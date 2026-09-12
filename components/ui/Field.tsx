@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { ChevronDown } from "lucide-react";
 import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
 
 const FIELD_BASE =
@@ -21,10 +22,19 @@ export function Textarea({ className, ...props }: TextareaHTMLAttributes<HTMLTex
 }
 
 export function Select({ className, children, ...props }: SelectHTMLAttributes<HTMLSelectElement>) {
+  // `appearance-none` retire la flèche native du navigateur : on doit donc en
+  // redessiner une nous-mêmes, sans quoi le champ ressemble à un simple texte
+  // et rien n'indique qu'il s'agit d'un menu déroulant.
   return (
-    <select className={cn(FIELD_BASE, "appearance-none bg-white pr-8", className)} {...props}>
-      {children}
-    </select>
+    <div className={cn("relative", className)}>
+      <select className={cn(FIELD_BASE, "w-full appearance-none bg-white pr-9")} {...props}>
+        {children}
+      </select>
+      <ChevronDown
+        aria-hidden="true"
+        className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-slate-400"
+      />
+    </div>
   );
 }
 

@@ -1,10 +1,13 @@
 import {
   ACADEMIC_LEVEL_ORDER,
+  type AcademicLevel,
   type CompatibilityBreakdown,
   type CompatibilityResult,
   type Formation,
   type MatchStrength,
+  type Requirement,
   type StudentProfile,
+  type StudyGoal,
   type SubjectMatch,
 } from "@/types";
 import { normalize } from "@/lib/utils";
@@ -19,16 +22,25 @@ import { areSynonyms } from "@/lib/matching/synonyms";
  * testé et amélioré indépendamment de l'interface.
  *
  * Pondération du score global (documentée pour rester explicable à l'utilisateur) :
- * - Prérequis d'admission ......... 25%
- * - Contenu académique ............ 35%
+ * - Prérequis d'admission ......... 30%
+ * - Contenu académique ............ 25%
  * - Compétences .................... 20%
- * - Niveau / diplôme ............... 20%
+ * - Niveau / diplôme ............... 25%
+ *
+ * Ces poids favorisent volontairement les éléments *structurants* du profil
+ * (niveau, domaine, prérequis obligatoires) par rapport au contenu académique
+ * et aux compétences : un étudiant ne liste jamais l'intégralité de son
+ * cursus, donc une matière absente de son profil ne veut pas dire qu'il ne la
+ * maîtrise pas. Un profil bien aligné sur le niveau et le domaine ne doit
+ * donc pas s'effondrer simplement parce que la liste de matières est
+ * incomplète (voir aussi `PREREQUISITE_TYPE_WEIGHT` et `STRENGTH_POINTS.partielle`
+ * ci-dessous, qui appliquent le même principe à l'intérieur de chaque critère).
  */
 export const ENGINE_WEIGHTS: CompatibilityBreakdown = {
-  prerequisites: 0.25,
-  academicContent: 0.35,
+  prerequisites: 0.3,
+  academicContent: 0.25,
   skills: 0.2,
-  levelDegree: 0.2,
+  levelDegree: 0.25,
 };
 
 const STOPWORDS = new Set([
@@ -67,9 +79,12 @@ function strengthFromScore(score: number): MatchStrength {
   return "manquant";
 }
 
+// Une correspondance partielle reste un signal positif réel (matière proche,
+// formulation différente) — elle vaut donc plus qu'une simple moyenne 50/50
+// avec l'absence totale de correspondance.
 const STRENGTH_POINTS: Record<MatchStrength, number> = {
   forte: 100,
-  partielle: 50,
+  partielle: 60,
   manquant: 0,
 };
 
@@ -88,41 +103,82 @@ function levelRank(level: string): number {
   return index === -1 ? 0 : index;
 }
 
-/** Score "Niveau / diplôme" : le niveau actuel de l'étudiant permet-il de candidater ? */
+/** À quel objectif de formation (Licence/Master/Doctorat) correspond ce niveau ? */
+function goalCategoryOf(level: AcademicLevel): StudyGoal | null {
+  if (level.startsWith("Licence")) return "Licence";
+  if (level.startsWith("Master")) return "Master";
+  if (level === "Doctorat") return "Doctorat";
+  return null; // ex. "Baccalauréat" : pas comparable à un objectif de formation.
+}
+
+/**
+ * Score "Niveau / diplôme" : le niveau actuel de l'étudiant permet-il de
+ * candidater, et cette formation correspond-elle au diplôme qu'il vise
+ * réellement (son "objectif de formation") ? Une formation de Licence
+ * affichée à un étudiant visant un Master n'est pas ce qu'il recherche,
+ * même si son niveau actuel le lui permettrait techniquement.
+ */
 function computeLevelDegreeScore(profile: StudentProfile, formation: Formation): number {
   const diff = levelRank(profile.currentLevel) - levelRank(formation.requiredLevel);
-  if (diff === 0) return 100;
-  if (diff === 1) return 90;
-  if (diff >= 2) return 75;
-  if (diff === -1) return 55;
-  return 20;
+  let base: number;
+  if (diff === 0) base = 100;
+  else if (diff === 1) base = 90;
+  else if (diff >= 2) base = 75;
+  else if (diff === -1) base = 55;
+  else base = 20;
+
+  const formationGoal = goalCategoryOf(formation.level);
+  const matchesGoal = formationGoal === null || formationGoal === profile.goal;
+  return matchesGoal ? base : Math.max(0, base - 25);
 }
+
+// À l'intérieur des prérequis, le niveau et le domaine sont structurants et
+// souvent éliminatoires (une mauvaise filière ou un niveau insuffisant
+// bloque réellement l'admission), alors qu'un prérequis isolé de matière ou
+// de compétence est davantage indicatif. Ils comptent donc double.
+const PREREQUISITE_TYPE_WEIGHT: Record<Requirement["type"], number> = {
+  niveau: 2,
+  domaine: 2,
+  matiere: 1,
+  competence: 1,
+};
 
 /** Score "Prérequis" : chaque exigence d'admission est-elle satisfaite ? */
 function computePrerequisitesScore(profile: StudentProfile, formation: Formation): number {
   if (formation.prerequisites.length === 0) return 100;
 
-  const strengths = formation.prerequisites.map((requirement): MatchStrength => {
+  let weightedTotal = 0;
+  let weightSum = 0;
+
+  for (const requirement of formation.prerequisites) {
+    let strength: MatchStrength;
     switch (requirement.type) {
       case "niveau": {
         const diff = levelRank(profile.currentLevel) - levelRank(requirement.value);
-        if (diff >= 0) return "forte";
-        if (diff === -1) return "partielle";
-        return "manquant";
+        if (diff >= 0) strength = "forte";
+        else if (diff === -1) strength = "partielle";
+        else strength = "manquant";
+        break;
       }
       case "domaine":
-        return strengthFromScore(similarity(requirement.value, profile.fieldOfStudy));
+        strength = strengthFromScore(similarity(requirement.value, profile.fieldOfStudy));
+        break;
       case "matiere":
-        return bestMatch(requirement.value, profile.courses.map((course) => course.name)).strength;
+        strength = bestMatch(requirement.value, profile.courses.map((course) => course.name)).strength;
+        break;
       case "competence":
-        return bestMatch(requirement.value, profile.skills).strength;
+        strength = bestMatch(requirement.value, profile.skills).strength;
+        break;
       default:
-        return "manquant";
+        strength = "manquant";
     }
-  });
 
-  const total = strengths.reduce((sum, strength) => sum + STRENGTH_POINTS[strength], 0);
-  return Math.round(total / strengths.length);
+    const weight = PREREQUISITE_TYPE_WEIGHT[requirement.type] ?? 1;
+    weightedTotal += STRENGTH_POINTS[strength] * weight;
+    weightSum += weight;
+  }
+
+  return Math.round(weightedTotal / weightSum);
 }
 
 /** Compare une liste d'exigences (matières ou compétences) au profil étudiant. */

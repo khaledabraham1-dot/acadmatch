@@ -96,14 +96,13 @@ export function FormationCard({ formation, score }: FormationCardProps) {
       </div>
 
       <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50 px-5 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <a
-          href={formation.sourceUrl}
-          className="block truncate text-xs text-slate-400 hover:text-slate-500"
-          onClick={(e) => e.preventDefault()}
+        {/* Texte, pas un lien : cette URL est fictive et ne mène nulle part. */}
+        <span
+          className="block truncate text-xs text-slate-400"
           title={`URL fictive de démonstration : ${formation.sourceUrl}`}
         >
           Source (démo) : {formation.sourceUrl.replace("https://", "")}
-        </a>
+        </span>
         <LinkButton
           href={`/resultat?formationId=${formation.id}`}
           size="sm"

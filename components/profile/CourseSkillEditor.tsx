@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Chip, SuggestionChip } from "@/components/ui/Chip";
 import { Input } from "@/components/ui/Field";
 import { Plus } from "lucide-react";
@@ -17,6 +17,7 @@ interface CourseSkillEditorProps {
 /** Éditeur de liste (matières ou compétences) : suggestions rapides + ajout manuel. */
 export function CourseSkillEditor({ label, hint, items, suggestions, placeholder, onChange }: CourseSkillEditorProps) {
   const [draft, setDraft] = useState("");
+  const inputId = useId();
 
   function addItem(value: string) {
     const trimmed = value.trim();
@@ -40,7 +41,9 @@ export function CourseSkillEditor({ label, hint, items, suggestions, placeholder
 
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium text-slate-700">{label}</label>
+      <label htmlFor={inputId} className="mb-1.5 block text-sm font-medium text-slate-700">
+        {label}
+      </label>
       {hint && <p className="mb-2.5 text-xs text-slate-500">{hint}</p>}
 
       {items.length > 0 && (
@@ -60,6 +63,7 @@ export function CourseSkillEditor({ label, hint, items, suggestions, placeholder
       */}
       <div className="mb-3 flex gap-2">
         <Input
+          id={inputId}
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => {
@@ -72,6 +76,7 @@ export function CourseSkillEditor({ label, hint, items, suggestions, placeholder
         <button
           type="button"
           onClick={handleAdd}
+          aria-label={`Ajouter (${label})`}
           className="inline-flex h-11 shrink-0 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-600 hover:bg-slate-50"
         >
           <Plus className="size-4" />
