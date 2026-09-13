@@ -357,7 +357,10 @@ export const FORMATIONS: Formation[] = [
       { id: "r3", type: "matiere", value: "Analyse", label: "Bases solides en analyse et algèbre" },
     ],
     coreCourses: [
-      course("Analyse fonctionnelle", "essentielle", ["Analyse"]),
+      // Pas d'alias "Analyse" ici : ce terme seul est trop générique et
+      // matcherait aussi "Analyse de données" ou "Analyse financière", qui
+      // sont des matières sans rapport (voir lib/matching/engine.ts).
+      course("Analyse fonctionnelle", "essentielle"),
       course("Algèbre linéaire", "essentielle"),
       course("Probabilités", "importante"),
       course("Topologie", "utile"),
@@ -436,7 +439,7 @@ export const FORMATIONS: Formation[] = [
     name: "Licence 3 Sciences Physiques",
     institution: "Faculté des Sciences de Rennes-Verrières",
     level: "Licence 3",
-    field: "Sciences",
+    field: "Sciences fondamentales",
     city: "Rennes",
     description:
       "Dernière année de licence généraliste en sciences physiques, avec travaux pratiques et initiation à la recherche.",
@@ -444,7 +447,12 @@ export const FORMATIONS: Formation[] = [
     language: "Français",
     prerequisites: [
       { id: "r1", type: "niveau", value: "Licence 2", label: "Licence 2 validée ou équivalent" },
-      { id: "r2", type: "domaine", value: "Sciences", label: "Parcours en Sciences (Physique, Chimie) ou Mathématiques" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences fondamentales",
+        label: "Parcours en Sciences (Physique, Chimie) ou Mathématiques",
+      },
     ],
     coreCourses: [
       course("Physique générale", "essentielle"),

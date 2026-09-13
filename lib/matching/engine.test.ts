@@ -192,6 +192,46 @@ describe("computeCompatibility", () => {
     expect(result.gaps).toEqual(expect.arrayContaining(["Machine Learning", "Optimisation"]));
   });
 
+  it("ne fait pas correspondre un mot d'une lettre par simple hasard de caractères (ex: \"R\" dans \"droit\")", () => {
+    const formation = makeFormation({
+      coreCourses: [course("Droit des contrats"), course("Architecture logicielle")],
+      skills: [skill("R")],
+    });
+    const profile = makeProfile({
+      courses: [{ id: "1", name: "Droit des contrats" }],
+      skills: ["Rédaction juridique"],
+    });
+
+    const result = computeCompatibility(profile, formation);
+
+    const rMatch = result.matches.find((m) => m.formationRequirement === "R");
+    expect(rMatch?.strength).toBe("manquant");
+  });
+
+  it("ne fait pas correspondre un mot par simple sous-chaîne de caractères (ex: \"Git\" dans \"digitale\")", () => {
+    const formation = makeFormation({
+      coreCourses: [course("Transformation digitale")],
+      skills: [skill("Git")],
+    });
+    const profile = makeProfile({ courses: [], skills: ["Marketing digital"] });
+
+    const result = computeCompatibility(profile, formation);
+
+    const gitMatch = result.matches.find((m) => m.formationRequirement === "Git");
+    expect(gitMatch?.strength).toBe("manquant");
+  });
+
+  it("dégrade en correspondance PARTIELLE (pas forte) un seul mot générique partagé entre deux matières différentes", () => {
+    // "Analyse" est un mot trop générique pour prouver, à lui seul, une
+    // maîtrise de l'analyse financière ou de l'analyse de données.
+    const formation = makeFormation({ coreCourses: [course("Analyse financière")], skills: [] });
+    const profile = makeProfile({ courses: [{ id: "1", name: "Analyse de données" }], skills: [] });
+
+    const result = computeCompatibility(profile, formation);
+
+    expect(result.matches[0].strength).toBe("partielle");
+  });
+
   it("5. reste stable et explicable quand le profil ne renseigne aucune matière/compétence", () => {
     const formation = makeFormation();
     const profile = makeProfile({ courses: [], skills: [] });

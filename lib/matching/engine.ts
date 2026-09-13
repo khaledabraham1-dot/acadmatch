@@ -67,8 +67,12 @@ function similarity(a: string, b: string): number {
   if (!na || !nb) return 0;
   if (na === nb) return 1;
   if (areSynonyms(na, nb)) return 0.9;
-  if (na.includes(nb) || nb.includes(na)) return 0.8;
 
+  // Comparaison MOT à mot (jamais caractère à caractère) à partir d'ici :
+  // un test `na.includes(nb)` sur les chaînes brutes ferait matcher "R" dans
+  // "droit" ou "Git" dans "digitale", par pur hasard de lettres. `tokenize`
+  // filtre déjà les mots d'une seule lettre, donc un intitulé comme "R" tombe
+  // ici à un ensemble de mots vide et ne matche plus jamais accidentellement.
   const ta = tokenize(a);
   const tb = tokenize(b);
   if (ta.length === 0 || tb.length === 0) return 0;
@@ -76,7 +80,24 @@ function similarity(a: string, b: string): number {
   const setB = new Set(tb);
   const intersection = [...setA].filter((token) => setB.has(token)).length;
   const union = new Set([...setA, ...setB]).size;
-  return union === 0 ? 0 : intersection / union;
+  const jaccard = union === 0 ? 0 : intersection / union;
+
+  // Un intitulé entièrement contenu, mot pour mot, dans un intitulé plus
+  // long est un signal positif : soit une reformulation plus détaillée
+  // ("Bases de données" ⊆ "Bases de données médicales"), soit une
+  // spécialisation du même thème ("Droit" ⊆ "Droit des sociétés"). On ne
+  // le traite comme une correspondance FORTE que si au moins deux mots sont
+  // partagés : un seul mot générique en commun ("Analyse" ⊆ "Analyse
+  // financière") est un signal réel mais plus faible — la matière commune
+  // peut recouvrir des domaines différents — d'où une correspondance
+  // partielle plutôt que forte.
+  const [smaller, larger] = setA.size <= setB.size ? [setA, setB] : [setB, setA];
+  const isFullyContained = smaller.size > 0 && [...smaller].every((token) => larger.has(token));
+  if (isFullyContained) {
+    return smaller.size >= 2 ? 0.8 : Math.max(jaccard, 0.5);
+  }
+
+  return jaccard;
 }
 
 function strengthFromScore(score: number): MatchStrength {

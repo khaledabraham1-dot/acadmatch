@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { FORMATIONS, getFormationById } from "@/data/formations";
+import { DOMAINS } from "@/data/subjects";
 import { computeCompatibility } from "@/lib/matching/engine";
+import { normalize } from "@/lib/utils";
 import type { StudentProfile } from "@/types";
 
 /** Vérifications de cohérence sur les données de démonstration (pas de logique métier ici). */
@@ -29,6 +31,24 @@ describe("FORMATIONS (données de démonstration)", () => {
     const first = FORMATIONS[0];
     expect(getFormationById(first.id)).toBe(first);
     expect(getFormationById("id-inexistant")).toBeUndefined();
+  });
+
+  it("n'a pas deux domaines dont l'un contient tous les mots de l'autre (ex: \"Sciences\" vs \"Sciences politiques\")", () => {
+    // Deux domaines qui partagent tous leurs mots seraient traités par le
+    // moteur comme une correspondance "forte" (voir lib/matching/engine.ts),
+    // ce qui ferait passer un étudiant d'un domaine pour compatible avec
+    // le prérequis "domaine" d'un tout autre domaine.
+    const tokenize = (value: string) => new Set(normalize(value).split(/[^a-z0-9]+/).filter(Boolean));
+    for (const a of DOMAINS) {
+      for (const b of DOMAINS) {
+        if (a === b) continue;
+        const ta = tokenize(a);
+        const tb = tokenize(b);
+        const [smaller, larger] = ta.size <= tb.size ? [ta, tb] : [tb, ta];
+        const fullyContained = [...smaller].every((token) => larger.has(token));
+        expect(fullyContained, `"${a}" et "${b}" ne devraient pas partager tous leurs mots`).toBe(false);
+      }
+    }
   });
 
   it("le moteur de matching produit un score valide pour chaque formation", () => {
