@@ -26,6 +26,7 @@ export const DOMAINS = [
   "Droit",
   "Sciences de l'ingénieur",
   "Mathématiques",
+  "Sciences",
   "Biologie & Santé",
   "Sciences politiques",
 ] as const;
@@ -79,6 +80,13 @@ export const SUGGESTED_COURSES: Record<Domain, string[]> = {
     "Statistiques",
     "Programmation scientifique",
   ],
+  Sciences: [
+    "Physique générale",
+    "Chimie générale",
+    "Mécanique",
+    "Optique",
+    "Méthodologie expérimentale",
+  ],
   "Biologie & Santé": [
     "Biologie cellulaire",
     "Biostatistiques",
@@ -112,6 +120,7 @@ export const SUGGESTED_SKILLS: Record<Domain, string[]> = {
   Droit: ["Rédaction juridique", "Argumentation", "Anglais juridique"],
   "Sciences de l'ingénieur": ["CAO", "Python", "Gestion de projet"],
   Mathématiques: ["Python", "Rigueur mathématique", "Algèbre"],
+  Sciences: ["Rigueur scientifique", "Python", "Expérimentation"],
   "Biologie & Santé": ["R", "Rigueur scientifique", "Statistiques"],
   "Sciences politiques": ["Rédaction académique", "Anglais courant", "Argumentation"],
 };

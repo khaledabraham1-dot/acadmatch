@@ -26,7 +26,8 @@ export function FormationCard({ formation, score }: FormationCardProps) {
           <div>
             <div className="mb-1.5 flex flex-wrap items-center gap-2">
               <Badge tone="neutral">{formation.level}</Badge>
-              <Badge tone="neutral">{formation.domain}</Badge>
+              <Badge tone="neutral">{formation.field}</Badge>
+              {formation.language !== "Français" && <Badge tone="neutral">{formation.language}</Badge>}
             </div>
             <h3 className="text-lg font-semibold text-slate-900">{formation.name}</h3>
             <p className="mt-0.5 flex items-center gap-1.5 text-sm text-slate-500">
@@ -34,7 +35,7 @@ export function FormationCard({ formation, score }: FormationCardProps) {
               {formation.institution}
               <span className="text-slate-300">·</span>
               <MapPin className="size-4" />
-              {formation.location}
+              {formation.city}
             </p>
           </div>
 
@@ -76,8 +77,8 @@ export function FormationCard({ formation, score }: FormationCardProps) {
                 Matières importantes
               </p>
               <ul className="space-y-1 text-sm text-slate-600">
-                {formation.keySubjects.map((subject) => (
-                  <li key={subject}>{subject}</li>
+                {formation.coreCourses.map((subject) => (
+                  <li key={subject.id}>{subject.name}</li>
                 ))}
               </ul>
             </div>
@@ -86,8 +87,8 @@ export function FormationCard({ formation, score }: FormationCardProps) {
                 Compétences demandées
               </p>
               <ul className="space-y-1 text-sm text-slate-600">
-                {formation.requiredSkills.map((skill) => (
-                  <li key={skill}>{skill}</li>
+                {formation.skills.map((skill) => (
+                  <li key={skill.id}>{skill.name}</li>
                 ))}
               </ul>
             </div>
@@ -99,9 +100,9 @@ export function FormationCard({ formation, score }: FormationCardProps) {
         {/* Texte, pas un lien : cette URL est fictive et ne mène nulle part. */}
         <span
           className="block truncate text-xs text-slate-400"
-          title={`URL fictive de démonstration : ${formation.sourceUrl}`}
+          title={`URL fictive de démonstration : ${formation.source}`}
         >
-          Source (démo) : {formation.sourceUrl.replace("https://", "")}
+          Source (démo) : {formation.source.replace("https://", "")}
         </span>
         <LinkButton
           href={`/resultat?formationId=${formation.id}`}

@@ -33,7 +33,7 @@ export function ComparisonSummary({ profile, formation }: ComparisonSummaryProps
           </p>
           <p className="font-semibold text-slate-900">{formation.name}</p>
           <p className="text-sm text-slate-500">
-            {formation.institution} · {formation.location}
+            {formation.institution} · {formation.city}
           </p>
         </div>
         <Link href="/recherche" className="shrink-0 text-sm font-medium text-blue-600 hover:text-blue-700">

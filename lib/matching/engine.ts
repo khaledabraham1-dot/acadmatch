@@ -1,9 +1,11 @@
 import {
   ACADEMIC_LEVEL_ORDER,
+  type AcademicItem,
   type AcademicLevel,
   type CompatibilityBreakdown,
   type CompatibilityResult,
   type Formation,
+  type Importance,
   type MatchStrength,
   type Requirement,
   type StudentProfile,
@@ -21,6 +23,10 @@ import { areSynonyms } from "@/lib/matching/synonyms";
  * remplaçable. Ce fichier ne dépend d'aucun composant React — il peut être
  * testé et amélioré indépendamment de l'interface.
  *
+ * Rappel : ce score est une SIMULATION de compatibilité académique entre un
+ * profil et le contenu affiché d'une formation. Il ne représente en aucun
+ * cas une probabilité d'admission.
+ *
  * Pondération du score global (documentée pour rester explicable à l'utilisateur) :
  * - Prérequis d'admission ......... 30%
  * - Contenu académique ............ 25%
@@ -33,7 +39,7 @@ import { areSynonyms } from "@/lib/matching/synonyms";
  * cursus, donc une matière absente de son profil ne veut pas dire qu'il ne la
  * maîtrise pas. Un profil bien aligné sur le niveau et le domaine ne doit
  * donc pas s'effondrer simplement parce que la liste de matières est
- * incomplète (voir aussi `PREREQUISITE_TYPE_WEIGHT` et `STRENGTH_POINTS.partielle`
+ * incomplète (voir aussi `requirementWeight` et `STRENGTH_POINTS.partielle`
  * ci-dessous, qui appliquent le même principe à l'intérieur de chaque critère).
  */
 export const ENGINE_WEIGHTS: CompatibilityBreakdown = {
@@ -88,12 +94,26 @@ const STRENGTH_POINTS: Record<MatchStrength, number> = {
   manquant: 0,
 };
 
-/** Trouve le meilleur élément du profil étudiant pour une exigence donnée. */
-function bestMatch(requirement: string, pool: string[]): { item: string | null; strength: MatchStrength } {
+/**
+ * Toutes les formulations reconnues pour un intitulé (le nom + ses alias
+ * explicites, ex: name="Machine Learning", aliases=["Apprentissage
+ * automatique"]). Le moteur essaie chaque formulation et garde la meilleure
+ * correspondance — cela s'ajoute (sans le remplacer) à la table globale de
+ * synonymes utilisée par `similarity` ci-dessus.
+ */
+function namesOf(item: { name?: string; value?: string; aliases?: string[] }): string[] {
+  const base = item.name ?? item.value ?? "";
+  return [base, ...(item.aliases ?? [])].filter((name) => name.length > 0);
+}
+
+/** Trouve le meilleur élément du profil étudiant pour un ensemble de formulations équivalentes. */
+function bestMatch(names: string[], pool: string[]): { item: string | null; strength: MatchStrength } {
   let best = { item: null as string | null, score: 0 };
   for (const candidate of pool) {
-    const score = similarity(requirement, candidate);
-    if (score > best.score) best = { item: candidate, score };
+    for (const name of names) {
+      const score = similarity(name, candidate);
+      if (score > best.score) best = { item: candidate, score };
+    }
   }
   return { item: best.item, strength: strengthFromScore(best.score) };
 }
@@ -135,13 +155,25 @@ function computeLevelDegreeScore(profile: StudentProfile, formation: Formation):
 // À l'intérieur des prérequis, le niveau et le domaine sont structurants et
 // souvent éliminatoires (une mauvaise filière ou un niveau insuffisant
 // bloque réellement l'admission), alors qu'un prérequis isolé de matière ou
-// de compétence est davantage indicatif. Ils comptent donc double.
+// de compétence est davantage indicatif. Ils comptent donc double par défaut
+// — une formation peut cependant surcharger ce poids via `importance`.
 const PREREQUISITE_TYPE_WEIGHT: Record<Requirement["type"], number> = {
   niveau: 2,
   domaine: 2,
   matiere: 1,
   competence: 1,
 };
+
+const IMPORTANCE_WEIGHT: Record<Importance, number> = {
+  essentielle: 3,
+  importante: 2,
+  utile: 1,
+};
+
+function requirementWeight(requirement: Requirement): number {
+  if (requirement.importance) return IMPORTANCE_WEIGHT[requirement.importance];
+  return PREREQUISITE_TYPE_WEIGHT[requirement.type] ?? 1;
+}
 
 /** Score "Prérequis" : chaque exigence d'admission est-elle satisfaite ? */
 function computePrerequisitesScore(profile: StudentProfile, formation: Formation): number {
@@ -161,19 +193,19 @@ function computePrerequisitesScore(profile: StudentProfile, formation: Formation
         break;
       }
       case "domaine":
-        strength = strengthFromScore(similarity(requirement.value, profile.fieldOfStudy));
+        strength = bestMatch(namesOf(requirement), [profile.fieldOfStudy]).strength;
         break;
       case "matiere":
-        strength = bestMatch(requirement.value, profile.courses.map((course) => course.name)).strength;
+        strength = bestMatch(namesOf(requirement), profile.courses.map((course) => course.name)).strength;
         break;
       case "competence":
-        strength = bestMatch(requirement.value, profile.skills).strength;
+        strength = bestMatch(namesOf(requirement), profile.skills).strength;
         break;
       default:
         strength = "manquant";
     }
 
-    const weight = PREREQUISITE_TYPE_WEIGHT[requirement.type] ?? 1;
+    const weight = requirementWeight(requirement);
     weightedTotal += STRENGTH_POINTS[strength] * weight;
     weightSum += weight;
   }
@@ -181,24 +213,34 @@ function computePrerequisitesScore(profile: StudentProfile, formation: Formation
   return Math.round(weightedTotal / weightSum);
 }
 
-/** Compare une liste d'exigences (matières ou compétences) au profil étudiant. */
+/**
+ * Compare une liste de matières/compétences attendues au profil étudiant.
+ * Chaque élément pèse selon son `importance` : une matière "essentielle"
+ * absente du profil coûte plus cher au score qu'une matière "utile".
+ */
 function computeContentScore(
-  requirements: string[],
+  items: AcademicItem[],
   studentPool: string[],
 ): { score: number; rows: SubjectMatch[] } {
-  if (requirements.length === 0) return { score: 100, rows: [] };
+  if (items.length === 0) return { score: 100, rows: [] };
 
-  const rows: SubjectMatch[] = requirements.map((requirement) => {
-    const match = bestMatch(requirement, studentPool);
-    return {
+  const rows: SubjectMatch[] = [];
+  let weightedTotal = 0;
+  let weightSum = 0;
+
+  for (const item of items) {
+    const match = bestMatch(namesOf(item), studentPool);
+    rows.push({
       studentItem: match.item ?? "—",
-      formationRequirement: requirement,
+      formationRequirement: item.name,
       strength: match.strength,
-    };
-  });
+    });
+    const weight = IMPORTANCE_WEIGHT[item.importance] ?? 1;
+    weightedTotal += STRENGTH_POINTS[match.strength] * weight;
+    weightSum += weight;
+  }
 
-  const total = rows.reduce((sum, row) => sum + STRENGTH_POINTS[row.strength], 0);
-  return { score: Math.round(total / rows.length), rows };
+  return { score: Math.round(weightedTotal / weightSum), rows };
 }
 
 /**
@@ -211,8 +253,8 @@ export function computeCompatibility(profile: StudentProfile, formation: Formati
   // à la fois un contenu académique et une compétence.
   const studentPool = [...profile.courses.map((course) => course.name), ...profile.skills];
 
-  const content = computeContentScore(formation.keySubjects, studentPool);
-  const skills = computeContentScore(formation.requiredSkills, studentPool);
+  const content = computeContentScore(formation.coreCourses, studentPool);
+  const skills = computeContentScore(formation.skills, studentPool);
   const prerequisites = computePrerequisitesScore(profile, formation);
   const levelDegree = computeLevelDegreeScore(profile, formation);
 

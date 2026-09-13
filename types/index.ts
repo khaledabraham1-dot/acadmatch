@@ -56,6 +56,12 @@ export interface StudentProfile {
 /** Type de correspondance entre un élément du profil étudiant et une exigence de formation. */
 export type MatchStrength = "forte" | "partielle" | "manquant";
 
+/**
+ * Poids d'une matière/compétence/prérequis dans le score.
+ * "essentielle" = difficile de réussir la formation sans, "utile" = un plus.
+ */
+export type Importance = "essentielle" | "importante" | "utile";
+
 /** Une exigence d'admission (prérequis) pour une formation. */
 export interface Requirement {
   id: string;
@@ -65,30 +71,59 @@ export interface Requirement {
   type: "niveau" | "domaine" | "matiere" | "competence";
   /** Valeur normalisée comparée au profil étudiant (ex: domaine ou nom de matière). */
   value: string;
+  /**
+   * Formulations équivalentes reconnues par le moteur de matching, ex:
+   * value="Probabilités", aliases=["Probability"] — utile pour un intitulé
+   * en anglais ou une variante de nom d'un établissement à l'autre.
+   */
+  aliases?: string[];
+  /** Poids de ce prérequis dans le score des prérequis ; par défaut dérivé de `type`. */
+  importance?: Importance;
 }
 
-/** Une formation française fictive (donnée de démonstration). */
+/**
+ * Une matière fondamentale ou une compétence attendue par une formation.
+ * Unité de base comparée au profil étudiant par le moteur de matching
+ * (voir lib/matching/engine.ts) — le pendant "formation" d'une matière ou
+ * compétence de `StudentProfile`.
+ */
+export interface AcademicItem {
+  id: string;
+  /** Intitulé de référence, ex: "Machine Learning". */
+  name: string;
+  /** Formulations équivalentes, ex: ["Apprentissage automatique", "ML"]. */
+  aliases?: string[];
+  importance: Importance;
+  category: "matiere" | "competence";
+}
+
+/** Une formation FICTIVE de démonstration (voir data/formations.ts). */
 export interface Formation {
   id: string;
   name: string;
   institution: string;
+  city: string;
   level: AcademicLevel;
-  domain: string;
-  location: string;
+  /** Domaine d'études, ex: "Informatique", "Data Science & IA". */
+  field: string;
   description: string;
   /** Prérequis d'admission. */
   prerequisites: Requirement[];
-  /** Matières/contenus académiques importants enseignés dans la formation. */
-  keySubjects: string[];
+  /** Matières fondamentales enseignées dans la formation. */
+  coreCourses: AcademicItem[];
   /** Compétences attendues des candidats. */
-  requiredSkills: string[];
+  skills: AcademicItem[];
   /** Niveau minimum requis pour candidater (le diplôme d'entrée). */
   requiredLevel: AcademicLevel;
+  /** Langue principale d'enseignement, ex: "Français", "Anglais". */
+  language: string;
   /**
    * URL source — TOUJOURS fictive pour ce prototype.
    * Ne jamais afficher comme une source officielle dans l'UI.
    */
-  sourceUrl: string;
+  source: string;
+  /** Toujours `true` : marque explicitement une donnée de démonstration (voir DemoDataBadge). */
+  demo: true;
 }
 
 /** Décomposition du score de compatibilité par critère. */
@@ -113,7 +148,7 @@ export interface SubjectMatch {
 /** Résultat complet de l'analyse de compatibilité, produit par le moteur de matching. */
 export interface CompatibilityResult {
   formationId: string;
-  /** Score global sur 100. */
+  /** Score global sur 100. Une simulation de compatibilité académique — pas une probabilité d'admission. */
   overallScore: number;
   breakdown: CompatibilityBreakdown;
   strengths: string[];

@@ -40,9 +40,9 @@ export default function RecherchePage() {
         q.length === 0 ||
         normalize(formation.name).includes(q) ||
         normalize(formation.institution).includes(q) ||
-        normalize(formation.domain).includes(q);
+        normalize(formation.field).includes(q);
       const matchesLevel = level === "Tous les niveaux" || formation.level === level;
-      const matchesDomain = domain === "Tous les domaines" || formation.domain === domain;
+      const matchesDomain = domain === "Tous les domaines" || formation.field === domain;
       return matchesQuery && matchesLevel && matchesDomain;
     }).sort((a, b) => {
       // Formations les plus compatibles en premier lorsqu'un profil existe.
