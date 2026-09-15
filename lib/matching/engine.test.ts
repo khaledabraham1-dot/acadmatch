@@ -40,6 +40,7 @@ function makeFormation(overrides: Partial<Formation> = {}): Formation {
     institution: "Université fictive",
     city: "Paris",
     level: "Master 1",
+    goal: "Master",
     field: "Informatique",
     description: "Formation de démonstration utilisée uniquement pour les tests.",
     requiredLevel: "Licence 3",
@@ -67,6 +68,7 @@ function makeProfile(overrides: Partial<StudentProfile> = {}): StudentProfile {
     courses: [],
     skills: [],
     goal: "Master",
+    languages: ["Français"],
     ...overrides,
   };
 }
@@ -251,5 +253,27 @@ describe("computeCompatibility", () => {
     expect(result.gaps.length).toBeGreaterThan(0);
     // Le niveau/domaine restent, eux, corrects : ce critère ne doit pas s'effondrer.
     expect(result.breakdown.levelDegree).toBeGreaterThan(0);
+  });
+
+  it("compare l'objectif au `goal` de la formation, pas à son niveau d'entrée (ex: école d'ingénieurs en admission parallèle)", () => {
+    // Une formation "grande école" en admission parallèle a un niveau
+    // d'entrée Licence 3 mais un objectif "École spécialisée" : un étudiant
+    // qui vise justement ça ne doit pas être pénalisé comme si la formation
+    // était une simple Licence (voir computeLevelDegreeScore).
+    const formation = makeFormation({ requiredLevel: "Licence 2", level: "Licence 3", goal: "École spécialisée" });
+    const matchingGoal = makeProfile({ currentLevel: "Licence 2", goal: "École spécialisée" });
+    const mismatchedGoal = makeProfile({ currentLevel: "Licence 2", goal: "Licence" });
+
+    expect(computeCompatibility(matchingGoal, formation).breakdown.levelDegree).toBe(100);
+    expect(computeCompatibility(mismatchedGoal, formation).breakdown.levelDegree).toBe(75);
+  });
+
+  it("pénalise le score de prérequis quand l'étudiant n'est pas à l'aise dans la langue d'enseignement", () => {
+    const formation = makeFormation({ language: "Anglais" });
+    const comfortable = makeProfile({ languages: ["Français", "Anglais"] });
+    const uncomfortable = makeProfile({ languages: ["Français"] });
+
+    expect(computeCompatibility(comfortable, formation).breakdown.prerequisites).toBe(100);
+    expect(computeCompatibility(uncomfortable, formation).breakdown.prerequisites).toBe(67);
   });
 });

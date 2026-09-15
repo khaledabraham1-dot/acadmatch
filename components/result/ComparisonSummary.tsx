@@ -18,7 +18,7 @@ export function ComparisonSummary({ profile, formation }: ComparisonSummaryProps
           </p>
           <p className="font-semibold text-slate-900">{profile.currentDegree}</p>
           <p className="text-sm text-slate-500">
-            {profile.currentLevel} · {profile.fieldOfStudy}
+            {profile.currentLevel} · {profile.fieldOfStudy} · {profile.languages.join(", ")}
           </p>
         </div>
         <Link href="/profil" className="shrink-0 text-sm font-medium text-blue-600 hover:text-blue-700">

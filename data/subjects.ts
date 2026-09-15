@@ -19,6 +19,9 @@ export const STUDY_GOALS: StudyGoal[] = [
   "École spécialisée",
 ];
 
+/** Langues d'enseignement présentes dans le catalogue — proposées dans le profil étudiant. */
+export const TEACHING_LANGUAGES = ["Français", "Anglais"] as const;
+
 export const DOMAINS = [
   "Informatique",
   "Data Science & IA",

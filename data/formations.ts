@@ -47,6 +47,7 @@ export const FORMATIONS: Formation[] = [
     name: "Master 2 Data Science (M2DS)",
     institution: "Institut Polytechnique de Paris (École Polytechnique)",
     level: "Master 2",
+    goal: "Master",
     field: "Data Science & IA",
     city: "Palaiseau",
     description:
@@ -82,6 +83,7 @@ export const FORMATIONS: Formation[] = [
     name: "MSc Artificial Intelligence Applied to Society",
     institution: "CentraleSupélec",
     level: "Master 1",
+    goal: "Master",
     field: "Data Science & IA",
     city: "Gif-sur-Yvette",
     description:
@@ -115,6 +117,7 @@ export const FORMATIONS: Formation[] = [
     name: "Mastère Spécialisé Intelligence Artificielle multimodale et autonome",
     institution: "Télécom Paris & ENSTA Paris (Institut Polytechnique de Paris)",
     level: "Master 2",
+    goal: "Master",
     field: "Data Science & IA",
     city: "Palaiseau",
     description:
@@ -147,6 +150,7 @@ export const FORMATIONS: Formation[] = [
     name: "Master 2 MoSEF — Data Science",
     institution: "Université Paris 1 Panthéon-Sorbonne",
     level: "Master 2",
+    goal: "Master",
     field: "Data Science & IA",
     city: "Paris",
     description:
@@ -180,6 +184,7 @@ export const FORMATIONS: Formation[] = [
     name: "Master Mathématiques — Filière Sciences des Données pour l'Ingénieur.e (SCDI)",
     institution: "Sorbonne Université — Institut de Statistique (ISUP)",
     level: "Master 1",
+    goal: "Master",
     field: "Data Science & IA",
     city: "Paris",
     description:
@@ -212,6 +217,7 @@ export const FORMATIONS: Formation[] = [
     name: "Licence Informatique (Portail Mathématiques-Informatique)",
     institution: "Sorbonne Université",
     level: "Licence 1",
+    goal: "Licence",
     field: "Informatique",
     city: "Paris",
     description:
@@ -243,6 +249,7 @@ export const FORMATIONS: Formation[] = [
     name: "Licence Informatique",
     institution: "Université Paris-Saclay",
     level: "Licence 1",
+    goal: "Licence",
     field: "Informatique",
     city: "Orsay",
     description:
@@ -274,6 +281,7 @@ export const FORMATIONS: Formation[] = [
     name: "BUT Informatique",
     institution: "IUT de Nantes — Université de Nantes",
     level: "Licence 1",
+    goal: "Licence",
     field: "Informatique",
     city: "Nantes",
     description:
@@ -305,6 +313,7 @@ export const FORMATIONS: Formation[] = [
     name: "Cycle ingénieur Informatique — admission parallèle (2ᵉ/3ᵉ année)",
     institution: "INSA Lyon",
     level: "Licence 3",
+    goal: "École spécialisée",
     field: "Informatique",
     city: "Villeurbanne",
     description:

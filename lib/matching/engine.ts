@@ -1,7 +1,6 @@
 import {
   ACADEMIC_LEVEL_ORDER,
   type AcademicItem,
-  type AcademicLevel,
   type CompatibilityBreakdown,
   type CompatibilityResult,
   type Formation,
@@ -9,7 +8,6 @@ import {
   type MatchStrength,
   type Requirement,
   type StudentProfile,
-  type StudyGoal,
   type SubjectMatch,
 } from "@/types";
 import { normalize } from "@/lib/utils";
@@ -144,20 +142,16 @@ function levelRank(level: string): number {
   return index === -1 ? 0 : index;
 }
 
-/** À quel objectif de formation (Licence/Master/Doctorat) correspond ce niveau ? */
-function goalCategoryOf(level: AcademicLevel): StudyGoal | null {
-  if (level.startsWith("Licence")) return "Licence";
-  if (level.startsWith("Master")) return "Master";
-  if (level === "Doctorat") return "Doctorat";
-  return null; // ex. "Baccalauréat" : pas comparable à un objectif de formation.
-}
-
 /**
  * Score "Niveau / diplôme" : le niveau actuel de l'étudiant permet-il de
  * candidater, et cette formation correspond-elle au diplôme qu'il vise
  * réellement (son "objectif de formation") ? Une formation de Licence
  * affichée à un étudiant visant un Master n'est pas ce qu'il recherche,
- * même si son niveau actuel le lui permettrait techniquement.
+ * même si son niveau actuel le lui permettrait techniquement. On compare
+ * directement `formation.goal` à `profile.goal` (et non le `level` de la
+ * formation) : `level` décrit le niveau d'ENTRÉE, pas le type de diplôme
+ * visé — une école d'ingénieurs en admission parallèle a un niveau d'entrée
+ * "Licence 3" mais un objectif "École spécialisée", pas "Licence".
  */
 function computeLevelDegreeScore(profile: StudentProfile, formation: Formation): number {
   const diff = levelRank(profile.currentLevel) - levelRank(formation.requiredLevel);
@@ -168,8 +162,7 @@ function computeLevelDegreeScore(profile: StudentProfile, formation: Formation):
   else if (diff === -1) base = 55;
   else base = 20;
 
-  const formationGoal = goalCategoryOf(formation.level);
-  const matchesGoal = formationGoal === null || formationGoal === profile.goal;
+  const matchesGoal = formation.goal === profile.goal;
   return matchesGoal ? base : Math.max(0, base - 25);
 }
 
@@ -196,12 +189,27 @@ function requirementWeight(requirement: Requirement): number {
   return PREREQUISITE_TYPE_WEIGHT[requirement.type] ?? 1;
 }
 
-/** Score "Prérequis" : chaque exigence d'admission est-elle satisfaite ? */
-function computePrerequisitesScore(profile: StudentProfile, formation: Formation): number {
-  if (formation.prerequisites.length === 0) return 100;
+/** L'étudiant est-il à l'aise pour suivre des cours dans la langue d'enseignement de la formation ? */
+function computeLanguageStrength(profile: StudentProfile, formation: Formation): MatchStrength {
+  const comfortable = profile.languages.some((lang) => normalize(lang) === normalize(formation.language));
+  return comfortable ? "forte" : "manquant";
+}
 
+/**
+ * Score "Prérequis" : chaque exigence d'admission explicite est-elle
+ * satisfaite, plus un prérequis implicite — la langue d'enseignement. Une
+ * formation à 100% en anglais qu'un étudiant ne maîtrise pas n'est pas
+ * réellement suivable, même si tout le reste du profil correspond ; on la
+ * traite donc avec le même poids qu'un prérequis de "domaine" (structurant,
+ * souvent éliminatoire), pas comme un simple bonus.
+ */
+function computePrerequisitesScore(profile: StudentProfile, formation: Formation): number {
   let weightedTotal = 0;
   let weightSum = 0;
+
+  const languageWeight = PREREQUISITE_TYPE_WEIGHT.domaine;
+  weightedTotal += STRENGTH_POINTS[computeLanguageStrength(profile, formation)] * languageWeight;
+  weightSum += languageWeight;
 
   for (const requirement of formation.prerequisites) {
     let strength: MatchStrength;

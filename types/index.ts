@@ -51,6 +51,8 @@ export interface StudentProfile {
   skills: string[];
   /** Objectif de formation visé en France. */
   goal: StudyGoal;
+  /** Langues dans lesquelles l'étudiant est à l'aise pour suivre des cours, ex: ["Français", "Anglais"]. */
+  languages: string[];
 }
 
 /** Type de correspondance entre un élément du profil étudiant et une exigence de formation. */
@@ -106,6 +108,13 @@ interface FormationBase {
   institution: string;
   city: string;
   level: AcademicLevel;
+  /**
+   * Objectif de formation représenté par cette fiche (utilisé pour comparer
+   * à `StudentProfile.goal`). Indépendant de `level` : une école d'ingénieurs
+   * en admission parallèle (ex: INSA) a un `level` d'entrée type "Licence 3"
+   * mais un `goal` "École spécialisée", pas "Licence".
+   */
+  goal: StudyGoal;
   /** Domaine d'études, ex: "Informatique", "Data Science & IA". */
   field: string;
   description: string;

@@ -68,6 +68,7 @@ describe("FORMATIONS (catalogue réel, Étape 3 — périmètre Data Science/IA/
       courses: [{ id: "1", name: "Bases de données" }],
       skills: ["Python"],
       goal: "Master",
+      languages: ["Français", "Anglais"],
     };
 
     for (const formation of FORMATIONS) {

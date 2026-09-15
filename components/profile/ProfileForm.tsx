@@ -10,6 +10,7 @@ import {
   STUDY_GOALS,
   SUGGESTED_COURSES,
   SUGGESTED_SKILLS,
+  TEACHING_LANGUAGES,
   type Domain,
 } from "@/data/subjects";
 import { loadProfile, saveProfile } from "@/lib/storage";
@@ -32,6 +33,7 @@ export function ProfileForm() {
   const [courses, setCourses] = useState<string[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
   const [goal, setGoal] = useState<StudyGoal>("Master");
+  const [languages, setLanguages] = useState<string[]>(["Français"]);
 
   // Pré-remplit le formulaire si un profil existe déjà (édition, retour en arrière).
   useEffect(() => {
@@ -45,6 +47,7 @@ export function ProfileForm() {
     setCourses(existing.courses.map((c) => c.name));
     setSkills(existing.skills);
     setGoal(existing.goal);
+    setLanguages(existing.languages ?? ["Français"]);
   }, []);
 
   function handleSubmit(event: React.FormEvent) {
@@ -57,12 +60,24 @@ export function ProfileForm() {
       courses: courses.map((name) => ({ id: generateId("course"), name })),
       skills,
       goal,
+      languages,
     };
 
     saveProfile(profile);
 
     const next = searchParams.get("next");
     router.push(next && next.startsWith("/") ? next : "/recherche");
+  }
+
+  function toggleLanguage(lang: string, checked: boolean) {
+    if (checked) {
+      setLanguages((prev) => (prev.includes(lang) ? prev : [...prev, lang]));
+    } else {
+      // Toujours garder au moins une langue : sans ça, aucune formation ne
+      // pourrait jamais obtenir un score de prérequis correct (voir le
+      // prérequis implicite de langue dans lib/matching/engine.ts).
+      setLanguages((prev) => (prev.length > 1 ? prev.filter((l) => l !== lang) : prev));
+    }
   }
 
   return (
@@ -126,6 +141,28 @@ export function ProfileForm() {
               ))}
             </Select>
           </div>
+
+          <fieldset className="sm:col-span-2">
+            <legend className="mb-1.5 block text-sm font-medium text-slate-700">
+              Langues dans lesquelles vous êtes à l&apos;aise pour suivre des cours
+            </legend>
+            <p className="mb-2.5 text-xs text-slate-500">
+              Certaines formations sont enseignées entièrement en anglais — utilisé pour évaluer la compatibilité.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              {TEACHING_LANGUAGES.map((lang) => (
+                <label key={lang} className="inline-flex items-center gap-2 text-sm text-slate-700">
+                  <input
+                    type="checkbox"
+                    checked={languages.includes(lang)}
+                    onChange={(e) => toggleLanguage(lang, e.target.checked)}
+                    className="size-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20"
+                  />
+                  {lang}
+                </label>
+              ))}
+            </div>
+          </fieldset>
         </div>
       </Card>
 
