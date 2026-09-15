@@ -11,6 +11,7 @@ import { FORMATIONS } from "@/data/formations";
 import { ACADEMIC_LEVEL_ORDER, type StudentProfile } from "@/types";
 import { loadProfile } from "@/lib/storage";
 import { computeCompatibility } from "@/lib/matching/engine";
+import { compareFormationsByGoalThenScore } from "@/lib/matching/ranking";
 import { normalize } from "@/lib/utils";
 
 // Dérivés du catalogue réel (pas des référentiels complets de data/subjects.ts) :
@@ -49,13 +50,10 @@ export default function RecherchePage() {
       const matchesLevel = level === "Tous les niveaux" || formation.level === level;
       const matchesDomain = domain === "Tous les domaines" || formation.field === domain;
       return matchesQuery && matchesLevel && matchesDomain;
-    }).sort((a, b) => {
-      // Formations les plus compatibles en premier lorsqu'un profil existe.
-      const scoreA = scores.get(a.id) ?? -1;
-      const scoreB = scores.get(b.id) ?? -1;
-      return scoreB - scoreA;
-    });
-  }, [query, level, domain, scores]);
+    }).sort((a, b) =>
+      compareFormationsByGoalThenScore(a, b, profile, (f) => scores.get(f.id) ?? -1),
+    );
+  }, [query, level, domain, scores, profile]);
 
   return (
     <AppShell
