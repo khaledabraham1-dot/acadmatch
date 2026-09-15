@@ -78,8 +78,14 @@ export default function RecherchePage() {
         </div>
       )}
 
-      <div className="mb-6 grid gap-3 sm:grid-cols-[1fr_auto_auto]">
-        <div className="relative">
+      {/*
+        flex-wrap plutôt qu'une grille à 3 colonnes fixes : entre sm et lg, la
+        somme des largeurs des deux <Select> dépassait la largeur disponible
+        (débordement horizontal constaté à ~900px). Le wrap laisse les filtres
+        niveau/domaine redescendre sur leur propre ligne au lieu de déborder.
+      */}
+      <div className="mb-6 flex flex-wrap gap-3">
+        <div className="relative w-full sm:min-w-60 sm:flex-1">
           <SearchIcon className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
           <Input
             value={query}
@@ -88,7 +94,7 @@ export default function RecherchePage() {
             className="pl-10"
           />
         </div>
-        <Select value={level} onChange={(e) => setLevel(e.target.value)} className="sm:w-48">
+        <Select value={level} onChange={(e) => setLevel(e.target.value)} className="w-full sm:w-48">
           <option>Tous les niveaux</option>
           {AVAILABLE_LEVELS.map((l) => (
             <option key={l} value={l}>
@@ -96,7 +102,7 @@ export default function RecherchePage() {
             </option>
           ))}
         </Select>
-        <Select value={domain} onChange={(e) => setDomain(e.target.value)} className="sm:w-56">
+        <Select value={domain} onChange={(e) => setDomain(e.target.value)} className="w-full sm:w-56">
           <option>Tous les domaines</option>
           {AVAILABLE_DOMAINS.map((d) => (
             <option key={d} value={d}>

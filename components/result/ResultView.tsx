@@ -75,7 +75,13 @@ export function ResultView() {
 
       <Card>
         <h2 className="mb-6 text-base font-semibold text-slate-900">Résultats de compatibilité</h2>
-        <div className="grid gap-8 sm:grid-cols-[auto_1fr]">
+        {/*
+          minmax(0,1fr), pas juste 1fr : sans le minmax, la colonne des
+          barres de critère ne pouvait pas rétrécir sous la largeur
+          intrinsèque de son contenu et débordait horizontalement autour de
+          768-900px (constaté en testant la responsivité).
+        */}
+        <div className="grid gap-8 sm:grid-cols-[auto_minmax(0,1fr)]">
           <div className="flex justify-center sm:border-r sm:border-slate-100 sm:pr-8">
             <ScoreCircle score={result.overallScore} />
           </div>

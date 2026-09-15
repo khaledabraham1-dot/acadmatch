@@ -17,7 +17,7 @@ export function ExampleResultPreview() {
       </div>
 
       <Card className="mx-auto max-w-4xl">
-        <div className="grid gap-8 sm:grid-cols-[auto_1fr]">
+        <div className="grid gap-8 sm:grid-cols-[auto_minmax(0,1fr)]">
           <div className="flex flex-col items-center justify-center sm:border-r sm:border-slate-100 sm:pr-8">
             <ScoreCircle score={82} size={140} />
             <p className="mt-1 text-xs text-slate-400">Compatibilité académique</p>

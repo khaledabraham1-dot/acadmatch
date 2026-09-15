@@ -11,8 +11,14 @@ interface ComparisonSummaryProps {
 export function ComparisonSummary({ profile, formation }: ComparisonSummaryProps) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
+      {/*
+        min-w-0 sur le bloc de texte : par défaut, un enfant flex refuse de
+        rétrécir sous la largeur intrinsèque (non wrappée) de son contenu —
+        un nom de formation ou d'établissement long forçait la carte (et la
+        page) à déborder horizontalement plutôt que de passer à la ligne.
+      */}
       <Card className="flex items-start justify-between gap-3">
-        <div>
+        <div className="min-w-0">
           <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">
             Votre parcours
           </p>
@@ -27,7 +33,7 @@ export function ComparisonSummary({ profile, formation }: ComparisonSummaryProps
       </Card>
 
       <Card className="flex items-start justify-between gap-3">
-        <div>
+        <div className="min-w-0">
           <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">
             Formation ciblée
           </p>
