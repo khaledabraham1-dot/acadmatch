@@ -8,11 +8,16 @@ import { DemoDataBadge } from "@/components/ui/DemoDataBadge";
 import { Input, Select } from "@/components/ui/Field";
 import { LinkButton } from "@/components/ui/Button";
 import { FORMATIONS } from "@/data/formations";
-import { DOMAINS } from "@/data/subjects";
 import { ACADEMIC_LEVEL_ORDER, type StudentProfile } from "@/types";
 import { loadProfile } from "@/lib/storage";
 import { computeCompatibility } from "@/lib/matching/engine";
 import { normalize } from "@/lib/utils";
+
+// Dérivés du catalogue réel (pas des référentiels complets de data/subjects.ts) :
+// proposer un domaine ou un niveau qui ne correspond à aucune formation mènerait
+// systématiquement à "Aucune formation ne correspond à votre recherche".
+const AVAILABLE_DOMAINS = [...new Set(FORMATIONS.map((f) => f.field))].sort();
+const AVAILABLE_LEVELS = ACADEMIC_LEVEL_ORDER.filter((l) => FORMATIONS.some((f) => f.level === l));
 
 export default function RecherchePage() {
   const [profile, setProfile] = useState<StudentProfile | null>(null);
@@ -57,9 +62,11 @@ export default function RecherchePage() {
       title="Rechercher une formation"
       description="Trouvez la formation française qui correspond à votre parcours."
     >
-      <div className="mb-6">
-        <DemoDataBadge />
-      </div>
+      {FORMATIONS.some((f) => f.demo) && (
+        <div className="mb-6">
+          <DemoDataBadge />
+        </div>
+      )}
 
       {!profile && (
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-blue-100 bg-blue-50 px-5 py-4">
@@ -85,7 +92,7 @@ export default function RecherchePage() {
         </div>
         <Select value={level} onChange={(e) => setLevel(e.target.value)} className="sm:w-48">
           <option>Tous les niveaux</option>
-          {ACADEMIC_LEVEL_ORDER.map((l) => (
+          {AVAILABLE_LEVELS.map((l) => (
             <option key={l} value={l}>
               {l}
             </option>
@@ -93,7 +100,7 @@ export default function RecherchePage() {
         </Select>
         <Select value={domain} onChange={(e) => setDomain(e.target.value)} className="sm:w-56">
           <option>Tous les domaines</option>
-          {DOMAINS.map((d) => (
+          {AVAILABLE_DOMAINS.map((d) => (
             <option key={d} value={d}>
               {d}
             </option>

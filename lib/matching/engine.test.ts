@@ -53,7 +53,10 @@ function makeFormation(overrides: Partial<Formation> = {}): Formation {
     source: "https://demo.acadmatch.fr/formations/test",
     demo: true,
     ...overrides,
-  };
+    // `Partial<Formation>` sur une union discriminée élargit `demo` en
+    // `boolean` : ce cast ne concerne que ce helper de test, pas les
+    // données réelles (voir types/index.ts — DemoFormation/VerifiedFormation).
+  } as Formation;
 }
 
 function makeProfile(overrides: Partial<StudentProfile> = {}): StudentProfile {

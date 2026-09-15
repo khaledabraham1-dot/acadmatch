@@ -6,19 +6,28 @@ import { normalize } from "@/lib/utils";
 import type { StudentProfile } from "@/types";
 
 /** Vérifications de cohérence sur les données de démonstration (pas de logique métier ici). */
-describe("FORMATIONS (données de démonstration)", () => {
-  it("contient au moins 15 formations couvrant plusieurs domaines", () => {
-    expect(FORMATIONS.length).toBeGreaterThanOrEqual(15);
+describe("FORMATIONS (catalogue réel, Étape 3 — périmètre Data Science/IA/Informatique)", () => {
+  it("contient au moins 6 formations couvrant au moins 2 domaines", () => {
+    expect(FORMATIONS.length).toBeGreaterThanOrEqual(6);
     const fields = new Set(FORMATIONS.map((f) => f.field));
-    expect(fields.size).toBeGreaterThanOrEqual(5);
+    expect(fields.size).toBeGreaterThanOrEqual(2);
   });
 
-  it("marque explicitement chaque formation comme donnée de démonstration", () => {
+  it("chaque formation réelle est vérifiée : pas de donnée démo, source officielle datée", () => {
     for (const formation of FORMATIONS) {
-      expect(formation.demo).toBe(true);
       expect(formation.id).toBeTruthy();
       expect(formation.coreCourses.length).toBeGreaterThan(0);
       expect(formation.skills.length).toBeGreaterThan(0);
+      if (formation.demo) {
+        // Une éventuelle formation de démonstration ajoutée plus tard ne doit
+        // jamais avoir l'apparence d'une donnée vérifiée (voir DemoDataBadge).
+        expect(formation.verifiedAt).toBeUndefined();
+        expect(formation.verificationStatus).toBeUndefined();
+        continue;
+      }
+      expect(formation.source).toMatch(/^https:\/\//);
+      expect(formation.verifiedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(formation.verificationStatus).toBe("vérifiée");
     }
   });
 

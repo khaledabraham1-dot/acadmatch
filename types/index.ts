@@ -97,8 +97,10 @@ export interface AcademicItem {
   category: "matiere" | "competence";
 }
 
-/** Une formation FICTIVE de démonstration (voir data/formations.ts). */
-export interface Formation {
+/** Statut de vérification d'une fiche formation par rapport à sa source officielle. */
+export type VerificationStatus = "vérifiée" | "à revérifier";
+
+interface FormationBase {
   id: string;
   name: string;
   institution: string;
@@ -117,14 +119,33 @@ export interface Formation {
   requiredLevel: AcademicLevel;
   /** Langue principale d'enseignement, ex: "Français", "Anglais". */
   language: string;
-  /**
-   * URL source — TOUJOURS fictive pour ce prototype.
-   * Ne jamais afficher comme une source officielle dans l'UI.
-   */
-  source: string;
-  /** Toujours `true` : marque explicitement une donnée de démonstration (voir DemoDataBadge). */
-  demo: true;
 }
+
+/** Formation fictive de démonstration : URL non fonctionnelle, jamais affichée comme un lien cliquable. */
+interface DemoFormation extends FormationBase {
+  demo: true;
+  source: string;
+  verifiedAt?: undefined;
+  verificationStatus?: undefined;
+}
+
+/** Formation réelle : source officielle, datée et vérifiée — obligatoires par construction du type. */
+interface VerifiedFormation extends FormationBase {
+  demo: false;
+  /** URL officielle de l'établissement pour cette formation. */
+  source: string;
+  /** Date (YYYY-MM-DD) à laquelle cette fiche a été vérifiée par rapport à `source`. */
+  verifiedAt: string;
+  verificationStatus: VerificationStatus;
+}
+
+/**
+ * Une formation, réelle et vérifiée ou fictive de démonstration — `demo`
+ * discrimine les deux et impose (au niveau des types) que toute formation
+ * réelle porte sa source, sa date de vérification et son statut
+ * (voir data/formations.ts, et DemoDataBadge côté UI).
+ */
+export type Formation = DemoFormation | VerifiedFormation;
 
 /** Décomposition du score de compatibilité par critère. */
 export interface CompatibilityBreakdown {

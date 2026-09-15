@@ -48,7 +48,7 @@ export function ResultView() {
     return (
       <EmptyState
         title="Formation introuvable"
-        description="Cette formation de démonstration n'existe pas ou plus."
+        description="Cette formation n'existe pas ou plus."
         ctaHref="/recherche"
         ctaLabel="Retour à la recherche"
       />
@@ -70,7 +70,7 @@ export function ResultView() {
 
   return (
     <div className="space-y-6">
-      <DemoDataBadge />
+      {formation.demo && <DemoDataBadge />}
       <ComparisonSummary profile={profile} formation={formation} />
 
       <Card>
@@ -100,7 +100,7 @@ export function ResultView() {
 
       <p className="rounded-xl bg-slate-50 p-4 text-xs leading-relaxed text-slate-500">
         Ce score ne garantit pas l&apos;admission : il mesure une adéquation académique entre votre
-        parcours et le contenu affiché de cette formation de démonstration.
+        parcours et le contenu affiché de cette formation{formation.demo ? " de démonstration" : ""}.
       </p>
     </div>
   );

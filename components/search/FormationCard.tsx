@@ -97,13 +97,25 @@ export function FormationCard({ formation, score }: FormationCardProps) {
       </div>
 
       <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50 px-5 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        {/* Texte, pas un lien : cette URL est fictive et ne mène nulle part. */}
-        <span
-          className="block truncate text-xs text-slate-400"
-          title={`URL fictive de démonstration : ${formation.source}`}
-        >
-          Source (démo) : {formation.source.replace("https://", "")}
-        </span>
+        {formation.demo ? (
+          // Texte, pas un lien : cette URL est fictive et ne mène nulle part.
+          <span
+            className="block truncate text-xs text-slate-400"
+            title={`URL fictive de démonstration : ${formation.source}`}
+          >
+            Source (démo) : {formation.source.replace("https://", "")}
+          </span>
+        ) : (
+          <a
+            href={formation.source}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block truncate text-xs font-medium text-blue-600 hover:text-blue-700"
+            title={formation.source}
+          >
+            Source officielle{formation.verifiedAt ? ` · vérifiée le ${formation.verifiedAt}` : ""} ↗
+          </a>
+        )}
         <LinkButton
           href={`/resultat?formationId=${formation.id}`}
           size="sm"

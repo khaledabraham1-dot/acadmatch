@@ -1,14 +1,24 @@
 import type { AcademicItem, Formation, Importance } from "@/types";
 
 /**
- * Formations FICTIVES pour le prototype AcadMatch.
+ * Catalogue de formations d'AcadMatch.
  *
- * ⚠️ Ces établissements, programmes, prérequis et URLs sont inventés à des
- * fins de démonstration. Ils ne représentent aucune institution réelle, ne
- * doivent jamais être présentés comme des informations officielles, et ne
- * doivent jamais être présentés comme une source officielle dans l'UI (voir
- * le composant DemoDataBadge, affiché partout où ces données apparaissent,
- * et le champ `demo: true` de chaque formation).
+ * Étape 3 (2026-09-15) : les 9 formations ci-dessous sont RÉELLES et
+ * vérifiées manuellement auprès de la source officielle de chaque
+ * établissement (`source`, `verifiedAt`, `verificationStatus`). Périmètre
+ * volontairement restreint à Data Science / IA / Informatique, du niveau
+ * Licence au Master, conformément au public cible d'AcadMatch (tout étudiant
+ * de niveau L1 minimum souhaitant continuer en France). Aucune formation,
+ * aucun prérequis et aucune URL n'est inventé — le contenu pédagogique
+ * (matières, compétences) est une synthèse fidèle de ce que chaque
+ * établissement publie, pas une citation exacte de sa maquette complète.
+ * Ce catalogue est destiné à être élargi (autres domaines, autres villes)
+ * avant le déploiement — voir la mémoire projet "acadmatch-roadmap".
+ *
+ * Pour toute formation FICTIVE de démonstration ajoutée plus tard (tests,
+ * prototypage), utiliser `demo: true` et une URL sous
+ * `https://demo.acadmatch.fr/...` — jamais présentée comme réelle dans l'UI
+ * (voir le composant DemoDataBadge).
  */
 
 let itemCounter = 0;
@@ -29,479 +39,297 @@ const course = (name: string, importance: Importance, aliases?: string[]) =>
 const skill = (name: string, importance: Importance, aliases?: string[]) =>
   item(name, importance, "competence", aliases);
 
+const VERIFIED_AT = "2026-09-15";
+
 export const FORMATIONS: Formation[] = [
   {
-    id: "f-data-science-cambrelle",
-    name: "Master 1 Data Science & Intelligence Artificielle",
-    institution: "Institut Polytechnique de Cambrelle",
-    level: "Master 1",
+    id: "f-m2ds-ip-paris",
+    name: "Master 2 Data Science (M2DS)",
+    institution: "Institut Polytechnique de Paris (École Polytechnique)",
+    level: "Master 2",
     field: "Data Science & IA",
-    city: "Grenoble",
+    city: "Palaiseau",
     description:
-      "Formation orientée science des données et IA, avec un fort volume horaire en mathématiques appliquées et en programmation.",
-    requiredLevel: "Licence 3",
-    language: "Français",
+      "Deuxième année de master adossée à l'École Polytechnique, centrée sur les fondements mathématiques et algorithmiques de la data science : apprentissage statistique, deep learning et traitement de grands volumes de données. Enseignement en anglais.",
+    requiredLevel: "Master 1",
+    language: "Anglais",
     prerequisites: [
-      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence validée (L3) ou équivalent" },
-      { id: "r2", type: "domaine", value: "Informatique", label: "Licence en Informatique, Mathématiques ou Data Science" },
-      { id: "r3", type: "matiere", value: "Algorithmique", label: "Bases solides en algorithmique" },
-      { id: "r4", type: "competence", value: "Python", label: "Maîtrise de Python" },
+      { id: "r1", type: "niveau", value: "Master 1", label: "Master 1 validé en mathématiques appliquées, statistiques ou équivalent" },
+      { id: "r2", type: "domaine", value: "Mathématiques", label: "Solide formation en mathématiques appliquées ou statistiques", aliases: ["Data Science & IA"] },
+      { id: "r3", type: "competence", value: "Python", label: "Programmation Python exigée" },
     ],
     coreCourses: [
       course("Machine Learning", "essentielle"),
       course("Statistiques", "essentielle"),
-      course("Bases de données", "importante"),
-      course("Algorithmique avancée", "importante"),
+      course("Deep Learning", "importante"),
+      course("Optimisation", "importante"),
+      course("Mathématiques appliquées", "importante"),
       course("Big Data", "utile"),
-      course("Mathématiques appliquées", "importante"),
-    ],
-    skills: [
-      skill("Python", "essentielle"),
-      skill("SQL", "importante"),
-      skill("Statistiques", "essentielle"),
-      skill("Machine Learning", "importante"),
-      skill("Anglais courant", "utile"),
-    ],
-    source: "https://demo.acadmatch.fr/formations/master-data-science-cambrelle",
-    demo: true,
-  },
-  {
-    id: "f-ia-valcourt",
-    name: "Master 1 Intelligence Artificielle",
-    institution: "Université de Valcourt",
-    level: "Master 1",
-    field: "Data Science & IA",
-    city: "Lyon",
-    description:
-      "Master centré sur l'apprentissage automatique, les réseaux de neurones et le traitement du langage naturel.",
-    requiredLevel: "Licence 3",
-    language: "Français",
-    prerequisites: [
-      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence validée (L3) ou équivalent" },
-      { id: "r2", type: "domaine", value: "Informatique", label: "Licence en Informatique ou Mathématiques" },
-      { id: "r3", type: "competence", value: "Python", label: "Programmation Python exigée" },
-    ],
-    coreCourses: [
-      course("Apprentissage automatique", "essentielle"),
-      course("Réseaux de neurones", "essentielle"),
-      course("Traitement du langage naturel", "importante"),
-      course("Mathématiques appliquées", "importante"),
-      course("Programmation Python", "essentielle"),
     ],
     skills: [
       skill("Python", "essentielle"),
       skill("Machine Learning", "essentielle"),
-      skill("Algèbre linéaire", "importante"),
       skill("Statistiques", "importante"),
+      skill("Anglais courant", "importante"),
     ],
-    source: "https://demo.acadmatch.fr/formations/master-ia-valcourt",
-    demo: true,
+    source: "https://www.ip-paris.fr/en/education/masters/applied-mathematics-and-statistics-program/master-year-2-data-science",
+    verifiedAt: VERIFIED_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
   },
   {
-    id: "f-licence-info-toulouse",
-    name: "Licence 3 Informatique",
-    institution: "École Supérieure du Numérique de Toulouse",
-    level: "Licence 3",
-    field: "Informatique",
-    city: "Toulouse",
-    description:
-      "Dernière année de licence généraliste en informatique : développement logiciel, bases de données et réseaux.",
-    requiredLevel: "Licence 2",
-    language: "Français",
-    prerequisites: [
-      { id: "r1", type: "niveau", value: "Licence 2", label: "Licence 2 validée ou équivalent" },
-      { id: "r2", type: "domaine", value: "Informatique", label: "Parcours en Informatique" },
-    ],
-    coreCourses: [
-      course("Programmation orientée objet", "essentielle"),
-      course("Structures de données", "essentielle"),
-      course("Bases de données", "importante"),
-      course("Réseaux informatiques", "importante"),
-      course("Systèmes d'exploitation", "utile"),
-    ],
-    skills: [
-      skill("Java", "essentielle"),
-      skill("SQL", "importante"),
-      skill("Algorithmique", "essentielle"),
-      skill("Travail en équipe", "utile"),
-    ],
-    source: "https://demo.acadmatch.fr/formations/licence-info-toulouse",
-    demo: true,
-  },
-  {
-    id: "f-eco-internationale-nantes",
-    name: "Master 1 Économie Internationale",
-    institution: "École de Commerce Atlantique",
-    level: "Master 1",
-    field: "Économie & Gestion",
-    city: "Nantes",
-    description:
-      "Formation axée sur le commerce international, la macroéconomie et la finance d'entreprise.",
-    requiredLevel: "Licence 3",
-    language: "Français",
-    prerequisites: [
-      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence validée (L3) ou équivalent" },
-      { id: "r2", type: "domaine", value: "Économie & Gestion", label: "Licence en Économie ou Gestion" },
-      { id: "r3", type: "competence", value: "Anglais courant", label: "Anglais courant exigé" },
-    ],
-    coreCourses: [
-      course("Macroéconomie", "essentielle"),
-      course("Microéconomie", "essentielle"),
-      course("Commerce international", "importante"),
-      course("Statistiques économiques", "importante"),
-      course("Finance d'entreprise", "utile"),
-    ],
-    skills: [
-      skill("Anglais courant", "essentielle"),
-      skill("Excel", "importante"),
-      skill("Analyse de données", "importante"),
-      skill("Économétrie", "utile"),
-    ],
-    source: "https://demo.acadmatch.fr/formations/master-eco-internationale-nantes",
-    demo: true,
-  },
-  {
-    id: "f-droit-affaires-clairval",
-    name: "Master 1 Droit des Affaires",
-    institution: "Institut Supérieur de Droit de Clairval",
-    level: "Master 1",
-    field: "Droit",
-    city: "Bordeaux",
-    description:
-      "Spécialisation en droit des sociétés, droit des contrats et droit fiscal appliqué aux entreprises.",
-    requiredLevel: "Licence 3",
-    language: "Français",
-    prerequisites: [
-      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence validée (L3) ou équivalent" },
-      { id: "r2", type: "domaine", value: "Droit", label: "Licence en Droit" },
-    ],
-    coreCourses: [
-      course("Droit des sociétés", "essentielle"),
-      course("Droit des contrats", "essentielle"),
-      course("Droit fiscal", "importante"),
-      course("Droit international privé", "utile"),
-    ],
-    skills: [
-      skill("Rédaction juridique", "essentielle"),
-      skill("Anglais juridique", "importante"),
-      skill("Argumentation", "importante"),
-    ],
-    source: "https://demo.acadmatch.fr/formations/master-droit-affaires-clairval",
-    demo: true,
-  },
-  {
-    id: "f-droit-public-aix",
-    name: "Licence 3 Droit Public",
-    institution: "Faculté de Droit d'Aix-Verrières",
-    level: "Licence 3",
-    field: "Droit",
-    city: "Aix-en-Provence",
-    description:
-      "Dernière année de licence orientée droit public : institutions, contentieux administratif et libertés fondamentales.",
-    requiredLevel: "Licence 2",
-    language: "Français",
-    prerequisites: [
-      { id: "r1", type: "niveau", value: "Licence 2", label: "Licence 2 validée ou équivalent" },
-      { id: "r2", type: "domaine", value: "Droit", label: "Parcours en Droit" },
-    ],
-    coreCourses: [
-      course("Droit constitutionnel", "essentielle"),
-      course("Droit administratif", "essentielle"),
-      course("Libertés fondamentales", "importante"),
-      course("Finances publiques", "utile"),
-    ],
-    skills: [
-      skill("Rédaction juridique", "essentielle"),
-      skill("Argumentation", "essentielle"),
-      skill("Méthodologie de recherche", "utile"),
-    ],
-    source: "https://demo.acadmatch.fr/formations/licence-droit-public-aix",
-    demo: true,
-  },
-  {
-    id: "f-genie-logiciel-fontenay",
-    name: "Master 1 Génie Logiciel",
-    institution: "École d'Ingénieurs de Fontenay",
-    level: "Master 1",
-    field: "Informatique",
-    city: "Lille",
-    description:
-      "Formation orientée conception logicielle à grande échelle, DevOps et qualité logicielle.",
-    requiredLevel: "Licence 3",
-    language: "Français",
-    prerequisites: [
-      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence validée (L3) ou équivalent" },
-      { id: "r2", type: "domaine", value: "Informatique", label: "Licence en Informatique ou diplôme d'ingénieur" },
-      { id: "r3", type: "matiere", value: "Programmation orientée objet", label: "Bases en programmation orientée objet" },
-    ],
-    coreCourses: [
-      course("Architecture logicielle", "essentielle"),
-      course("Programmation orientée objet", "essentielle"),
-      course("DevOps", "importante"),
-      course("Tests logiciels", "importante"),
-      course("Bases de données", "utile"),
-    ],
-    skills: [
-      skill("Java", "essentielle"),
-      skill("Git", "importante"),
-      skill("Programmation orientée objet", "essentielle"),
-      skill("Anglais courant", "utile"),
-    ],
-    source: "https://demo.acadmatch.fr/formations/master-genie-logiciel-fontenay",
-    demo: true,
-  },
-  {
-    id: "f-data-sante-montoire",
-    name: "Master 1 Data Science pour la Santé",
-    institution: "Université des Sciences de Montoire",
+    id: "f-msc-ai-centralesupelec",
+    name: "MSc Artificial Intelligence Applied to Society",
+    institution: "CentraleSupélec",
     level: "Master 1",
     field: "Data Science & IA",
-    city: "Marseille",
+    city: "Gif-sur-Yvette",
     description:
-      "Applique les méthodes de data science aux données médicales : biostatistiques, ML et éthique des données.",
-    requiredLevel: "Licence 3",
-    language: "Français",
-    prerequisites: [
-      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence validée (L3) ou équivalent" },
-      { id: "r2", type: "domaine", value: "Biologie & Santé", label: "Licence en Biologie, Santé, Mathématiques ou Informatique" },
-    ],
-    coreCourses: [
-      course("Biostatistiques", "essentielle"),
-      course("Machine Learning", "essentielle"),
-      course("Bases de données médicales", "importante"),
-      course("Programmation R", "importante"),
-      course("Statistiques", "utile"),
-    ],
-    skills: [
-      skill("R", "essentielle"),
-      skill("Statistiques", "importante"),
-      skill("Python", "importante"),
-      skill("Rigueur scientifique", "utile"),
-    ],
-    source: "https://demo.acadmatch.fr/formations/master-data-sante-montoire",
-    demo: true,
-  },
-  {
-    id: "f-sciences-po-vergnac",
-    name: "Master 1 Sciences Politiques",
-    institution: "Institut de Sciences Politiques de Vergnac",
-    level: "Master 1",
-    field: "Sciences politiques",
-    city: "Paris",
-    description:
-      "Formation généraliste en relations internationales, institutions politiques et méthodologie de recherche.",
-    requiredLevel: "Licence 3",
-    language: "Français",
-    prerequisites: [
-      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence validée (L3) ou équivalent" },
-      { id: "r2", type: "domaine", value: "Sciences politiques", label: "Licence en Sciences politiques, Droit ou Histoire" },
-    ],
-    coreCourses: [
-      course("Relations internationales", "essentielle"),
-      course("Institutions politiques", "essentielle"),
-      course("Méthodologie de recherche", "importante"),
-      course("Histoire des idées politiques", "utile"),
-    ],
-    skills: [
-      skill("Argumentation", "essentielle"),
-      skill("Anglais courant", "importante"),
-      skill("Rédaction académique", "importante"),
-    ],
-    source: "https://demo.acadmatch.fr/formations/master-sciences-po-vergnac",
-    demo: true,
-  },
-  {
-    id: "f-maths-appliquees-aubine",
-    name: "Licence 3 Mathématiques Appliquées",
-    institution: "Université Sainte-Aubine",
-    level: "Licence 3",
-    field: "Mathématiques",
-    city: "Strasbourg",
-    description:
-      "Dernière année de licence en mathématiques appliquées, avec une ouverture vers la programmation scientifique.",
-    requiredLevel: "Licence 2",
-    language: "Français",
-    prerequisites: [
-      { id: "r1", type: "niveau", value: "Licence 2", label: "Licence 2 validée ou équivalent" },
-      { id: "r2", type: "domaine", value: "Mathématiques", label: "Parcours en Mathématiques" },
-    ],
-    coreCourses: [
-      course("Analyse", "essentielle"),
-      course("Algèbre linéaire", "essentielle"),
-      course("Probabilités", "importante"),
-      course("Statistiques", "importante"),
-      course("Programmation scientifique", "utile"),
-    ],
-    skills: [
-      skill("Python", "importante"),
-      skill("Rigueur mathématique", "essentielle"),
-      skill("Algèbre", "importante"),
-    ],
-    source: "https://demo.acadmatch.fr/formations/licence-maths-appliquees-aubine",
-    demo: true,
-  },
-  {
-    id: "f-maths-fondamentales-orvault",
-    name: "Master 1 Mathématiques Fondamentales",
-    institution: "Université d'Orvault",
-    level: "Master 1",
-    field: "Mathématiques",
-    city: "Rennes",
-    description:
-      "Approfondissement théorique en analyse, algèbre et probabilités, en vue d'une poursuite en recherche ou agrégation.",
-    requiredLevel: "Licence 3",
-    language: "Français",
-    prerequisites: [
-      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence validée (L3) ou équivalent" },
-      { id: "r2", type: "domaine", value: "Mathématiques", label: "Licence en Mathématiques" },
-      { id: "r3", type: "matiere", value: "Analyse", label: "Bases solides en analyse et algèbre" },
-    ],
-    coreCourses: [
-      // Pas d'alias "Analyse" ici : ce terme seul est trop générique et
-      // matcherait aussi "Analyse de données" ou "Analyse financière", qui
-      // sont des matières sans rapport (voir lib/matching/engine.ts).
-      course("Analyse fonctionnelle", "essentielle"),
-      course("Algèbre linéaire", "essentielle"),
-      course("Probabilités", "importante"),
-      course("Topologie", "utile"),
-    ],
-    skills: [
-      skill("Rigueur mathématique", "essentielle"),
-      skill("Rédaction académique", "utile"),
-    ],
-    source: "https://demo.acadmatch.fr/formations/master-maths-fondamentales-orvault",
-    demo: true,
-  },
-  {
-    id: "f-management-numerique-nantes",
-    name: "Master 1 Management de Projets Numériques",
-    institution: "École de Commerce Atlantique",
-    level: "Master 1",
-    field: "Économie & Gestion",
-    city: "Nantes",
-    description:
-      "Formation à la croisée du management et du numérique : conduite de projet, transformation digitale, SI.",
-    requiredLevel: "Licence 3",
-    language: "Français",
-    prerequisites: [
-      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence validée (L3) ou équivalent" },
-      { id: "r2", type: "domaine", value: "Économie & Gestion", label: "Licence en Gestion, Économie ou Informatique" },
-    ],
-    coreCourses: [
-      course("Gestion de projet", "essentielle"),
-      course("Transformation digitale", "importante"),
-      course("Systèmes d'information", "importante"),
-      course("Marketing digital", "utile"),
-      course("Analyse de données", "utile"),
-    ],
-    skills: [
-      skill("Gestion de projet", "essentielle"),
-      skill("Excel", "importante"),
-      skill("Communication", "importante"),
-      skill("Analyse de données", "utile"),
-    ],
-    source: "https://demo.acadmatch.fr/formations/master-management-numerique-nantes",
-    demo: true,
-  },
-  {
-    id: "f-finance-entreprise-paris",
-    name: "Master 1 Finance d'Entreprise",
-    institution: "École Supérieure de Commerce de la Seine",
-    level: "Master 1",
-    field: "Économie & Gestion",
-    city: "Paris",
-    description:
-      "Formation en finance d'entreprise : analyse financière, évaluation d'entreprise et marchés de capitaux.",
-    requiredLevel: "Licence 3",
-    language: "Français",
-    prerequisites: [
-      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence validée (L3) ou équivalent" },
-      { id: "r2", type: "domaine", value: "Économie & Gestion", label: "Licence en Économie, Gestion ou Finance" },
-      { id: "r3", type: "competence", value: "Analyse de données", label: "Bases en analyse de données financières" },
-    ],
-    coreCourses: [
-      course("Analyse financière", "essentielle"),
-      course("Évaluation d'entreprise", "essentielle"),
-      course("Marchés de capitaux", "importante"),
-      course("Comptabilité", "importante"),
-    ],
-    skills: [
-      skill("Excel", "essentielle"),
-      skill("Analyse de données", "essentielle"),
-      skill("Anglais courant", "importante"),
-      skill("Économétrie", "utile"),
-    ],
-    source: "https://demo.acadmatch.fr/formations/master-finance-entreprise-paris",
-    demo: true,
-  },
-  {
-    id: "f-sciences-physiques-rennes",
-    name: "Licence 3 Sciences Physiques",
-    institution: "Faculté des Sciences de Rennes-Verrières",
-    level: "Licence 3",
-    field: "Sciences fondamentales",
-    city: "Rennes",
-    description:
-      "Dernière année de licence généraliste en sciences physiques, avec travaux pratiques et initiation à la recherche.",
-    requiredLevel: "Licence 2",
-    language: "Français",
-    prerequisites: [
-      { id: "r1", type: "niveau", value: "Licence 2", label: "Licence 2 validée ou équivalent" },
-      {
-        id: "r2",
-        type: "domaine",
-        value: "Sciences fondamentales",
-        label: "Parcours en Sciences (Physique, Chimie) ou Mathématiques",
-      },
-    ],
-    coreCourses: [
-      course("Physique générale", "essentielle"),
-      course("Mécanique", "essentielle"),
-      course("Chimie générale", "importante"),
-      course("Optique", "utile"),
-      course("Méthodologie expérimentale", "importante"),
-    ],
-    skills: [
-      skill("Rigueur scientifique", "essentielle"),
-      skill("Expérimentation", "importante"),
-      skill("Python", "utile"),
-    ],
-    source: "https://demo.acadmatch.fr/formations/licence-sciences-physiques-rennes",
-    demo: true,
-  },
-  {
-    id: "f-data-engineering-lyon",
-    name: "Master 1 Data Engineering",
-    institution: "Lyon Institute of Technology",
-    level: "Master 1",
-    field: "Data Science & IA",
-    city: "Lyon",
-    description:
-      "Programme enseigné en anglais, centré sur l'ingénierie des données : bases de données, statistiques appliquées et calcul distribué.",
+      "Master of Science en intelligence artificielle, enseigné entièrement en anglais, combinant IA symbolique et IA fondée sur les données, appliquées à des enjeux sociétaux (santé, mobilité, industrie, finance).",
     requiredLevel: "Licence 3",
     language: "Anglais",
     prerequisites: [
-      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence validée (L3) ou équivalent" },
-      { id: "r2", type: "domaine", value: "Informatique", label: "Licence en Informatique, Mathématiques ou Data Science" },
-      { id: "r3", type: "competence", value: "Python", label: "Programmation Python exigée" },
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence (Bac+3/4) validée en sciences, ingénierie ou équivalent" },
+      { id: "r2", type: "domaine", value: "Informatique", label: "Formation scientifique ou en ingénierie", aliases: ["Data Science & IA", "Mathématiques"] },
+      { id: "r3", type: "competence", value: "Anglais courant", label: "Anglais courant exigé (programme 100% anglophone)" },
     ],
-    // Intitulés volontairement en anglais, avec alias français explicites,
-    // pour illustrer la reconnaissance de correspondances inter-langues
-    // (voir la spécification : "Probabilités" ↔ "Probability", etc.).
     coreCourses: [
-      course("Database Systems", "essentielle", ["Base de données", "Bases de données"]),
-      course("Probability", "essentielle", ["Probabilités"]),
-      course("Statistical Methods", "essentielle", ["Statistiques"]),
-      course("Machine Learning", "importante", ["Apprentissage automatique"]),
-      course("Distributed Computing", "utile"),
+      course("Machine Learning", "essentielle"),
+      course("Deep Learning", "essentielle"),
+      course("Mathématiques appliquées", "importante"),
+      course("Traitement du langage naturel", "utile"),
     ],
     skills: [
       skill("Python", "essentielle"),
-      skill("SQL", "importante"),
+      skill("Machine Learning", "essentielle"),
       skill("Anglais courant", "essentielle"),
+      skill("Statistiques", "importante"),
     ],
-    source: "https://demo.acadmatch.fr/formations/master-data-engineering-lyon",
-    demo: true,
+    source: "https://www.centralesupelec.fr/en/Regional-programs/master-science-artificial-intelligence",
+    verifiedAt: VERIFIED_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-ms-ia-telecom-paris",
+    name: "Mastère Spécialisé Intelligence Artificielle multimodale et autonome",
+    institution: "Télécom Paris & ENSTA Paris (Institut Polytechnique de Paris)",
+    level: "Master 2",
+    field: "Data Science & IA",
+    city: "Palaiseau",
+    description:
+      "Mastère Spécialisé (titre RNCP, Bac+6) centré sur le deep learning, l'apprentissage par renforcement, l'IA symbolique et la robotique, avec une thèse professionnelle de 4 à 6 mois.",
+    requiredLevel: "Master 2",
+    language: "Français",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Master 2", label: "Diplôme d'ingénieur, Master 2 ou équivalent Bac+5" },
+      { id: "r2", type: "domaine", value: "Informatique", label: "Formation en informatique, mathématiques ou ingénierie", aliases: ["Data Science & IA"] },
+      { id: "r3", type: "matiere", value: "Machine Learning", label: "Bases en apprentissage automatique recommandées" },
+    ],
+    coreCourses: [
+      course("Deep Learning", "essentielle"),
+      course("Machine Learning", "essentielle"),
+      course("Apprentissage par renforcement", "importante"),
+      course("Robotique", "utile"),
+    ],
+    skills: [
+      skill("Python", "essentielle"),
+      skill("Machine Learning", "essentielle"),
+      skill("Anglais courant", "utile"),
+    ],
+    source: "https://www.telecom-paris.fr/fr/masteres-specialises/formation-intelligence-artificielle",
+    verifiedAt: VERIFIED_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-mosef-paris1",
+    name: "Master 2 MoSEF — Data Science",
+    institution: "Université Paris 1 Panthéon-Sorbonne",
+    level: "Master 2",
+    field: "Data Science & IA",
+    city: "Paris",
+    description:
+      "Master en modélisation statistique, économique et financière (MoSEF), formant des data scientists maîtrisant économétrie, machine learning et programmation appliqués à l'entreprise.",
+    requiredLevel: "Master 1",
+    language: "Français",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Master 1", label: "Master 1 validé en économie, statistiques, mathématiques appliquées ou équivalent" },
+      { id: "r2", type: "domaine", value: "Économie & Gestion", label: "Licence/Master en Économie, Statistiques ou Mathématiques appliquées", aliases: ["Mathématiques", "Data Science & IA"] },
+      { id: "r3", type: "competence", value: "Analyse de données", label: "Bases en économétrie et analyse de données" },
+    ],
+    coreCourses: [
+      course("Économétrie", "essentielle"),
+      course("Machine Learning", "essentielle"),
+      course("Statistiques", "importante"),
+      course("Programmation Python", "importante"),
+    ],
+    skills: [
+      skill("Python", "essentielle"),
+      skill("Économétrie", "essentielle"),
+      skill("Statistiques", "importante"),
+      skill("Excel", "utile"),
+    ],
+    source: "https://mosefparis1.com/",
+    verifiedAt: VERIFIED_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-scdi-sorbonne",
+    name: "Master Mathématiques — Filière Sciences des Données pour l'Ingénieur.e (SCDI)",
+    institution: "Sorbonne Université — Institut de Statistique (ISUP)",
+    level: "Master 1",
+    field: "Data Science & IA",
+    city: "Paris",
+    description:
+      "Filière du Master de Mathématiques de Sorbonne Université menant à un double diplôme (Master Mathématiques + diplôme de statisticien ISUP), formant aux métiers de statisticien et data scientist.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence 3 validée en mathématiques ou équivalent" },
+      { id: "r2", type: "domaine", value: "Mathématiques", label: "Licence en Mathématiques, avec de solides bases en probabilités et statistiques", aliases: ["Data Science & IA"] },
+    ],
+    coreCourses: [
+      course("Statistiques", "essentielle"),
+      course("Probabilités", "essentielle"),
+      course("Machine Learning", "importante"),
+      course("Programmation scientifique", "importante"),
+      course("Algèbre linéaire", "utile"),
+    ],
+    skills: [
+      skill("Statistiques", "essentielle"),
+      skill("Python", "importante"),
+      skill("Rigueur mathématique", "importante"),
+    ],
+    source: "https://isup.sorbonne-universite.fr/formations/filiere-data-science-ds",
+    verifiedAt: VERIFIED_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-licence-info-sorbonne",
+    name: "Licence Informatique (Portail Mathématiques-Informatique)",
+    institution: "Sorbonne Université",
+    level: "Licence 1",
+    field: "Informatique",
+    city: "Paris",
+    description:
+      "Première année commune (portail Mathématiques-Informatique) menant aux licences d'Informatique ou de Mathématiques de Sorbonne Université ; admission via Parcoursup (ou procédure DAP hors Union européenne).",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Baccalauréat ou équivalent" },
+      { id: "r2", type: "domaine", value: "Informatique", label: "Profil scientifique, spécialité Mathématiques recommandée", aliases: ["Mathématiques"] },
+    ],
+    coreCourses: [
+      course("Algorithmique", "essentielle"),
+      course("Programmation orientée objet", "essentielle"),
+      course("Mathématiques appliquées", "importante"),
+      course("Structures de données", "importante"),
+    ],
+    skills: [
+      skill("Algorithmique", "essentielle"),
+      skill("Rigueur mathématique", "importante"),
+      skill("Python", "utile"),
+    ],
+    source: "https://sciences.sorbonne-universite.fr/parcoursup",
+    verifiedAt: VERIFIED_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-licence-info-paris-saclay",
+    name: "Licence Informatique",
+    institution: "Université Paris-Saclay",
+    level: "Licence 1",
+    field: "Informatique",
+    city: "Orsay",
+    description:
+      "Licence de 3 ans (L1/L2/L3) en informatique à l'UFR Sciences de l'Université Paris-Saclay, avec un parcours possible en alternance (MIAGE) en troisième année.",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Baccalauréat ou équivalent" },
+      { id: "r2", type: "domaine", value: "Informatique", label: "Profil scientifique, spécialité Mathématiques ou NSI recommandée", aliases: ["Mathématiques"] },
+    ],
+    coreCourses: [
+      course("Algorithmique", "essentielle"),
+      course("Structures de données", "essentielle"),
+      course("Bases de données", "importante"),
+      course("Réseaux informatiques", "utile"),
+    ],
+    skills: [
+      skill("Algorithmique", "essentielle"),
+      skill("Python", "importante"),
+      skill("Travail en équipe", "utile"),
+    ],
+    source: "https://www.universite-paris-saclay.fr/en/education/licence-undergraduate-programme/informatique",
+    verifiedAt: VERIFIED_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-but-info-nantes",
+    name: "BUT Informatique",
+    institution: "IUT de Nantes — Université de Nantes",
+    level: "Licence 1",
+    field: "Informatique",
+    city: "Nantes",
+    description:
+      "Bachelor Universitaire de Technologie (Bac+3, 180 ECTS) en informatique : conception, développement et déploiement de solutions logicielles. Entrée en BUT1 via Parcoursup, ou en BUT2/BUT3 sur dossier et entretien avec un BTS SIO ou un Bac+2 en informatique.",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Baccalauréat pour une entrée en BUT1 ; Bac+2 informatique pour une entrée directe en BUT2/BUT3" },
+      { id: "r2", type: "domaine", value: "Informatique", label: "Profil scientifique ou technologique" },
+    ],
+    coreCourses: [
+      course("Programmation orientée objet", "essentielle"),
+      course("Bases de données", "essentielle"),
+      course("Algorithmique", "importante"),
+      course("Réseaux informatiques", "importante"),
+    ],
+    skills: [
+      skill("Algorithmique", "essentielle"),
+      skill("SQL", "importante"),
+      skill("Travail en équipe", "utile"),
+    ],
+    source: "https://iutnantes.univ-nantes.fr/fr/formations/but-info",
+    verifiedAt: VERIFIED_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-insa-lyon-info-parallele",
+    name: "Cycle ingénieur Informatique — admission parallèle (2ᵉ/3ᵉ année)",
+    institution: "INSA Lyon",
+    level: "Licence 3",
+    field: "Informatique",
+    city: "Villeurbanne",
+    description:
+      "Admission directe en 2ᵉ ou 3ᵉ année du cycle ingénieur du Département Informatique de l'INSA Lyon, pour les étudiants ayant déjà validé un DUT/BUT, une Licence (L2/L3) ou un BTS.",
+    requiredLevel: "Licence 2",
+    language: "Français",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 2", label: "L2, L3, DUT, BUT2/BUT3 ou BTS validé" },
+      { id: "r2", type: "domaine", value: "Informatique", label: "Parcours scientifique ou technologique en informatique" },
+    ],
+    coreCourses: [
+      course("Algorithmique avancée", "essentielle"),
+      course("Architecture logicielle", "importante"),
+      course("Bases de données", "importante"),
+      course("Réseaux informatiques", "utile"),
+    ],
+    skills: [
+      skill("Algorithmique", "essentielle"),
+      skill("Programmation orientée objet", "importante"),
+      skill("Anglais courant", "utile"),
+    ],
+    source: "https://www.insa-lyon.fr/fr/admission",
+    verifiedAt: VERIFIED_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
   },
 ];
 
