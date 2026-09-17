@@ -1,4 +1,5 @@
 import type { Formation } from "@/types";
+import { effectiveVerificationStatus } from "@/lib/data/integrity";
 import { Card } from "@/components/ui/Card";
 import { ExternalLink } from "lucide-react";
 
@@ -7,10 +8,12 @@ interface OfficialSourceCardProps {
 }
 
 /**
- * Accès clair à la source officielle (critère de sortie Étape 7).
+ * Accès clair à la source officielle (critère de sortie Étape 7 / audit Étape 8).
  * Les fiches démo ne doivent jamais être présentées comme un lien cliquable officiel.
  */
 export function OfficialSourceCard({ formation }: OfficialSourceCardProps) {
+  const status = effectiveVerificationStatus(formation);
+
   return (
     <Card className="border-blue-100 bg-blue-50/60">
       <h2 className="mb-1 text-base font-semibold text-slate-900">Source officielle</h2>
@@ -37,7 +40,7 @@ export function OfficialSourceCard({ formation }: OfficialSourceCardProps) {
           <p className="text-xs text-slate-500">
             {formation.institution}
             {formation.verifiedAt ? ` · fiche AcadMatch vérifiée le ${formation.verifiedAt}` : ""}
-            {formation.verificationStatus === "à revérifier" ? " · à revérifier" : ""}
+            {status === "à revérifier" ? " · à revérifier" : ""}
           </p>
         </div>
       )}

@@ -21,6 +21,7 @@ import { computeCompatibility } from "@/lib/matching/engine";
 import { compareFormationsByGoalThenScore } from "@/lib/matching/ranking";
 import { validateStoredProfile } from "@/lib/profile/validation";
 import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
+import { CatalogueScopeNotice } from "@/components/ui/CatalogueScopeNotice";
 import {
   ALL_CITIES,
   ALL_DOMAINS,
@@ -119,6 +120,8 @@ export default function RecherchePage() {
         />
       )}
 
+      <CatalogueScopeNotice className="mb-6 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm leading-relaxed text-slate-600" />
+
       <div className="mb-6 space-y-3">
         <div className="relative">
           <SearchIcon className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
@@ -127,6 +130,7 @@ export default function RecherchePage() {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Rechercher une formation, un établissement..."
             className="pl-10"
+            aria-label="Rechercher une formation ou un établissement"
           />
         </div>
         {/*
@@ -136,7 +140,12 @@ export default function RecherchePage() {
           filtres) — avec 4 filtres, le wrap est d'autant plus nécessaire.
         */}
         <div className="flex flex-wrap gap-3">
-          <Select value={level} onChange={(e) => setLevel(e.target.value)} className="w-full sm:w-44">
+          <Select
+            value={level}
+            onChange={(e) => setLevel(e.target.value)}
+            className="w-full sm:w-44"
+            aria-label="Filtrer par niveau"
+          >
             <option>{ALL_LEVELS}</option>
             {AVAILABLE_LEVELS.map((l) => (
               <option key={l} value={l}>
@@ -144,7 +153,12 @@ export default function RecherchePage() {
               </option>
             ))}
           </Select>
-          <Select value={domain} onChange={(e) => setDomain(e.target.value)} className="w-full sm:w-56">
+          <Select
+            value={domain}
+            onChange={(e) => setDomain(e.target.value)}
+            className="w-full sm:w-56"
+            aria-label="Filtrer par domaine"
+          >
             <option>{ALL_DOMAINS}</option>
             {AVAILABLE_DOMAINS.map((d) => (
               <option key={d} value={d}>
@@ -152,7 +166,12 @@ export default function RecherchePage() {
               </option>
             ))}
           </Select>
-          <Select value={city} onChange={(e) => setCity(e.target.value)} className="w-full sm:w-40">
+          <Select
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            className="w-full sm:w-40"
+            aria-label="Filtrer par ville"
+          >
             <option>{ALL_CITIES}</option>
             {AVAILABLE_CITIES.map((c) => (
               <option key={c} value={c}>
@@ -160,7 +179,12 @@ export default function RecherchePage() {
               </option>
             ))}
           </Select>
-          <Select value={language} onChange={(e) => setLanguage(e.target.value)} className="w-full sm:w-44">
+          <Select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            className="w-full sm:w-44"
+            aria-label="Filtrer par langue"
+          >
             <option>{ALL_LANGUAGES}</option>
             {AVAILABLE_LANGUAGES.map((lg) => (
               <option key={lg} value={lg}>

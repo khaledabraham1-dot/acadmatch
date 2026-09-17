@@ -1,16 +1,22 @@
 import { describe, expect, it } from "vitest";
 import { FORMATIONS, getFormationById } from "@/data/formations";
 import { DOMAINS } from "@/data/subjects";
+import { blockingCatalogueIssues } from "@/lib/data/integrity";
 import { computeCompatibility } from "@/lib/matching/engine";
 import { normalize } from "@/lib/utils";
 import type { StudentProfile } from "@/types";
 
-/** Vérifications de cohérence sur les données de démonstration (pas de logique métier ici). */
-describe("FORMATIONS (catalogue réel, Étape 3 — périmètre Data Science/IA/Informatique)", () => {
+/** Vérifications de cohérence sur le catalogue (Étape 3 + audit Étape 8). */
+describe("FORMATIONS (catalogue réel — périmètre Data Science/IA/Informatique)", () => {
   it("contient au moins 6 formations couvrant au moins 2 domaines", () => {
     expect(FORMATIONS.length).toBeGreaterThanOrEqual(6);
     const fields = new Set(FORMATIONS.map((f) => f.field));
     expect(fields.size).toBeGreaterThanOrEqual(2);
+  });
+
+  it("passe l'audit d'intégrité bloquant (sources, ids, pas de démo déguisée)", () => {
+    const now = new Date("2026-09-17T12:00:00.000Z");
+    expect(blockingCatalogueIssues(FORMATIONS, now)).toEqual([]);
   });
 
   it("chaque formation réelle est vérifiée : pas de donnée démo, source officielle datée", () => {

@@ -13,7 +13,10 @@ import type { AcademicItem, Formation, Importance } from "@/types";
  * (matières, compétences) est une synthèse fidèle de ce que chaque
  * établissement publie, pas une citation exacte de sa maquette complète.
  * Ce catalogue est destiné à être élargi (autres domaines, autres villes)
- * avant le déploiement — voir la mémoire projet "acadmatch-roadmap".
+ * avant le déploiement.
+ *
+ * Étape 8 (2026-09-17) : audit des liens — URL CentraleSupélec corrigée
+ * (ancienne page 404), dates de vérification rafraîchies.
  *
  * Pour toute formation FICTIVE de démonstration ajoutée plus tard (tests,
  * prototypage), utiliser `demo: true` et une URL sous
@@ -39,7 +42,7 @@ const course = (name: string, importance: Importance, aliases?: string[]) =>
 const skill = (name: string, importance: Importance, aliases?: string[]) =>
   item(name, importance, "competence", aliases);
 
-const VERIFIED_AT = "2026-09-15";
+const VERIFIED_AT = "2026-09-17";
 
 export const FORMATIONS: Formation[] = [
   {
@@ -107,7 +110,7 @@ export const FORMATIONS: Formation[] = [
       skill("Anglais courant", "essentielle"),
       skill("Statistiques", "importante"),
     ],
-    source: "https://www.centralesupelec.fr/en/Regional-programs/master-science-artificial-intelligence",
+    source: "https://www.centralesupelec.fr/programmes/master-science-artificial-intelligence",
     verifiedAt: VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,

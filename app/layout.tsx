@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AcadMatch — Trouvez les formations françaises adaptées à votre parcours",
+  title: "AcadMatch — Compatibilité académique avant de candidater",
   description:
-    "AcadMatch analyse votre parcours académique et le compare aux formations françaises pour vous montrer votre compatibilité, vos points forts et vos lacunes.",
+    "AcadMatch aide les étudiants à comprendre quelles formations françaises correspondent à leur parcours : score explicable, lacunes prioritaires et sources officielles. Ce n'est pas Campus France — c'est l'aide à la décision avant de postuler.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
