@@ -1,15 +1,22 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Search as SearchIcon, ArrowRight } from "lucide-react";
+import { Search as SearchIcon, ArrowRight, Columns2, X } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 import { FormationCard } from "@/components/search/FormationCard";
 import { DemoDataBadge } from "@/components/ui/DemoDataBadge";
 import { Input, Select } from "@/components/ui/Field";
-import { LinkButton } from "@/components/ui/Button";
+import { Button, LinkButton } from "@/components/ui/Button";
 import { FORMATIONS } from "@/data/formations";
 import { ACADEMIC_LEVEL_ORDER, type StudentProfile } from "@/types";
-import { loadProfile } from "@/lib/storage";
+import {
+  clearCompareIds,
+  compareResultsHref,
+  loadCompareIds,
+  loadProfile,
+  MAX_COMPARE_FORMATIONS,
+  toggleCompareId,
+} from "@/lib/storage";
 import { computeCompatibility } from "@/lib/matching/engine";
 import { compareFormationsByGoalThenScore } from "@/lib/matching/ranking";
 import { validateStoredProfile } from "@/lib/profile/validation";
@@ -33,6 +40,7 @@ const AVAILABLE_LANGUAGES = uniqueSorted(FORMATIONS, (f) => f.language);
 
 export default function RecherchePage() {
   const [profile, setProfile] = useState<StudentProfile | null>(null);
+  const [compareIds, setCompareIds] = useState<string[]>([]);
   const [query, setQuery] = useState("");
   const [level, setLevel] = useState(ALL_LEVELS);
   const [domain, setDomain] = useState(ALL_DOMAINS);
@@ -43,6 +51,7 @@ export default function RecherchePage() {
     // localStorage n'existe pas côté serveur : la lecture doit se faire après le montage.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setProfile(loadProfile());
+    setCompareIds(loadCompareIds());
   }, []);
 
   function resetFilters() {
@@ -51,6 +60,15 @@ export default function RecherchePage() {
     setDomain(ALL_DOMAINS);
     setCity(ALL_CITIES);
     setLanguage(ALL_LANGUAGES);
+  }
+
+  function handleToggleCompare(formationId: string) {
+    setCompareIds(toggleCompareId(formationId));
+  }
+
+  function handleClearCompare() {
+    clearCompareIds();
+    setCompareIds([]);
   }
 
   const scores = useMemo(() => {
@@ -66,10 +84,14 @@ export default function RecherchePage() {
     );
   }, [query, level, domain, city, language, scores, profile]);
 
+  const compareNames = compareIds
+    .map((id) => FORMATIONS.find((f) => f.id === id)?.name)
+    .filter(Boolean);
+
   return (
     <AppShell
       title="Rechercher une formation"
-      description="Trouvez la formation française qui correspond à votre parcours."
+      description="Trouvez la formation française qui correspond à votre parcours. Cochez 2 ou 3 fiches pour les comparer."
     >
       {FORMATIONS.some((f) => f.demo) && (
         <div className="mb-6">
@@ -150,12 +172,26 @@ export default function RecherchePage() {
       </div>
 
       <p className="mb-4 text-sm text-slate-400">
-        {filtered.length} formation{filtered.length > 1 ? "s" : ""} trouvée{filtered.length > 1 ? "s" : ""}
+        {filtered.length} formation{filtered.length > 1 ? "s" : ""} trouvée
+        {filtered.length > 1 ? "s" : ""}
+        {compareIds.length > 0 && (
+          <span className="text-slate-500">
+            {" "}
+            · {compareIds.length}/{MAX_COMPARE_FORMATIONS} à comparer
+          </span>
+        )}
       </p>
 
-      <div className="space-y-4">
+      <div className={compareIds.length > 0 ? "space-y-4 pb-24" : "space-y-4"}>
         {filtered.map((formation) => (
-          <FormationCard key={formation.id} formation={formation} score={scores.get(formation.id) ?? null} />
+          <FormationCard
+            key={formation.id}
+            formation={formation}
+            score={scores.get(formation.id) ?? null}
+            selectedForCompare={compareIds.includes(formation.id)}
+            compareCount={compareIds.length}
+            onToggleCompare={handleToggleCompare}
+          />
         ))}
         {filtered.length === 0 && (
           <div className="rounded-2xl border border-dashed border-slate-200 p-8 text-center">
@@ -170,6 +206,36 @@ export default function RecherchePage() {
           </div>
         )}
       </div>
+
+      {compareIds.length > 0 && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 shadow-[0_-8px_30px_rgba(15,23,42,0.08)] backdrop-blur">
+          <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+                <Columns2 className="size-4 text-blue-600" />
+                Comparaison ({compareIds.length}/{MAX_COMPARE_FORMATIONS})
+              </p>
+              <p className="truncate text-xs text-slate-500">
+                {compareNames.join(" · ") || "Sélectionnez des formations"}
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button type="button" variant="ghost" size="sm" onClick={handleClearCompare}>
+                <X className="size-3.5" />
+                Vider
+              </Button>
+              {compareIds.length >= 2 ? (
+                <LinkButton href={compareResultsHref(compareIds)} size="sm">
+                  Comparer maintenant
+                  <ArrowRight className="size-3.5" />
+                </LinkButton>
+              ) : (
+                <p className="text-xs text-slate-500">Ajoutez encore une formation</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </AppShell>
   );
 }

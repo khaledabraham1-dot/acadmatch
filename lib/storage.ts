@@ -16,6 +16,9 @@ import type { StudentProfile } from "@/types";
 
 const PROFILE_KEY = "acadmatch:profile";
 const SELECTED_FORMATION_KEY = "acadmatch:selectedFormationId";
+/** Shortlist pour la comparaison côte-à-côte (Étape 7) — max 3 formations. */
+const COMPARE_IDS_KEY = "acadmatch:compareIds";
+export const MAX_COMPARE_FORMATIONS = 3;
 
 function getStorage(): Storage | null {
   try {
@@ -83,4 +86,60 @@ export function loadSelectedFormationId(): string | null {
   } catch {
     return null;
   }
+}
+
+export function loadCompareIds(): string[] {
+  const storage = getStorage();
+  if (!storage) return [];
+  try {
+    const raw = storage.getItem(COMPARE_IDS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((id): id is string => typeof id === "string").slice(0, MAX_COMPARE_FORMATIONS);
+  } catch {
+    return [];
+  }
+}
+
+function saveCompareIds(ids: string[]): void {
+  const storage = getStorage();
+  if (!storage) return;
+  try {
+    storage.setItem(COMPARE_IDS_KEY, JSON.stringify(ids.slice(0, MAX_COMPARE_FORMATIONS)));
+  } catch {
+    // Non bloquant.
+  }
+}
+
+/** Ajoute ou retire une formation de la shortlist de comparaison. */
+export function toggleCompareId(formationId: string): string[] {
+  const current = loadCompareIds();
+  if (current.includes(formationId)) {
+    const next = current.filter((id) => id !== formationId);
+    saveCompareIds(next);
+    return next;
+  }
+  if (current.length >= MAX_COMPARE_FORMATIONS) return current;
+  const next = [...current, formationId];
+  saveCompareIds(next);
+  return next;
+}
+
+export function clearCompareIds(): void {
+  const storage = getStorage();
+  if (!storage) return;
+  try {
+    storage.removeItem(COMPARE_IDS_KEY);
+  } catch {
+    // Non bloquant.
+  }
+}
+
+/** Construit l'URL de comparaison à partir d'une liste d'ids. */
+export function compareResultsHref(ids: string[]): string {
+  const unique = [...new Set(ids)].slice(0, MAX_COMPARE_FORMATIONS);
+  if (unique.length === 0) return "/recherche";
+  if (unique.length === 1) return `/resultat?formationId=${encodeURIComponent(unique[0])}`;
+  return `/resultat?compare=${unique.map(encodeURIComponent).join(",")}`;
 }

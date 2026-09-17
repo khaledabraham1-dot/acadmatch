@@ -6,7 +6,7 @@ export default function ResultatPage() {
   return (
     <AppShell
       title="Résultats de compatibilité"
-      description="Analyse détaillée de votre compatibilité avec la formation sélectionnée."
+      description="Analyse détaillée, plan d'actions et comparaison — pour décider en connaissance de cause."
     >
       <Suspense>
         <ResultView />

@@ -11,13 +11,13 @@ const STEPS = [
     icon: Search,
     title: "Choisissez une formation",
     description:
-      "Recherchez une formation française parmi notre base de démonstration et sélectionnez-la.",
+      "Parcourez des formations françaises vérifiées, ou comparez-en 2 à 3 côte à côte.",
   },
   {
     icon: LineChart,
     title: "Obtenez votre analyse",
     description:
-      "Un score de compatibilité détaillé, vos points forts, vos lacunes et les points à vérifier.",
+      "Score explicable, forces, lacunes prioritaires et lien vers la source officielle.",
   },
 ];
 

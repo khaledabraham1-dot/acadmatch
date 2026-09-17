@@ -7,17 +7,31 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { LinkButton } from "@/components/ui/Button";
 import { getCompatibilityLabel } from "@/lib/matching/labels";
+import { MAX_COMPARE_FORMATIONS } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 
 interface FormationCardProps {
   formation: Formation;
   /** Score déjà calculé côté page (null si aucun profil n'est encore renseigné). */
   score: number | null;
+  /** La formation est-elle dans la shortlist de comparaison ? */
+  selectedForCompare?: boolean;
+  /** Nombre actuel d'éléments dans la shortlist (pour désactiver au plafond). */
+  compareCount?: number;
+  onToggleCompare?: (formationId: string) => void;
 }
 
-export function FormationCard({ formation, score }: FormationCardProps) {
+export function FormationCard({
+  formation,
+  score,
+  selectedForCompare = false,
+  compareCount = 0,
+  onToggleCompare,
+}: FormationCardProps) {
   const [expanded, setExpanded] = useState(false);
   const compat = score !== null ? getCompatibilityLabel(score) : null;
+  const compareDisabled =
+    !selectedForCompare && compareCount >= MAX_COMPARE_FORMATIONS && Boolean(onToggleCompare);
 
   return (
     <Card className="p-0 overflow-hidden">
@@ -50,6 +64,27 @@ export function FormationCard({ formation, score }: FormationCardProps) {
         </div>
 
         <p className="mt-3 text-sm leading-relaxed text-slate-600">{formation.description}</p>
+
+        {onToggleCompare && (
+          <label
+            className={cn(
+              "mt-4 inline-flex items-center gap-2 text-sm",
+              compareDisabled ? "cursor-not-allowed text-slate-400" : "cursor-pointer text-slate-700",
+            )}
+          >
+            <input
+              type="checkbox"
+              checked={selectedForCompare}
+              disabled={compareDisabled}
+              onChange={() => onToggleCompare(formation.id)}
+              className="size-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50"
+            />
+            Comparer
+            {compareDisabled && (
+              <span className="text-xs text-slate-400">(max. {MAX_COMPARE_FORMATIONS})</span>
+            )}
+          </label>
+        )}
 
         <button
           type="button"

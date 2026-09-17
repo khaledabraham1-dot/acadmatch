@@ -7,6 +7,7 @@ import type { StudentProfile } from "@/types";
 import { getFormationById } from "@/data/formations";
 import { loadProfile, saveSelectedFormationId } from "@/lib/storage";
 import { computeCompatibility } from "@/lib/matching/engine";
+import { buildDecisionAid } from "@/lib/matching/explanation";
 import { validateStoredProfile } from "@/lib/profile/validation";
 import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
@@ -17,10 +18,28 @@ import { CriteriaBar } from "@/components/result/CriteriaBar";
 import { StrengthsGaps } from "@/components/result/StrengthsGaps";
 import { MatchTable } from "@/components/result/MatchTable";
 import { ComparisonSummary } from "@/components/result/ComparisonSummary";
+import { CompatibilityExplanation } from "@/components/result/CompatibilityExplanation";
+import { ActionPlan } from "@/components/result/ActionPlan";
+import { OfficialSourceCard } from "@/components/result/OfficialSourceCard";
+import { FormationCompareTable } from "@/components/result/FormationCompareTable";
+
+/** Parse `?compare=id1,id2,id3` en liste d'ids valides (2–3). */
+function parseCompareIds(raw: string | null): string[] {
+  if (!raw) return [];
+  return [
+    ...new Set(
+      raw
+        .split(",")
+        .map((id) => id.trim())
+        .filter(Boolean),
+    ),
+  ].slice(0, 3);
+}
 
 export function ResultView() {
   const searchParams = useSearchParams();
   const formationId = searchParams.get("formationId");
+  const compareIds = parseCompareIds(searchParams.get("compare"));
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [ready, setReady] = useState(false);
 
@@ -34,11 +53,72 @@ export function ResultView() {
 
   if (!ready) return null;
 
+  if (!profile) {
+    const next =
+      compareIds.length >= 2
+        ? `/resultat?compare=${compareIds.map(encodeURIComponent).join(",")}`
+        : formationId
+          ? `/resultat?formationId=${encodeURIComponent(formationId)}`
+          : "/resultat";
+    return (
+      <EmptyState
+        title="Renseignez votre profil académique"
+        description="Nous avons besoin de votre parcours pour calculer votre compatibilité."
+        ctaHref={`/profil?next=${encodeURIComponent(next)}`}
+        ctaLabel="Analyser mon profil"
+      />
+    );
+  }
+
+  // Mode comparaison multi-formations (Étape 7).
+  if (compareIds.length >= 2) {
+    const formations = compareIds
+      .map((id) => getFormationById(id))
+      .filter((f): f is NonNullable<typeof f> => Boolean(f));
+
+    if (formations.length < 2) {
+      return (
+        <EmptyState
+          title="Comparaison impossible"
+          description="Au moins deux formations valides sont nécessaires. Revenez à la recherche pour en sélectionner."
+          ctaHref="/recherche"
+          ctaLabel="Retour à la recherche"
+        />
+      );
+    }
+
+    const profileValidation = validateStoredProfile(profile);
+
+    return (
+      <div className="space-y-6">
+        {formations.some((f) => f.demo) && <DemoDataBadge />}
+        <ProfileReliabilityNotice
+          validation={profileValidation}
+          editHref={`/profil?next=${encodeURIComponent(`/resultat?compare=${compareIds.join(",")}`)}`}
+        />
+        <div>
+          <h2 className="text-base font-semibold text-slate-900">
+            Comparaison de {formations.length} formations
+          </h2>
+          <p className="mt-1 text-sm text-slate-500">
+            Vue côte-à-côte pour décider laquelle approfondir — puis ouvrez l&apos;analyse détaillée.
+          </p>
+        </div>
+        <FormationCompareTable profile={profile} formations={formations} />
+        <div className="flex justify-end">
+          <LinkButton href="/recherche" variant="outline" size="sm">
+            Modifier la sélection
+          </LinkButton>
+        </div>
+      </div>
+    );
+  }
+
   if (!formationId) {
     return (
       <EmptyState
-        title="Choisissez une formation à comparer"
-        description="Recherchez une formation française pour lancer l'analyse de compatibilité."
+        title="Choisissez une formation à analyser"
+        description="Recherchez une formation, ou sélectionnez-en 2 à 3 pour les comparer côte à côte."
         ctaHref="/recherche"
         ctaLabel="Rechercher une formation"
       />
@@ -57,28 +137,15 @@ export function ResultView() {
     );
   }
 
-  if (!profile) {
-    return (
-      <EmptyState
-        title="Renseignez votre profil académique"
-        description="Nous avons besoin de votre parcours pour calculer votre compatibilité avec cette formation."
-        ctaHref={`/profil?next=${encodeURIComponent(`/resultat?formationId=${formation.id}`)}`}
-        ctaLabel="Analyser mon profil"
-      />
-    );
-  }
-
   const result = computeCompatibility(profile, formation);
+  const aid = buildDecisionAid(profile, formation, result);
   const profileValidation = validateStoredProfile(profile);
   const editProfileHref = `/profil?next=${encodeURIComponent(`/resultat?formationId=${formation.id}`)}`;
 
   return (
     <div className="space-y-6">
       {formation.demo && <DemoDataBadge />}
-      <ProfileReliabilityNotice
-        validation={profileValidation}
-        editHref={editProfileHref}
-      />
+      <ProfileReliabilityNotice validation={profileValidation} editHref={editProfileHref} />
       <ComparisonSummary profile={profile} formation={formation} />
 
       <Card>
@@ -94,14 +161,32 @@ export function ResultView() {
             <ScoreCircle score={result.overallScore} />
           </div>
           <div className="flex flex-col justify-center gap-4">
-            <CriteriaBar label="Prérequis" score={result.breakdown.prerequisites} icon={<ClipboardCheck className="size-4" />} />
-            <CriteriaBar label="Contenu académique" score={result.breakdown.academicContent} icon={<BookOpen className="size-4" />} />
-            <CriteriaBar label="Compétences" score={result.breakdown.skills} icon={<Wrench className="size-4" />} />
-            <CriteriaBar label="Niveau / diplôme" score={result.breakdown.levelDegree} icon={<GraduationCap className="size-4" />} />
+            <CriteriaBar
+              label="Prérequis"
+              score={result.breakdown.prerequisites}
+              icon={<ClipboardCheck className="size-4" />}
+            />
+            <CriteriaBar
+              label="Contenu académique"
+              score={result.breakdown.academicContent}
+              icon={<BookOpen className="size-4" />}
+            />
+            <CriteriaBar
+              label="Compétences"
+              score={result.breakdown.skills}
+              icon={<Wrench className="size-4" />}
+            />
+            <CriteriaBar
+              label="Niveau / diplôme"
+              score={result.breakdown.levelDegree}
+              icon={<GraduationCap className="size-4" />}
+            />
           </div>
         </div>
       </Card>
 
+      <CompatibilityExplanation aid={aid} />
+      <ActionPlan actions={aid.actions} />
       <StrengthsGaps strengths={result.strengths} gaps={result.gaps} />
 
       <Card>
@@ -112,9 +197,13 @@ export function ResultView() {
         <MatchTable matches={result.matches} />
       </Card>
 
+      <OfficialSourceCard formation={formation} />
+
       <p className="rounded-xl bg-slate-50 p-4 text-xs leading-relaxed text-slate-500">
-        Ce score ne garantit pas l&apos;admission : il mesure une adéquation académique entre votre
-        parcours et le contenu affiché de cette formation{formation.demo ? " de démonstration" : ""}.
+        Ce score ne garantit pas l&apos;admission et n&apos;est pas une probabilité d&apos;acceptation :
+        il mesure une adéquation académique entre votre parcours et le contenu affiché de cette
+        formation{formation.demo ? " de démonstration" : ""}. Vérifiez toujours la source officielle
+        avant de candidater.
       </p>
     </div>
   );
