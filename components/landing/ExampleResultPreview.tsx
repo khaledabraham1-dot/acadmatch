@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/Card";
 import { ScoreCircle } from "@/components/result/ScoreCircle";
 import { CriteriaBar } from "@/components/result/CriteriaBar";
+import { TryExampleButton } from "@/components/landing/TryExampleButton";
 import { CheckCircle2, AlertCircle } from "lucide-react";
 
 /** Exemple illustratif statique — reproduit la mise en page réelle de la page Résultat. */
@@ -12,7 +13,8 @@ export function ExampleResultPreview() {
           Un résultat clair et explicable
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-slate-500">
-          Exemple illustratif du type d&apos;analyse que vous obtiendrez pour une formation donnée.
+          Exemple illustratif du type d&apos;analyse que vous obtiendrez — puis testez avec un
+          vrai parcours exemple en un clic.
         </p>
       </div>
 
@@ -34,7 +36,7 @@ export function ExampleResultPreview() {
         <div className="mt-8 grid gap-6 border-t border-slate-100 pt-6 sm:grid-cols-2">
           <div>
             <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold text-emerald-700">
-              <CheckCircle2 className="size-4" />
+              <CheckCircle2 className="size-4" aria-hidden />
               Points forts
             </h3>
             <ul className="space-y-1.5 text-sm text-slate-600">
@@ -45,7 +47,7 @@ export function ExampleResultPreview() {
           </div>
           <div>
             <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold text-rose-700">
-              <AlertCircle className="size-4" />
+              <AlertCircle className="size-4" aria-hidden />
               Lacunes
             </h3>
             <ul className="space-y-1.5 text-sm text-slate-600">
@@ -53,6 +55,10 @@ export function ExampleResultPreview() {
               <li>Optimisation</li>
             </ul>
           </div>
+        </div>
+
+        <div className="mt-8 flex justify-center border-t border-slate-100 pt-6">
+          <TryExampleButton label="Tester avec un profil exemple" />
         </div>
       </Card>
     </section>

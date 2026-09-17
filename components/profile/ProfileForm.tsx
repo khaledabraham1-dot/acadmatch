@@ -26,7 +26,8 @@ import { Label, Select, Input } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
 import { CourseSkillEditor } from "@/components/profile/CourseSkillEditor";
 import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
-import { ArrowRight } from "lucide-react";
+import { EXAMPLE_PROFILE_LABEL, EXAMPLE_STUDENT_PROFILE } from "@/data/example-profile";
+import { ArrowRight, FlaskConical } from "lucide-react";
 
 const DEFAULT_DOMAIN: Domain = "Informatique";
 
@@ -109,6 +110,18 @@ export function ProfileForm() {
     setSubmitAttempted(false);
   }
 
+  function handleLoadExample() {
+    const example = EXAMPLE_STUDENT_PROFILE;
+    setCurrentLevel(example.currentLevel);
+    setFieldOfStudy(example.fieldOfStudy as Domain);
+    setCurrentDegree(example.currentDegree);
+    setCourses(example.courses.map((c) => c.name));
+    setSkills(example.skills);
+    setGoal(example.goal);
+    setLanguages(example.languages);
+    setSubmitAttempted(false);
+  }
+
   function toggleLanguage(lang: string, checked: boolean) {
     if (checked) {
       setLanguages((prev) => (prev.includes(lang) ? prev : [...prev, lang]));
@@ -122,6 +135,16 @@ export function ProfileForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4">
+        <p className="text-sm text-slate-600">
+          Pressé ? Chargez un parcours type pour voir immédiatement comment fonctionne AcadMatch.
+        </p>
+        <Button type="button" variant="outline" size="sm" onClick={handleLoadExample}>
+          <FlaskConical className="size-3.5" aria-hidden />
+          {EXAMPLE_PROFILE_LABEL}
+        </Button>
+      </div>
+
       <ProfileReliabilityNotice validation={validation} />
 
       <Card>

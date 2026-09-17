@@ -13,6 +13,9 @@ export function LandingNav() {
           <a href="#exemple" className="hover:text-slate-900">
             Exemple de résultat
           </a>
+          <a href="/recherche" className="hover:text-slate-900">
+            Formations
+          </a>
         </nav>
         <LinkButton href="/profil" size="sm">
           Analyser mon profil

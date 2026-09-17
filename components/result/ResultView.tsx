@@ -22,6 +22,7 @@ import { CompatibilityExplanation } from "@/components/result/CompatibilityExpla
 import { ActionPlan } from "@/components/result/ActionPlan";
 import { OfficialSourceCard } from "@/components/result/OfficialSourceCard";
 import { FormationCompareTable } from "@/components/result/FormationCompareTable";
+import { ResultFeedback } from "@/components/result/ResultFeedback";
 
 /** Parse `?compare=id1,id2,id3` en liste d'ids valides (2–3). */
 function parseCompareIds(raw: string | null): string[] {
@@ -198,6 +199,8 @@ export function ResultView() {
       </Card>
 
       <OfficialSourceCard formation={formation} />
+
+      <ResultFeedback formationId={formation.id} score={result.overallScore} />
 
       <p className="rounded-xl bg-slate-50 p-4 text-xs leading-relaxed text-slate-500">
         Ce score ne garantit pas l&apos;admission et n&apos;est pas une probabilité d&apos;acceptation :

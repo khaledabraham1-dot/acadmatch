@@ -1,4 +1,5 @@
 import { LinkButton } from "@/components/ui/Button";
+import { TryExampleButton } from "@/components/landing/TryExampleButton";
 import { ArrowRight, Sparkles } from "lucide-react";
 
 export function Hero() {
@@ -22,10 +23,13 @@ export function Hero() {
             Analyser mon profil
             <ArrowRight className="size-4" />
           </LinkButton>
-          <LinkButton href="/recherche" variant="outline" size="lg" className="w-full sm:w-auto">
-            Voir les formations
-          </LinkButton>
+          <TryExampleButton className="w-full sm:w-auto" />
         </div>
+        <p className="mt-3">
+          <LinkButton href="/recherche" variant="ghost" size="sm">
+            Voir les formations sans profil
+          </LinkButton>
+        </p>
         <p className="mt-4 text-sm text-slate-400">
           Sans compte. Score explicable. Catalogue ciblé Data Science / IA / Informatique.
         </p>

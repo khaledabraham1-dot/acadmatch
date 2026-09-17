@@ -38,6 +38,16 @@ npm run test   # Vitest
 npm run build  # build de production
 ```
 
+## Feedback MVP
+
+Sur la page résultat, les utilisateurs peuvent indiquer si l'analyse les a aidés.
+Par défaut l'avis reste en `localStorage`. Pour recevoir les avis par e-mail :
+
+```bash
+cp .env.example .env.local
+# renseigner NEXT_PUBLIC_FEEDBACK_EMAIL=vous@exemple.com
+```
+
 ## Stack
 
 Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · aucune base de données (persistance
