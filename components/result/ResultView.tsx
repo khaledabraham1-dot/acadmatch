@@ -7,9 +7,11 @@ import type { StudentProfile } from "@/types";
 import { getFormationById } from "@/data/formations";
 import { loadProfile, saveSelectedFormationId } from "@/lib/storage";
 import { computeCompatibility } from "@/lib/matching/engine";
+import { validateStoredProfile } from "@/lib/profile/validation";
 import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { DemoDataBadge } from "@/components/ui/DemoDataBadge";
+import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
 import { ScoreCircle } from "@/components/result/ScoreCircle";
 import { CriteriaBar } from "@/components/result/CriteriaBar";
 import { StrengthsGaps } from "@/components/result/StrengthsGaps";
@@ -60,17 +62,23 @@ export function ResultView() {
       <EmptyState
         title="Renseignez votre profil académique"
         description="Nous avons besoin de votre parcours pour calculer votre compatibilité avec cette formation."
-        ctaHref={`/profil?next=/resultat?formationId=${formation.id}`}
+        ctaHref={`/profil?next=${encodeURIComponent(`/resultat?formationId=${formation.id}`)}`}
         ctaLabel="Analyser mon profil"
       />
     );
   }
 
   const result = computeCompatibility(profile, formation);
+  const profileValidation = validateStoredProfile(profile);
+  const editProfileHref = `/profil?next=${encodeURIComponent(`/resultat?formationId=${formation.id}`)}`;
 
   return (
     <div className="space-y-6">
       {formation.demo && <DemoDataBadge />}
+      <ProfileReliabilityNotice
+        validation={profileValidation}
+        editHref={editProfileHref}
+      />
       <ComparisonSummary profile={profile} formation={formation} />
 
       <Card>

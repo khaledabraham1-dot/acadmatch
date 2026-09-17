@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { AcademicLevel, StudentProfile, StudyGoal } from "@/types";
 import {
@@ -13,12 +13,19 @@ import {
   TEACHING_LANGUAGES,
   type Domain,
 } from "@/data/subjects";
-import { loadProfile, saveProfile } from "@/lib/storage";
+import { clearProfile, loadProfile, saveProfile } from "@/lib/storage";
+import {
+  RECOMMENDED_COURSES,
+  RECOMMENDED_SKILLS,
+  safeInternalPath,
+  validateProfileDraft,
+} from "@/lib/profile/validation";
 import { generateId } from "@/lib/utils";
 import { Card } from "@/components/ui/Card";
 import { Label, Select, Input } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
 import { CourseSkillEditor } from "@/components/profile/CourseSkillEditor";
+import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
 import { ArrowRight } from "lucide-react";
 
 const DEFAULT_DOMAIN: Domain = "Informatique";
@@ -34,6 +41,8 @@ export function ProfileForm() {
   const [skills, setSkills] = useState<string[]>([]);
   const [goal, setGoal] = useState<StudyGoal>("Master");
   const [languages, setLanguages] = useState<string[]>(["Français"]);
+  const [hasExistingProfile, setHasExistingProfile] = useState(false);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
 
   // Pré-remplit le formulaire si un profil existe déjà (édition, retour en arrière).
   useEffect(() => {
@@ -48,10 +57,27 @@ export function ProfileForm() {
     setSkills(existing.skills);
     setGoal(existing.goal);
     setLanguages(existing.languages ?? ["Français"]);
+    setHasExistingProfile(true);
   }, []);
+
+  const validation = useMemo(
+    () =>
+      validateProfileDraft({
+        currentLevel,
+        fieldOfStudy,
+        currentDegree,
+        courses,
+        skills,
+        goal,
+        languages,
+      }),
+    [currentLevel, fieldOfStudy, currentDegree, courses, skills, goal, languages],
+  );
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+    setSubmitAttempted(true);
+    if (!validation.isSubmittable) return;
 
     const profile: StudentProfile = {
       currentLevel,
@@ -64,9 +90,23 @@ export function ProfileForm() {
     };
 
     saveProfile(profile);
+    setHasExistingProfile(true);
 
-    const next = searchParams.get("next");
-    router.push(next && next.startsWith("/") ? next : "/recherche");
+    const next = safeInternalPath(searchParams.get("next"));
+    router.push(next);
+  }
+
+  function handleClear() {
+    clearProfile();
+    setCurrentLevel("Licence 3");
+    setFieldOfStudy(DEFAULT_DOMAIN);
+    setCurrentDegree("");
+    setCourses([]);
+    setSkills([]);
+    setGoal("Master");
+    setLanguages(["Français"]);
+    setHasExistingProfile(false);
+    setSubmitAttempted(false);
   }
 
   function toggleLanguage(lang: string, checked: boolean) {
@@ -81,7 +121,9 @@ export function ProfileForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+      <ProfileReliabilityNotice validation={validation} />
+
       <Card>
         <h2 className="mb-5 text-base font-semibold text-slate-900">Votre parcours actuel</h2>
         <div className="grid gap-5 sm:grid-cols-2">
@@ -129,6 +171,9 @@ export function ProfileForm() {
                 <option key={suggestion} value={suggestion} />
               ))}
             </datalist>
+            <p className="mt-1.5 text-xs text-slate-500">
+              Si vous laissez ce champ vide, AcadMatch utilisera « {currentLevel} — {fieldOfStudy} ».
+            </p>
           </div>
 
           <div className="sm:col-span-2">
@@ -147,7 +192,8 @@ export function ProfileForm() {
               Langues dans lesquelles vous êtes à l&apos;aise pour suivre des cours
             </legend>
             <p className="mb-2.5 text-xs text-slate-500">
-              Certaines formations sont enseignées entièrement en anglais — utilisé pour évaluer la compatibilité.
+              Certaines formations sont enseignées entièrement en anglais — utilisé pour évaluer la
+              compatibilité.
             </p>
             <div className="flex flex-wrap gap-4">
               {TEACHING_LANGUAGES.map((lang) => (
@@ -169,7 +215,8 @@ export function ProfileForm() {
       <Card>
         <h2 className="mb-1 text-base font-semibold text-slate-900">Matières et modules étudiés</h2>
         <p className="mb-5 text-sm text-slate-500">
-          Ajoutez les matières marquantes de votre parcours — elles seront comparées au contenu des formations.
+          Ajoutez les matières marquantes de votre parcours (recommandé : au moins{" "}
+          {RECOMMENDED_COURSES}). Elles seront comparées au contenu des formations.
         </p>
         <CourseSkillEditor
           label="Vos matières"
@@ -183,7 +230,7 @@ export function ProfileForm() {
       <Card>
         <h2 className="mb-1 text-base font-semibold text-slate-900">Compétences</h2>
         <p className="mb-5 text-sm text-slate-500">
-          Vos compétences techniques ou transversales (langages, outils, langues...).
+          Vos compétences techniques ou transversales (recommandé : au moins {RECOMMENDED_SKILLS}).
         </p>
         <CourseSkillEditor
           label="Vos compétences"
@@ -194,9 +241,34 @@ export function ProfileForm() {
         />
       </Card>
 
-      <div className="flex justify-end">
+      {submitAttempted && validation.errors.length > 0 && (
+        <div
+          role="alert"
+          className="rounded-2xl border border-red-100 bg-red-50 px-5 py-4 text-sm text-red-800"
+        >
+          <p className="font-semibold text-red-900">Complétez ces éléments avant de continuer :</p>
+          <ul className="mt-1 list-disc space-y-1 pl-5">
+            {validation.errors.map((error) => (
+              <li key={error}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        {hasExistingProfile ? (
+          <button
+            type="button"
+            onClick={handleClear}
+            className="text-sm font-medium text-slate-500 hover:text-slate-700"
+          >
+            Effacer mon profil
+          </button>
+        ) : (
+          <span />
+        )}
         <Button type="submit" size="lg">
-          Rechercher une formation
+          Enregistrer et rechercher
           <ArrowRight className="size-4" />
         </Button>
       </div>

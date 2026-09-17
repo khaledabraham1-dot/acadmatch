@@ -12,6 +12,8 @@ import { ACADEMIC_LEVEL_ORDER, type StudentProfile } from "@/types";
 import { loadProfile } from "@/lib/storage";
 import { computeCompatibility } from "@/lib/matching/engine";
 import { compareFormationsByGoalThenScore } from "@/lib/matching/ranking";
+import { validateStoredProfile } from "@/lib/profile/validation";
+import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
 import {
   ALL_CITIES,
   ALL_DOMAINS,
@@ -85,6 +87,14 @@ export default function RecherchePage() {
             <ArrowRight className="size-3.5" />
           </LinkButton>
         </div>
+      )}
+
+      {profile && (
+        <ProfileReliabilityNotice
+          className="mb-6"
+          validation={validateStoredProfile(profile)}
+          editHref="/profil?next=/recherche"
+        />
       )}
 
       <div className="mb-6 space-y-3">
