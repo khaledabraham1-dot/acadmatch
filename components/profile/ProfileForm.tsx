@@ -33,6 +33,7 @@ import { Label, Select, Input } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
 import { CourseSkillEditor } from "@/components/profile/CourseSkillEditor";
 import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
+import { DegreeEquivalenceHelper } from "@/components/profile/DegreeEquivalenceHelper";
 import { CatalogueScopeNotice } from "@/components/ui/CatalogueScopeNotice";
 import { FORMATIONS } from "@/data/formations";
 import { isGoalCoveredByCatalogue } from "@/lib/search/filters";
@@ -179,6 +180,7 @@ export function ProfileForm() {
                 </option>
               ))}
             </Select>
+            <DegreeEquivalenceHelper onApply={setCurrentLevel} />
           </div>
 
           <div>
