@@ -44,6 +44,15 @@ export function OfficialSourceCard({ formation }: OfficialSourceCardProps) {
           </p>
         </div>
       )}
+
+      <div className="mt-3 border-t border-blue-100 pt-3">
+        <p className="text-xs font-semibold text-slate-700">Comment candidater</p>
+        <p className="mt-1 text-xs leading-relaxed text-slate-600">{formation.applicationProcedure}</p>
+        <p className="mt-1 text-xs italic text-slate-400">
+          Plateforme et procédure générales — la date limite exacte de la campagne en cours n&apos;est
+          fiable que sur la page officielle ci-dessus.
+        </p>
+      </div>
     </Card>
   );
 }

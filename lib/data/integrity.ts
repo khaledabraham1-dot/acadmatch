@@ -76,6 +76,10 @@ export function auditCatalogue(formations: Formation[], now = new Date()): Catal
       issues.push({ formationId: formation.id, message: "identité incomplète (nom / établissement / ville)" });
     }
 
+    if (!formation.applicationProcedure.trim()) {
+      issues.push({ formationId: formation.id, message: "procédure de candidature manquante" });
+    }
+
     if (formation.coreCourses.length === 0 || formation.skills.length === 0) {
       issues.push({ formationId: formation.id, message: "contenu académique ou compétences vides" });
     }

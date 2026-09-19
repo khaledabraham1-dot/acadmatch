@@ -27,6 +27,7 @@ function formation(overrides: Partial<Formation> = {}): Formation {
     skills: [],
     requiredLevel: "Licence 3",
     language: "Français",
+    applicationProcedure: "Dossier en ligne — formation de test.",
     source: "https://demo.acadmatch.fr/f",
     demo: true,
     ...overrides,

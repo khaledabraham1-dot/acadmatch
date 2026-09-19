@@ -153,6 +153,17 @@ interface FormationBase {
   requiredLevel: AcademicLevel;
   /** Langue principale d'enseignement, ex: "Français", "Anglais". */
   language: string;
+  /**
+   * Procédure de candidature en clair (plateforme, dossier, entretien,
+   * période habituelle). Texte descriptif volontairement dépourvu de dates
+   * exactes (jour/année) : une date de campagne se périme en quelques mois,
+   * contrairement à une plateforme ou un type de procédure qui change
+   * rarement — pour la date limite exacte, `source` fait toujours foi.
+   * Quand la page officielle ne détaille pas la procédure au moment de la
+   * vérification, ce champ le dit explicitement au lieu d'improviser
+   * (ex: "à vérifier directement sur le site officiel").
+   */
+  applicationProcedure: string;
 }
 
 /** Formation fictive de démonstration : URL non fonctionnelle, jamais affichée comme un lien cliquable. */

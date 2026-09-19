@@ -45,6 +45,7 @@ function makeFormation(overrides: Partial<Formation> = {}): Formation {
     description: "Formation de démonstration utilisée uniquement pour les tests.",
     requiredLevel: "Licence 3",
     language: "Français",
+    applicationProcedure: "Dossier en ligne — formation de test.",
     prerequisites: [
       requirement({ type: "niveau", value: "Licence 3" }),
       requirement({ type: "domaine", value: "Informatique" }),

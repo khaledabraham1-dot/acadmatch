@@ -57,6 +57,8 @@ export const FORMATIONS: Formation[] = [
       "Deuxième année de master adossée à l'École Polytechnique, centrée sur les fondements mathématiques et algorithmiques de la data science : apprentissage statistique, deep learning et traitement de grands volumes de données. Enseignement en anglais.",
     requiredLevel: "Master 1",
     language: "Anglais",
+    applicationProcedure:
+      "Candidature 100 % en ligne (relevés de notes, deux références académiques, CV, lettre de motivation) — dates précises sur la page admissions dédiée d'IP Paris.",
     prerequisites: [
       { id: "r1", type: "niveau", value: "Master 1", label: "Master 1 validé en mathématiques appliquées, statistiques ou équivalent" },
       { id: "r2", type: "domaine", value: "Mathématiques", label: "Solide formation en mathématiques appliquées ou statistiques", aliases: ["Data Science & IA"] },
@@ -93,6 +95,8 @@ export const FORMATIONS: Formation[] = [
       "Master of Science en intelligence artificielle, enseigné entièrement en anglais, combinant IA symbolique et IA fondée sur les données, appliquées à des enjeux sociétaux (santé, mobilité, industrie, finance).",
     requiredLevel: "Licence 3",
     language: "Anglais",
+    applicationProcedure:
+      "Plateforme de candidature dédiée à CentraleSupélec, par vagues successives (environ 5 vagues, de novembre à mai) — candidater tôt augmente les chances sur les premières vagues.",
     prerequisites: [
       { id: "r1", type: "niveau", value: "Licence 3", label: "Licence (Bac+3/4) validée en sciences, ingénierie ou équivalent" },
       { id: "r2", type: "domaine", value: "Informatique", label: "Formation scientifique ou en ingénierie", aliases: ["Data Science & IA", "Mathématiques"] },
@@ -127,6 +131,8 @@ export const FORMATIONS: Formation[] = [
       "Mastère Spécialisé (titre RNCP, Bac+6) centré sur le deep learning, l'apprentissage par renforcement, l'IA symbolique et la robotique, avec une thèse professionnelle de 4 à 6 mois.",
     requiredLevel: "Master 2",
     language: "Français",
+    applicationProcedure:
+      "Plateforme de candidature dédiée (frais de dossier d'environ 90 €), campagne généralement ouverte à partir de novembre pour une rentrée en septembre suivant.",
     prerequisites: [
       { id: "r1", type: "niveau", value: "Master 2", label: "Diplôme d'ingénieur, Master 2 ou équivalent Bac+5" },
       { id: "r2", type: "domaine", value: "Informatique", label: "Formation en informatique, mathématiques ou ingénierie", aliases: ["Data Science & IA"] },
@@ -160,6 +166,8 @@ export const FORMATIONS: Formation[] = [
       "Master en modélisation statistique, économique et financière (MoSEF), formant des data scientists maîtrisant économétrie, machine learning et programmation appliqués à l'entreprise.",
     requiredLevel: "Master 1",
     language: "Français",
+    applicationProcedure:
+      "Procédure de candidature non détaillée sur la page publique du programme — à vérifier directement sur le site officiel ou en contactant le programme.",
     prerequisites: [
       { id: "r1", type: "niveau", value: "Master 1", label: "Master 1 validé en économie, statistiques, mathématiques appliquées ou équivalent" },
       { id: "r2", type: "domaine", value: "Économie & Gestion", label: "Licence/Master en Économie, Statistiques ou Mathématiques appliquées", aliases: ["Mathématiques", "Data Science & IA"] },
@@ -194,6 +202,8 @@ export const FORMATIONS: Formation[] = [
       "Filière du Master de Mathématiques de Sorbonne Université menant à un double diplôme (Master Mathématiques + diplôme de statisticien ISUP), formant aux métiers de statisticien et data scientist.",
     requiredLevel: "Licence 3",
     language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier. Master 2 : plateforme eCandidat, généralement au printemps (mars à juin) — aucun entretien mentionné, admission sur dossier.",
     prerequisites: [
       { id: "r1", type: "niveau", value: "Licence 3", label: "Licence 3 validée en mathématiques ou équivalent" },
       { id: "r2", type: "domaine", value: "Mathématiques", label: "Licence en Mathématiques, avec de solides bases en probabilités et statistiques", aliases: ["Data Science & IA"] },
@@ -227,6 +237,8 @@ export const FORMATIONS: Formation[] = [
       "Première année commune (portail Mathématiques-Informatique) menant aux licences d'Informatique ou de Mathématiques de Sorbonne Université ; admission via Parcoursup (ou procédure DAP hors Union européenne).",
     requiredLevel: "Baccalauréat",
     language: "Français",
+    applicationProcedure:
+      "Parcoursup pour les bacheliers français, UE/EEE/Suisse (vœux formulés de janvier à mars, réponses à partir de juin) ; procédure DAP pour les candidats hors Union européenne.",
     prerequisites: [
       { id: "r1", type: "niveau", value: "Baccalauréat", label: "Baccalauréat ou équivalent" },
       { id: "r2", type: "domaine", value: "Informatique", label: "Profil scientifique, spécialité Mathématiques recommandée", aliases: ["Mathématiques"] },
@@ -259,6 +271,8 @@ export const FORMATIONS: Formation[] = [
       "Licence de 3 ans (L1/L2/L3) en informatique à l'UFR Sciences de l'Université Paris-Saclay, avec un parcours possible en alternance (MIAGE) en troisième année.",
     requiredLevel: "Baccalauréat",
     language: "Français",
+    applicationProcedure:
+      "Procédure de candidature non confirmée sur la page consultée — à vérifier directement sur la page « Applying for undergraduate programmes » de l'université.",
     prerequisites: [
       { id: "r1", type: "niveau", value: "Baccalauréat", label: "Baccalauréat ou équivalent" },
       { id: "r2", type: "domaine", value: "Informatique", label: "Profil scientifique, spécialité Mathématiques ou NSI recommandée", aliases: ["Mathématiques"] },
@@ -291,6 +305,8 @@ export const FORMATIONS: Formation[] = [
       "Bachelor Universitaire de Technologie (Bac+3, 180 ECTS) en informatique : conception, développement et déploiement de solutions logicielles. Entrée en BUT1 via Parcoursup, ou en BUT2/BUT3 sur dossier et entretien avec un BTS SIO ou un Bac+2 en informatique.",
     requiredLevel: "Baccalauréat",
     language: "Français",
+    applicationProcedure:
+      "BUT1 : Parcoursup (vœux de janvier à mars, propositions d'admission en continu à partir de début juin). BUT2/BUT3 : dossier via la procédure des IUT des Pays de la Loire, hors Parcoursup.",
     prerequisites: [
       { id: "r1", type: "niveau", value: "Baccalauréat", label: "Baccalauréat pour une entrée en BUT1 ; Bac+2 informatique pour une entrée directe en BUT2/BUT3" },
       { id: "r2", type: "domaine", value: "Informatique", label: "Profil scientifique ou technologique" },
@@ -323,6 +339,8 @@ export const FORMATIONS: Formation[] = [
       "Admission directe en 2ᵉ ou 3ᵉ année du cycle ingénieur du Département Informatique de l'INSA Lyon, pour les étudiants ayant déjà validé un DUT/BUT, une Licence (L2/L3) ou un BTS.",
     requiredLevel: "Licence 2",
     language: "Français",
+    applicationProcedure:
+      "Page officielle non consultable au moment de la vérification — procédure et calendrier d'admission parallèle à vérifier directement sur le site de l'INSA Lyon.",
     prerequisites: [
       { id: "r1", type: "niveau", value: "Licence 2", label: "L2, L3, DUT, BUT2/BUT3 ou BTS validé" },
       { id: "r2", type: "domaine", value: "Informatique", label: "Parcours scientifique ou technologique en informatique" },
