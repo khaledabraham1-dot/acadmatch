@@ -49,3 +49,23 @@ export function filterFormations(formations: Formation[], filters: SearchFilters
 export function uniqueSorted(formations: Formation[], selector: (formation: Formation) => string): string[] {
   return [...new Set(formations.map(selector))].sort();
 }
+
+/**
+ * Au moins une formation du catalogue vise-t-elle cet objectif ? Le
+ * formulaire de profil propose des objectifs (`StudyGoal`) indépendamment du
+ * catalogue actuel (ex: "Doctorat"), donc un étudiant peut sélectionner un
+ * objectif qu'aucune formation ne couvre encore. Dans ce cas, le tri par
+ * objectif (`compareFormationsByGoalThenScore`) ne trouve jamais de
+ * correspondance et retombe sur le score brut — qui peut alors sembler élevé
+ * pour une formation d'un type totalement différent (ex: un Mastère
+ * Spécialisé à 79% pour un profil visant un Doctorat). Utilisé pour avertir
+ * l'utilisateur plutôt que de laisser un score fort passer pour une
+ * recommandation pertinente.
+ */
+export function isGoalCoveredByCatalogue(
+  formations: Formation[],
+  goal: string | null | undefined,
+): boolean {
+  if (!goal) return true;
+  return formations.some((formation) => formation.goal === goal);
+}

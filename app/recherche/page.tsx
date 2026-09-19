@@ -120,7 +120,10 @@ export default function RecherchePage() {
         />
       )}
 
-      <CatalogueScopeNotice className="mb-6 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm leading-relaxed text-slate-600" />
+      <CatalogueScopeNotice
+        goal={profile?.goal}
+        className="mb-6 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm leading-relaxed text-slate-600"
+      />
 
       <div className="mb-6 space-y-3">
         <div className="relative">

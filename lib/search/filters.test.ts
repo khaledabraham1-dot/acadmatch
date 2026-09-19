@@ -6,6 +6,7 @@ import {
   ALL_LEVELS,
   EMPTY_FILTERS,
   filterFormations,
+  isGoalCoveredByCatalogue,
   matchesFilters,
   uniqueSorted,
 } from "@/lib/search/filters";
@@ -96,5 +97,22 @@ describe("uniqueSorted", () => {
       formation({ id: "3", city: "Nantes" }),
     ];
     expect(uniqueSorted(formations, (f) => f.city)).toEqual(["Lyon", "Nantes"]);
+  });
+});
+
+describe("isGoalCoveredByCatalogue", () => {
+  const formations = [formation({ goal: "Master" })];
+
+  it("est vrai quand une formation vise cet objectif", () => {
+    expect(isGoalCoveredByCatalogue(formations, "Master")).toBe(true);
+  });
+
+  it("est faux quand aucune formation ne vise cet objectif (ex: Doctorat, absent du catalogue actuel)", () => {
+    expect(isGoalCoveredByCatalogue(formations, "Doctorat")).toBe(false);
+  });
+
+  it("reste vrai sans objectif renseigné (rien à signaler avant que l'utilisateur choisisse)", () => {
+    expect(isGoalCoveredByCatalogue(formations, null)).toBe(true);
+    expect(isGoalCoveredByCatalogue(formations, undefined)).toBe(true);
   });
 });

@@ -26,6 +26,9 @@ import { Label, Select, Input } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
 import { CourseSkillEditor } from "@/components/profile/CourseSkillEditor";
 import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
+import { CatalogueScopeNotice } from "@/components/ui/CatalogueScopeNotice";
+import { FORMATIONS } from "@/data/formations";
+import { isGoalCoveredByCatalogue } from "@/lib/search/filters";
 import { EXAMPLE_PROFILE_LABEL, EXAMPLE_STUDENT_PROFILE } from "@/data/example-profile";
 import { ArrowRight, FlaskConical } from "lucide-react";
 
@@ -208,6 +211,9 @@ export function ProfileForm() {
                 </option>
               ))}
             </Select>
+            {!isGoalCoveredByCatalogue(FORMATIONS, goal) && (
+              <CatalogueScopeNotice goal={goal} className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs leading-relaxed text-slate-600" />
+            )}
           </div>
 
           <fieldset className="sm:col-span-2">

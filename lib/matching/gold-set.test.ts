@@ -148,6 +148,30 @@ describe("gold set orientation — cas positifs / négatifs / limites", () => {
     }
   });
 
+  it("POS : profil Économie/Stats visant un Master Data Science → MoSEF (domaine économétrie) devant le M2DS généraliste", () => {
+    // Deux masters de data science peuvent tous les deux être de bons candidats
+    // pour un même objectif ("Master") — le classement doit distinguer celui
+    // dont le domaine (Économie & Gestion) colle réellement au profil, pas
+    // seulement le score brut de compatibilité de contenu générique.
+    const profile: StudentProfile = {
+      currentLevel: "Master 1",
+      fieldOfStudy: "Économie & Gestion",
+      currentDegree: "Master 1 Économétrie",
+      courses: [
+        { id: "1", name: "Économétrie" },
+        { id: "2", name: "Statistiques" },
+        { id: "3", name: "Microéconomie" },
+      ],
+      skills: ["Excel", "Analyse de données", "Python"],
+      goal: "Master",
+      languages: ["Français"],
+    };
+
+    const mosefScore = computeCompatibility(profile, byId("f-mosef-paris1")).overallScore;
+    const m2dsScore = computeCompatibility(profile, byId("f-m2ds-ip-paris")).overallScore;
+    expect(mosefScore).toBeGreaterThan(m2dsScore);
+  });
+
   it("LIMITE : formation 100% anglais pénalise un profil sans anglais (écart mesurable)", () => {
     const formation = byId("f-msc-ai-centralesupelec");
     const base = {

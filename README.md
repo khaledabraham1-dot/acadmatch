@@ -52,3 +52,15 @@ cp .env.example .env.local
 
 Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · aucune base de données (persistance
 locale via `localStorage` pour ce prototype).
+
+## Hors périmètre du MVP actuel
+
+Volontairement non traité pour l'instant (voir `AcadMatch_Roadmap_MVP_v1.docx`) : candidature
+automatisée ou remplissage Campus France, prédiction d'admission, chatbot généraliste,
+marketplace de consultants, extension immédiate à tous les pays, monétisation, IA générative
+par défaut dans le moteur. `StudyGoal` propose "Doctorat" en anticipation d'un futur
+élargissement du catalogue, mais aucune formation de ce type n'y figure encore — l'app le
+signale explicitement à l'utilisateur plutôt que de le masquer (voir `CatalogueScopeNotice`).
+
+Pistes V2+ : import/compréhension de syllabus PDF, équivalences sémantiques par IA, analyse de
+CV/projets, recommandations personnalisées, extension à d'autres pays, offre B2B écoles.
