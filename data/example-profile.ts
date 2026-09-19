@@ -23,4 +23,5 @@ export const EXAMPLE_STUDENT_PROFILE: StudentProfile = {
   skills: ["Python", "SQL", "Git", "Java"],
   goal: "Master",
   languages: ["Français", "Anglais"],
+  academicStanding: "Bons résultats",
 };

@@ -1,6 +1,8 @@
 import {
   ACADEMIC_LEVEL_ORDER,
+  NEUTRAL_ACADEMIC_STANDING,
   type AcademicLevel,
+  type AcademicStanding,
   type StudentProfile,
   type StudyGoal,
 } from "@/types";
@@ -38,6 +40,7 @@ export interface ProfileDraft {
   skills: string[];
   goal: StudyGoal;
   languages: string[];
+  academicStanding: AcademicStanding;
 }
 
 export interface ProfileValidation {
@@ -173,6 +176,7 @@ export function validateStoredProfile(profile: StudentProfile): ProfileValidatio
     skills: profile.skills,
     goal: profile.goal,
     languages: profile.languages,
+    academicStanding: profile.academicStanding ?? NEUTRAL_ACADEMIC_STANDING,
   });
 }
 

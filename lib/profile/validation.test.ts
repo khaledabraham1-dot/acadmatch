@@ -60,6 +60,7 @@ describe("validateProfileDraft", () => {
     skills: ["Python", "SQL"],
     goal: "Master" as const,
     languages: ["Français"],
+    academicStanding: "Résultats dans la moyenne" as const,
   };
 
   it("accepte un profil exploitable", () => {
@@ -107,6 +108,22 @@ describe("validateStoredProfile", () => {
     const result = validateStoredProfile(profile);
     expect(result.reliability).toBe("limité");
     expect(result.isSubmittable).toBe(true);
+  });
+
+  it("ne bloque pas un profil enregistré avant l'ajout de academicStanding", () => {
+    // Simule un ancien profil localStorage, capturé avant ce champ (Étape 10).
+    const legacyProfile = {
+      currentLevel: "Licence 3",
+      fieldOfStudy: "Informatique",
+      currentDegree: "Licence Informatique",
+      courses: [{ id: "c1", name: "Algorithmique" }],
+      skills: ["Python"],
+      goal: "Master",
+      languages: ["Français"],
+    } as StudentProfile;
+
+    expect(() => validateStoredProfile(legacyProfile)).not.toThrow();
+    expect(validateStoredProfile(legacyProfile).isSubmittable).toBe(true);
   });
 });
 

@@ -27,7 +27,7 @@ const CRITERION_LABELS: Record<keyof CompatibilityBreakdown, string> = {
   prerequisites: "les prérequis d'admission",
   academicContent: "le contenu académique",
   skills: "les compétences attendues",
-  levelDegree: "l'adéquation niveau / objectif",
+  levelDegree: "l'adéquation niveau / dossier / objectif",
 };
 
 export interface DecisionAction {

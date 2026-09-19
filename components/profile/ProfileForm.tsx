@@ -2,9 +2,16 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import type { AcademicLevel, StudentProfile, StudyGoal } from "@/types";
+import {
+  NEUTRAL_ACADEMIC_STANDING,
+  type AcademicLevel,
+  type AcademicStanding,
+  type StudentProfile,
+  type StudyGoal,
+} from "@/types";
 import {
   ACADEMIC_LEVELS,
+  ACADEMIC_STANDINGS,
   CURRENT_DEGREE_SUGGESTIONS,
   DOMAINS,
   STUDY_GOALS,
@@ -45,6 +52,7 @@ export function ProfileForm() {
   const [skills, setSkills] = useState<string[]>([]);
   const [goal, setGoal] = useState<StudyGoal>("Master");
   const [languages, setLanguages] = useState<string[]>(["Français"]);
+  const [academicStanding, setAcademicStanding] = useState<AcademicStanding>(NEUTRAL_ACADEMIC_STANDING);
   const [hasExistingProfile, setHasExistingProfile] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
 
@@ -61,6 +69,7 @@ export function ProfileForm() {
     setSkills(existing.skills);
     setGoal(existing.goal);
     setLanguages(existing.languages ?? ["Français"]);
+    setAcademicStanding(existing.academicStanding ?? NEUTRAL_ACADEMIC_STANDING);
     setHasExistingProfile(true);
   }, []);
 
@@ -74,8 +83,9 @@ export function ProfileForm() {
         skills,
         goal,
         languages,
+        academicStanding,
       }),
-    [currentLevel, fieldOfStudy, currentDegree, courses, skills, goal, languages],
+    [currentLevel, fieldOfStudy, currentDegree, courses, skills, goal, languages, academicStanding],
   );
 
   function handleSubmit(event: React.FormEvent) {
@@ -91,6 +101,7 @@ export function ProfileForm() {
       skills,
       goal,
       languages,
+      academicStanding,
     };
 
     saveProfile(profile);
@@ -109,6 +120,7 @@ export function ProfileForm() {
     setSkills([]);
     setGoal("Master");
     setLanguages(["Français"]);
+    setAcademicStanding(NEUTRAL_ACADEMIC_STANDING);
     setHasExistingProfile(false);
     setSubmitAttempted(false);
   }
@@ -122,6 +134,7 @@ export function ProfileForm() {
     setSkills(example.skills);
     setGoal(example.goal);
     setLanguages(example.languages);
+    setAcademicStanding(example.academicStanding ?? NEUTRAL_ACADEMIC_STANDING);
     setSubmitAttempted(false);
   }
 
@@ -199,6 +212,26 @@ export function ProfileForm() {
             </datalist>
             <p className="mt-1.5 text-xs text-slate-500">
               Si vous laissez ce champ vide, AcadMatch utilisera « {currentLevel} — {fieldOfStudy} ».
+            </p>
+          </div>
+
+          <div className="sm:col-span-2">
+            <Label htmlFor="academicStanding">Vos résultats académiques</Label>
+            <Select
+              id="academicStanding"
+              value={academicStanding}
+              onChange={(e) => setAcademicStanding(e.target.value as AcademicStanding)}
+            >
+              {ACADEMIC_STANDINGS.map((standing) => (
+                <option key={standing} value={standing}>
+                  {standing}
+                </option>
+              ))}
+            </Select>
+            <p className="mt-1.5 text-xs text-slate-500">
+              Auto-évaluation honnête, quel que soit votre système de notation d&apos;origine. Elle
+              affine légèrement la compatibilité « Niveau / dossier » — elle ne vous exclut jamais
+              d&apos;une formation.
             </p>
           </div>
 

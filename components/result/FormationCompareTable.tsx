@@ -83,7 +83,7 @@ export function FormationCompareTable({ profile, formations }: FormationCompareT
               ))}
             </tr>
             <tr>
-              <td className="px-4 py-3 font-medium text-slate-500">Niveau / objectif</td>
+              <td className="px-4 py-3 font-medium text-slate-500">Niveau / dossier</td>
               {rows.map(({ formation, result }) => (
                 <td key={formation.id} className="px-4 py-3">
                   {result.breakdown.levelDegree}/100

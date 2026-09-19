@@ -1,4 +1,4 @@
-import type { AcademicLevel, StudyGoal } from "@/types";
+import type { AcademicLevel, AcademicStanding, StudyGoal } from "@/types";
 
 /** Référentiels utilisés dans les formulaires (profil, filtres de recherche). */
 
@@ -17,6 +17,14 @@ export const STUDY_GOALS: StudyGoal[] = [
   "Master",
   "Doctorat",
   "École spécialisée",
+];
+
+/** Ordre volontairement croissant : reflété tel quel dans le <select> du profil. */
+export const ACADEMIC_STANDINGS: AcademicStanding[] = [
+  "Résultats modestes",
+  "Résultats dans la moyenne",
+  "Bons résultats",
+  "Excellents résultats",
 ];
 
 /** Langues d'enseignement présentes dans le catalogue — proposées dans le profil étudiant. */

@@ -178,7 +178,7 @@ export function ResultView() {
               icon={<Wrench className="size-4" />}
             />
             <CriteriaBar
-              label="Niveau / diplôme"
+              label="Niveau / dossier"
               score={result.breakdown.levelDegree}
               icon={<GraduationCap className="size-4" />}
             />

@@ -268,6 +268,47 @@ describe("computeCompatibility", () => {
     expect(computeCompatibility(mismatchedGoal, formation).breakdown.levelDegree).toBe(75);
   });
 
+  describe("auto-évaluation du dossier (academicStanding, Étape 10)", () => {
+    it("ordonne le score 'Niveau / dossier' selon le dossier déclaré, à niveau/objectif identiques", () => {
+      const formation = makeFormation();
+      const scoreFor = (academicStanding: StudentProfile["academicStanding"]) =>
+        computeCompatibility(makeProfile({ academicStanding }), formation).breakdown.levelDegree;
+
+      const modeste = scoreFor("Résultats modestes");
+      const moyenne = scoreFor("Résultats dans la moyenne");
+      const bons = scoreFor("Bons résultats");
+      const excellents = scoreFor("Excellents résultats");
+
+      expect(modeste).toBeLessThan(moyenne);
+      expect(moyenne).toBeLessThan(bons);
+      expect(bons).toBeLessThan(excellents);
+    });
+
+    it("un profil qui ne renseigne pas academicStanding est traité comme neutre (rétrocompatibilité)", () => {
+      const formation = makeFormation();
+      const withoutField = computeCompatibility(makeProfile({ academicStanding: undefined }), formation);
+      const withNeutral = computeCompatibility(
+        makeProfile({ academicStanding: "Résultats dans la moyenne" }),
+        formation,
+      );
+      expect(withoutField.breakdown.levelDegree).toBe(withNeutral.breakdown.levelDegree);
+    });
+
+    it("reste borné à [0, 100] même cumulé à un fort décalage de niveau/objectif", () => {
+      const formation = makeFormation({ requiredLevel: "Master 2", goal: "Master" });
+      const worst = computeCompatibility(
+        makeProfile({ currentLevel: "Baccalauréat", goal: "Licence", academicStanding: "Résultats modestes" }),
+        formation,
+      );
+      const best = computeCompatibility(
+        makeProfile({ currentLevel: "Master 2", goal: "Master", academicStanding: "Excellents résultats" }),
+        formation,
+      );
+      expect(worst.breakdown.levelDegree).toBeGreaterThanOrEqual(0);
+      expect(best.breakdown.levelDegree).toBeLessThanOrEqual(100);
+    });
+  });
+
   it("pénalise le score de prérequis quand l'étudiant n'est pas à l'aise dans la langue d'enseignement", () => {
     const formation = makeFormation({ language: "Anglais" });
     const comfortable = makeProfile({ languages: ["Français", "Anglais"] });

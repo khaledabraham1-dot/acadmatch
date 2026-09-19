@@ -1,6 +1,8 @@
 import {
   ACADEMIC_LEVEL_ORDER,
+  NEUTRAL_ACADEMIC_STANDING,
   type AcademicItem,
+  type AcademicStanding,
   type CompatibilityBreakdown,
   type CompatibilityResult,
   type Formation,
@@ -143,15 +145,39 @@ function levelRank(level: string): number {
 }
 
 /**
- * Score "Niveau / diplôme" : le niveau actuel de l'étudiant permet-il de
- * candidater, et cette formation correspond-elle au diplôme qu'il vise
- * réellement (son "objectif de formation") ? Une formation de Licence
- * affichée à un étudiant visant un Master n'est pas ce qu'il recherche,
- * même si son niveau actuel le lui permettrait techniquement. On compare
- * directement `formation.goal` à `profile.goal` (et non le `level` de la
- * formation) : `level` décrit le niveau d'ENTRÉE, pas le type de diplôme
- * visé — une école d'ingénieurs en admission parallèle a un niveau d'entrée
- * "Licence 3" mais un objectif "École spécialisée", pas "Licence".
+ * Ajustement du score "Niveau / dossier" selon l'auto-évaluation des
+ * résultats académiques (`StudentProfile.academicStanding`, Étape 10 —
+ * "point 1"). Un jury regarde la qualité du dossier, pas seulement le
+ * niveau/domaine — un profil qui liste les mêmes matières qu'un autre mais
+ * avec des résultats nettement meilleurs (ou plus faibles) ne devrait pas
+ * obtenir exactement le même score.
+ *
+ * Volontairement modeste et SYMÉTRIQUE, pas un seuil de sélectivité par
+ * formation : on ne connaît pas la barre réelle de chaque jury sans
+ * l'inventer (interdit par la charte du catalogue), donc l'ajustement reste
+ * le même quelle que soit la formation plutôt que de prétendre à une
+ * précision qu'on n'a pas. Un profil qui ne renseigne pas ce champ (ancien
+ * profil stocké avant son ajout, ou choix de ne pas répondre) reçoit
+ * `NEUTRAL_ACADEMIC_STANDING` : aucun ajustement, ni pénalité ni bonus.
+ */
+const ACADEMIC_STANDING_ADJUSTMENT: Record<AcademicStanding, number> = {
+  "Résultats modestes": -12,
+  "Résultats dans la moyenne": 0,
+  "Bons résultats": 8,
+  "Excellents résultats": 15,
+};
+
+/**
+ * Score "Niveau / dossier" : le niveau actuel de l'étudiant permet-il de
+ * candidater, cette formation correspond-elle au diplôme qu'il vise
+ * réellement (son "objectif de formation"), et que vaut son dossier ? Une
+ * formation de Licence affichée à un étudiant visant un Master n'est pas ce
+ * qu'il recherche, même si son niveau actuel le lui permettrait
+ * techniquement. On compare directement `formation.goal` à `profile.goal`
+ * (et non le `level` de la formation) : `level` décrit le niveau d'ENTRÉE,
+ * pas le type de diplôme visé — une école d'ingénieurs en admission
+ * parallèle a un niveau d'entrée "Licence 3" mais un objectif "École
+ * spécialisée", pas "Licence".
  */
 function computeLevelDegreeScore(profile: StudentProfile, formation: Formation): number {
   const diff = levelRank(profile.currentLevel) - levelRank(formation.requiredLevel);
@@ -163,7 +189,11 @@ function computeLevelDegreeScore(profile: StudentProfile, formation: Formation):
   else base = 20;
 
   const matchesGoal = formation.goal === profile.goal;
-  return matchesGoal ? base : Math.max(0, base - 25);
+  const afterGoal = matchesGoal ? base : Math.max(0, base - 25);
+
+  const standing = profile.academicStanding ?? NEUTRAL_ACADEMIC_STANDING;
+  const afterStanding = afterGoal + ACADEMIC_STANDING_ADJUSTMENT[standing];
+  return Math.min(100, Math.max(0, afterStanding));
 }
 
 // À l'intérieur des prérequis, le niveau et le domaine sont structurants et

@@ -31,6 +31,23 @@ export const ACADEMIC_LEVEL_ORDER: AcademicLevel[] = [
 /** Objectif d'études visé par l'étudiant. */
 export type StudyGoal = "Licence" | "Master" | "Doctorat" | "École spécialisée";
 
+/**
+ * Auto-évaluation des résultats académiques du parcours actuel — volontairement
+ * indépendante d'un système de notation précis (mention française, GPA, etc.),
+ * puisque le public cible inclut des étudiants formés hors de France et
+ * qu'AcadMatch ne convertit pas encore les diplômes étrangers (voir roadmap).
+ * Utilisée par le moteur comme signal de dossier, en plus du niveau (voir
+ * `CompatibilityBreakdown.levelDegree` et `computeLevelDegreeScore`).
+ */
+export type AcademicStanding =
+  | "Résultats modestes"
+  | "Résultats dans la moyenne"
+  | "Bons résultats"
+  | "Excellents résultats";
+
+/** Valeur neutre (aucun ajustement de score) — profil qui n'a pas renseigné ce champ. */
+export const NEUTRAL_ACADEMIC_STANDING: AcademicStanding = "Résultats dans la moyenne";
+
 /** Une matière ou un module suivi par l'étudiant. */
 export interface Course {
   id: string;
@@ -53,6 +70,14 @@ export interface StudentProfile {
   goal: StudyGoal;
   /** Langues dans lesquelles l'étudiant est à l'aise pour suivre des cours, ex: ["Français", "Anglais"]. */
   languages: string[];
+  /**
+   * Auto-évaluation des résultats académiques (optionnelle). Optionnelle
+   * (contrairement à `languages`) car elle a une valeur neutre sûre par
+   * défaut (`NEUTRAL_ACADEMIC_STANDING`) qui ne pénalise ni n'avantage un
+   * profil qui ne l'a pas renseignée — un profil enregistré avant l'ajout de
+   * ce champ reste donc valide sans migration de `lib/storage.ts`.
+   */
+  academicStanding?: AcademicStanding;
 }
 
 /** Type de correspondance entre un élément du profil étudiant et une exigence de formation. */
@@ -164,7 +189,7 @@ export interface CompatibilityBreakdown {
   academicContent: number;
   /** Recouvrement des compétences (%). */
   skills: number;
-  /** Adéquation du niveau / diplôme actuel (%). */
+  /** Adéquation du niveau / diplôme actuel, incluant l'auto-évaluation du dossier (%). */
   levelDegree: number;
 }
 
