@@ -44,9 +44,17 @@ export function DegreeEquivalenceHelper({ onApply }: DegreeEquivalenceHelperProp
     <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
       <Label htmlFor="validatedYears">Années d&apos;études supérieures validées depuis le secondaire</Label>
       <div className="flex flex-wrap items-center gap-2">
+        {/*
+          w-full plutôt qu'un min-w-[260px] fixe : ce sélecteur vit dans une
+          boîte déjà réduite par plusieurs niveaux de padding (main + Card +
+          ce bloc) — à 320px, il ne restait qu'environ 208px de large
+          disponibles, moins que le min-width fixe, ce qui forçait un
+          débordement horizontal. w-full s'adapte à l'espace réel ; sm:w-auto
+          lui redonne une largeur naturelle dès qu'il y a de la place.
+        */}
         <Select
           id="validatedYears"
-          className="w-auto min-w-[260px] flex-1"
+          className="w-full sm:w-auto sm:min-w-[220px] sm:flex-1"
           value={years}
           onChange={(e) => setYears(Number(e.target.value))}
         >

@@ -21,7 +21,11 @@ export function Chip({ children, onRemove, className }: ChipProps) {
           type="button"
           onClick={onRemove}
           aria-label={`Retirer ${typeof children === "string" ? children : ""}`}
-          className="rounded-full p-0.5 text-slate-400 hover:bg-slate-200 hover:text-slate-600"
+          // p-1.5 plutôt que p-0.5 : la cible tactile précédente (~18px) était
+          // nettement sous la taille confortable au toucher sur mobile, alors
+          // que retirer une matière/compétence est une action fréquente du
+          // formulaire de profil.
+          className="rounded-full p-1.5 text-slate-400 hover:bg-slate-200 hover:text-slate-600"
         >
           <X className="size-3.5" />
         </button>

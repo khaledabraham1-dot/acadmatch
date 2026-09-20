@@ -69,6 +69,7 @@ export function ResultFeedback({ formationId, score }: ResultFeedbackProps) {
             key={key}
             type="button"
             onClick={() => setChoice(key)}
+            aria-pressed={choice === key}
             className={
               choice === key
                 ? "rounded-xl bg-blue-600 px-3.5 py-2 text-sm font-medium text-white"
