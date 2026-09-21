@@ -17,7 +17,8 @@ Accueil → Analyser mon profil → Rechercher une formation → Résultat de co
 - `components/` — composants UI, découpés par domaine (`landing`, `profile`, `search`, `result`, `shell`, `ui`).
 - `lib/matching/engine.ts` — moteur de scoring **déterministe**, sans IA externe, séparé de l'UI et remplaçable.
 - `data/` — catalogue de formations françaises **réelles et vérifiées** (périmètre actuel :
-  Data Science / IA / Informatique) et référentiels de matières/compétences.
+  Data Science / IA / Informatique) et référentiels de matières/compétences. Processus
+  d'ajout/vérification d'une formation : voir [`docs/data-sourcing.md`](docs/data-sourcing.md).
 - `types/` — types TypeScript partagés (`StudentProfile`, `StudyProgram`, `Institution`, `CompatibilityResult`, ...).
   `StudyProgram` (anciennement `Formation`) est générique : `institution.country` porte le pays, préparant
   l'ajout de futurs pays sans toucher au moteur de matching (voir roadmap — architecture internationale).
@@ -35,9 +36,10 @@ npm run dev
 Ouvrir [http://localhost:3000](http://localhost:3000).
 
 ```bash
-npm run lint   # ESLint
-npm run test   # Vitest
-npm run build  # build de production
+npm run lint             # ESLint
+npm run test             # Vitest
+npm run build            # build de production
+npm run audit:catalogue  # intégrité des données du catalogue (voir docs/data-sourcing.md)
 ```
 
 ## Feedback MVP

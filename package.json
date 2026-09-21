@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "audit:catalogue": "node --no-warnings scripts/audit-catalogue.mts"
   },
   "dependencies": {
     "lucide-react": "^1.45.0",
