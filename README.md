@@ -25,6 +25,8 @@ Accueil → Analyser mon profil → Rechercher une formation → Résultat de co
 - `app/compte/`, `lib/supabase/` — comptes utilisateurs **optionnels** (sauvegarder son profil pour le
   retrouver sur un autre appareil) : voir [`docs/accounts-setup.md`](docs/accounts-setup.md) pour la
   configuration. Sans elle, `/compte` affiche "bientôt disponible" et le reste de l'app est inchangé.
+- `lib/ai/` — fondations IA transverses (client Claude serveur, quotas, appel générique), pas encore
+  utilisées par une fonctionnalité visible : voir [`docs/ai-integration.md`](docs/ai-integration.md).
 
 ⚠️ Le catalogue est volontairement limité. Toute fiche `demo: true` doit rester clairement
 marquée comme démonstration — jamais présentée comme officielle.
