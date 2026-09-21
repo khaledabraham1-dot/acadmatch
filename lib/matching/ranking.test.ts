@@ -1,13 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { compareFormationsByGoalThenScore } from "@/lib/matching/ranking";
-import type { Formation, StudentProfile } from "@/types";
+import type { StudentProfile, StudyProgram } from "@/types";
 
-function formation(overrides: Partial<Formation> = {}): Formation {
+function formation(overrides: Partial<StudyProgram> = {}): StudyProgram {
   return {
     id: "f",
     name: "Formation",
-    institution: "Établissement",
-    city: "Paris",
+    institution: { name: "Établissement", city: "Paris", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Informatique",
@@ -20,7 +19,7 @@ function formation(overrides: Partial<Formation> = {}): Formation {
     source: "https://demo.acadmatch.fr/f",
     demo: true,
     ...overrides,
-  } as Formation;
+  } as StudyProgram;
 }
 
 function profile(overrides: Partial<StudentProfile> = {}): StudentProfile {
@@ -47,7 +46,7 @@ describe("compareFormationsByGoalThenScore", () => {
       ["licence", 90],
       ["master", 60],
     ]);
-    const scoreOf = (f: Formation) => scores.get(f.id) ?? -1;
+    const scoreOf = (f: StudyProgram) => scores.get(f.id) ?? -1;
 
     const sorted = [wrongGoalButHighScore, rightGoalButLowerScore].sort((a, b) =>
       compareFormationsByGoalThenScore(a, b, profile({ goal: "Master" }), scoreOf),
@@ -63,7 +62,7 @@ describe("compareFormationsByGoalThenScore", () => {
       ["low", 40],
       ["high", 85],
     ]);
-    const scoreOf = (f: Formation) => scores.get(f.id) ?? -1;
+    const scoreOf = (f: StudyProgram) => scores.get(f.id) ?? -1;
 
     const sorted = [low, high].sort((a, b) =>
       compareFormationsByGoalThenScore(a, b, profile({ goal: "Master" }), scoreOf),
@@ -79,7 +78,7 @@ describe("compareFormationsByGoalThenScore", () => {
       ["a", 90],
       ["b", 60],
     ]);
-    const scoreOf = (f: Formation) => scores.get(f.id) ?? -1;
+    const scoreOf = (f: StudyProgram) => scores.get(f.id) ?? -1;
 
     const sorted = [a, b].sort((x, y) => compareFormationsByGoalThenScore(x, y, null, scoreOf));
 

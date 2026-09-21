@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { FORMATIONS } from "@/data/formations";
+import type { StudyProgram } from "@/types";
 import {
+  auditCatalogue,
   blockingCatalogueIssues,
   daysSince,
   effectiveVerificationStatus,
@@ -59,5 +61,29 @@ describe("intégrité du catalogue réel", () => {
     for (const source of sources) {
       expect(isHttpsOfficialUrl(source)).toBe(true);
     }
+  });
+
+  it("le catalogue actuel est entièrement français (architecture internationale, phase 1)", () => {
+    // Documente l'état actuel, pas une règle figée : ce test devra être mis à
+    // jour dès qu'un premier établissement belge sera ajouté (roadmap, phase
+    // "deuxième pays"). Sert de garde-fou pour ne pas introduire un pays
+    // implicitement faux (ex: copier-coller sans changer `institution.country`).
+    for (const formation of FORMATIONS) {
+      expect(formation.institution.country).toBe("France");
+    }
+  });
+});
+
+describe("intégrité catalogue — pays de l'établissement", () => {
+  const base = FORMATIONS[0];
+
+  it("signale une identité incomplète quand le pays de l'établissement est vide", () => {
+    const withoutCountry: StudyProgram = {
+      ...base,
+      id: "f-test-no-country",
+      institution: { ...base.institution, country: "" },
+    };
+    const issues = auditCatalogue([withoutCountry]);
+    expect(issues.some((issue) => issue.message.includes("pays"))).toBe(true);
   });
 });

@@ -1,10 +1,10 @@
 import Link from "next/link";
-import type { Formation, StudentProfile } from "@/types";
+import type { StudentProfile, StudyProgram } from "@/types";
 import { Card } from "@/components/ui/Card";
 
 interface ComparisonSummaryProps {
   profile: StudentProfile;
-  formation: Formation;
+  formation: StudyProgram;
 }
 
 /** Rappel des deux termes de la comparaison, avec un lien pour les modifier. */
@@ -39,7 +39,7 @@ export function ComparisonSummary({ profile, formation }: ComparisonSummaryProps
           </p>
           <p className="font-semibold text-slate-900">{formation.name}</p>
           <p className="text-sm text-slate-500">
-            {formation.institution} · {formation.city}
+            {formation.institution.name} · {formation.institution.city}
           </p>
         </div>
         <Link href="/recherche" className="shrink-0 text-sm font-medium text-blue-600 hover:text-blue-700">

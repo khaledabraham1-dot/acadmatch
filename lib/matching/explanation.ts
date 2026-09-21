@@ -1,9 +1,9 @@
 import type {
   CompatibilityBreakdown,
   CompatibilityResult,
-  Formation,
   Importance,
   StudentProfile,
+  StudyProgram,
 } from "@/types";
 import { ENGINE_WEIGHTS } from "@/lib/matching/engine";
 import { getCompatibilityLabel } from "@/lib/matching/labels";
@@ -52,7 +52,7 @@ export interface DecisionAid {
   actions: DecisionAction[];
 }
 
-function importanceOf(formation: Formation, requirementName: string): Importance {
+function importanceOf(formation: StudyProgram, requirementName: string): Importance {
   const key = normalize(requirementName);
   const fromCourses = formation.coreCourses.find((item) => normalize(item.name) === key);
   if (fromCourses) return fromCourses.importance;
@@ -87,7 +87,7 @@ function weakestCriterionOf(breakdown: CompatibilityBreakdown): keyof Compatibil
 
 /** Construit le plan d'actions à partir des correspondances manquantes / partielles. */
 export function buildActionPlan(
-  formation: Formation,
+  formation: StudyProgram,
   result: CompatibilityResult,
   limit = 3,
 ): DecisionAction[] {
@@ -130,7 +130,7 @@ export function buildActionPlan(
  */
 export function buildDecisionAid(
   profile: StudentProfile,
-  formation: Formation,
+  formation: StudyProgram,
   result: CompatibilityResult,
 ): DecisionAid {
   const label = getCompatibilityLabel(result.overallScore);

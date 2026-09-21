@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { computeCompatibility } from "@/lib/matching/engine";
-import type { AcademicItem, Formation, Importance, Requirement, StudentProfile } from "@/types";
+import type { AcademicItem, Importance, Requirement, StudentProfile, StudyProgram } from "@/types";
 
 /**
  * Tests du moteur de matching (lib/matching/engine.ts).
@@ -33,12 +33,11 @@ function requirement(partial: Omit<Requirement, "id" | "label"> & { label?: stri
 }
 
 /** Formation de test avec des valeurs par défaut raisonnables, surchargeables par cas de test. */
-function makeFormation(overrides: Partial<Formation> = {}): Formation {
+function makeFormation(overrides: Partial<StudyProgram> = {}): StudyProgram {
   return {
     id: "f-test",
     name: "Formation de test",
-    institution: "Université fictive",
-    city: "Paris",
+    institution: { name: "Université fictive", city: "Paris", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Informatique",
@@ -55,10 +54,10 @@ function makeFormation(overrides: Partial<Formation> = {}): Formation {
     source: "https://demo.acadmatch.fr/formations/test",
     demo: true,
     ...overrides,
-    // `Partial<Formation>` sur une union discriminée élargit `demo` en
+    // `Partial<StudyProgram>` sur une union discriminée élargit `demo` en
     // `boolean` : ce cast ne concerne que ce helper de test, pas les
-    // données réelles (voir types/index.ts — DemoFormation/VerifiedFormation).
-  } as Formation;
+    // données réelles (voir types/index.ts — DemoStudyProgram/VerifiedStudyProgram).
+  } as StudyProgram;
 }
 
 function makeProfile(overrides: Partial<StudentProfile> = {}): StudentProfile {

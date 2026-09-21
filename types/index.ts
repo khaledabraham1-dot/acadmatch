@@ -127,11 +127,25 @@ export interface AcademicItem {
 /** Statut de vérification d'une fiche formation par rapport à sa source officielle. */
 export type VerificationStatus = "vérifiée" | "à revérifier";
 
-interface FormationBase {
+/**
+ * Établissement proposant une formation. `country` est volontairement une
+ * chaîne normalisée (ex: "France", "Belgique") plutôt qu'un enum de codes
+ * pays — même choix que le reste du fichier — car il n'existe qu'un seul
+ * pays au catalogue pour l'instant (voir roadmap : architecture
+ * internationale, 2e pays prévu ensuite). Ce champ est ce qui manquait pour
+ * distinguer un établissement français d'un établissement étranger : avant
+ * son introduction, le pays était implicite (toujours la France).
+ */
+export interface Institution {
+  name: string;
+  city: string;
+  country: string;
+}
+
+interface StudyProgramBase {
   id: string;
   name: string;
-  institution: string;
-  city: string;
+  institution: Institution;
   level: AcademicLevel;
   /**
    * Objectif de formation représenté par cette fiche (utilisé pour comparer
@@ -167,7 +181,7 @@ interface FormationBase {
 }
 
 /** Formation fictive de démonstration : URL non fonctionnelle, jamais affichée comme un lien cliquable. */
-interface DemoFormation extends FormationBase {
+interface DemoStudyProgram extends StudyProgramBase {
   demo: true;
   source: string;
   verifiedAt?: undefined;
@@ -175,7 +189,7 @@ interface DemoFormation extends FormationBase {
 }
 
 /** Formation réelle : source officielle, datée et vérifiée — obligatoires par construction du type. */
-interface VerifiedFormation extends FormationBase {
+interface VerifiedStudyProgram extends StudyProgramBase {
   demo: false;
   /** URL officielle de l'établissement pour cette formation. */
   source: string;
@@ -185,12 +199,17 @@ interface VerifiedFormation extends FormationBase {
 }
 
 /**
- * Une formation, réelle et vérifiée ou fictive de démonstration — `demo`
- * discrimine les deux et impose (au niveau des types) que toute formation
- * réelle porte sa source, sa date de vérification et son statut
- * (voir data/formations.ts, et DemoDataBadge côté UI).
+ * Une formation (au sens générique : "study program"), réelle et vérifiée
+ * ou fictive de démonstration — `demo` discrimine les deux et impose (au
+ * niveau des types) que toute formation réelle porte sa source, sa date de
+ * vérification et son statut (voir data/formations.ts, et DemoDataBadge
+ * côté UI). Nommé `StudyProgram` (et non `Formation`) car ce type n'est plus
+ * spécifique à la France : `institution.country` porte le pays (voir
+ * `Institution`) et les règles d'éligibilité/procédure propres à un pays
+ * restent un texte descriptif sur la fiche (`applicationProcedure`), jamais
+ * mêlées au calcul de score du moteur de matching (lib/matching/engine.ts).
  */
-export type Formation = DemoFormation | VerifiedFormation;
+export type StudyProgram = DemoStudyProgram | VerifiedStudyProgram;
 
 /** Décomposition du score de compatibilité par critère. */
 export interface CompatibilityBreakdown {

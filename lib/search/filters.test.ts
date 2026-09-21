@@ -10,14 +10,24 @@ import {
   matchesFilters,
   uniqueSorted,
 } from "@/lib/search/filters";
-import type { Formation } from "@/types";
+import type { StudyProgram } from "@/types";
 
-function formation(overrides: Partial<Formation> = {}): Formation {
+/** Overrides du helper de test : `institution`/`city` en raccourci plat plutôt que l'objet `Institution` imbriqué. */
+type FormationOverrides = Partial<Omit<StudyProgram, "institution">> & {
+  institution?: string;
+  city?: string;
+};
+
+function formation(overrides: FormationOverrides = {}): StudyProgram {
+  const { institution, city, ...rest } = overrides;
   return {
     id: "f",
     name: "Master Data Science",
-    institution: "Université Exemple",
-    city: "Paris",
+    institution: {
+      name: institution ?? "Université Exemple",
+      city: city ?? "Paris",
+      country: "France",
+    },
     level: "Master 1",
     goal: "Master",
     field: "Data Science & IA",
@@ -30,8 +40,8 @@ function formation(overrides: Partial<Formation> = {}): Formation {
     applicationProcedure: "Dossier en ligne — formation de test.",
     source: "https://demo.acadmatch.fr/f",
     demo: true,
-    ...overrides,
-  } as Formation;
+    ...rest,
+  } as StudyProgram;
 }
 
 describe("matchesFilters", () => {
@@ -97,7 +107,7 @@ describe("uniqueSorted", () => {
       formation({ id: "2", city: "Lyon" }),
       formation({ id: "3", city: "Nantes" }),
     ];
-    expect(uniqueSorted(formations, (f) => f.city)).toEqual(["Lyon", "Nantes"]);
+    expect(uniqueSorted(formations, (f) => f.institution.city)).toEqual(["Lyon", "Nantes"]);
   });
 });
 

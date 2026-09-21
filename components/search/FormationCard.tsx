@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { MapPin, GraduationCap, ChevronDown, ArrowRight } from "lucide-react";
-import type { Formation } from "@/types";
+import type { StudyProgram } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { LinkButton } from "@/components/ui/Button";
@@ -11,7 +11,7 @@ import { MAX_COMPARE_FORMATIONS } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 
 interface FormationCardProps {
-  formation: Formation;
+  formation: StudyProgram;
   /** Score déjà calculé côté page (null si aucun profil n'est encore renseigné). */
   score: number | null;
   /** La formation est-elle dans la shortlist de comparaison ? */
@@ -46,10 +46,10 @@ export function FormationCard({
             <h3 className="text-lg font-semibold text-slate-900">{formation.name}</h3>
             <p className="mt-0.5 flex items-center gap-1.5 text-sm text-slate-500">
               <GraduationCap className="size-4" />
-              {formation.institution}
+              {formation.institution.name}
               <span className="text-slate-300">·</span>
               <MapPin className="size-4" />
-              {formation.city}
+              {formation.institution.city}
             </p>
           </div>
 

@@ -18,7 +18,9 @@ Accueil → Analyser mon profil → Rechercher une formation → Résultat de co
 - `lib/matching/engine.ts` — moteur de scoring **déterministe**, sans IA externe, séparé de l'UI et remplaçable.
 - `data/` — catalogue de formations françaises **réelles et vérifiées** (périmètre actuel :
   Data Science / IA / Informatique) et référentiels de matières/compétences.
-- `types/` — types TypeScript partagés (`StudentProfile`, `Formation`, `CompatibilityResult`, ...).
+- `types/` — types TypeScript partagés (`StudentProfile`, `StudyProgram`, `Institution`, `CompatibilityResult`, ...).
+  `StudyProgram` (anciennement `Formation`) est générique : `institution.country` porte le pays, préparant
+  l'ajout de futurs pays sans toucher au moteur de matching (voir roadmap — architecture internationale).
 
 ⚠️ Le catalogue est volontairement limité. Toute fiche `demo: true` doit rester clairement
 marquée comme démonstration — jamais présentée comme officielle.

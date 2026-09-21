@@ -1,4 +1,4 @@
-import type { Formation, VerificationStatus } from "@/types";
+import type { StudyProgram, VerificationStatus } from "@/types";
 
 /**
  * Intégrité du catalogue (Étape 8).
@@ -46,7 +46,7 @@ export function isVerificationStale(verifiedAt: string, now = new Date()): boole
  * traitée comme "à revérifier" même si le champ n'a pas encore été mis à jour.
  */
 export function effectiveVerificationStatus(
-  formation: Formation,
+  formation: StudyProgram,
   now = new Date(),
 ): VerificationStatus | "démonstration" {
   if (formation.demo) return "démonstration";
@@ -61,7 +61,7 @@ export interface CatalogueIssue {
 }
 
 /** Règles dures d'intégrité du catalogue — aucune exception silencieuse. */
-export function auditCatalogue(formations: Formation[], now = new Date()): CatalogueIssue[] {
+export function auditCatalogue(formations: StudyProgram[], now = new Date()): CatalogueIssue[] {
   const issues: CatalogueIssue[] = [];
   const seenIds = new Set<string>();
   const seenSources = new Set<string>();
@@ -72,8 +72,16 @@ export function auditCatalogue(formations: Formation[], now = new Date()): Catal
     }
     seenIds.add(formation.id);
 
-    if (!formation.name.trim() || !formation.institution.trim() || !formation.city.trim()) {
-      issues.push({ formationId: formation.id, message: "identité incomplète (nom / établissement / ville)" });
+    if (
+      !formation.name.trim() ||
+      !formation.institution.name.trim() ||
+      !formation.institution.city.trim() ||
+      !formation.institution.country.trim()
+    ) {
+      issues.push({
+        formationId: formation.id,
+        message: "identité incomplète (nom / établissement / ville / pays)",
+      });
     }
 
     if (!formation.applicationProcedure.trim()) {
@@ -139,7 +147,7 @@ export function auditCatalogue(formations: Formation[], now = new Date()): Catal
 }
 
 /** Erreurs bloquantes uniquement (exclut le signal "à revérifier" de fraîcheur). */
-export function blockingCatalogueIssues(formations: Formation[], now = new Date()): CatalogueIssue[] {
+export function blockingCatalogueIssues(formations: StudyProgram[], now = new Date()): CatalogueIssue[] {
   return auditCatalogue(formations, now).filter(
     (issue) => !issue.message.startsWith("à revérifier"),
   );

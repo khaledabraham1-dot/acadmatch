@@ -5,11 +5,11 @@ import {
   type AcademicStanding,
   type CompatibilityBreakdown,
   type CompatibilityResult,
-  type Formation,
   type Importance,
   type MatchStrength,
   type Requirement,
   type StudentProfile,
+  type StudyProgram,
   type SubjectMatch,
 } from "@/types";
 import { normalize } from "@/lib/utils";
@@ -179,7 +179,7 @@ const ACADEMIC_STANDING_ADJUSTMENT: Record<AcademicStanding, number> = {
  * parallèle a un niveau d'entrée "Licence 3" mais un objectif "École
  * spécialisée", pas "Licence".
  */
-function computeLevelDegreeScore(profile: StudentProfile, formation: Formation): number {
+function computeLevelDegreeScore(profile: StudentProfile, formation: StudyProgram): number {
   const diff = levelRank(profile.currentLevel) - levelRank(formation.requiredLevel);
   let base: number;
   if (diff === 0) base = 100;
@@ -220,7 +220,7 @@ function requirementWeight(requirement: Requirement): number {
 }
 
 /** L'étudiant est-il à l'aise pour suivre des cours dans la langue d'enseignement de la formation ? */
-function computeLanguageStrength(profile: StudentProfile, formation: Formation): MatchStrength {
+function computeLanguageStrength(profile: StudentProfile, formation: StudyProgram): MatchStrength {
   const comfortable = profile.languages.some((lang) => normalize(lang) === normalize(formation.language));
   return comfortable ? "forte" : "manquant";
 }
@@ -233,7 +233,7 @@ function computeLanguageStrength(profile: StudentProfile, formation: Formation):
  * traite donc avec le même poids qu'un prérequis de "domaine" (structurant,
  * souvent éliminatoire), pas comme un simple bonus.
  */
-function computePrerequisitesScore(profile: StudentProfile, formation: Formation): number {
+function computePrerequisitesScore(profile: StudentProfile, formation: StudyProgram): number {
   let weightedTotal = 0;
   let weightSum = 0;
 
@@ -306,7 +306,7 @@ function computeContentScore(
  * Calcule le résultat de compatibilité entre un profil étudiant et une formation.
  * Fonction pure : mêmes entrées → même résultat, sans effet de bord.
  */
-export function computeCompatibility(profile: StudentProfile, formation: Formation): CompatibilityResult {
+export function computeCompatibility(profile: StudentProfile, formation: StudyProgram): CompatibilityResult {
   // Les matières et compétences renseignées forment un même bassin de
   // comparaison : un cours "Machine Learning" peut légitimement démontrer
   // à la fois un contenu académique et une compétence.

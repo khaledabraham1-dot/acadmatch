@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Formation, StudentProfile } from "@/types";
+import type { StudentProfile, StudyProgram } from "@/types";
 import { computeCompatibility } from "@/lib/matching/engine";
 import { buildDecisionAid } from "@/lib/matching/explanation";
 import { getCompatibilityLabel } from "@/lib/matching/labels";
@@ -9,7 +9,7 @@ import { LinkButton } from "@/components/ui/Button";
 
 interface FormationCompareTableProps {
   profile: StudentProfile;
-  formations: Formation[];
+  formations: StudyProgram[];
 }
 
 /**
@@ -40,7 +40,7 @@ export function FormationCompareTable({ profile, formations }: FormationCompareT
                     {formation.name}
                   </Link>
                   <p className="mt-0.5 text-[11px] font-normal normal-case tracking-normal text-slate-400">
-                    {formation.institution}
+                    {formation.institution.name}
                   </p>
                 </th>
               ))}

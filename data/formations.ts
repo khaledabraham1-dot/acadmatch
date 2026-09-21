@@ -1,4 +1,4 @@
-import type { AcademicItem, Formation, Importance } from "@/types";
+import type { AcademicItem, Importance, StudyProgram } from "@/types";
 
 /**
  * Catalogue de formations d'AcadMatch.
@@ -44,15 +44,14 @@ const skill = (name: string, importance: Importance, aliases?: string[]) =>
 
 const VERIFIED_AT = "2026-09-17";
 
-export const FORMATIONS: Formation[] = [
+export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-m2ds-ip-paris",
     name: "Master 2 Data Science (M2DS)",
-    institution: "Institut Polytechnique de Paris (École Polytechnique)",
+    institution: { name: "Institut Polytechnique de Paris (École Polytechnique)", city: "Palaiseau", country: "France" },
     level: "Master 2",
     goal: "Master",
     field: "Data Science & IA",
-    city: "Palaiseau",
     description:
       "Deuxième année de master adossée à l'École Polytechnique, centrée sur les fondements mathématiques et algorithmiques de la data science : apprentissage statistique, deep learning et traitement de grands volumes de données. Enseignement en anglais.",
     requiredLevel: "Master 1",
@@ -86,11 +85,10 @@ export const FORMATIONS: Formation[] = [
   {
     id: "f-msc-ai-centralesupelec",
     name: "MSc Artificial Intelligence Applied to Society",
-    institution: "CentraleSupélec",
+    institution: { name: "CentraleSupélec", city: "Gif-sur-Yvette", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Data Science & IA",
-    city: "Gif-sur-Yvette",
     description:
       "Master of Science en intelligence artificielle, enseigné entièrement en anglais, combinant IA symbolique et IA fondée sur les données, appliquées à des enjeux sociétaux (santé, mobilité, industrie, finance).",
     requiredLevel: "Licence 3",
@@ -122,11 +120,14 @@ export const FORMATIONS: Formation[] = [
   {
     id: "f-ms-ia-telecom-paris",
     name: "Mastère Spécialisé Intelligence Artificielle multimodale et autonome",
-    institution: "Télécom Paris & ENSTA Paris (Institut Polytechnique de Paris)",
+    institution: {
+      name: "Télécom Paris & ENSTA Paris (Institut Polytechnique de Paris)",
+      city: "Palaiseau",
+      country: "France",
+    },
     level: "Master 2",
     goal: "Master",
     field: "Data Science & IA",
-    city: "Palaiseau",
     description:
       "Mastère Spécialisé (titre RNCP, Bac+6) centré sur le deep learning, l'apprentissage par renforcement, l'IA symbolique et la robotique, avec une thèse professionnelle de 4 à 6 mois.",
     requiredLevel: "Master 2",
@@ -157,11 +158,10 @@ export const FORMATIONS: Formation[] = [
   {
     id: "f-mosef-paris1",
     name: "Master 2 MoSEF — Data Science",
-    institution: "Université Paris 1 Panthéon-Sorbonne",
+    institution: { name: "Université Paris 1 Panthéon-Sorbonne", city: "Paris", country: "France" },
     level: "Master 2",
     goal: "Master",
     field: "Data Science & IA",
-    city: "Paris",
     description:
       "Master en modélisation statistique, économique et financière (MoSEF), formant des data scientists maîtrisant économétrie, machine learning et programmation appliqués à l'entreprise.",
     requiredLevel: "Master 1",
@@ -193,11 +193,10 @@ export const FORMATIONS: Formation[] = [
   {
     id: "f-scdi-sorbonne",
     name: "Master Mathématiques — Filière Sciences des Données pour l'Ingénieur.e (SCDI)",
-    institution: "Sorbonne Université — Institut de Statistique (ISUP)",
+    institution: { name: "Sorbonne Université — Institut de Statistique (ISUP)", city: "Paris", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Data Science & IA",
-    city: "Paris",
     description:
       "Filière du Master de Mathématiques de Sorbonne Université menant à un double diplôme (Master Mathématiques + diplôme de statisticien ISUP), formant aux métiers de statisticien et data scientist.",
     requiredLevel: "Licence 3",
@@ -228,11 +227,10 @@ export const FORMATIONS: Formation[] = [
   {
     id: "f-licence-info-sorbonne",
     name: "Licence Informatique (Portail Mathématiques-Informatique)",
-    institution: "Sorbonne Université",
+    institution: { name: "Sorbonne Université", city: "Paris", country: "France" },
     level: "Licence 1",
     goal: "Licence",
     field: "Informatique",
-    city: "Paris",
     description:
       "Première année commune (portail Mathématiques-Informatique) menant aux licences d'Informatique ou de Mathématiques de Sorbonne Université ; admission via Parcoursup (ou procédure DAP hors Union européenne).",
     requiredLevel: "Baccalauréat",
@@ -262,11 +260,10 @@ export const FORMATIONS: Formation[] = [
   {
     id: "f-licence-info-paris-saclay",
     name: "Licence Informatique",
-    institution: "Université Paris-Saclay",
+    institution: { name: "Université Paris-Saclay", city: "Orsay", country: "France" },
     level: "Licence 1",
     goal: "Licence",
     field: "Informatique",
-    city: "Orsay",
     description:
       "Licence de 3 ans (L1/L2/L3) en informatique à l'UFR Sciences de l'Université Paris-Saclay, avec un parcours possible en alternance (MIAGE) en troisième année.",
     requiredLevel: "Baccalauréat",
@@ -296,11 +293,10 @@ export const FORMATIONS: Formation[] = [
   {
     id: "f-but-info-nantes",
     name: "BUT Informatique",
-    institution: "IUT de Nantes — Université de Nantes",
+    institution: { name: "IUT de Nantes — Université de Nantes", city: "Nantes", country: "France" },
     level: "Licence 1",
     goal: "Licence",
     field: "Informatique",
-    city: "Nantes",
     description:
       "Bachelor Universitaire de Technologie (Bac+3, 180 ECTS) en informatique : conception, développement et déploiement de solutions logicielles. Entrée en BUT1 via Parcoursup, ou en BUT2/BUT3 sur dossier et entretien avec un BTS SIO ou un Bac+2 en informatique.",
     requiredLevel: "Baccalauréat",
@@ -330,11 +326,10 @@ export const FORMATIONS: Formation[] = [
   {
     id: "f-insa-lyon-info-parallele",
     name: "Cycle ingénieur Informatique — admission parallèle (2ᵉ/3ᵉ année)",
-    institution: "INSA Lyon",
+    institution: { name: "INSA Lyon", city: "Villeurbanne", country: "France" },
     level: "Licence 3",
     goal: "École spécialisée",
     field: "Informatique",
-    city: "Villeurbanne",
     description:
       "Admission directe en 2ᵉ ou 3ᵉ année du cycle ingénieur du Département Informatique de l'INSA Lyon, pour les étudiants ayant déjà validé un DUT/BUT, une Licence (L2/L3) ou un BTS.",
     requiredLevel: "Licence 2",
@@ -363,6 +358,6 @@ export const FORMATIONS: Formation[] = [
   },
 ];
 
-export function getFormationById(id: string): Formation | undefined {
+export function getFormationById(id: string): StudyProgram | undefined {
   return FORMATIONS.find((formation) => formation.id === id);
 }

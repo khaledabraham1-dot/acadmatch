@@ -1,10 +1,10 @@
-import type { Formation } from "@/types";
+import type { StudyProgram } from "@/types";
 import { effectiveVerificationStatus } from "@/lib/data/integrity";
 import { Card } from "@/components/ui/Card";
 import { ExternalLink } from "lucide-react";
 
 interface OfficialSourceCardProps {
-  formation: Formation;
+  formation: StudyProgram;
 }
 
 /**
@@ -38,7 +38,7 @@ export function OfficialSourceCard({ formation }: OfficialSourceCardProps) {
             <ExternalLink className="size-3.5" aria-hidden />
           </a>
           <p className="text-xs text-slate-500">
-            {formation.institution}
+            {formation.institution.name}
             {formation.verifiedAt ? ` · fiche AcadMatch vérifiée le ${formation.verifiedAt}` : ""}
             {status === "à revérifier" ? " · à revérifier" : ""}
           </p>

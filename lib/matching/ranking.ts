@@ -1,4 +1,4 @@
-import type { Formation, StudentProfile } from "@/types";
+import type { StudentProfile, StudyProgram } from "@/types";
 
 /**
  * Compare deux formations pour le tri des résultats de recherche : d'abord
@@ -15,10 +15,10 @@ import type { Formation, StudentProfile } from "@/types";
  * réalistes (Étape 4) — voir aussi lib/matching/engine.ts.
  */
 export function compareFormationsByGoalThenScore(
-  a: Formation,
-  b: Formation,
+  a: StudyProgram,
+  b: StudyProgram,
   profile: StudentProfile | null,
-  scoreOf: (formation: Formation) => number,
+  scoreOf: (formation: StudyProgram) => number,
 ): number {
   if (profile) {
     const aMatchesGoal = a.goal === profile.goal;

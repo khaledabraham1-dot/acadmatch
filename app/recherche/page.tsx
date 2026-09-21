@@ -36,7 +36,7 @@ import {
 // formation mènerait systématiquement à "Aucune formation ne correspond".
 const AVAILABLE_DOMAINS = uniqueSorted(FORMATIONS, (f) => f.field);
 const AVAILABLE_LEVELS = ACADEMIC_LEVEL_ORDER.filter((l) => FORMATIONS.some((f) => f.level === l));
-const AVAILABLE_CITIES = uniqueSorted(FORMATIONS, (f) => f.city);
+const AVAILABLE_CITIES = uniqueSorted(FORMATIONS, (f) => f.institution.city);
 const AVAILABLE_LANGUAGES = uniqueSorted(FORMATIONS, (f) => f.language);
 
 export default function RecherchePage() {
