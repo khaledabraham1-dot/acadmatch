@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "AcadMatch — Compatibilité académique avant de candidater",
   description:
-    "AcadMatch aide les étudiants à comprendre quelles formations françaises correspondent à leur parcours : score explicable, lacunes prioritaires et sources officielles. Ce n'est pas Campus France — c'est l'aide à la décision avant de postuler.",
+    "AcadMatch aide les étudiants à comprendre quelles formations correspondent à leur parcours : score explicable, lacunes prioritaires et sources officielles. Ce n'est pas Campus France — c'est l'aide à la décision avant de postuler.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

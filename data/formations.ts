@@ -460,6 +460,13 @@ export const FORMATIONS: StudyProgram[] = [
       course("Bases de données", "essentielle"),
       course("Systèmes d'exploitation", "importante"),
       course("Génie logiciel", "importante"),
+      // Une des deux spécialisations de 3e semestre confirmées sur la page
+      // officielle (l'autre, Cloud Computing & Data Infrastructures, est déjà
+      // couverte par "Bases de données"/"Systèmes d'exploitation" ci-dessus).
+      // Sans cet item, un profil orienté IA obtenait un score de contenu
+      // artificiellement bas pour une formation qui propose pourtant cette
+      // spécialisation (trouvé lors de l'audit Phase 7).
+      course("Intelligence Artificielle", "utile", ["IA", "Machine Learning"]),
     ],
     skills: [
       skill("Programmation", "essentielle"),

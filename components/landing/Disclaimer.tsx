@@ -14,9 +14,10 @@ export function Disclaimer() {
             garantie ni une probabilité d&apos;admission.
           </p>
           <p>
-            Les fiches actuelles sont des formations françaises réelles, vérifiées manuellement
-            auprès de sources officielles, sur un périmètre volontairement limité (Data Science, IA,
-            Informatique). Vérifiez toujours la page de l&apos;établissement avant de candidater.
+            Les fiches actuelles sont des formations réelles (très majoritairement en France, avec
+            un premier établissement belge), vérifiées manuellement auprès de sources officielles,
+            sur un périmètre volontairement limité (Data Science, IA, Informatique). Vérifiez
+            toujours la page de l&apos;établissement avant de candidater.
           </p>
         </div>
       </div>

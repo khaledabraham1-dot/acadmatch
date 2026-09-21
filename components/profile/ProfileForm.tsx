@@ -238,7 +238,7 @@ export function ProfileForm() {
           </div>
 
           <div className="sm:col-span-2">
-            <Label htmlFor="goal">Objectif de formation en France</Label>
+            <Label htmlFor="goal">Objectif de formation</Label>
             <Select id="goal" value={goal} onChange={(e) => setGoal(e.target.value as StudyGoal)}>
               {STUDY_GOALS.map((g) => (
                 <option key={g} value={g}>

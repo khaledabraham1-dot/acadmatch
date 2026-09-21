@@ -32,10 +32,11 @@ export function CatalogueScopeNotice({
     >
       <p className="font-medium text-slate-800">Périmètre actuel du catalogue</p>
       <p className="mt-1">
-        AcadMatch couvre pour l&apos;instant un premier socle de formations françaises{" "}
+        AcadMatch couvre pour l&apos;instant un premier socle de formations, très majoritairement en
+        France (et un premier établissement belge, à titre expérimental), en{" "}
         <strong className="font-semibold text-slate-800">Data Science, IA et Informatique</strong>,
         vérifiées auprès de sources officielles. Ce n&apos;est pas (encore) l&apos;ensemble des
-        formations Campus France — l&apos;objectif est la fiabilité du matching, pas le volume.
+        formations disponibles — l&apos;objectif est la fiabilité du matching, pas le volume.
       </p>
       {!goalCovered && goal && (
         <p className="mt-2 font-medium text-amber-700">

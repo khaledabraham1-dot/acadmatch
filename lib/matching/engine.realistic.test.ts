@@ -12,12 +12,6 @@ import type { StudentProfile } from "@/types";
  * manuellement le moteur — voir la mémoire projet "acadmatch-roadmap".
  */
 
-function findFormation(id: string) {
-  const formation = FORMATIONS.find((f) => f.id === id);
-  if (!formation) throw new Error(`Formation de test introuvable : ${id}`);
-  return formation;
-}
-
 describe("moteur de matching sur le catalogue réel — profils réalistes", () => {
   it("un étudiant en L3 Informatique visant un Master ne voit plus une Licence ressortir devant les Masters pertinents", () => {
     // Cas observé en testant l'Étape 4 : une Licence L1, largement dépassée
@@ -50,9 +44,17 @@ describe("moteur de matching sur le catalogue réel — profils réalistes", () 
     expect(firstNonMasterIndex).toBeGreaterThan(lastMasterIndex);
   });
 
-  it("pénalise mesurablement une formation enseignée en anglais quand l'étudiant n'est pas à l'aise en anglais (MSc AI CentraleSupélec)", () => {
-    const formation = findFormation("f-msc-ai-centralesupelec");
-    expect(formation.language).toBe("Anglais");
+  it("pénalise mesurablement CHAQUE formation anglophone du catalogue quand l'étudiant n'est pas à l'aise en anglais", () => {
+    // Généralisé (Phase 7, audit Matching V2) : ne teste plus une seule
+    // formation codée en dur, mais toutes celles réellement enseignées en
+    // anglais dans le catalogue — au moment de l'écriture : M2DS, MSc AI
+    // CentraleSupélec, MoSIG (Grenoble) et UCLouvain (Belgique, 1er cas
+    // international). Garde-fou plus solide : si un futur ajout anglophone
+    // contourne accidentellement la vérification implicite de langue
+    // (computeLanguageStrength, lib/matching/engine.ts), ce test le détecte
+    // sans avoir à se souvenir d'ajouter un cas dédié.
+    const englishFormations = FORMATIONS.filter((f) => f.language === "Anglais");
+    expect(englishFormations.length).toBeGreaterThanOrEqual(4);
 
     const base: Omit<StudentProfile, "languages"> = {
       currentLevel: "Licence 3",
@@ -68,10 +70,11 @@ describe("moteur de matching sur le catalogue réel — profils réalistes", () 
       goal: "Master",
     };
 
-    const comfortable = computeCompatibility({ ...base, languages: ["Français", "Anglais"] }, formation);
-    const uncomfortable = computeCompatibility({ ...base, languages: ["Français"] }, formation);
-
-    expect(uncomfortable.overallScore).toBeLessThan(comfortable.overallScore);
+    for (const formation of englishFormations) {
+      const comfortable = computeCompatibility({ ...base, languages: ["Français", "Anglais"] }, formation);
+      const uncomfortable = computeCompatibility({ ...base, languages: ["Français"] }, formation);
+      expect(uncomfortable.overallScore, `formation ${formation.id}`).toBeLessThan(comfortable.overallScore);
+    }
   });
 
   it("un étudiant BUT2 visant une admission parallèle (objectif École spécialisée) voit les formations « École spécialisée » devant les Licences", () => {

@@ -66,7 +66,7 @@ export interface StudentProfile {
   courses: Course[];
   /** Compétences maîtrisées. */
   skills: string[];
-  /** Objectif de formation visé en France. */
+  /** Objectif de formation visé. */
   goal: StudyGoal;
   /** Langues dans lesquelles l'étudiant est à l'aise pour suivre des cours, ex: ["Français", "Anglais"]. */
   languages: string[];
