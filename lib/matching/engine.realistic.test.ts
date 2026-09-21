@@ -74,7 +74,14 @@ describe("moteur de matching sur le catalogue réel — profils réalistes", () 
     expect(uncomfortable.overallScore).toBeLessThan(comfortable.overallScore);
   });
 
-  it("un étudiant BUT2 visant une admission parallèle (objectif École spécialisée) voit l'INSA en tête, pas une Licence", () => {
+  it("un étudiant BUT2 visant une admission parallèle (objectif École spécialisée) voit les formations « École spécialisée » devant les Licences", () => {
+    // Depuis la phase 4 (extension du catalogue), l'INSA Lyon n'est plus la
+    // seule formation à objectif "École spécialisée" (ENSEIRB-MATMECA,
+    // Bordeaux INP, a le même objectif) : on ne verrouille donc plus un
+    // gagnant précis entre les deux — leur ordre reflète des différences
+    // réelles de fiches (ex: "Programmation orientée objet" pondérée
+    // différemment) — seulement l'invariant qui compte : aucune Licence ne
+    // doit passer devant une formation visant réellement son objectif.
     const profile: StudentProfile = {
       currentLevel: "Licence 2",
       fieldOfStudy: "Informatique",
@@ -94,6 +101,8 @@ describe("moteur de matching sur le catalogue réel — profils réalistes", () 
       compareFormationsByGoalThenScore(a, b, profile, (f) => scores.get(f.id) ?? -1),
     );
 
-    expect(sorted[0].id).toBe("f-insa-lyon-info-parallele");
+    const firstNonSpecialiseIndex = sorted.findIndex((f) => f.goal !== "École spécialisée");
+    const lastSpecialiseIndex = sorted.map((f) => f.goal).lastIndexOf("École spécialisée");
+    expect(firstNonSpecialiseIndex).toBeGreaterThan(lastSpecialiseIndex);
   });
 });

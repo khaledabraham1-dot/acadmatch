@@ -417,6 +417,142 @@ export const FORMATIONS: StudyProgram[] = [
     verificationStatus: "vérifiée",
     demo: false,
   },
+  {
+    id: "f-mosig-grenoble-inp",
+    name: "Master of Science in Informatics at Grenoble (MoSIG)",
+    institution: {
+      name: "Grenoble INP — Ensimag, Université Grenoble Alpes",
+      city: "Grenoble",
+      country: "France",
+    },
+    level: "Master 1",
+    goal: "Master",
+    field: "Informatique",
+    description:
+      "Master of Science international de 2 ans (LMD), entièrement en anglais, à Grenoble INP — Ensimag, avec deux spécialisations possibles : Cloud Computing & Data Infrastructures, ou IA appliquée et systèmes interactifs.",
+    requiredLevel: "Licence 3",
+    language: "Anglais",
+    applicationProcedure:
+      "Candidature en ligne sur la plateforme dédiée de Grenoble INP (applicationform.grenoble-inp.fr), généralement ouverte de mi-janvier à fin avril pour une rentrée en septembre ; dossier à déposer avant fin mars en cas de procédure de visa Études en France.",
+    prerequisites: [
+      {
+        id: "r1",
+        type: "niveau",
+        value: "Licence 3",
+        label: "Licence (Bac+3) ou Bac+4 en sciences ou ingénierie, avec des cours d'informatique",
+      },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Informatique",
+        label: "Solide pratique de la programmation (C/C++/Java), algorithmique, systèmes d'exploitation et bases de données",
+        aliases: ["Data Science & IA"],
+      },
+      {
+        id: "r3",
+        type: "competence",
+        value: "Anglais courant",
+        label: "Programme entièrement en anglais",
+      },
+    ],
+    coreCourses: [
+      course("Algorithmique", "essentielle"),
+      course("Bases de données", "essentielle"),
+      course("Systèmes d'exploitation", "importante"),
+      course("Génie logiciel", "importante"),
+    ],
+    skills: [
+      skill("Programmation", "essentielle"),
+      skill("Bases de données", "importante"),
+      skill("Anglais courant", "essentielle"),
+    ],
+    source: "https://ensimag.grenoble-inp.fr/fr/formation/master-of-science-in-informatics-at-grenoble",
+    verifiedAt: "2026-09-21",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-licence-info-toulouse",
+    name: "Licence mention Informatique",
+    institution: {
+      name: "Université de Toulouse (ex-Université Toulouse III – Paul Sabatier)",
+      city: "Toulouse",
+      country: "France",
+    },
+    level: "Licence 1",
+    goal: "Licence",
+    field: "Informatique",
+    description:
+      "Licence de 3 ans combinant fondamentaux théoriques et applications pratiques en informatique, avec plusieurs parcours (généraliste, réseaux et télécoms, double licence mathématiques-informatique) ; environ 80 % des débouchés professionnels visent un niveau Bac+5.",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    applicationProcedure:
+      "Parcoursup, vœux formulés de janvier à mars pour une entrée en L1 ; le parcours double licence mathématiques-informatique (MIDL) est sélectif, à capacité limitée.",
+    prerequisites: [
+      {
+        id: "r1",
+        type: "niveau",
+        value: "Baccalauréat",
+        label: "Baccalauréat général, technologique ou professionnel, ou équivalent",
+      },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Informatique",
+        label: "Profil scientifique ; spécialités Mathématiques ou NSI valorisées",
+        aliases: ["Mathématiques"],
+      },
+    ],
+    coreCourses: [
+      course("Algorithmique", "essentielle"),
+      course("Programmation", "essentielle"),
+      course("Mathématiques appliquées", "importante"),
+    ],
+    skills: [skill("Algorithmique", "essentielle"), skill("Rigueur mathématique", "importante")],
+    source: "https://www.utoulouse.fr/licence-mention-informatique",
+    verifiedAt: "2026-09-21",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-ing-info-enseirb-matmeca",
+    name: "Ingénieur spécialité Informatique — admission sur titre (BUT/Licence)",
+    institution: { name: "ENSEIRB-MATMECA — Bordeaux INP", city: "Talence", country: "France" },
+    level: "Licence 3",
+    goal: "École spécialisée",
+    field: "Informatique",
+    description:
+      "Diplôme d'ingénieur en informatique de Bordeaux INP (Bac+5, 3 ans), admission sur titre en 1ʳᵉ année pour les titulaires d'une Licence ou d'un BUT. Spécialisations en 3ᵉ année : calcul intensif et sciences de données, robotique et apprentissage, intelligence artificielle, ou génie logiciel et cybersécurité. Stages (12 mois cumulés) et mobilité internationale (minimum 17 semaines) obligatoires.",
+    requiredLevel: "Licence 2",
+    language: "Français",
+    applicationProcedure:
+      "Admission sur titre via la plateforme eCandidat de Bordeaux INP, généralement de mars à mai pour une entrée en septembre ; réservée aux titulaires d'une Licence, d'un BUT ou d'une ATS selon les filières.",
+    prerequisites: [
+      {
+        id: "r1",
+        type: "niveau",
+        value: "Licence 2",
+        label: "Licence, BUT ou ATS validé(e) (Bac+2 minimum)",
+      },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Informatique",
+        label: "Parcours scientifique ou technologique en informatique",
+      },
+    ],
+    coreCourses: [
+      course("Algorithmique", "essentielle"),
+      course("Bases de données", "importante"),
+      course("Systèmes d'exploitation", "importante"),
+      course("Génie logiciel", "importante"),
+    ],
+    skills: [skill("Programmation orientée objet", "essentielle"), skill("Anglais courant", "utile")],
+    source: "https://formation.bordeaux-inp.fr/fr/offre-de-formation/titre-d-ingenieur-DING/ingenieur-specialite-informatique-LUMF0005.html",
+    verifiedAt: "2026-09-21",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
 ];
 
 export function getFormationById(id: string): StudyProgram | undefined {
