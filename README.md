@@ -1,7 +1,7 @@
 # AcadMatch
 
 Prototype (MVP) qui aide les étudiants à déterminer quelles formations françaises
-correspondent à leur parcours académique — sans création de compte.
+correspondent à leur parcours académique — sans création de compte obligatoire.
 
 AcadMatch n'est **pas** Campus France : c'est une aide à la décision (compatibilité,
 forces, lacunes, sources officielles) avant de candidater.
@@ -22,6 +22,9 @@ Accueil → Analyser mon profil → Rechercher une formation → Résultat de co
 - `types/` — types TypeScript partagés (`StudentProfile`, `StudyProgram`, `Institution`, `CompatibilityResult`, ...).
   `StudyProgram` (anciennement `Formation`) est générique : `institution.country` porte le pays, préparant
   l'ajout de futurs pays sans toucher au moteur de matching (voir roadmap — architecture internationale).
+- `app/compte/`, `lib/supabase/` — comptes utilisateurs **optionnels** (sauvegarder son profil pour le
+  retrouver sur un autre appareil) : voir [`docs/accounts-setup.md`](docs/accounts-setup.md) pour la
+  configuration. Sans elle, `/compte` affiche "bientôt disponible" et le reste de l'app est inchangé.
 
 ⚠️ Le catalogue est volontairement limité. Toute fiche `demo: true` doit rester clairement
 marquée comme démonstration — jamais présentée comme officielle.
@@ -54,8 +57,9 @@ cp .env.example .env.local
 
 ## Stack
 
-Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · aucune base de données (persistance
-locale via `localStorage` pour ce prototype).
+Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · persistance locale via `localStorage`
+par défaut ; Supabase (Postgres + Auth) en option pour les comptes utilisateurs, voir
+[`docs/accounts-setup.md`](docs/accounts-setup.md).
 
 ## Hors périmètre du MVP actuel
 
