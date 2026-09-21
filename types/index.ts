@@ -146,6 +146,15 @@ interface StudyProgramBase {
   id: string;
   name: string;
   institution: Institution;
+  /**
+   * Niveau affiché (badge UI uniquement — voir components/search/FormationCard.tsx) :
+   * l'année d'études qu'un candidat rejoindrait, pas le diplôme final obtenu.
+   * Le moteur de matching (lib/matching/engine.ts) ne lit jamais ce champ,
+   * seulement `requiredLevel` (le diplôme d'entrée) et `goal`. Utile pour les
+   * masters étrangers en 2 ans non scindés en M1/M2 (ex: UCLouvain, entré
+   * directement après une Licence) : `level` reflète l'année d'entrée
+   * ("Master 1"), pas les 2 années du programme.
+   */
   level: AcademicLevel;
   /**
    * Objectif de formation représenté par cette fiche (utilisé pour comparer

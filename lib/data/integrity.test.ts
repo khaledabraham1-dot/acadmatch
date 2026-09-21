@@ -63,14 +63,18 @@ describe("intégrité du catalogue réel", () => {
     }
   });
 
-  it("le catalogue actuel est entièrement français (architecture internationale, phase 1)", () => {
-    // Documente l'état actuel, pas une règle figée : ce test devra être mis à
-    // jour dès qu'un premier établissement belge sera ajouté (roadmap, phase
-    // "deuxième pays"). Sert de garde-fou pour ne pas introduire un pays
+  it("le catalogue couvre uniquement les pays validés par la roadmap (France, Belgique)", () => {
+    // Documente l'état actuel, pas une règle figée : ce test devra être
+    // élargi à chaque nouveau pays réellement ajouté (roadmap, phase
+    // "multi-pays"). Sert de garde-fou pour ne pas introduire un pays
     // implicitement faux (ex: copier-coller sans changer `institution.country`).
+    const knownCountries = new Set(["France", "Belgique"]);
     for (const formation of FORMATIONS) {
-      expect(formation.institution.country).toBe("France");
+      expect(knownCountries.has(formation.institution.country)).toBe(true);
     }
+    // Et on vérifie que la Belgique (phase 3, validation de l'architecture
+    // internationale) est bien représentée, pas juste "acceptée en théorie".
+    expect(FORMATIONS.some((f) => f.institution.country === "Belgique")).toBe(true);
   });
 });
 

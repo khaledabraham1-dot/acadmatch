@@ -18,6 +18,13 @@ import type { AcademicItem, Importance, StudyProgram } from "@/types";
  * Étape 8 (2026-09-17) : audit des liens — URL CentraleSupélec corrigée
  * (ancienne page 404), dates de vérification rafraîchies.
  *
+ * Post-MVP, phase 3 (2026-09-21) : première formation hors France (UCLouvain,
+ * Belgique) — voir docs/data-sourcing.md pour le processus de vérification
+ * suivi, identique quel que soit le pays. Volontairement une seule fiche
+ * pour l'instant : cette phase valide l'architecture internationale
+ * (`StudyProgram`/`Institution`, phase 1) sur un vrai cas étranger avant
+ * d'élargir le catalogue belge.
+ *
  * Pour toute formation FICTIVE de démonstration ajoutée plus tard (tests,
  * prototypage), utiliser `demo: true` et une URL sous
  * `https://demo.acadmatch.fr/...` — jamais présentée comme réelle dans l'UI
@@ -353,6 +360,60 @@ export const FORMATIONS: StudyProgram[] = [
     ],
     source: "https://www.insa-lyon.fr/fr/admission",
     verifiedAt: VERIFIED_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-date-uclouvain",
+    name: "Master en Data Science Engineering",
+    institution: {
+      name: "UCLouvain — Louvain School of Engineering (EPL)",
+      city: "Louvain-la-Neuve",
+      country: "Belgique",
+    },
+    level: "Master 1",
+    goal: "Master",
+    field: "Data Science & IA",
+    description:
+      "Master de 2 ans (120 crédits ECTS) combinant mathématiques, statistiques et informatique pour l'analyse et le traitement de données à grande échelle, avec un choix de spécialisation entre analyse de données et cybersécurité. Enseignement entièrement en anglais.",
+    requiredLevel: "Licence 3",
+    language: "Anglais",
+    applicationProcedure:
+      "Candidature en ligne via le portail d'inscription de l'UCLouvain. Selon le diplôme d'origine : accès direct, accès conditionnel (jusqu'à 60 crédits complémentaires) ou refus — aucune période de candidature précise n'est indiquée sur la page consultée. Certificat de langue anglaise exigé pour les diplômes non belges.",
+    prerequisites: [
+      {
+        id: "r1",
+        type: "niveau",
+        value: "Licence 3",
+        label: "Bachelier ou master validé, accès direct pour les bacheliers en sciences de l'ingénieur",
+      },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Informatique",
+        label: "Solides bases en mathématiques, statistiques et informatique",
+        aliases: ["Data Science & IA", "Mathématiques"],
+      },
+      {
+        id: "r3",
+        type: "competence",
+        value: "Anglais courant",
+        label: "Programme entièrement en anglais ; certificat de langue exigé pour les diplômes non belges",
+      },
+    ],
+    coreCourses: [
+      course("Bases de données", "essentielle"),
+      course("Machine Learning", "essentielle"),
+      course("Statistiques", "essentielle"),
+      course("Cybersécurité", "utile", ["Cryptographie", "Sécurité informatique"]),
+    ],
+    skills: [
+      skill("Machine Learning", "essentielle"),
+      skill("Statistiques", "essentielle"),
+      skill("Anglais courant", "essentielle"),
+    ],
+    source: "https://uclouvain.be/en-prog-2026-date2m",
+    verifiedAt: "2026-09-21",
     verificationStatus: "vérifiée",
     demo: false,
   },
