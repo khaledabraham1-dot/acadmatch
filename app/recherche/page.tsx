@@ -19,9 +19,11 @@ import {
 } from "@/lib/storage";
 import { computeCompatibility } from "@/lib/matching/engine";
 import { compareFormationsByGoalThenScore } from "@/lib/matching/ranking";
+import { getRecommendations } from "@/lib/matching/recommendations";
 import { validateStoredProfile } from "@/lib/profile/validation";
 import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
 import { CatalogueScopeNotice } from "@/components/ui/CatalogueScopeNotice";
+import { RecommendationsSection } from "@/components/recommendations/RecommendationsSection";
 import {
   ALL_CITIES,
   ALL_DOMAINS,
@@ -89,6 +91,12 @@ export default function RecherchePage() {
     );
   }, [query, level, domain, city, language, goal, scores, profile]);
 
+  // Top picks catalogue entier, indépendants des filtres ci-dessous (Phase 9).
+  const recommendations = useMemo(() => {
+    if (!profile) return [];
+    return getRecommendations(profile, FORMATIONS);
+  }, [profile]);
+
   const hasActiveFilters =
     query !== "" ||
     level !== ALL_LEVELS ||
@@ -136,6 +144,8 @@ export default function RecherchePage() {
         goal={profile?.goal}
         className="mb-6 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm leading-relaxed text-slate-600"
       />
+
+      <RecommendationsSection recommendations={recommendations} />
 
       <div className="mb-6 space-y-3">
         <div className="relative">
