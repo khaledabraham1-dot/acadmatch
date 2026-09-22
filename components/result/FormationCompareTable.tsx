@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 import type { StudentProfile, StudyProgram } from "@/types";
 import { computeCompatibility } from "@/lib/matching/engine";
 import { buildDecisionAid } from "@/lib/matching/explanation";
 import { getCompatibilityLabel } from "@/lib/matching/labels";
+import { effectiveVerificationStatus } from "@/lib/data/integrity";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { LinkButton } from "@/components/ui/Button";
@@ -13,8 +15,10 @@ interface FormationCompareTableProps {
 }
 
 /**
- * Comparaison côte-à-côte de 2–3 formations : scores, point faible, 1ère action,
- * objectif et langue. L'étudiant décide ; AcadMatch structure la décision.
+ * Comparaison côte-à-côte de 2–3 formations (Phase 10) : ville, diplôme visé,
+ * niveau, scores, lacunes, langue et source officielle. Établissement déjà
+ * visible en en-tête (nom de formation), pas dupliqué en ligne. Aucun
+ * classement "meilleure formation" — l'étudiant décide, AcadMatch structure.
  */
 export function FormationCompareTable({ profile, formations }: FormationCompareTableProps) {
   const rows = formations.map((formation) => {
@@ -47,6 +51,30 @@ export function FormationCompareTable({ profile, formations }: FormationCompareT
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-slate-700">
+            <tr>
+              <td className="px-4 py-3 font-medium text-slate-500">Ville</td>
+              {rows.map(({ formation }) => (
+                <td key={formation.id} className="px-4 py-3">
+                  {formation.institution.city}
+                </td>
+              ))}
+            </tr>
+            <tr>
+              <td className="px-4 py-3 font-medium text-slate-500">Diplôme visé</td>
+              {rows.map(({ formation }) => (
+                <td key={formation.id} className="px-4 py-3">
+                  <Badge tone="info">{formation.goal}</Badge>
+                </td>
+              ))}
+            </tr>
+            <tr>
+              <td className="px-4 py-3 font-medium text-slate-500">Niveau</td>
+              {rows.map(({ formation }) => (
+                <td key={formation.id} className="px-4 py-3">
+                  {formation.level}
+                </td>
+              ))}
+            </tr>
             <tr>
               <td className="px-4 py-3 font-medium text-slate-500">Score global</td>
               {rows.map(({ formation, result, compat }) => (
@@ -83,7 +111,7 @@ export function FormationCompareTable({ profile, formations }: FormationCompareT
               ))}
             </tr>
             <tr>
-              <td className="px-4 py-3 font-medium text-slate-500">Niveau / dossier</td>
+              <td className="px-4 py-3 font-medium text-slate-500">Adéquation niveau / dossier</td>
               {rows.map(({ formation, result }) => (
                 <td key={formation.id} className="px-4 py-3">
                   {result.breakdown.levelDegree}/100
@@ -99,10 +127,12 @@ export function FormationCompareTable({ profile, formations }: FormationCompareT
               ))}
             </tr>
             <tr>
-              <td className="px-4 py-3 font-medium text-slate-500">1ʳᵉ action prioritaire</td>
+              <td className="px-4 py-3 font-medium text-slate-500">Lacunes principales</td>
               {rows.map(({ formation, aid }) => (
                 <td key={formation.id} className="px-4 py-3">
-                  {aid.actions[0]?.label ?? "Aucune lacune majeure"}
+                  {aid.actions.length > 0
+                    ? aid.actions.slice(0, 2).map((a) => a.label).join(", ")
+                    : "Aucune lacune majeure"}
                 </td>
               ))}
             </tr>
@@ -111,6 +141,29 @@ export function FormationCompareTable({ profile, formations }: FormationCompareT
               {rows.map(({ formation }) => (
                 <td key={formation.id} className="px-4 py-3">
                   {formation.language}
+                </td>
+              ))}
+            </tr>
+            <tr>
+              <td className="px-4 py-3 font-medium text-slate-500">Source</td>
+              {rows.map(({ formation }) => (
+                <td key={formation.id} className="px-4 py-3">
+                  {formation.demo ? (
+                    <span className="text-xs text-slate-400">Démo — URL fictive</span>
+                  ) : (
+                    <a
+                      href={formation.source}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
+                    >
+                      Page officielle
+                      <ExternalLink className="size-3.5" aria-hidden />
+                    </a>
+                  )}
+                  {!formation.demo && effectiveVerificationStatus(formation) === "à revérifier" && (
+                    <span className="ml-1.5 text-xs text-amber-600">à revérifier</span>
+                  )}
                 </td>
               ))}
             </tr>
