@@ -268,19 +268,24 @@ export const APPLICATION_STATUSES: ApplicationStatus[] = [
 
 /**
  * Élément coché/décoché d'une checklist libre (document à réunir, action à
- * faire). Volontairement non structuré (pas de `source`/`obligatoire` par
- * élément) : la checklist documentaire sourcée et normée par formation est
- * une phase ultérieure (Phase 15) — ceci est la liste personnelle et libre
- * de l'étudiant, qu'il remplit lui-même.
+ * faire) — liste personnelle que l'étudiant remplit et édite librement.
  *
- * `dueDate` (Phase 14) est optionnelle et, comme `Application.deadline`, un
- * rappel que l'étudiant se fixe lui-même — jamais une date officielle.
+ * `dueDate` (Phase 14) est un rappel que l'étudiant se fixe lui-même —
+ * jamais une date officielle. `required`/`source` (Phase 15) permettent de
+ * marquer un document obligatoire/optionnel : quand l'élément vient d'une
+ * suggestion officielle d'AcadMatch (voir `data/documentSuggestions.ts`),
+ * `source` DOIT être renseigné avant de pouvoir affirmer `required: true`
+ * — un étudiant peut librement marquer son propre élément comme
+ * obligatoire sans source, c'est alors son appréciation personnelle, pas
+ * une affirmation d'AcadMatch.
  */
 export interface ChecklistItem {
   id: string;
   label: string;
   done: boolean;
   dueDate?: string;
+  required?: boolean;
+  source?: string;
 }
 
 /**

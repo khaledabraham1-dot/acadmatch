@@ -1,5 +1,7 @@
 import type { Application, ApplicationStatus, ChecklistItem } from "@/types";
 import type { CompatibilityTone } from "@/lib/matching/labels";
+import type { DocumentSuggestion } from "@/data/documentSuggestions";
+import { normalize } from "@/lib/utils";
 
 /**
  * Logique pure du suivi des candidatures (Phase 13) — testable indépendamment
@@ -70,4 +72,23 @@ export function removeChecklistItem(items: ChecklistItem[], id: string): Checkli
 /** Fixe (ou retire, avec `date` undefined/vide) le rappel personnel d'un élément de checklist (Phase 14). */
 export function setChecklistItemDueDate(items: ChecklistItem[], id: string, date: string | undefined): ChecklistItem[] {
   return items.map((item) => (item.id === id ? { ...item, dueDate: date || undefined } : item));
+}
+
+/** Bascule obligatoire/optionnel pour un élément — appréciation libre de l'étudiant sur son propre élément. */
+export function toggleChecklistItemRequired(items: ChecklistItem[], id: string): ChecklistItem[] {
+  return items.map((item) => (item.id === id ? { ...item, required: !item.required } : item));
+}
+
+/**
+ * Ajoute les documents d'un jeu de suggestions officielles (Phase 15) à une
+ * checklist, avec leur `required`/`source` déjà sourcés — ignore les
+ * libellés déjà présents (comparaison insensible à la casse/accents) pour
+ * ne pas dupliquer si l'étudiant clique deux fois.
+ */
+export function addSuggestedDocuments(items: ChecklistItem[], suggestions: DocumentSuggestion[], source: string): ChecklistItem[] {
+  const existingLabels = new Set(items.map((item) => normalize(item.label)));
+  const toAdd = suggestions
+    .filter((s) => !existingLabels.has(normalize(s.label)))
+    .map((s) => ({ id: randomChecklistItemId(), label: s.label, done: false, required: s.required, source }));
+  return [...items, ...toAdd];
 }

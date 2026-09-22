@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
   addChecklistItem,
+  addSuggestedDocuments,
   applicationStatusTone,
   createApplication,
   removeChecklistItem,
   setChecklistItemDueDate,
   sortApplicationsByUrgency,
   toggleChecklistItem,
+  toggleChecklistItemRequired,
 } from "@/lib/applications";
 import type { Application } from "@/types";
 
@@ -111,5 +113,50 @@ describe("checklist (documents / prochaines actions)", () => {
     const items = [{ id: "1", label: "CV", done: false, dueDate: "2026-02-10" }];
     expect(setChecklistItemDueDate(items, "1", "")[0].dueDate).toBeUndefined();
     expect(setChecklistItemDueDate(items, "1", undefined)[0].dueDate).toBeUndefined();
+  });
+
+  it("toggleChecklistItemRequired inverse uniquement l'élément visé", () => {
+    const items = [
+      { id: "1", label: "CV", done: false },
+      { id: "2", label: "Lettre", done: false, required: true },
+    ];
+    const toggled = toggleChecklistItemRequired(items, "1");
+    expect(toggled.find((i) => i.id === "1")?.required).toBe(true);
+    expect(toggled.find((i) => i.id === "2")?.required).toBe(true);
+    expect(toggleChecklistItemRequired(toggled, "1").find((i) => i.id === "1")?.required).toBe(false);
+  });
+});
+
+describe("addSuggestedDocuments (Phase 15)", () => {
+  const suggestions = [
+    { label: "État civil (pièce d'identité)", required: true },
+    { label: "CV", required: true },
+  ];
+  const source = "https://example.gouv.fr/guide";
+
+  it("ajoute chaque suggestion avec son required et la source fournie", () => {
+    const items = addSuggestedDocuments([], suggestions, source);
+    expect(items).toHaveLength(2);
+    expect(items.every((i) => i.required === true && i.source === source && i.done === false)).toBe(true);
+  });
+
+  it("n'ajoute jamais un document obligatoire sans source (règle explicite de la phase)", () => {
+    const items = addSuggestedDocuments([], suggestions, source);
+    for (const item of items) {
+      if (item.required) expect(item.source).toBeTruthy();
+    }
+  });
+
+  it("ignore une suggestion déjà présente (comparaison insensible à la casse/accents), n'ajoute pas de doublon", () => {
+    const existing = [{ id: "1", label: "cv", done: false }];
+    const items = addSuggestedDocuments(existing, suggestions, source);
+    expect(items).toHaveLength(2); // l'existant "cv" + seulement "État civil" ajouté
+    expect(items.filter((i) => i.label.toLowerCase() === "cv")).toHaveLength(1);
+  });
+
+  it("un rejeu du même ajout (double clic) ne duplique rien", () => {
+    const once = addSuggestedDocuments([], suggestions, source);
+    const twice = addSuggestedDocuments(once, suggestions, source);
+    expect(twice).toHaveLength(2);
   });
 });
