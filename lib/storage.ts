@@ -1,4 +1,4 @@
-import type { StudentProfile } from "@/types";
+import type { Application, StudentProfile } from "@/types";
 
 /**
  * Persistance locale (aucun compte, aucune base de données pour ce prototype).
@@ -29,6 +29,8 @@ export const MAX_COMPARE_FORMATIONS = 3;
  */
 const SAVED_FORMATION_IDS_KEY = "acadmatch:savedFormationIds";
 export const MAX_SAVED_FORMATIONS = 30;
+/** Suivi des candidatures (Phase 13) — une candidature par formation (`formationId` fait clé). */
+const APPLICATIONS_KEY = "acadmatch:applications";
 
 function getStorage(): Storage | null {
   try {
@@ -181,6 +183,76 @@ export function toggleSavedFormationId(formationId: string): string[] {
   if (current.length >= MAX_SAVED_FORMATIONS) return current;
   const next = [...current, formationId];
   saveSavedFormationIds(next);
+  return next;
+}
+
+function isValidChecklistItem(value: unknown): value is Application["documents"][number] {
+  if (!value || typeof value !== "object") return false;
+  const item = value as Record<string, unknown>;
+  return typeof item.id === "string" && typeof item.label === "string" && typeof item.done === "boolean";
+}
+
+const VALID_APPLICATION_STATUSES = new Set<Application["status"]>([
+  "à préparer",
+  "prête",
+  "envoyée",
+  "en attente",
+  "réponse reçue",
+]);
+
+function isValidApplication(value: unknown): value is Application {
+  if (!value || typeof value !== "object") return false;
+  const app = value as Record<string, unknown>;
+  return (
+    typeof app.formationId === "string" &&
+    typeof app.status === "string" &&
+    VALID_APPLICATION_STATUSES.has(app.status as Application["status"]) &&
+    typeof app.notes === "string" &&
+    Array.isArray(app.documents) &&
+    app.documents.every(isValidChecklistItem) &&
+    Array.isArray(app.nextActions) &&
+    app.nextActions.every(isValidChecklistItem)
+  );
+}
+
+export function loadApplications(): Application[] {
+  const storage = getStorage();
+  if (!storage) return [];
+  try {
+    const raw = storage.getItem(APPLICATIONS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(isValidApplication);
+  } catch {
+    return [];
+  }
+}
+
+function saveApplications(applications: Application[]): void {
+  const storage = getStorage();
+  if (!storage) return;
+  try {
+    storage.setItem(APPLICATIONS_KEY, JSON.stringify(applications));
+  } catch {
+    // Non bloquant.
+  }
+}
+
+/** Crée ou met à jour (par `formationId`) une candidature suivie. */
+export function upsertApplication(application: Application): Application[] {
+  const current = loadApplications();
+  const next = [
+    ...current.filter((a) => a.formationId !== application.formationId),
+    application,
+  ];
+  saveApplications(next);
+  return next;
+}
+
+export function deleteApplication(formationId: string): Application[] {
+  const next = loadApplications().filter((a) => a.formationId !== formationId);
+  saveApplications(next);
   return next;
 }
 

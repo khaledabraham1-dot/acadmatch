@@ -249,3 +249,54 @@ export interface CompatibilityResult {
   gaps: string[];
   matches: SubjectMatch[];
 }
+
+/**
+ * Statut d'avancement d'une candidature (Phase 13), volontairement simple
+ * et linéaire : pas de sous-statuts (entretien, liste d'attente...) pour ce
+ * MVP du suivi — à enrichir plus tard si des cas réels le justifient.
+ */
+export type ApplicationStatus = "à préparer" | "prête" | "envoyée" | "en attente" | "réponse reçue";
+
+/** Ordre d'avancement affiché dans les sélecteurs. */
+export const APPLICATION_STATUSES: ApplicationStatus[] = [
+  "à préparer",
+  "prête",
+  "envoyée",
+  "en attente",
+  "réponse reçue",
+];
+
+/**
+ * Élément coché/décoché d'une checklist libre (document à réunir, action à
+ * faire). Volontairement non structuré (pas de `source`/`obligatoire` par
+ * élément) : la checklist documentaire sourcée et normée par formation est
+ * une phase ultérieure (Phase 15) — ceci est la liste personnelle et libre
+ * de l'étudiant, qu'il remplit lui-même.
+ */
+export interface ChecklistItem {
+  id: string;
+  label: string;
+  done: boolean;
+}
+
+/**
+ * Suivi d'une candidature à une formation (Phase 13), stocké localement
+ * (lib/storage.ts), une candidature par formation (`formationId` sert de
+ * clé). Complètement indépendant du moteur de matching et de l'éligibilité
+ * administrative (data/eligibility.ts) : ceci est un espace personnel de
+ * suivi, pas une donnée sourcée/vérifiée par AcadMatch.
+ */
+export interface Application {
+  formationId: string;
+  status: ApplicationStatus;
+  /**
+   * Échéance personnelle fixée par l'étudiant, ex: "je veux avoir envoyé mon
+   * dossier avant le 15 février" — un rappel qu'il se fixe, jamais une date
+   * officielle affirmée par AcadMatch (voir `StudyProgram.applicationProcedure`,
+   * qui documente volontairement la procédure sans jour/année exacts).
+   */
+  deadline?: string;
+  documents: ChecklistItem[];
+  nextActions: ChecklistItem[];
+  notes: string;
+}

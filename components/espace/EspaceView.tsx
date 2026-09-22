@@ -2,12 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Bookmark, Columns2, FileText, FolderKanban, User, X } from "lucide-react";
-import type { StudentProfile } from "@/types";
-import { FORMATIONS } from "@/data/formations";
+import { ArrowRight, Bookmark, ClipboardList, Columns2, FileText, FolderKanban, User, X } from "lucide-react";
+import type { Application, StudentProfile } from "@/types";
+import { FORMATIONS, getFormationById } from "@/data/formations";
 import {
   clearCompareIds,
   compareResultsHref,
+  loadApplications,
   loadCompareIds,
   loadProfile,
   loadSavedFormationIds,
@@ -15,34 +16,40 @@ import {
   toggleCompareId,
   toggleSavedFormationId,
 } from "@/lib/storage";
+import { applicationStatusTone, sortApplicationsByUrgency } from "@/lib/applications";
 import { computeCompatibility } from "@/lib/matching/engine";
 import { validateStoredProfile } from "@/lib/profile/validation";
 import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
 import { LinkButton, Button } from "@/components/ui/Button";
 import { FormationCard } from "@/components/search/FormationCard";
 import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
 
 /**
  * Espace projet étudiant (Phase 12) — regroupe profil, formations
- * sauvegardées et comparaisons en cours. Réutilise entièrement les données
- * et composants existants (aucun second stockage de profil, aucun second
- * moteur de score, même FormationCard que /recherche) : la seule donnée
- * réellement nouvelle est la liste des sauvegardes (lib/storage.ts).
- * Documents et Projet d'études restent des cartes "à venir" — ces
- * fonctionnalités n'existent pas encore (Phases 15/17), et le principe du
- * projet est de ne jamais présenter une absence de donnée comme un résultat.
+ * sauvegardées, comparaisons en cours et un résumé du suivi des
+ * candidatures (Phase 13). Réutilise entièrement les données et
+ * composants existants (aucun second stockage de profil, aucun second
+ * moteur de score, même FormationCard/ApplicationCard qu'ailleurs) : la
+ * seule donnée réellement nouvelle introduite par cette page elle-même est
+ * la liste des sauvegardes (lib/storage.ts). Documents et Projet d'études
+ * restent des cartes "à venir" — ces fonctionnalités n'existent pas encore
+ * (Phases 15/17), et le principe du projet est de ne jamais présenter une
+ * absence de donnée comme un résultat.
  */
 export function EspaceView() {
   const [ready, setReady] = useState(false);
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [savedIds, setSavedIds] = useState<string[]>([]);
   const [compareIds, setCompareIds] = useState<string[]>([]);
+  const [applications, setApplications] = useState<Application[]>([]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setProfile(loadProfile());
     setSavedIds(loadSavedFormationIds());
     setCompareIds(loadCompareIds());
+    setApplications(loadApplications());
     setReady(true);
   }, []);
 
@@ -60,6 +67,11 @@ export function EspaceView() {
   const compareNames = compareIds
     .map((id) => FORMATIONS.find((f) => f.id === id)?.name)
     .filter(Boolean);
+
+  const topApplications = useMemo(
+    () => sortApplicationsByUrgency(applications).slice(0, 3),
+    [applications],
+  );
 
   function handleToggleSave(formationId: string) {
     setSavedIds(toggleSavedFormationId(formationId));
@@ -192,6 +204,47 @@ export function EspaceView() {
                 la recherche
               </Link>
               , cochez « Comparer » sur 2 ou 3 fiches.
+            </p>
+          </Card>
+        )}
+      </section>
+
+      {/* Suivi des candidatures (Phase 13) */}
+      <section>
+        <h2 className="mb-3 flex items-center gap-2 text-base font-semibold text-slate-900">
+          <ClipboardList className="size-4 text-slate-500" />
+          Candidatures
+          {applications.length > 0 && (
+            <span className="text-sm font-normal text-slate-400">({applications.length})</span>
+          )}
+        </h2>
+        {applications.length > 0 ? (
+          <Card className="space-y-3">
+            <ul className="space-y-2">
+              {topApplications.map((application) => {
+                const formation = getFormationById(application.formationId);
+                if (!formation) return null;
+                return (
+                  <li key={application.formationId} className="flex items-center justify-between gap-3 text-sm">
+                    <span className="min-w-0 truncate text-slate-700">{formation.name}</span>
+                    <Badge tone={applicationStatusTone(application.status)}>{application.status}</Badge>
+                  </li>
+                );
+              })}
+            </ul>
+            <LinkButton href="/candidatures" size="sm" variant="outline">
+              Voir toutes mes candidatures
+              <ArrowRight className="size-3.5" />
+            </LinkButton>
+          </Card>
+        ) : (
+          <Card className="border-dashed text-center">
+            <p className="text-sm text-slate-400">
+              Aucune candidature suivie pour l&apos;instant.{" "}
+              <Link href="/candidatures" className="font-medium text-blue-600 hover:text-blue-700">
+                Démarrer le suivi
+              </Link>
+              .
             </p>
           </Card>
         )}
