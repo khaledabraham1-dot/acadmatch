@@ -6,6 +6,7 @@ export const ALL_LEVELS = "Tous les niveaux";
 export const ALL_DOMAINS = "Tous les domaines";
 export const ALL_CITIES = "Toutes les villes";
 export const ALL_LANGUAGES = "Toutes les langues";
+export const ALL_GOALS = "Tous les diplômes";
 
 export interface SearchFilters {
   query: string;
@@ -13,6 +14,9 @@ export interface SearchFilters {
   domain: string;
   city: string;
   language: string;
+  /** Type de diplôme visé (`StudyProgram.goal`) — indépendant du niveau d'entrée, ex: une école
+   * d'ingénieurs en admission parallèle a `level` "Licence 3" mais `goal` "École spécialisée". */
+  goal: string;
 }
 
 export const EMPTY_FILTERS: SearchFilters = {
@@ -21,6 +25,7 @@ export const EMPTY_FILTERS: SearchFilters = {
   domain: ALL_DOMAINS,
   city: ALL_CITIES,
   language: ALL_LANGUAGES,
+  goal: ALL_GOALS,
 };
 
 /**
@@ -38,7 +43,8 @@ export function matchesFilters(formation: StudyProgram, filters: SearchFilters):
   const matchesDomain = filters.domain === ALL_DOMAINS || formation.field === filters.domain;
   const matchesCity = filters.city === ALL_CITIES || formation.institution.city === filters.city;
   const matchesLanguage = filters.language === ALL_LANGUAGES || formation.language === filters.language;
-  return matchesQuery && matchesLevel && matchesDomain && matchesCity && matchesLanguage;
+  const matchesGoal = filters.goal === ALL_GOALS || formation.goal === filters.goal;
+  return matchesQuery && matchesLevel && matchesDomain && matchesCity && matchesLanguage && matchesGoal;
 }
 
 export function filterFormations(formations: StudyProgram[], filters: SearchFilters): StudyProgram[] {

@@ -25,6 +25,7 @@ import { CatalogueScopeNotice } from "@/components/ui/CatalogueScopeNotice";
 import {
   ALL_CITIES,
   ALL_DOMAINS,
+  ALL_GOALS,
   ALL_LANGUAGES,
   ALL_LEVELS,
   filterFormations,
@@ -32,12 +33,13 @@ import {
 } from "@/lib/search/filters";
 
 // Dérivés du catalogue réel (pas des référentiels complets de data/subjects.ts) :
-// proposer un domaine, niveau, ville ou langue qui ne correspond à aucune
-// formation mènerait systématiquement à "Aucune formation ne correspond".
+// proposer un domaine, niveau, ville, langue ou diplôme qui ne correspond à
+// aucune formation mènerait systématiquement à "Aucune formation ne correspond".
 const AVAILABLE_DOMAINS = uniqueSorted(FORMATIONS, (f) => f.field);
 const AVAILABLE_LEVELS = ACADEMIC_LEVEL_ORDER.filter((l) => FORMATIONS.some((f) => f.level === l));
 const AVAILABLE_CITIES = uniqueSorted(FORMATIONS, (f) => f.institution.city);
 const AVAILABLE_LANGUAGES = uniqueSorted(FORMATIONS, (f) => f.language);
+const AVAILABLE_GOALS = uniqueSorted(FORMATIONS, (f) => f.goal);
 
 export default function RecherchePage() {
   const [profile, setProfile] = useState<StudentProfile | null>(null);
@@ -47,6 +49,7 @@ export default function RecherchePage() {
   const [domain, setDomain] = useState(ALL_DOMAINS);
   const [city, setCity] = useState(ALL_CITIES);
   const [language, setLanguage] = useState(ALL_LANGUAGES);
+  const [goal, setGoal] = useState(ALL_GOALS);
 
   useEffect(() => {
     // localStorage n'existe pas côté serveur : la lecture doit se faire après le montage.
@@ -61,6 +64,7 @@ export default function RecherchePage() {
     setDomain(ALL_DOMAINS);
     setCity(ALL_CITIES);
     setLanguage(ALL_LANGUAGES);
+    setGoal(ALL_GOALS);
   }
 
   function handleToggleCompare(formationId: string) {
@@ -80,10 +84,18 @@ export default function RecherchePage() {
   }, [profile]);
 
   const filtered = useMemo(() => {
-    return filterFormations(FORMATIONS, { query, level, domain, city, language }).sort((a, b) =>
+    return filterFormations(FORMATIONS, { query, level, domain, city, language, goal }).sort((a, b) =>
       compareFormationsByGoalThenScore(a, b, profile, (f) => scores.get(f.id) ?? -1),
     );
-  }, [query, level, domain, city, language, scores, profile]);
+  }, [query, level, domain, city, language, goal, scores, profile]);
+
+  const hasActiveFilters =
+    query !== "" ||
+    level !== ALL_LEVELS ||
+    domain !== ALL_DOMAINS ||
+    city !== ALL_CITIES ||
+    language !== ALL_LANGUAGES ||
+    goal !== ALL_GOALS;
 
   const compareNames = compareIds
     .map((id) => FORMATIONS.find((f) => f.id === id)?.name)
@@ -170,6 +182,19 @@ export default function RecherchePage() {
             ))}
           </Select>
           <Select
+            value={goal}
+            onChange={(e) => setGoal(e.target.value)}
+            className="w-full sm:w-44"
+            aria-label="Filtrer par diplôme visé"
+          >
+            <option>{ALL_GOALS}</option>
+            {AVAILABLE_GOALS.map((g) => (
+              <option key={g} value={g}>
+                {g}
+              </option>
+            ))}
+          </Select>
+          <Select
             value={city}
             onChange={(e) => setCity(e.target.value)}
             className="w-full sm:w-40"
@@ -198,16 +223,27 @@ export default function RecherchePage() {
         </div>
       </div>
 
-      <p className="mb-4 text-sm text-slate-400">
-        {filtered.length} formation{filtered.length > 1 ? "s" : ""} trouvée
-        {filtered.length > 1 ? "s" : ""}
-        {compareIds.length > 0 && (
-          <span className="text-slate-500">
-            {" "}
-            · {compareIds.length}/{MAX_COMPARE_FORMATIONS} à comparer
-          </span>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <p className="text-sm text-slate-400">
+          {filtered.length} formation{filtered.length > 1 ? "s" : ""} trouvée
+          {filtered.length > 1 ? "s" : ""}
+          {compareIds.length > 0 && (
+            <span className="text-slate-500">
+              {" "}
+              · {compareIds.length}/{MAX_COMPARE_FORMATIONS} à comparer
+            </span>
+          )}
+        </p>
+        {hasActiveFilters && (
+          <button
+            type="button"
+            onClick={resetFilters}
+            className="text-sm font-medium text-blue-600 hover:text-blue-700"
+          >
+            Réinitialiser les filtres
+          </button>
         )}
-      </p>
+      </div>
 
       <div className={compareIds.length > 0 ? "space-y-4 pb-24" : "space-y-4"}>
         {filtered.map((formation) => (

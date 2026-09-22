@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   ALL_CITIES,
   ALL_DOMAINS,
+  ALL_GOALS,
   ALL_LANGUAGES,
   ALL_LEVELS,
   EMPTY_FILTERS,
@@ -68,9 +69,24 @@ describe("matchesFilters", () => {
     expect(matchesFilters(f, { ...EMPTY_FILTERS, language: "Français" })).toBe(false);
   });
 
+  it("filtre par diplôme visé (goal), indépendamment du niveau d'entrée", () => {
+    // Cas réel du catalogue : une école d'ingénieurs en admission parallèle a un niveau
+    // d'entrée "Licence 3" mais vise le diplôme "École spécialisée", pas "Licence".
+    const f = formation({ level: "Licence 3", goal: "École spécialisée" });
+    expect(matchesFilters(f, { ...EMPTY_FILTERS, goal: "École spécialisée" })).toBe(true);
+    expect(matchesFilters(f, { ...EMPTY_FILTERS, goal: "Licence" })).toBe(false);
+  });
+
   it("combine tous les filtres avec un ET logique", () => {
     const f = formation({ level: "Master 2", field: "Informatique", city: "Lyon", language: "Anglais" });
-    const allMatch = { level: "Master 2", domain: "Informatique", city: "Lyon", language: "Anglais", query: "" };
+    const allMatch = {
+      level: "Master 2",
+      domain: "Informatique",
+      city: "Lyon",
+      language: "Anglais",
+      goal: "Master",
+      query: "",
+    };
     expect(matchesFilters(f, allMatch)).toBe(true);
     // Un seul critère qui ne correspond plus suffit à exclure la formation.
     expect(matchesFilters(f, { ...allMatch, city: "Paris" })).toBe(false);
@@ -83,6 +99,7 @@ describe("matchesFilters", () => {
     expect(ALL_DOMAINS).not.toBe("");
     expect(ALL_CITIES).not.toBe("");
     expect(ALL_LANGUAGES).not.toBe("");
+    expect(ALL_GOALS).not.toBe("");
   });
 });
 

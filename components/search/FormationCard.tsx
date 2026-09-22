@@ -39,6 +39,7 @@ export function FormationCard({
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <div className="mb-1.5 flex flex-wrap items-center gap-2">
+              <Badge tone="info">{formation.goal}</Badge>
               <Badge tone="neutral">{formation.level}</Badge>
               <Badge tone="neutral">{formation.field}</Badge>
               {formation.language !== "Français" && <Badge tone="neutral">{formation.language}</Badge>}
