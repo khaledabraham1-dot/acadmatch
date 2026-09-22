@@ -19,6 +19,16 @@ const SELECTED_FORMATION_KEY = "acadmatch:selectedFormationId";
 /** Shortlist pour la comparaison côte-à-côte (Étape 7) — max 3 formations. */
 const COMPARE_IDS_KEY = "acadmatch:compareIds";
 export const MAX_COMPARE_FORMATIONS = 3;
+/**
+ * Formations sauvegardées (Phase 12) — liste distincte de la shortlist de
+ * comparaison : un étudiant explore souvent plus de 3 formations qui
+ * l'intéressent avant de restreindre son choix, et "sauvegarder pour plus
+ * tard" n'a pas le même cycle de vie que "comparer maintenant" (la
+ * comparaison se vide facilement, une sauvegarde doit rester). Plafond large
+ * (garde-fou anti-abus, pas une contrainte UX comme pour la comparaison).
+ */
+const SAVED_FORMATION_IDS_KEY = "acadmatch:savedFormationIds";
+export const MAX_SAVED_FORMATIONS = 30;
 
 function getStorage(): Storage | null {
   try {
@@ -134,6 +144,44 @@ export function clearCompareIds(): void {
   } catch {
     // Non bloquant.
   }
+}
+
+export function loadSavedFormationIds(): string[] {
+  const storage = getStorage();
+  if (!storage) return [];
+  try {
+    const raw = storage.getItem(SAVED_FORMATION_IDS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((id): id is string => typeof id === "string").slice(0, MAX_SAVED_FORMATIONS);
+  } catch {
+    return [];
+  }
+}
+
+function saveSavedFormationIds(ids: string[]): void {
+  const storage = getStorage();
+  if (!storage) return;
+  try {
+    storage.setItem(SAVED_FORMATION_IDS_KEY, JSON.stringify(ids.slice(0, MAX_SAVED_FORMATIONS)));
+  } catch {
+    // Non bloquant.
+  }
+}
+
+/** Ajoute ou retire une formation de la liste des sauvegardes. */
+export function toggleSavedFormationId(formationId: string): string[] {
+  const current = loadSavedFormationIds();
+  if (current.includes(formationId)) {
+    const next = current.filter((id) => id !== formationId);
+    saveSavedFormationIds(next);
+    return next;
+  }
+  if (current.length >= MAX_SAVED_FORMATIONS) return current;
+  const next = [...current, formationId];
+  saveSavedFormationIds(next);
+  return next;
 }
 
 /** Construit l'URL de comparaison à partir d'une liste d'ids. */

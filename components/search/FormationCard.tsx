@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin, GraduationCap, ChevronDown, ArrowRight } from "lucide-react";
+import { MapPin, GraduationCap, ChevronDown, ArrowRight, Bookmark, BookmarkCheck } from "lucide-react";
 import type { StudyProgram } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
@@ -19,6 +19,9 @@ interface FormationCardProps {
   /** Nombre actuel d'éléments dans la shortlist (pour désactiver au plafond). */
   compareCount?: number;
   onToggleCompare?: (formationId: string) => void;
+  /** La formation est-elle dans les sauvegardes (Phase 12, espace projet) ? */
+  saved?: boolean;
+  onToggleSave?: (formationId: string) => void;
 }
 
 export function FormationCard({
@@ -27,6 +30,8 @@ export function FormationCard({
   selectedForCompare = false,
   compareCount = 0,
   onToggleCompare,
+  saved = false,
+  onToggleSave,
 }: FormationCardProps) {
   const [expanded, setExpanded] = useState(false);
   const compat = score !== null ? getCompatibilityLabel(score) : null;
@@ -34,9 +39,23 @@ export function FormationCard({
     !selectedForCompare && compareCount >= MAX_COMPARE_FORMATIONS && Boolean(onToggleCompare);
 
   return (
-    <Card className="p-0 overflow-hidden">
+    <Card className="relative p-0 overflow-hidden">
+      {onToggleSave && (
+        <button
+          type="button"
+          onClick={() => onToggleSave(formation.id)}
+          aria-label={saved ? "Retirer des formations sauvegardées" : "Sauvegarder cette formation"}
+          aria-pressed={saved}
+          className={cn(
+            "absolute right-4 top-4 rounded-lg p-1.5 transition-colors sm:right-5 sm:top-5",
+            saved ? "text-blue-600 hover:bg-blue-50" : "text-slate-300 hover:bg-slate-100 hover:text-slate-500",
+          )}
+        >
+          {saved ? <BookmarkCheck className="size-5" /> : <Bookmark className="size-5" />}
+        </button>
+      )}
       <div className="p-5 sm:p-6">
-        <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="flex flex-wrap items-start justify-between gap-3 pr-8">
           <div>
             <div className="mb-1.5 flex flex-wrap items-center gap-2">
               <Badge tone="info">{formation.goal}</Badge>

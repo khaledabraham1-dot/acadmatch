@@ -1,14 +1,17 @@
 "use client";
 
-import { ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
+import { ArrowRight, CheckCircle2, AlertCircle, Bookmark, BookmarkCheck } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { LinkButton } from "@/components/ui/Button";
 import { getCompatibilityLabel } from "@/lib/matching/labels";
+import { cn } from "@/lib/utils";
 import type { Recommendation } from "@/lib/matching/recommendations";
 
 interface RecommendationsSectionProps {
   recommendations: Recommendation[];
+  savedIds?: string[];
+  onToggleSave?: (formationId: string) => void;
 }
 
 /**
@@ -17,7 +20,11 @@ interface RecommendationsSectionProps {
  * en dessous sur /recherche. Complète la liste filtrable (exploration
  * manuelle) sans la remplacer.
  */
-export function RecommendationsSection({ recommendations }: RecommendationsSectionProps) {
+export function RecommendationsSection({
+  recommendations,
+  savedIds = [],
+  onToggleSave,
+}: RecommendationsSectionProps) {
   if (recommendations.length === 0) return null;
 
   return (
@@ -26,9 +33,24 @@ export function RecommendationsSection({ recommendations }: RecommendationsSecti
       <div className="grid gap-4 sm:grid-cols-3">
         {recommendations.map(({ formation, result, reason }) => {
           const compat = getCompatibilityLabel(result.overallScore);
+          const saved = savedIds.includes(formation.id);
           return (
-            <Card key={formation.id} className="flex flex-col">
-              <div className="mb-2 flex items-start justify-between gap-2">
+            <Card key={formation.id} className="relative flex flex-col">
+              {onToggleSave && (
+                <button
+                  type="button"
+                  onClick={() => onToggleSave(formation.id)}
+                  aria-label={saved ? "Retirer des formations sauvegardées" : "Sauvegarder cette formation"}
+                  aria-pressed={saved}
+                  className={cn(
+                    "absolute right-3 top-3 rounded-lg p-1 transition-colors",
+                    saved ? "text-blue-600 hover:bg-blue-50" : "text-slate-300 hover:bg-slate-100 hover:text-slate-500",
+                  )}
+                >
+                  {saved ? <BookmarkCheck className="size-4" /> : <Bookmark className="size-4" />}
+                </button>
+              )}
+              <div className="mb-2 flex items-start justify-between gap-2 pr-6">
                 <Badge tone="info">{formation.goal}</Badge>
                 <div className="text-right">
                   <Badge tone={compat.tone}>{compat.label}</Badge>

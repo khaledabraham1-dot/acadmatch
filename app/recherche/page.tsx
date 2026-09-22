@@ -14,8 +14,10 @@ import {
   compareResultsHref,
   loadCompareIds,
   loadProfile,
+  loadSavedFormationIds,
   MAX_COMPARE_FORMATIONS,
   toggleCompareId,
+  toggleSavedFormationId,
 } from "@/lib/storage";
 import { computeCompatibility } from "@/lib/matching/engine";
 import { compareFormationsByGoalThenScore } from "@/lib/matching/ranking";
@@ -46,6 +48,7 @@ const AVAILABLE_GOALS = uniqueSorted(FORMATIONS, (f) => f.goal);
 export default function RecherchePage() {
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [compareIds, setCompareIds] = useState<string[]>([]);
+  const [savedIds, setSavedIds] = useState<string[]>([]);
   const [query, setQuery] = useState("");
   const [level, setLevel] = useState(ALL_LEVELS);
   const [domain, setDomain] = useState(ALL_DOMAINS);
@@ -58,6 +61,7 @@ export default function RecherchePage() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setProfile(loadProfile());
     setCompareIds(loadCompareIds());
+    setSavedIds(loadSavedFormationIds());
   }, []);
 
   function resetFilters() {
@@ -71,6 +75,10 @@ export default function RecherchePage() {
 
   function handleToggleCompare(formationId: string) {
     setCompareIds(toggleCompareId(formationId));
+  }
+
+  function handleToggleSave(formationId: string) {
+    setSavedIds(toggleSavedFormationId(formationId));
   }
 
   function handleClearCompare() {
@@ -145,7 +153,11 @@ export default function RecherchePage() {
         className="mb-6 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm leading-relaxed text-slate-600"
       />
 
-      <RecommendationsSection recommendations={recommendations} />
+      <RecommendationsSection
+        recommendations={recommendations}
+        savedIds={savedIds}
+        onToggleSave={handleToggleSave}
+      />
 
       <div className="mb-6 space-y-3">
         <div className="relative">
@@ -264,6 +276,8 @@ export default function RecherchePage() {
             selectedForCompare={compareIds.includes(formation.id)}
             compareCount={compareIds.length}
             onToggleCompare={handleToggleCompare}
+            saved={savedIds.includes(formation.id)}
+            onToggleSave={handleToggleSave}
           />
         ))}
         {filtered.length === 0 && (
