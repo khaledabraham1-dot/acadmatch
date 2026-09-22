@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Bookmark, CalendarDays, ClipboardList, Columns2, FileText, FolderKanban, User, X } from "lucide-react";
+import { ArrowRight, Bookmark, CalendarDays, ClipboardList, Columns2, FolderKanban, User, X } from "lucide-react";
 import type { Application, StudentProfile } from "@/types";
 import { FORMATIONS, getFormationById } from "@/data/formations";
 import {
@@ -18,6 +18,7 @@ import {
 } from "@/lib/storage";
 import { applicationStatusTone, sortApplicationsByUrgency } from "@/lib/applications";
 import { buildCalendarEntries, formatCalendarDate, sortCalendarEntries } from "@/lib/calendar";
+import { buildTargetedFormations, summarizeStudyProject } from "@/lib/studyProject";
 import { computeCompatibility } from "@/lib/matching/engine";
 import { validateStoredProfile } from "@/lib/profile/validation";
 import { Card } from "@/components/ui/Card";
@@ -29,15 +30,17 @@ import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilit
 /**
  * Espace projet étudiant (Phase 12) — regroupe profil, formations
  * sauvegardées, comparaisons en cours, un résumé du suivi des candidatures
- * (Phase 13) et des prochains rappels du calendrier (Phase 14). Réutilise
- * entièrement les données et composants existants (aucun second stockage
- * de profil, aucun second moteur de score, mêmes fonctions lib/calendar.ts
- * et lib/applications.ts qu'ailleurs) : la seule donnée réellement
- * nouvelle introduite par cette page elle-même est la liste des
- * sauvegardes (lib/storage.ts). Documents et Projet d'études restent des
- * cartes "à venir" — ces fonctionnalités n'existent pas encore (Phases
- * 15/17), et le principe du projet est de ne jamais présenter une absence
- * de donnée comme un résultat.
+ * (Phase 13), des prochains rappels du calendrier (Phase 14) et une
+ * synthèse du projet d'études (Phase 16 : formations ciblées, pays,
+ * objectifs, avancement documentaire). Réutilise entièrement les données
+ * et composants existants (aucun second stockage de profil, aucun second
+ * moteur de score, mêmes fonctions lib/calendar.ts, lib/applications.ts et
+ * lib/studyProject.ts qu'ailleurs) — la synthèse du projet d'études
+ * n'affiche QUE des agrégats qu'aucune autre section ne montre déjà
+ * (candidatures/calendrier gardent leur propre section, jamais dupliqués
+ * ici). Documents n'a jamais eu besoin de sa propre section : le suivi
+ * documentaire (Phase 15) vit dans chaque candidature sur /candidatures,
+ * et son agrégat rejoint la synthèse du projet d'études ci-dessous.
  */
 export function EspaceView() {
   const [ready, setReady] = useState(false);
@@ -78,6 +81,11 @@ export function EspaceView() {
   const upcomingCalendarEntries = useMemo(
     () => sortCalendarEntries(buildCalendarEntries(applications, FORMATIONS)).slice(0, 3),
     [applications],
+  );
+
+  const studyProjectSummary = useMemo(
+    () => summarizeStudyProject(buildTargetedFormations(savedIds, applications, FORMATIONS)),
+    [savedIds, applications],
   );
 
   function handleToggleSave(formationId: string) {
@@ -294,30 +302,75 @@ export function EspaceView() {
         )}
       </section>
 
-      {/* Documents — pas encore construit (Phase 15) */}
-      <section>
-        <h2 className="mb-3 flex items-center gap-2 text-base font-semibold text-slate-900">
-          <FileText className="size-4 text-slate-500" />
-          Documents
-        </h2>
-        <Card className="border-dashed text-center">
-          <p className="text-sm text-slate-400">
-            Bientôt disponible : suivi des documents par candidature (checklist, statut, source).
-          </p>
-        </Card>
-      </section>
-
-      {/* Projet d'études — pas encore construit (Phase 17) */}
+      {/* Projet d'études — synthèse (Phase 16) */}
       <section>
         <h2 className="mb-3 flex items-center gap-2 text-base font-semibold text-slate-900">
           <FolderKanban className="size-4 text-slate-500" />
           Projet d&apos;études
         </h2>
-        <Card className="border-dashed text-center">
-          <p className="text-sm text-slate-400">
-            Bientôt disponible : vue synthétique formations ciblées, calendrier, candidatures et budget.
-          </p>
-        </Card>
+        {studyProjectSummary.totalFormations > 0 ? (
+          <Card className="space-y-4">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+              <div>
+                <p className="text-2xl font-semibold text-slate-900">{studyProjectSummary.totalFormations}</p>
+                <p className="text-xs text-slate-500">
+                  Formation{studyProjectSummary.totalFormations > 1 ? "s" : ""} ciblée
+                  {studyProjectSummary.totalFormations > 1 ? "s" : ""}
+                </p>
+              </div>
+              <div>
+                <p className="text-2xl font-semibold text-slate-900">
+                  {Object.keys(studyProjectSummary.countryCounts).length}
+                </p>
+                <p className="text-xs text-slate-500">Pays</p>
+              </div>
+              <div>
+                <p className="text-2xl font-semibold text-slate-900">
+                  {Object.keys(studyProjectSummary.goalCounts).length}
+                </p>
+                <p className="text-xs text-slate-500">Objectif{Object.keys(studyProjectSummary.goalCounts).length > 1 ? "s" : ""}</p>
+              </div>
+              <div>
+                <p className="text-2xl font-semibold text-slate-900">
+                  {studyProjectSummary.documentsDone}/{studyProjectSummary.documentsTotal}
+                </p>
+                <p className="text-xs text-slate-500">Documents réunis</p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-1.5">
+              {Object.entries(studyProjectSummary.countryCounts).map(([country, count]) => (
+                <span key={country} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600">
+                  {country} ({count})
+                </span>
+              ))}
+              {Object.entries(studyProjectSummary.goalCounts).map(([goal, count]) => (
+                <span key={goal} className="rounded-full bg-blue-50 px-2.5 py-1 text-xs text-blue-700">
+                  {goal} ({count})
+                </span>
+              ))}
+            </div>
+
+            {studyProjectSummary.requiredDocumentsPending > 0 && (
+              <p className="text-sm text-amber-700">
+                {studyProjectSummary.requiredDocumentsPending} document
+                {studyProjectSummary.requiredDocumentsPending > 1 ? "s" : ""} obligatoire
+                {studyProjectSummary.requiredDocumentsPending > 1 ? "s" : ""} encore à réunir — voir{" "}
+                <Link href="/candidatures" className="font-medium underline underline-offset-2">
+                  le suivi des candidatures
+                </Link>
+                .
+              </p>
+            )}
+          </Card>
+        ) : (
+          <Card className="border-dashed text-center">
+            <p className="text-sm text-slate-400">
+              Aucune formation ciblée pour l&apos;instant. Sauvegardez une formation ou suivez une candidature pour
+              voir apparaître votre projet d&apos;études ici.
+            </p>
+          </Card>
+        )}
       </section>
     </div>
   );
