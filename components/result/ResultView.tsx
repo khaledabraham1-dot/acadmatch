@@ -20,6 +20,7 @@ import { MatchTable } from "@/components/result/MatchTable";
 import { ComparisonSummary } from "@/components/result/ComparisonSummary";
 import { CompatibilityExplanation } from "@/components/result/CompatibilityExplanation";
 import { ActionPlan } from "@/components/result/ActionPlan";
+import { EligibilitySection } from "@/components/result/EligibilitySection";
 import { OfficialSourceCard } from "@/components/result/OfficialSourceCard";
 import { FormationCompareTable } from "@/components/result/FormationCompareTable";
 import { ResultFeedback } from "@/components/result/ResultFeedback";
@@ -197,6 +198,8 @@ export function ResultView() {
         </p>
         <MatchTable matches={result.matches} />
       </Card>
+
+      <EligibilitySection formation={formation} />
 
       <OfficialSourceCard formation={formation} />
 
