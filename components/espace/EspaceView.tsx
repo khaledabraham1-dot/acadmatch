@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Bookmark, ClipboardList, Columns2, FileText, FolderKanban, User, X } from "lucide-react";
+import { ArrowRight, Bookmark, CalendarDays, ClipboardList, Columns2, FileText, FolderKanban, User, X } from "lucide-react";
 import type { Application, StudentProfile } from "@/types";
 import { FORMATIONS, getFormationById } from "@/data/formations";
 import {
@@ -17,6 +17,7 @@ import {
   toggleSavedFormationId,
 } from "@/lib/storage";
 import { applicationStatusTone, sortApplicationsByUrgency } from "@/lib/applications";
+import { buildCalendarEntries, formatCalendarDate, sortCalendarEntries } from "@/lib/calendar";
 import { computeCompatibility } from "@/lib/matching/engine";
 import { validateStoredProfile } from "@/lib/profile/validation";
 import { Card } from "@/components/ui/Card";
@@ -27,15 +28,16 @@ import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilit
 
 /**
  * Espace projet étudiant (Phase 12) — regroupe profil, formations
- * sauvegardées, comparaisons en cours et un résumé du suivi des
- * candidatures (Phase 13). Réutilise entièrement les données et
- * composants existants (aucun second stockage de profil, aucun second
- * moteur de score, même FormationCard/ApplicationCard qu'ailleurs) : la
- * seule donnée réellement nouvelle introduite par cette page elle-même est
- * la liste des sauvegardes (lib/storage.ts). Documents et Projet d'études
- * restent des cartes "à venir" — ces fonctionnalités n'existent pas encore
- * (Phases 15/17), et le principe du projet est de ne jamais présenter une
- * absence de donnée comme un résultat.
+ * sauvegardées, comparaisons en cours, un résumé du suivi des candidatures
+ * (Phase 13) et des prochains rappels du calendrier (Phase 14). Réutilise
+ * entièrement les données et composants existants (aucun second stockage
+ * de profil, aucun second moteur de score, mêmes fonctions lib/calendar.ts
+ * et lib/applications.ts qu'ailleurs) : la seule donnée réellement
+ * nouvelle introduite par cette page elle-même est la liste des
+ * sauvegardes (lib/storage.ts). Documents et Projet d'études restent des
+ * cartes "à venir" — ces fonctionnalités n'existent pas encore (Phases
+ * 15/17), et le principe du projet est de ne jamais présenter une absence
+ * de donnée comme un résultat.
  */
 export function EspaceView() {
   const [ready, setReady] = useState(false);
@@ -70,6 +72,11 @@ export function EspaceView() {
 
   const topApplications = useMemo(
     () => sortApplicationsByUrgency(applications).slice(0, 3),
+    [applications],
+  );
+
+  const upcomingCalendarEntries = useMemo(
+    () => sortCalendarEntries(buildCalendarEntries(applications, FORMATIONS)).slice(0, 3),
     [applications],
   );
 
@@ -243,6 +250,43 @@ export function EspaceView() {
               Aucune candidature suivie pour l&apos;instant.{" "}
               <Link href="/candidatures" className="font-medium text-blue-600 hover:text-blue-700">
                 Démarrer le suivi
+              </Link>
+              .
+            </p>
+          </Card>
+        )}
+      </section>
+
+      {/* Calendrier personnalisé (Phase 14) */}
+      <section>
+        <h2 className="mb-3 flex items-center gap-2 text-base font-semibold text-slate-900">
+          <CalendarDays className="size-4 text-slate-500" />
+          Calendrier
+        </h2>
+        {upcomingCalendarEntries.length > 0 ? (
+          <Card className="space-y-3">
+            <ul className="space-y-2">
+              {upcomingCalendarEntries.map((entry) => (
+                <li
+                  key={`${entry.formationId}-${entry.source}-${entry.itemId ?? "deadline"}`}
+                  className="flex items-center justify-between gap-3 text-sm"
+                >
+                  <span className="min-w-0 truncate text-slate-700">{entry.label}</span>
+                  <span className="shrink-0 text-xs text-slate-400">{formatCalendarDate(entry.date)}</span>
+                </li>
+              ))}
+            </ul>
+            <LinkButton href="/calendrier" size="sm" variant="outline">
+              Voir le calendrier complet
+              <ArrowRight className="size-3.5" />
+            </LinkButton>
+          </Card>
+        ) : (
+          <Card className="border-dashed text-center">
+            <p className="text-sm text-slate-400">
+              Aucun rappel pour l&apos;instant. Ajoutez une échéance personnelle depuis{" "}
+              <Link href="/candidatures" className="font-medium text-blue-600 hover:text-blue-700">
+                le suivi des candidatures
               </Link>
               .
             </p>

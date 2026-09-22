@@ -272,11 +272,15 @@ export const APPLICATION_STATUSES: ApplicationStatus[] = [
  * élément) : la checklist documentaire sourcée et normée par formation est
  * une phase ultérieure (Phase 15) — ceci est la liste personnelle et libre
  * de l'étudiant, qu'il remplit lui-même.
+ *
+ * `dueDate` (Phase 14) est optionnelle et, comme `Application.deadline`, un
+ * rappel que l'étudiant se fixe lui-même — jamais une date officielle.
  */
 export interface ChecklistItem {
   id: string;
   label: string;
   done: boolean;
+  dueDate?: string;
 }
 
 /**

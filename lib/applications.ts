@@ -66,3 +66,8 @@ export function toggleChecklistItem(items: ChecklistItem[], id: string): Checkli
 export function removeChecklistItem(items: ChecklistItem[], id: string): ChecklistItem[] {
   return items.filter((item) => item.id !== id);
 }
+
+/** Fixe (ou retire, avec `date` undefined/vide) le rappel personnel d'un élément de checklist (Phase 14). */
+export function setChecklistItemDueDate(items: ChecklistItem[], id: string, date: string | undefined): ChecklistItem[] {
+  return items.map((item) => (item.id === id ? { ...item, dueDate: date || undefined } : item));
+}

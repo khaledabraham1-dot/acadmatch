@@ -4,7 +4,13 @@ import Link from "next/link";
 import { MapPin, Trash2 } from "lucide-react";
 import type { Application, StudyProgram } from "@/types";
 import { APPLICATION_STATUSES } from "@/types";
-import { addChecklistItem, applicationStatusTone, removeChecklistItem, toggleChecklistItem } from "@/lib/applications";
+import {
+  addChecklistItem,
+  applicationStatusTone,
+  removeChecklistItem,
+  setChecklistItemDueDate,
+  toggleChecklistItem,
+} from "@/lib/applications";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Select, Textarea } from "@/components/ui/Field";
@@ -99,6 +105,9 @@ export function ApplicationCard({ application, formation, onChange, onRemove }: 
             onRemove={(id) =>
               onChange({ ...application, documents: removeChecklistItem(application.documents, id) })
             }
+            onSetDueDate={(id, date) =>
+              onChange({ ...application, documents: setChecklistItemDueDate(application.documents, id, date) })
+            }
           />
         </div>
         <div>
@@ -117,6 +126,9 @@ export function ApplicationCard({ application, formation, onChange, onRemove }: 
             }
             onRemove={(id) =>
               onChange({ ...application, nextActions: removeChecklistItem(application.nextActions, id) })
+            }
+            onSetDueDate={(id, date) =>
+              onChange({ ...application, nextActions: setChecklistItemDueDate(application.nextActions, id, date) })
             }
           />
         </div>

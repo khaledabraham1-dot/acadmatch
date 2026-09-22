@@ -4,6 +4,7 @@ import {
   applicationStatusTone,
   createApplication,
   removeChecklistItem,
+  setChecklistItemDueDate,
   sortApplicationsByUrgency,
   toggleChecklistItem,
 } from "@/lib/applications";
@@ -94,5 +95,21 @@ describe("checklist (documents / prochaines actions)", () => {
       { id: "2", label: "Lettre", done: false },
     ];
     expect(removeChecklistItem(items, "1")).toEqual([{ id: "2", label: "Lettre", done: false }]);
+  });
+
+  it("setChecklistItemDueDate fixe le rappel personnel d'un seul élément", () => {
+    const items = [
+      { id: "1", label: "CV", done: false },
+      { id: "2", label: "Lettre", done: false },
+    ];
+    const withDate = setChecklistItemDueDate(items, "1", "2026-02-10");
+    expect(withDate.find((i) => i.id === "1")?.dueDate).toBe("2026-02-10");
+    expect(withDate.find((i) => i.id === "2")?.dueDate).toBeUndefined();
+  });
+
+  it("setChecklistItemDueDate avec une date vide retire le rappel", () => {
+    const items = [{ id: "1", label: "CV", done: false, dueDate: "2026-02-10" }];
+    expect(setChecklistItemDueDate(items, "1", "")[0].dueDate).toBeUndefined();
+    expect(setChecklistItemDueDate(items, "1", undefined)[0].dueDate).toBeUndefined();
   });
 });
