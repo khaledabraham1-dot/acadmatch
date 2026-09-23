@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { MapPin, Trash2 } from "lucide-react";
+import { MapPin, PenLine, Trash2 } from "lucide-react";
 import type { Application, StudyProgram } from "@/types";
 import { APPLICATION_STATUSES } from "@/types";
 import { documentSuggestionFor } from "@/data/documentSuggestions";
@@ -16,6 +16,7 @@ import {
 } from "@/lib/applications";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { LinkButton } from "@/components/ui/Button";
 import { Select, Textarea } from "@/components/ui/Field";
 import { ChecklistEditor } from "@/components/applications/ChecklistEditor";
 
@@ -164,6 +165,13 @@ export function ApplicationCard({ application, formation, onChange, onRemove }: 
           placeholder="Vos notes personnelles sur cette candidature…"
           className="min-h-16"
         />
+      </div>
+
+      <div className="mt-4">
+        <LinkButton href={`/lettre-motivation?formationId=${formation.id}`} size="sm" variant="outline">
+          <PenLine className="size-3.5" />
+          {application.motivationLetter ? "Modifier ma lettre de motivation" : "Rédiger ma lettre de motivation"}
+        </LinkButton>
       </div>
     </Card>
   );

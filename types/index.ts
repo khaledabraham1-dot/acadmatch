@@ -308,4 +308,10 @@ export interface Application {
   documents: ChecklistItem[];
   nextActions: ChecklistItem[];
   notes: string;
+  /**
+   * Brouillon de lettre de motivation (Phase 17), généré par IA à partir du
+   * profil et de la formation puis TOUJOURS éditable par l'étudiant — jamais
+   * envoyé tel quel. Absent tant qu'aucun brouillon n'a été généré ou écrit.
+   */
+  motivationLetter?: string;
 }

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 /**
  * Supprime le compte de l'utilisateur authentifié (auth.users + sa ligne
@@ -13,6 +14,13 @@ import { createAdminClient } from "@/lib/supabase/admin";
  * suppression d'un autre compte que le sien.
  */
 export async function POST() {
+  // Sans Supabase configuré, createClient() lève une exception (constaté en
+  // durcissant app/api/lettre-motivation/route.ts, Phase 17) — même garde ici
+  // plutôt qu'un 500 non géré si cette route est appelée directement.
+  if (!isSupabaseConfigured()) {
+    return NextResponse.json({ error: "Comptes pas encore configurés." }, { status: 503 });
+  }
+
   const supabase = await createClient();
   const {
     data: { user },
