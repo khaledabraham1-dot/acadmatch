@@ -27,24 +27,33 @@ Dans le tableau de bord Supabase → SQL Editor, coller et exécuter le
 contenu de `supabase/migrations/0001_profiles.sql` (une seule table
 `profiles`, avec Row Level Security déjà configurée dans le fichier).
 
-## 3. Personnaliser le modèle d'e-mail "Magic Link"
+## 3. Modèle d'e-mail "Magic Link" — rien à faire pour l'instant
 
-Supabase → Authentication → Email Templates → **Magic Link**. Remplacer le
-lien par défaut pour qu'il pointe vers notre route de confirmation :
+Le modèle par défaut de Supabase fonctionne tel quel : `/auth/confirm`
+accepte le `?code=` qu'il renvoie (flux PKCE). Limite : le lien doit être
+ouvert **dans le même navigateur** que celui où la connexion a été
+demandée.
+
+Plus tard (avant l'ouverture à de vrais utilisateurs) : brancher un SMTP
+personnalisé (ex: Resend) — obligatoire de toute façon, le SMTP intégré de
+Supabase n'envoie que quelques e-mails par heure — puis, dans
+Authentication → Email Templates → Magic Link, remplacer
+`{{ .ConfirmationURL }}` par :
 
 ```
 {{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next=/compte
 ```
 
-Sans cette étape, le lien reçu par e-mail pointe vers une page Supabase
-générique au lieu de connecter l'utilisateur sur AcadMatch.
+pour que le lien fonctionne aussi d'un appareil à l'autre.
 
 ## 4. Renseigner l'URL du site
 
 Supabase → Authentication → URL Configuration → **Site URL** : l'URL de
 production (ex: `https://acadmatch.vercel.app` ou le domaine final), et
-ajouter la même URL + `http://localhost:3000` dans **Redirect URLs** (pour
-pouvoir tester en local).
+ajouter dans **Redirect URLs** : `https://<url-de-production>/**` et
+`http://localhost:3000/**` (le `/**` est indispensable : sans lui, Supabase
+refuse de rediriger vers `/auth/confirm` et renvoie sur la page d'accueil,
+où la connexion échoue).
 
 ## 5. Récupérer les clés et les renseigner
 
