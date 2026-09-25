@@ -15,6 +15,10 @@ create index if not exists ai_usage_user_id_created_at_idx
 
 alter table public.ai_usage enable row level security;
 
+-- Droits explicites (voir 0001_profiles.sql) : lecture + insertion
+-- uniquement, cohérent avec les policies ci-dessous (journal non modifiable).
+grant select, insert on public.ai_usage to authenticated;
+
 -- Toujours interrogée/écrite depuis une route serveur avec la session de
 -- l'utilisateur (jamais depuis le navigateur ni avec la clé admin) — RLS
 -- reste la garantie de dernier recours si ce n'était pas le cas.

@@ -15,6 +15,13 @@ create table if not exists public.profiles (
 
 alter table public.profiles enable row level security;
 
+-- Droits explicites : le projet Supabase est créé avec "Automatically expose
+-- new tables" désactivé (recommandation Supabase), donc aucune table n'est
+-- accessible via l'API tant qu'on ne l'accorde pas ici. Seul le rôle
+-- `authenticated` (utilisateur connecté) y a accès — jamais `anon` — et RLS
+-- ci-dessous restreint en plus chaque utilisateur à sa propre ligne.
+grant select, insert, update, delete on public.profiles to authenticated;
+
 -- Isolation des données imposée par Postgres, pas seulement par le code
 -- applicatif : un utilisateur ne peut jamais lire ni écrire la ligne d'un
 -- autre, même en cas de bug côté client.

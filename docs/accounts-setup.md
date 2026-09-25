@@ -13,6 +13,14 @@ Sur [supabase.com](https://supabase.com), créer un nouveau projet.
 d'AcadMatch est en France/UE, et ça simplifie toute question de conformité
 RGPD plus tard.
 
+Options de sécurité à la création :
+- **Enable Data API** : ✅ coché (le client `supabase-js` en a besoin).
+- **Automatically expose new tables** : ❌ décoché (recommandation
+  Supabase) — les migrations accordent elles-mêmes les droits nécessaires
+  (`grant ... to authenticated`), table par table.
+- **Enable automatic RLS** : ✅ coché — filet de sécurité pour toute table
+  future ; nos migrations activent déjà RLS explicitement.
+
 ## 2. Exécuter la migration SQL
 
 Dans le tableau de bord Supabase → SQL Editor, coller et exécuter le
