@@ -1,4 +1,4 @@
-import { Home, Search, User, BarChart3, FolderKanban, ClipboardList, CalendarDays, PenLine, UserCircle } from "lucide-react";
+import { Home, Search, User, BarChart3, FolderKanban, ClipboardList, CalendarDays, PenLine, MessagesSquare, UserCircle } from "lucide-react";
 
 export const NAV_ITEMS = [
   { href: "/", label: "Accueil", icon: Home },
@@ -9,5 +9,6 @@ export const NAV_ITEMS = [
   { href: "/candidatures", label: "Suivi des candidatures", icon: ClipboardList },
   { href: "/calendrier", label: "Calendrier", icon: CalendarDays },
   { href: "/lettre-motivation", label: "Lettre de motivation", icon: PenLine },
+  { href: "/entretiens", label: "Entretiens", icon: MessagesSquare },
   { href: "/compte", label: "Mon compte", icon: UserCircle },
 ] as const;

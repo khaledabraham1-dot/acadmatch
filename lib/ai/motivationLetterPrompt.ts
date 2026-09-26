@@ -1,4 +1,5 @@
 import type { StudentProfile, StudyProgram } from "@/types";
+import { formatFormation, formatProfile } from "@/lib/ai/promptContext";
 
 /**
  * Construction du prompt pour l'assistant de lettre de motivation (Phase 17)
@@ -20,44 +21,6 @@ Règle absolue, plus importante que le style ou la longueur : tu n'as le droit d
 Le texte que tu produis est un BROUILLON de départ, pas une lettre finale : l'étudiant le relira et le modifiera toujours avant tout envoi. Écris en français, ton sincère et concret (pas de formules creuses), 250 à 400 mots, structuré en 3-4 paragraphes (motivation pour cette formation précise, lien entre le parcours réel de l'étudiant et son contenu/ses prérequis, projet/objectif, formule de politesse).
 
 Format : texte brut uniquement, affiché tel quel dans une zone de texte — aucun Markdown (pas de **gras**, de # titres ni de listes), aucun titre ni commentaire autour de la lettre. Commence directement par « Madame, Monsieur, ».`;
-
-function formatProfile(profile: StudentProfile): string {
-  const lines = [
-    `Niveau actuel : ${profile.currentLevel}`,
-    `Diplôme actuel / en cours : ${profile.currentDegree}`,
-    `Domaine d'études : ${profile.fieldOfStudy}`,
-    `Objectif : ${profile.goal}`,
-    `Langues : ${profile.languages.join(", ")}`,
-  ];
-  if (profile.courses.length > 0) {
-    lines.push(`Matières suivies : ${profile.courses.map((c) => c.name).join(", ")}`);
-  }
-  if (profile.skills.length > 0) {
-    lines.push(`Compétences : ${profile.skills.join(", ")}`);
-  }
-  if (profile.academicStanding) {
-    lines.push(`Auto-évaluation du dossier : ${profile.academicStanding}`);
-  }
-  return lines.join("\n");
-}
-
-function formatFormation(formation: StudyProgram): string {
-  const lines = [
-    `Nom : ${formation.name}`,
-    `Établissement : ${formation.institution.name} (${formation.institution.city}, ${formation.institution.country})`,
-    `Diplôme visé : ${formation.goal}`,
-    `Domaine : ${formation.field}`,
-    `Langue d'enseignement : ${formation.language}`,
-    `Description officielle : ${formation.description}`,
-  ];
-  if (formation.coreCourses.length > 0) {
-    lines.push(`Matières fondamentales : ${formation.coreCourses.map((c) => c.name).join(", ")}`);
-  }
-  if (formation.prerequisites.length > 0) {
-    lines.push(`Prérequis : ${formation.prerequisites.map((p) => p.label).join(", ")}`);
-  }
-  return lines.join("\n");
-}
 
 export interface MotivationLetterPrompt {
   system: string;

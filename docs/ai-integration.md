@@ -83,3 +83,23 @@ UI IA n'existe encore.
 `supabase/migrations/0002_ai_usage.sql` (table `ai_usage`, journal
 d'appels avec RLS) — à exécuter dans le même SQL Editor Supabase que
 `0001_profiles.sql` (voir `docs/accounts-setup.md`).
+
+## Fonctionnalités qui l'utilisent
+
+| Fonctionnalité | Route | `feature` (ai_usage) |
+|---|---|---|
+| Lettre de motivation (Phase 17) | `app/api/lettre-motivation/route.ts` | `lettre-motivation` |
+| Préparation aux entretiens (Phase 18) | `app/api/entretien/route.ts` | `entretien-questions`, `entretien-feedback` |
+
+Toutes partagent `lib/ai/routeAuth.ts` (compte requis, dégradation 503/401,
+traduction des échecs typés), `lib/ai/promptContext.ts` (mise en forme du
+profil et de la formation + validation du profil reçu, jamais digne de
+confiance puisqu'il vient de localStorage) et, côté client,
+`components/ai/AiFeature.tsx`. Chaque appel (une génération de questions,
+un retour sur une réponse) compte pour une unité du quota journalier
+partagé — y compris un appel dont la réponse s'avère inexploitable.
+
+Seule source d'expériences autorisée pour l'IA : le champ optionnel
+`StudentProfile.experiences` (formulaire de profil). Aucune fonctionnalité
+n'invente d'expérience, et la préparation aux entretiens ne rédige jamais
+la réponse à la place de l'étudiant — elle la commente.

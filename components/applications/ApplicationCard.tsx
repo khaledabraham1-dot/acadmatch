@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { MapPin, PenLine, Trash2 } from "lucide-react";
+import { MapPin, MessagesSquare, PenLine, Trash2 } from "lucide-react";
 import type { Application, StudyProgram } from "@/types";
 import { APPLICATION_STATUSES } from "@/types";
 import { documentSuggestionFor } from "@/data/documentSuggestions";
@@ -167,10 +167,14 @@ export function ApplicationCard({ application, formation, onChange, onRemove }: 
         />
       </div>
 
-      <div className="mt-4">
+      <div className="mt-4 flex flex-wrap gap-2">
         <LinkButton href={`/lettre-motivation?formationId=${formation.id}`} size="sm" variant="outline">
           <PenLine className="size-3.5" />
           {application.motivationLetter ? "Modifier ma lettre de motivation" : "Rédiger ma lettre de motivation"}
+        </LinkButton>
+        <LinkButton href={`/entretiens?formationId=${formation.id}`} size="sm" variant="outline">
+          <MessagesSquare className="size-3.5" />
+          {application.interviewPrep ? "Reprendre ma préparation d'entretien" : "Préparer l'entretien"}
         </LinkButton>
       </div>
     </Card>

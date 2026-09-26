@@ -29,7 +29,8 @@ import {
 } from "@/lib/profile/validation";
 import { generateId } from "@/lib/utils";
 import { Card } from "@/components/ui/Card";
-import { Label, Select, Input } from "@/components/ui/Field";
+import { Label, Select, Input, Textarea } from "@/components/ui/Field";
+import { MAX_EXPERIENCES_LENGTH } from "@/lib/ai/promptContext";
 import { Button } from "@/components/ui/Button";
 import { CourseSkillEditor } from "@/components/profile/CourseSkillEditor";
 import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
@@ -54,6 +55,7 @@ export function ProfileForm() {
   const [goal, setGoal] = useState<StudyGoal>("Master");
   const [languages, setLanguages] = useState<string[]>(["Français"]);
   const [academicStanding, setAcademicStanding] = useState<AcademicStanding>(NEUTRAL_ACADEMIC_STANDING);
+  const [experiences, setExperiences] = useState("");
   const [hasExistingProfile, setHasExistingProfile] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
 
@@ -71,6 +73,7 @@ export function ProfileForm() {
     setGoal(existing.goal);
     setLanguages(existing.languages ?? ["Français"]);
     setAcademicStanding(existing.academicStanding ?? NEUTRAL_ACADEMIC_STANDING);
+    setExperiences(existing.experiences ?? "");
     setHasExistingProfile(true);
   }, []);
 
@@ -103,6 +106,7 @@ export function ProfileForm() {
       goal,
       languages,
       academicStanding,
+      ...(experiences.trim() ? { experiences: experiences.trim() } : {}),
     };
 
     saveProfile(profile);
@@ -122,6 +126,7 @@ export function ProfileForm() {
     setGoal("Master");
     setLanguages(["Français"]);
     setAcademicStanding(NEUTRAL_ACADEMIC_STANDING);
+    setExperiences("");
     setHasExistingProfile(false);
     setSubmitAttempted(false);
   }
@@ -302,6 +307,26 @@ export function ProfileForm() {
           suggestions={SUGGESTED_SKILLS[fieldOfStudy] ?? []}
           placeholder="ex : Python"
           onChange={setSkills}
+        />
+      </Card>
+
+      <Card>
+        <h2 className="mb-1 text-base font-semibold text-slate-900">
+          Expériences et projets <span className="font-normal text-slate-400">(optionnel)</span>
+        </h2>
+        <p className="mb-4 text-sm text-slate-500">
+          Stages, projets, jobs, engagements associatifs… Non utilisés pour la compatibilité : ce sont les
+          seules expériences que les assistants IA (lettre de motivation, entretiens) ont le droit de
+          mentionner — ils n&apos;en inventent jamais.
+        </p>
+        <Textarea
+          id="experiences"
+          aria-label="Expériences et projets"
+          value={experiences}
+          onChange={(e) => setExperiences(e.target.value)}
+          maxLength={MAX_EXPERIENCES_LENGTH}
+          placeholder="ex : Stage de 2 mois en développement web chez… ; projet de fin d'année : application de…"
+          className="min-h-24"
         />
       </Card>
 

@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { callAi } from "@/lib/ai/callAi";
 import { buildMotivationLetterPrompt } from "@/lib/ai/motivationLetterPrompt";
+import { isPromptableProfile } from "@/lib/ai/promptContext";
+import { aiErrorResponse, aiFailureResponse, authenticateAiRequest, readJsonBody } from "@/lib/ai/routeAuth";
 import { getFormationById } from "@/data/formations";
-import type { StudentProfile } from "@/types";
 
 /**
  * Génère un brouillon de lettre de motivation (Phase 17) — première
@@ -20,52 +19,24 @@ import type { StudentProfile } from "@/types";
  * et le nom de la fonctionnalité, voir lib/ai/rateLimit.ts).
  */
 export async function POST(request: Request) {
-  // Sans Supabase configuré (voir docs/accounts-setup.md), createClient() lève
-  // une exception — cette route doit se dégrader proprement (comme l'UI,
-  // voir MotivationLetterView) plutôt que de renvoyer un 500 non géré.
-  if (!isSupabaseConfigured()) {
-    return NextResponse.json({ ok: false, reason: "not_configured" }, { status: 503 });
+  const auth = await authenticateAiRequest();
+  if (!auth.ok) return auth.response;
+
+  const body = await readJsonBody<{ formationId: string; profile: unknown }>(request);
+  const formation = body?.formationId ? getFormationById(body.formationId) : undefined;
+  if (!formation || !isPromptableProfile(body?.profile)) {
+    return aiErrorResponse("invalid_request", 400);
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return NextResponse.json({ ok: false, reason: "not_authenticated" }, { status: 401 });
-  }
-
-  let body: { formationId?: string; profile?: StudentProfile };
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ ok: false, reason: "invalid_request" }, { status: 400 });
-  }
-
-  const { formationId, profile } = body;
-  if (!formationId || !profile) {
-    return NextResponse.json({ ok: false, reason: "invalid_request" }, { status: 400 });
-  }
-
-  const formation = getFormationById(formationId);
-  if (!formation) {
-    return NextResponse.json({ ok: false, reason: "invalid_request" }, { status: 400 });
-  }
-
-  const { system, user: userMessage } = buildMotivationLetterPrompt(profile, formation);
+  const { system, user: userMessage } = buildMotivationLetterPrompt(body.profile, formation);
 
   const result = await callAi({
-    userId: user.id,
+    userId: auth.userId,
     feature: "lettre-motivation",
     system,
     messages: [{ role: "user", content: userMessage }],
   });
 
-  if (!result.ok) {
-    const status = result.reason === "quota_exceeded" ? 429 : 503;
-    return NextResponse.json({ ok: false, reason: result.reason }, { status });
-  }
-
+  if (!result.ok) return aiFailureResponse(result);
   return NextResponse.json({ ok: true, text: result.text });
 }

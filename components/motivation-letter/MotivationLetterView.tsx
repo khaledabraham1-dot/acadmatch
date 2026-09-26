@@ -1,30 +1,26 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import type { User } from "@supabase/supabase-js";
-import { AlertCircle, Loader2, Save, ShieldAlert, Sparkles } from "lucide-react";
+import { Loader2, Save, Sparkles } from "lucide-react";
 import type { Application, StudentProfile } from "@/types";
 import { getFormationById } from "@/data/formations";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { createClient } from "@/lib/supabase/client";
 import { loadApplications, loadProfile, upsertApplication } from "@/lib/storage";
 import { createApplication } from "@/lib/applications";
-import { MAX_AI_REQUESTS_PER_DAY } from "@/lib/ai/config";
 import { Card } from "@/components/ui/Card";
-import { Button, LinkButton } from "@/components/ui/Button";
-import { Select, Textarea } from "@/components/ui/Field";
+import { Button } from "@/components/ui/Button";
+import { Textarea } from "@/components/ui/Field";
+import {
+  AiErrorNotice,
+  AiLoginRequired,
+  AiNotConfiguredNotice,
+  ApplicationPicker,
+  ProfileRequired,
+  postAi,
+  useAiAccess,
+} from "@/components/ai/AiFeature";
 
 type GenerationState = "idle" | "loading" | "error";
-
-const ERROR_MESSAGES: Record<string, string> = {
-  not_authenticated: "Vous devez être connecté pour utiliser cette fonctionnalité.",
-  not_configured: "Cette fonctionnalité IA n'est pas encore configurée. Réessayez plus tard.",
-  quota_exceeded: `Vous avez atteint la limite de ${MAX_AI_REQUESTS_PER_DAY} générations aujourd'hui. Réessayez demain.`,
-  invalid_request: "Requête invalide — rechargez la page et réessayez.",
-  error: "Une erreur est survenue pendant la génération. Réessayez dans un instant.",
-};
 
 /**
  * Assistant de lettre de motivation (Phase 17) — première fonctionnalité IA
@@ -39,32 +35,19 @@ export function MotivationLetterView() {
   const searchParams = useSearchParams();
   const formationId = searchParams.get("formationId");
 
-  const [configured] = useState(isSupabaseConfigured());
-  const [user, setUser] = useState<User | null>(null);
-  const [authLoading, setAuthLoading] = useState(configured);
+  const { configured, user, authLoading } = useAiAccess();
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [applications, setApplications] = useState<Application[]>([]);
   const [draft, setDraft] = useState("");
   const [savedAt, setSavedAt] = useState<number | null>(null);
   const [generation, setGeneration] = useState<GenerationState>("idle");
   const [errorReason, setErrorReason] = useState<string | null>(null);
-  const [picked, setPicked] = useState("");
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setProfile(loadProfile());
     setApplications(loadApplications());
-    if (!configured) return;
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
-      setAuthLoading(false);
-    });
-    const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-    return () => subscription.subscription.unsubscribe();
-  }, [configured]);
+  }, []);
 
   const formation = formationId ? getFormationById(formationId) : undefined;
   const application = useMemo(
@@ -89,111 +72,36 @@ export function MotivationLetterView() {
     if (!formationId || !profile) return;
     setGeneration("loading");
     setErrorReason(null);
-    try {
-      const response = await fetch("/api/lettre-motivation", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ formationId, profile }),
-      });
-      const data = await response.json();
-      if (!data.ok) {
-        setErrorReason(data.reason ?? "error");
-        setGeneration("error");
-        return;
-      }
-      setDraft(data.text);
-      setGeneration("idle");
-    } catch {
-      setErrorReason("error");
+    const result = await postAi<{ text: string }>("/api/lettre-motivation", { formationId, profile });
+    if (!result.ok) {
+      setErrorReason(result.reason);
       setGeneration("error");
+      return;
     }
+    setDraft(result.text);
+    setGeneration("idle");
   }
 
-  if (!configured) {
-    return (
-      <Card className="border-amber-100 bg-amber-50/60">
-        <div className="flex items-start gap-3">
-          <ShieldAlert className="mt-0.5 size-5 shrink-0 text-amber-600" aria-hidden />
-          <div>
-            <h2 className="text-sm font-semibold text-slate-900">Fonctionnalité bientôt disponible</h2>
-            <p className="mt-1 text-sm text-slate-600">
-              L&apos;assistant de lettre de motivation est en cours de mise en place.
-            </p>
-          </div>
-        </div>
-      </Card>
-    );
-  }
-
+  if (!configured) return <AiNotConfiguredNotice featureName="L'assistant de lettre de motivation" />;
   if (authLoading) return null;
-
-  if (!user) {
-    return (
-      <Card className="flex flex-wrap items-center justify-between gap-3 border-blue-100 bg-blue-50/60">
-        <p className="text-sm text-blue-800">
-          Les fonctionnalités IA demandent un compte (gratuit) — le reste d&apos;AcadMatch reste utilisable
-          sans connexion.
-        </p>
-        <LinkButton href="/compte" size="sm">
-          Se connecter
-        </LinkButton>
-      </Card>
-    );
-  }
+  if (!user) return <AiLoginRequired />;
 
   if (!formationId || !formation) {
     return (
-      <Card>
-        <h2 className="mb-1 text-sm font-semibold text-slate-900">Choisissez une candidature</h2>
-        <p className="mb-4 text-sm text-slate-500">
-          La lettre de motivation est rédigée pour une formation précise, suivie dans{" "}
-          <Link href="/candidatures" className="font-medium text-blue-600 hover:text-blue-700">
-            le suivi des candidatures
-          </Link>
-          .
-        </p>
-        {applications.length > 0 ? (
-          <div className="flex flex-wrap items-end gap-3">
-            <div className="min-w-0 flex-1">
-              <Select value={picked} onChange={(e) => setPicked(e.target.value)}>
-                <option value="">Choisissez une formation…</option>
-                {applications.map((a) => {
-                  const f = getFormationById(a.formationId);
-                  return f ? (
-                    <option key={a.formationId} value={a.formationId}>
-                      {f.name} — {f.institution.name}
-                    </option>
-                  ) : null;
-                })}
-              </Select>
-            </div>
-            <LinkButton
-              href={picked ? `/lettre-motivation?formationId=${picked}` : "#"}
-              size="md"
-              className={!picked ? "pointer-events-none opacity-50" : undefined}
-            >
-              Continuer
-            </LinkButton>
-          </div>
-        ) : (
-          <LinkButton href="/candidatures" size="sm" variant="outline">
-            Suivre une candidature
-          </LinkButton>
-        )}
-      </Card>
+      <ApplicationPicker
+        applications={applications}
+        basePath="/lettre-motivation"
+        description="La lettre de motivation est rédigée pour une formation précise"
+      />
     );
   }
 
   if (!profile) {
     return (
-      <Card className="flex flex-wrap items-center justify-between gap-3 border-blue-100 bg-blue-50/60">
-        <p className="text-sm text-blue-800">
-          Renseignez votre profil académique pour générer un brouillon basé sur votre parcours réel.
-        </p>
-        <LinkButton href={`/profil?next=${encodeURIComponent(`/lettre-motivation?formationId=${formationId}`)}`} size="sm">
-          Analyser mon profil
-        </LinkButton>
-      </Card>
+      <ProfileRequired
+        message="Renseignez votre profil académique pour générer un brouillon basé sur votre parcours réel."
+        next={`/lettre-motivation?formationId=${formationId}`}
+      />
     );
   }
 
@@ -215,12 +123,7 @@ export function MotivationLetterView() {
         </p>
       </Card>
 
-      {generation === "error" && errorReason && (
-        <Card className="flex items-start gap-3 border-red-100 bg-red-50/60">
-          <AlertCircle className="mt-0.5 size-5 shrink-0 text-red-600" aria-hidden />
-          <p className="text-sm text-red-800">{ERROR_MESSAGES[errorReason] ?? ERROR_MESSAGES.error}</p>
-        </Card>
-      )}
+      {generation === "error" && errorReason && <AiErrorNotice reason={errorReason} />}
 
       <Card>
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">

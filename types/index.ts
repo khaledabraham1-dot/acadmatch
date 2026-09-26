@@ -78,6 +78,14 @@ export interface StudentProfile {
    * ce champ reste donc valide sans migration de `lib/storage.ts`.
    */
   academicStanding?: AcademicStanding;
+  /**
+   * Expériences, stages, projets ou engagements décrits librement par
+   * l'étudiant (Phase 18, optionnel). Seule source autorisée pour que les
+   * fonctionnalités IA mentionnent une expérience : elles n'en inventent
+   * jamais (voir lib/ai/promptContext.ts). Optionnel, donc un profil
+   * enregistré avant l'ajout de ce champ reste valide sans migration.
+   */
+  experiences?: string;
 }
 
 /** Type de correspondance entre un élément du profil étudiant et une exigence de formation. */
@@ -314,4 +322,40 @@ export interface Application {
    * envoyé tel quel. Absent tant qu'aucun brouillon n'a été généré ou écrit.
    */
   motivationLetter?: string;
+  /**
+   * Préparation à l'entretien (Phase 18) : questions générées pour cette
+   * formation, réponses rédigées par l'étudiant et retours de l'IA. Absent
+   * tant qu'aucune question n'a été générée.
+   */
+  interviewPrep?: InterviewPrep;
+}
+
+/** Catégorie d'une question d'entretien — ce que le jury cherche à évaluer. */
+export type InterviewQuestionCategory = "motivation" | "parcours" | "académique" | "projet" | "point de vigilance";
+
+export const INTERVIEW_QUESTION_CATEGORIES: InterviewQuestionCategory[] = [
+  "motivation",
+  "parcours",
+  "académique",
+  "projet",
+  "point de vigilance",
+];
+
+export interface InterviewQuestion {
+  id: string;
+  category: InterviewQuestionCategory;
+  question: string;
+  /** Ce que le jury cherche à évaluer avec cette question. */
+  intent: string;
+  /** Réponse rédigée par l'étudiant (jamais générée par l'IA). */
+  answer: string;
+  /** Dernier retour de l'IA sur `answer`, s'il a été demandé. */
+  feedback?: string;
+}
+
+export interface InterviewPrep {
+  questions: InterviewQuestion[];
+  /** Langue des questions : celle de l'enseignement de la formation. */
+  language: string;
+  generatedAt: string;
 }

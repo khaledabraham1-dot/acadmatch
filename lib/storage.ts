@@ -1,4 +1,5 @@
-import type { Application, StudentProfile } from "@/types";
+import type { Application, InterviewPrep, InterviewQuestionCategory, StudentProfile } from "@/types";
+import { INTERVIEW_QUESTION_CATEGORIES } from "@/types";
 
 /**
  * Persistance locale (aucun compte, aucune base de données pour ce prototype).
@@ -215,6 +216,39 @@ function isValidApplication(value: unknown): value is Application {
   );
 }
 
+function isValidInterviewPrep(value: unknown): value is InterviewPrep {
+  if (!value || typeof value !== "object") return false;
+  const prep = value as Record<string, unknown>;
+  return (
+    typeof prep.language === "string" &&
+    typeof prep.generatedAt === "string" &&
+    Array.isArray(prep.questions) &&
+    prep.questions.every((q) => {
+      if (!q || typeof q !== "object") return false;
+      const question = q as Record<string, unknown>;
+      return (
+        typeof question.id === "string" &&
+        typeof question.question === "string" &&
+        typeof question.answer === "string" &&
+        INTERVIEW_QUESTION_CATEGORIES.includes(question.category as InterviewQuestionCategory) &&
+        (question.feedback === undefined || typeof question.feedback === "string")
+      );
+    })
+  );
+}
+
+/**
+ * Une préparation d'entretien illisible (Phase 18) est écartée seule,
+ * sans perdre la candidature qui la porte — elle se régénère en un clic,
+ * contrairement aux documents et notes de la candidature.
+ */
+function withValidInterviewPrep(application: Application): Application {
+  if (application.interviewPrep === undefined || isValidInterviewPrep(application.interviewPrep)) {
+    return application;
+  }
+  return { ...application, interviewPrep: undefined };
+}
+
 export function loadApplications(): Application[] {
   const storage = getStorage();
   if (!storage) return [];
@@ -223,7 +257,7 @@ export function loadApplications(): Application[] {
     if (!raw) return [];
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) return [];
-    return parsed.filter(isValidApplication);
+    return parsed.filter(isValidApplication).map(withValidInterviewPrep);
   } catch {
     return [];
   }
