@@ -45,6 +45,7 @@ describe("buildMotivationLetterPrompt", () => {
   it("rappelle explicitement que le texte produit reste un brouillon éditable", () => {
     const { system } = buildMotivationLetterPrompt(profile, formation);
     expect(system).toMatch(/BROUILLON/);
+    expect(system).toMatch(/aucun Markdown/);
   });
 
   it("inclut les faits du profil fourni, rien d'autre inventé côté prompt", () => {
