@@ -44,6 +44,9 @@ describe("documentSuggestionFor", () => {
       "f-master-finance-ift-lyon3",
       "f-master-mecanique-sorbonne",
       "f-master-ase-lille",
+      "f-m1-maths-fondamentales-paris-saclay",
+      "f-m1-applied-maths-grenoble",
+      "f-master-maths-appliquees-stats-lille",
     ]);
   });
 });

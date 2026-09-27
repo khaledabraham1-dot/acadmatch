@@ -29,7 +29,8 @@ import type { AcademicItem, Importance, StudyProgram } from "@/types";
  * 2 licences + 3 masters par domaine, plusieurs villes — Économie & Gestion
  * d'abord (TSE, Aix-Marseille, iaelyon, UCLouvain LSM), puis Sciences de
  * l'ingénieur (Strasbourg, ULiège, Sorbonne, Lille, Centrale Nantes), puis
- * Droit (Bordeaux, ULB, Strasbourg, Aix-Marseille, Toulouse). Chaque fiche ajoutée
+ * Droit (Bordeaux, ULB, Strasbourg, Aix-Marseille, Toulouse), puis
+ * Mathématiques (Rennes, UNamur, Paris-Saclay, Grenoble, Lille). Chaque fiche ajoutée
  * a aussi ses frais sourcés dans data/budget.ts (un test l'impose).
  *
  * Pour toute formation FICTIVE de démonstration ajoutée plus tard (tests,
@@ -1134,6 +1135,199 @@ export const FORMATIONS: StudyProgram[] = [
     ],
     skills: [skill("Anglais juridique", "essentielle", ["Anglais courant"]), skill("Rédaction juridique", "importante")],
     source: "https://www.ut-capitole.fr/home/course-offer/english-taught-courses/master-ll-m-international-economic-law",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+
+  // -------------------------------------------------------------------------
+  // Mathématiques — ajoutées et vérifiées le 2026-09-27. Formation d'actuaire
+  // de l'ISFA (Lyon 1) écartée pour l'instant : entrée normale en L3, et
+  // l'entrée en M1 exige déjà un M1 (une dizaine de places) — la présenter
+  // comme un master classique tromperait un étudiant de L3.
+  // -------------------------------------------------------------------------
+  {
+    id: "f-licence-maths-rennes",
+    name: "Licence Mathématiques — portail Mathématiques et applications (L1-L2)",
+    institution: { name: "Université de Rennes — UFR Mathématiques", city: "Rennes", country: "France" },
+    level: "Licence 1",
+    goal: "Licence",
+    field: "Mathématiques",
+    description:
+      "Deux premières années de la licence de mathématiques (campus de Beaulieu) : algèbre, géométrie, analyse, probabilités et statistiques, avec des modules de physique et d'informatique. Mène à la L3 de mathématiques — ou de physique, d'informatique — puis aux masters (calcul scientifique, préparation à l'agrégation, enseignement MEEF).",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    applicationProcedure:
+      "L1 : Parcoursup pour les bacheliers (vœux de janvier à mars) ; procédure spécifique pour les candidats internationaux (voir la page de l'université). Un dispositif « oui si » (L1 en deux ans avec accompagnement) existe pour les profils à consolider.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Baccalauréat général ou équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Mathématiques",
+        label: "Spécialité mathématiques en première et terminale fortement recommandée",
+        aliases: ["Sciences fondamentales", "Informatique", "Data Science & IA", "Sciences de l'ingénieur"],
+      },
+    ],
+    coreCourses: [
+      course("Analyse", "essentielle"),
+      course("Algèbre linéaire", "essentielle", ["Algèbre"]),
+      course("Probabilités", "importante"),
+      course("Statistiques", "utile"),
+      course("Programmation scientifique", "utile", ["Informatique"]),
+    ],
+    skills: [skill("Rigueur mathématique", "essentielle"), skill("Python", "utile")],
+    source: "https://math.univ-rennes.fr/le-portail-mathematiques-et-applications-l1-l2",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-bachelier-maths-unamur",
+    name: "Bachelier en sciences mathématiques",
+    institution: { name: "Université de Namur (UNamur) — Faculté des sciences", city: "Namur", country: "Belgique" },
+    level: "Licence 1",
+    goal: "Licence",
+    field: "Mathématiques",
+    description:
+      "Bachelier de 3 ans (180 crédits ECTS) : analyse réelle, algèbre linéaire, probabilités et programmation dès la 1re année, puis analyse complexe, géométrie différentielle, statistique, théorie des graphes, et en 3e année analyse fonctionnelle, optimisation, analyse numérique et équations aux dérivées partielles. Débouchés : enseignement, gestion des risques financiers, actuariat, informatique, recherche.",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    applicationProcedure:
+      "Pas d'examen d'entrée. Candidats hors UE : diplôme secondaire obtenu il y a 3 ans au plus, moyenne d'au moins 13/20, demande d'équivalence à la Fédération Wallonie-Bruxelles (avant le 15 juillet), frais d'examen du dossier de 200 € non remboursables ; dossier complet avant le 31 mars si un visa étudiant est nécessaire. Une seule candidature autorisée dans l'ensemble des établissements de la Fédération Wallonie-Bruxelles.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Diplôme secondaire reconnu équivalent (13/20 minimum pour les candidats hors UE)" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Mathématiques",
+        label: "Goût pour le raisonnement mathématique (cours préparatoires proposés en maths et physique)",
+        aliases: ["Sciences fondamentales", "Informatique", "Data Science & IA", "Sciences de l'ingénieur"],
+      },
+    ],
+    coreCourses: [
+      course("Analyse", "essentielle", ["Analyse réelle"]),
+      course("Algèbre linéaire", "essentielle", ["Algèbre"]),
+      course("Probabilités", "importante"),
+      course("Programmation", "importante", ["Programmation scientifique"]),
+      course("Optimisation", "utile"),
+    ],
+    skills: [skill("Rigueur mathématique", "essentielle"), skill("Python", "utile")],
+    source: "https://www.unamur.be/en/bachelor-mathematics-2026-2027",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-m1-maths-fondamentales-paris-saclay",
+    name: "Master Mathématiques et applications — M1 Mathématiques fondamentales et applications",
+    institution: { name: "Université Paris-Saclay — Institut de mathématiques d'Orsay", city: "Orsay", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Mathématiques",
+    description:
+      "M1 de 60 places au sein du master de mathématiques de Paris-Saclay, l'un des plus réputés au monde en mathématiques : algèbre, analyse, géométrie, EDP et analyse de Fourier, probabilités et statistique, arithmétique, logique, mathématiques pour l'IA. Enseignement en français avec des cours en anglais ; le M2 offre un très large choix de cours en anglais, du pur à l'appliqué.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master ; candidats hors UE : plateforme Inception de l'université (session 2026 : du 15 janvier au 16 mars). Dossier : lettre de motivation, relevés de notes depuis le bac, CV, descriptif et volume horaire des cours suivis, certificat de français obligatoire pour les non-francophones.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "L3 de mathématiques fondamentales ou équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Mathématiques",
+        label: "Solide formation en mathématiques fondamentales",
+      },
+      { id: "r3", type: "matiere", value: "Algèbre linéaire", label: "Algèbre, analyse et probabilités de niveau licence" },
+    ],
+    coreCourses: [
+      course("Algèbre", "essentielle", ["Algèbre linéaire"]),
+      course("Analyse", "essentielle", ["Analyse fonctionnelle"]),
+      course("Probabilités", "importante"),
+      course("Géométrie", "importante", ["Géométrie différentielle"]),
+      course("Équations aux dérivées partielles", "utile", ["EDP"]),
+    ],
+    skills: [skill("Rigueur mathématique", "essentielle"), skill("Anglais courant", "utile")],
+    source: "https://www.universite-paris-saclay.fr/en/education/masters-degree/mathematics-and-applications/m1-mathematiques-fondamentales-et-applications",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-m1-applied-maths-grenoble",
+    name: "Master of Applied Mathematics (M1 AM)",
+    institution: {
+      name: "Université Grenoble Alpes & Grenoble INP - Ensimag (UFR IM²AG)",
+      city: "Grenoble",
+      country: "France",
+    },
+    level: "Master 1",
+    goal: "Master",
+    field: "Mathématiques",
+    description:
+      "M1 d'un an entièrement en anglais : probabilités et statistique, EDP et modélisation, images et géométrie, informatique, optimisation et cryptographie. Ouvre sur les M2 grenoblois — MSc in Industrial and Applied Mathematics (MSIAM : modélisation et calcul scientifique, ou data science), cybersécurité, recherche opérationnelle et optimisation (ORCO).",
+    requiredLevel: "Licence 3",
+    language: "Anglais",
+    applicationProcedure:
+      "Titulaires d'une licence française : Mon Master (printemps 2027). Autres candidats : plateforme RELINT, démarches à commencer en janvier-février 2027. Anglais B2 exigé (TOEFL iBT 78, IELTS 6, TOEIC 700 ou équivalent), sauf études antérieures en anglais ; niveau A2 en français recommandé.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Bachelor (180 ECTS) en mathématiques ou mathématiques appliquées, ou équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Mathématiques",
+        label: "Bases en mathématiques ET en programmation numérique indispensables",
+        aliases: ["Data Science & IA"],
+      },
+      { id: "r3", type: "competence", value: "Anglais courant", label: "Programme 100 % en anglais ; niveau B2 certifié" },
+    ],
+    coreCourses: [
+      course("Probabilités", "essentielle"),
+      course("Statistiques", "essentielle"),
+      course("Équations aux dérivées partielles", "importante", ["EDP", "Modélisation"]),
+      course("Optimisation", "importante"),
+      course("Programmation scientifique", "importante", ["Programmation numérique"]),
+      course("Cryptographie", "utile"),
+    ],
+    skills: [skill("Anglais courant", "essentielle"), skill("Python", "importante"), skill("Rigueur mathématique", "importante")],
+    source: "https://applied-math-master.imag.fr/admission/",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-maths-appliquees-stats-lille",
+    name: "Master Mathématiques appliquées, statistiques",
+    institution: { name: "Université de Lille — Faculté des sciences et technologies", city: "Villeneuve-d'Ascq", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Mathématiques",
+    description:
+      "Master de 2 ans à dominante probabilités et statistique, très tourné vers l'emploi (nombreux intervenants de l'industrie) : modélisation de l'aléatoire, science des données avec R, Python et C++, algorithmes stochastiques, bases de données. Trois parcours : ingénierie statistique et numérique (data sciences, environnement), mathématiques du vivant et de la santé, MIASHS modélisation des données.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier ; les candidats résidant dans un pays à procédure « Études en France » passent par cette procédure.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence de mathématiques, MIASHS ou équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Mathématiques",
+        label: "Formation en mathématiques ou en mathématiques appliquées aux sciences humaines et sociales",
+        aliases: ["Data Science & IA"],
+      },
+    ],
+    coreCourses: [
+      course("Probabilités", "essentielle"),
+      course("Statistiques", "essentielle", ["Statistique inférentielle"]),
+      course("Programmation R", "importante", ["R"]),
+      course("Algorithmes stochastiques", "utile"),
+      course("Bases de données", "utile"),
+    ],
+    skills: [skill("R", "importante"), skill("Python", "importante"), skill("Analyse de données", "utile")],
+    source: "https://formation.univ-lille.fr/fr/offre-de-formation/master-lmd-XB/master-mathematiques-appliquees-statistiques-MG191719.html",
     verifiedAt: "2026-09-27",
     verificationStatus: "vérifiée",
     demo: false,

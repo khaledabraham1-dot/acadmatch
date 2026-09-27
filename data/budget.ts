@@ -184,6 +184,31 @@ export const TUITION_FEES: Record<string, TuitionFee> = {
     scope: "annuel",
     note: "4 500 € par an, montant publié pour 2025-2026 (dernière fiche disponible).",
   },
+  "f-licence-maths-rennes": FRENCH_LICENCE,
+  "f-master-maths-appliquees-stats-lille": FRENCH_MASTER,
+  "f-m1-maths-fondamentales-paris-saclay": {
+    ...FRENCH_MASTER,
+    nonEuNote:
+      "Paris-Saclay accorde aux étudiants hors UE une exonération partielle qui ramène les droits différenciés au niveau des droits nationaux (délibération CA-2026-013 du 3 février 2026), sous conditions à vérifier auprès de l'université.",
+  },
+  "f-m1-applied-maths-grenoble": {
+    ...FRENCH_MASTER,
+    nonEu: {
+      cents: 25_500,
+      academicYear: "2026-2027",
+      source: "https://applied-math-master.imag.fr/admission/",
+    },
+    nonEuNote:
+      "Les établissements grenoblois accueillent les étudiants internationaux aux mêmes tarifs que les étudiants français et européens : tout étudiant qui en exprime le besoin est exonéré des droits différenciés.",
+  },
+  "f-bachelier-maths-unamur": {
+    eu: { cents: 119_400, academicYear: "2026-2027", source: "https://www.unamur.be/en/registration/international/fees" },
+    nonEu: { cents: 536_900, academicYear: "2026-2027", source: "https://www.unamur.be/en/registration/international/fees" },
+    nonEuNote:
+      "5 369 € pour les ressortissants hors UE de pays non listés par l'ARES ; 1 194 € pour les pays listés ; ressortissants des pays les moins avancés (liste ONU) exonérés de la contribution supplémentaire. S'y ajoutent 200 € de frais d'examen du dossier, non remboursables.",
+    scope: "annuel",
+    note: "Droits d'inscription complets 2026-2027, sous réserve de la publication du décret sur le minerval progressif.",
+  },
   "f-msc-advanced-manufacturing-centrale-nantes": {
     eu: { cents: 25_500, academicYear: "2026-2027", source: "https://www.ec-nantes.fr/english-version/study/tuition-fees" },
     nonEu: { cents: 1_200_000, academicYear: "2026-2027", source: "https://www.ec-nantes.fr/english-version/study/tuition-fees" },
