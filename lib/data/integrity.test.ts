@@ -91,3 +91,19 @@ describe("intégrité catalogue — pays de l'établissement", () => {
     expect(issues.some((issue) => issue.message.includes("pays"))).toBe(true);
   });
 });
+
+describe("intégrité catalogue — domaines", () => {
+  it("signale un domaine inconnu (ex: ancien « Sciences fondamentales ») dans le champ ou un prérequis", () => {
+    const base = FORMATIONS[0];
+    const broken: StudyProgram = {
+      ...base,
+      id: "f-test-domaine",
+      source: "https://example.org/test-domaine",
+      field: "Sciences fondamentales",
+      prerequisites: [{ id: "r1", type: "domaine", value: "Physique", label: "x", aliases: ["Chimi"] }],
+    };
+    const messages = auditCatalogue([broken]).map((issue) => issue.message);
+    expect(messages).toContain("domaine inconnu : « Sciences fondamentales »");
+    expect(messages).toContain("prérequis de domaine inconnu : « Chimi »");
+  });
+});

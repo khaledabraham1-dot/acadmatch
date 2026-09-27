@@ -37,12 +37,33 @@ export const DOMAINS = [
   "Droit",
   "Sciences de l'ingénieur",
   "Mathématiques",
-  "Sciences fondamentales",
+  "Physique",
+  "Chimie",
   "Biologie & Santé",
   "Sciences politiques",
 ] as const;
 
 export type Domain = (typeof DOMAINS)[number];
+
+/**
+ * Anciens domaines encore présents dans des profils enregistrés (navigateur
+ * ou compte), avec les domaines qui les remplacent. "Sciences fondamentales"
+ * a été séparé en Physique et Chimie le 2026-09-27 : on ne choisit jamais à
+ * la place de l'étudiant — le moteur traite l'ancien domaine comme les deux,
+ * et le formulaire de profil lui demande de trancher.
+ */
+export const LEGACY_DOMAINS: Record<string, Domain[]> = {
+  "Sciences fondamentales": ["Physique", "Chimie"],
+};
+
+/** Domaines à considérer pour un domaine d'études de profil (lui-même, ou ses remplaçants s'il est ancien). */
+export function domainEquivalents(fieldOfStudy: string): string[] {
+  return [fieldOfStudy, ...(LEGACY_DOMAINS[fieldOfStudy] ?? [])];
+}
+
+export function isCurrentDomain(value: string): value is Domain {
+  return (DOMAINS as readonly string[]).includes(value);
+}
 
 /** Suggestions de matières par domaine, pour l'ajout rapide dans le profil. */
 export const SUGGESTED_COURSES: Record<Domain, string[]> = {
@@ -91,12 +112,21 @@ export const SUGGESTED_COURSES: Record<Domain, string[]> = {
     "Statistiques",
     "Programmation scientifique",
   ],
-  "Sciences fondamentales": [
+  Physique: [
     "Physique générale",
-    "Chimie générale",
     "Mécanique",
+    "Physique quantique",
+    "Physique statistique",
     "Optique",
-    "Méthodologie expérimentale",
+    "Électromagnétisme",
+  ],
+  Chimie: [
+    "Chimie générale",
+    "Chimie organique",
+    "Chimie inorganique",
+    "Chimie physique",
+    "Chimie analytique",
+    "Spectroscopie",
   ],
   "Biologie & Santé": [
     "Biologie cellulaire",
@@ -131,7 +161,8 @@ export const SUGGESTED_SKILLS: Record<Domain, string[]> = {
   Droit: ["Rédaction juridique", "Argumentation", "Anglais juridique"],
   "Sciences de l'ingénieur": ["CAO", "Python", "Gestion de projet"],
   Mathématiques: ["Python", "Rigueur mathématique", "Algèbre"],
-  "Sciences fondamentales": ["Rigueur scientifique", "Python", "Expérimentation"],
+  Physique: ["Rigueur scientifique", "Python", "Expérimentation"],
+  Chimie: ["Expérimentation", "Rigueur scientifique", "Anglais courant"],
   "Biologie & Santé": ["R", "Rigueur scientifique", "Statistiques"],
   "Sciences politiques": ["Rédaction académique", "Anglais courant", "Argumentation"],
 };
@@ -142,6 +173,8 @@ export const CURRENT_DEGREE_SUGGESTIONS = [
   "Licence en Mathématiques",
   "Licence en Économie",
   "Licence en Droit",
+  "Licence de Physique",
+  "Licence de Chimie",
   "Diplôme d'ingénieur (3 ans)",
   "Master 1 en Data Science",
 ];

@@ -215,3 +215,41 @@ describe("synonymes et preuve de contenu — domaines Droit / Sciences politique
     expect(computeCompatibility(lawyer, businessLaw).overallScore).toBeGreaterThanOrEqual(85);
   });
 });
+
+describe("séparation Physique / Chimie (ex-« Sciences fondamentales »)", () => {
+  const chemist: StudentProfile = {
+    currentLevel: "Licence 3",
+    fieldOfStudy: "Chimie",
+    currentDegree: "Licence de Chimie",
+    courses: [
+      { id: "1", name: "Chimie organique" },
+      { id: "2", name: "Chimie inorganique" },
+      { id: "3", name: "Spectroscopie" },
+    ],
+    skills: ["Expérimentation"],
+    goal: "Master",
+    languages: ["Français", "Anglais"],
+  };
+  const icfp = () => FORMATIONS.find((f) => f.id === "f-master-icfp-psl")!;
+  const chemistryMaster = () => FORMATIONS.find((f) => f.id === "f-master-chimie-strasbourg")!;
+
+  it("un chimiste n'est plus aligné sur le master de physique fondamentale (était 64/100)", () => {
+    expect(computeCompatibility(chemist, icfp()).overallScore).toBeLessThan(45);
+    expect(computeCompatibility(chemist, chemistryMaster()).overallScore).toBeGreaterThanOrEqual(85);
+  });
+
+  it("un profil enregistré avec l'ancien domaine n'est pas plafonné à tort, ni en physique ni en chimie", () => {
+    const legacy = { ...chemist, fieldOfStudy: "Sciences fondamentales" };
+    expect(computeCompatibility(legacy, chemistryMaster()).domainCapped).toBeUndefined();
+    expect(computeCompatibility(legacy, icfp()).domainCapped).toBeUndefined();
+  });
+
+  it("plus aucune fiche ne référence l'ancien domaine", () => {
+    for (const formation of FORMATIONS) {
+      expect(formation.field).not.toBe("Sciences fondamentales");
+      for (const r of formation.prerequisites) {
+        expect([r.value, ...(r.aliases ?? [])]).not.toContain("Sciences fondamentales");
+      }
+    }
+  });
+});

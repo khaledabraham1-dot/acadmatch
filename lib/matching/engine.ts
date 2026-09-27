@@ -14,6 +14,7 @@ import {
 } from "@/types";
 import { normalize } from "@/lib/utils";
 import { areSynonyms } from "@/lib/matching/synonyms";
+import { domainEquivalents } from "@/data/subjects";
 
 /**
  * Moteur de scoring déterministe d'AcadMatch.
@@ -227,8 +228,9 @@ function requirementWeight(requirement: Requirement): number {
  * voisins sont déclarés explicitement dans chaque fiche via `aliases`.
  */
 function domainRequirementStrength(requirement: Requirement, fieldOfStudy: string): MatchStrength {
-  const field = normalize(fieldOfStudy);
-  return namesOf(requirement).some((name) => normalize(name) === field) ? "forte" : "manquant";
+  // Un ancien domaine (ex: "Sciences fondamentales") vaut chacun de ses remplaçants.
+  const fields = domainEquivalents(fieldOfStudy).map(normalize);
+  return namesOf(requirement).some((name) => fields.includes(normalize(name))) ? "forte" : "manquant";
 }
 
 /** L'étudiant est-il à l'aise pour suivre des cours dans la langue d'enseignement de la formation ? */

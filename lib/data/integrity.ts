@@ -1,4 +1,6 @@
 import type { StudyProgram, VerificationStatus } from "@/types";
+// Import relatif avec extension : ce module est aussi exécuté tel quel par Node (scripts/audit-catalogue.mts), qui ne résout pas l'alias @/.
+import { isCurrentDomain } from "../../data/subjects.ts";
 
 /**
  * Intégrité du catalogue (Étape 8).
@@ -98,6 +100,21 @@ export function auditCatalogue(formations: StudyProgram[], now = new Date()): Ca
 
     if (!isHttpsOfficialUrl(formation.source)) {
       issues.push({ formationId: formation.id, message: "source non HTTPS / URL invalide" });
+    }
+
+    // Domaines : la liste du profil est fermée, un domaine inconnu (faute de
+    // frappe, ancien domaine comme "Sciences fondamentales") rendrait la fiche
+    // silencieusement inatteignable par le matching.
+    if (!isCurrentDomain(formation.field)) {
+      issues.push({ formationId: formation.id, message: `domaine inconnu : « ${formation.field} »` });
+    }
+    for (const requirement of formation.prerequisites) {
+      if (requirement.type !== "domaine") continue;
+      for (const domain of [requirement.value, ...(requirement.aliases ?? [])]) {
+        if (!isCurrentDomain(domain)) {
+          issues.push({ formationId: formation.id, message: `prérequis de domaine inconnu : « ${domain} »` });
+        }
+      }
     }
 
     if (formation.demo) {

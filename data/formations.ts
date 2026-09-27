@@ -31,7 +31,7 @@ import type { AcademicItem, Importance, StudyProgram } from "@/types";
  * l'ingénieur (Strasbourg, ULiège, Sorbonne, Lille, Centrale Nantes), puis
  * Droit (Bordeaux, ULB, Strasbourg, Aix-Marseille, Toulouse), puis
  * Mathématiques (Rennes, UNamur, Paris-Saclay, Grenoble, Lille), puis
- * Sciences fondamentales (Montpellier, UNamur, Strasbourg, Lyon 1, ENS-PSL), puis
+ * Physique et Chimie (Montpellier, UNamur, Strasbourg, Lyon 1, ENS-PSL), puis
  * Biologie & Santé (Nancy, ULB, Sorbonne, Bordeaux, EHESP), puis
  * Sciences politiques (Lille, ULiège, Paris 1, UCLouvain, Sciences Po). Chaque fiche ajoutée
  * a aussi ses frais sourcés dans data/budget.ts (un test l'impose).
@@ -792,7 +792,7 @@ export const FORMATIONS: StudyProgram[] = [
         type: "domaine",
         value: "Sciences de l'ingénieur",
         label: "Bases en mathématiques et en physique attendues (la L1 les consolide)",
-        aliases: ["Sciences fondamentales", "Mathématiques"],
+        aliases: ["Physique", "Mathématiques"],
       },
     ],
     coreCourses: [
@@ -828,7 +828,7 @@ export const FORMATIONS: StudyProgram[] = [
         type: "domaine",
         value: "Sciences de l'ingénieur",
         label: "Mathématiques de niveau renforcé (programme à 6 h/semaine des trois dernières années du secondaire)",
-        aliases: ["Mathématiques", "Sciences fondamentales"],
+        aliases: ["Mathématiques", "Physique"],
       },
       { id: "r3", type: "matiere", value: "Analyse", label: "Analyse, algèbre, géométrie et trigonométrie : matières de l'examen d'entrée" },
     ],
@@ -865,7 +865,7 @@ export const FORMATIONS: StudyProgram[] = [
         type: "domaine",
         value: "Sciences de l'ingénieur",
         label: "Solide formation en mécanique, physique ou mathématiques",
-        aliases: ["Sciences fondamentales", "Mathématiques"],
+        aliases: ["Physique", "Mathématiques"],
       },
       { id: "r3", type: "matiere", value: "Mécanique", label: "Bases solides en mécanique" },
     ],
@@ -902,7 +902,7 @@ export const FORMATIONS: StudyProgram[] = [
         type: "domaine",
         value: "Sciences de l'ingénieur",
         label: "Formation en électronique, génie électrique ou automatique",
-        aliases: ["Sciences fondamentales"],
+        aliases: ["Physique"],
       },
     ],
     coreCourses: [
@@ -938,7 +938,7 @@ export const FORMATIONS: StudyProgram[] = [
         type: "domaine",
         value: "Sciences de l'ingénieur",
         label: "Cursus scientifique ou technologique avec un bon niveau en mathématiques",
-        aliases: ["Sciences fondamentales", "Mathématiques"],
+        aliases: ["Physique", "Chimie", "Mathématiques"],
       },
       { id: "r3", type: "competence", value: "Anglais courant", label: "Programme 100 % en anglais ; certificat exigé (ex. IELTS 6.5)" },
     ],
@@ -1169,7 +1169,7 @@ export const FORMATIONS: StudyProgram[] = [
         type: "domaine",
         value: "Mathématiques",
         label: "Spécialité mathématiques en première et terminale fortement recommandée",
-        aliases: ["Sciences fondamentales", "Informatique", "Data Science & IA", "Sciences de l'ingénieur"],
+        aliases: ["Physique", "Informatique", "Data Science & IA", "Sciences de l'ingénieur"],
       },
     ],
     coreCourses: [
@@ -1205,7 +1205,7 @@ export const FORMATIONS: StudyProgram[] = [
         type: "domaine",
         value: "Mathématiques",
         label: "Goût pour le raisonnement mathématique (cours préparatoires proposés en maths et physique)",
-        aliases: ["Sciences fondamentales", "Informatique", "Data Science & IA", "Sciences de l'ingénieur"],
+        aliases: ["Physique", "Informatique", "Data Science & IA", "Sciences de l'ingénieur"],
       },
     ],
     coreCourses: [
@@ -1337,7 +1337,9 @@ export const FORMATIONS: StudyProgram[] = [
   },
 
   // -------------------------------------------------------------------------
-  // Sciences fondamentales (physique, chimie) — ajoutées et vérifiées le
+  // Physique et Chimie (ex-domaine "Sciences fondamentales", séparé le
+  // 2026-09-27 : un chimiste ne doit pas être aligné sur un master de
+  // physique) — ajoutées et vérifiées le
   // 2026-09-27. Bachelier en chimie de l'UMONS écarté : conditions hors UE
   // des diplômes étrangers non publiées clairement — UNamur retenue, dont les
   // règles le sont.
@@ -1348,7 +1350,7 @@ export const FORMATIONS: StudyProgram[] = [
     institution: { name: "Université de Montpellier — Faculté des sciences", city: "Montpellier", country: "France" },
     level: "Licence 1",
     goal: "Licence",
-    field: "Sciences fondamentales",
+    field: "Physique",
     description:
       "Licence de 3 ans commençant par une L1 dans le portail PCSI (physique, chimie, sciences de l'ingénieur) : maîtrise progressive des concepts de base de la physique et des outils mathématiques et numériques pour analyser, décrire et modéliser un système physique. Enseignement en cours magistraux (1/3), travaux dirigés (1/2) et travaux pratiques (1/6) ; variantes renforcées CUPGE Physique et mathématiques.",
     requiredLevel: "Baccalauréat",
@@ -1360,9 +1362,9 @@ export const FORMATIONS: StudyProgram[] = [
       {
         id: "r2",
         type: "domaine",
-        value: "Sciences fondamentales",
+        value: "Physique",
         label: "Spécialités mathématiques, physique-chimie ou sciences de l'ingénieur recommandées ; mathématiques expertes appréciées",
-        aliases: ["Mathématiques", "Sciences de l'ingénieur"],
+        aliases: ["Mathématiques", "Sciences de l'ingénieur", "Chimie"],
       },
     ],
     coreCourses: [
@@ -1384,7 +1386,7 @@ export const FORMATIONS: StudyProgram[] = [
     institution: { name: "Université de Namur (UNamur) — Faculté des sciences", city: "Namur", country: "Belgique" },
     level: "Licence 1",
     goal: "Licence",
-    field: "Sciences fondamentales",
+    field: "Chimie",
     description:
       "Bachelier de 3 ans (180 crédits ECTS) : chimie générale et organique, physique, outils mathématiques et biologie en 1re année ; chimie analytique, chimie physique, chimie quantique, chimie inorganique et biochimie en 2e ; spectroscopie, électrochimie, chimie macromoléculaire et travaux pratiques poussés en 3e. Anglais scientifique chaque année. Débouchés : R&D industrielle, recherche, enseignement, pharmaceutique, environnement.",
     requiredLevel: "Baccalauréat",
@@ -1396,9 +1398,9 @@ export const FORMATIONS: StudyProgram[] = [
       {
         id: "r2",
         type: "domaine",
-        value: "Sciences fondamentales",
+        value: "Chimie",
         label: "Bases scientifiques du secondaire (chimie, physique, mathématiques)",
-        aliases: ["Biologie & Santé"],
+        aliases: ["Biologie & Santé", "Physique"],
       },
     ],
     coreCourses: [
@@ -1420,7 +1422,7 @@ export const FORMATIONS: StudyProgram[] = [
     institution: { name: "Université de Strasbourg — Faculté de chimie & ECPM", city: "Strasbourg", country: "France" },
     level: "Master 1",
     goal: "Master",
-    field: "Sciences fondamentales",
+    field: "Chimie",
     description:
       "Parcours phare de la faculté de chimie de Strasbourg, berceau de la chimie supramoléculaire (prix Nobel Lehn 1987, Sauvage 2016), en partenariat avec l'école d'ingénieurs ECPM : chimie organique, chimie de coordination, chimie supramoléculaire et détermination structurale par spectroscopie, avec 80 h de TP de synthèse et 60 h de TP de chimie physique en M1. Enseignement en français et en anglais, partenariats internationaux.",
     requiredLevel: "Licence 3",
@@ -1432,9 +1434,9 @@ export const FORMATIONS: StudyProgram[] = [
       {
         id: "r2",
         type: "domaine",
-        value: "Sciences fondamentales",
+        value: "Chimie",
         label: "Solide niveau en chimie organique, inorganique et organométallique, suivie en L2 et L3",
-        aliases: ["Biologie & Santé"],
+        aliases: ["Biologie & Santé", "Physique"],
       },
       { id: "r3", type: "matiere", value: "Chimie organique", label: "Chimie organique approfondie" },
       { id: "r4", type: "competence", value: "Anglais courant", label: "Français et anglais de niveau B2" },
@@ -1458,7 +1460,7 @@ export const FORMATIONS: StudyProgram[] = [
     institution: { name: "Université Claude Bernard Lyon 1 — Département de physique", city: "Villeurbanne", country: "France" },
     level: "Master 1",
     goal: "Master",
-    field: "Sciences fondamentales",
+    field: "Physique",
     description:
       "Master de 2 ans couvrant un large spectre de la physique, ouvert à la recherche comme à l'industrie. Trois M1 au choix, chacun recruté séparément : physique appliquée (vers les M2 CDIM et PHYSMAN), matière et lumière, quantique et complexe (vers MAX et Q-Light), univers et interactions fondamentales (vers ASTRO, COSMO, SUBA). Quatre unités du 1er semestre peuvent être suivies en anglais ; cours de français langue étrangère pour les non-francophones.",
     requiredLevel: "Licence 3",
@@ -1470,7 +1472,7 @@ export const FORMATIONS: StudyProgram[] = [
       {
         id: "r2",
         type: "domaine",
-        value: "Sciences fondamentales",
+        value: "Physique",
         label: "Formation en physique",
         aliases: ["Sciences de l'ingénieur"],
       },
@@ -1494,7 +1496,7 @@ export const FORMATIONS: StudyProgram[] = [
     institution: { name: "Université PSL — École normale supérieure, Département de physique", city: "Paris", country: "France" },
     level: "Master 1",
     goal: "Master",
-    field: "Sciences fondamentales",
+    field: "Physique",
     description:
       "Master de 2 ans (120 crédits ECTS) entièrement en anglais, très sélectif, co-organisé par l'ENS-PSL avec Sorbonne Université, Université Paris Cité et Paris-Saclay : M1 presque entièrement à la carte en physique moderne puis stage, M2 en matière condensée, matière molle et physique biologique, physique quantique ou physique théorique, avec stage de recherche. Voie privilégiée vers le doctorat.",
     requiredLevel: "Licence 3",
@@ -1506,7 +1508,7 @@ export const FORMATIONS: StudyProgram[] = [
       {
         id: "r2",
         type: "domaine",
-        value: "Sciences fondamentales",
+        value: "Physique",
         label: "Formation approfondie en physique et en mathématiques",
         aliases: ["Sciences de l'ingénieur", "Mathématiques"],
       },
@@ -1553,7 +1555,7 @@ export const FORMATIONS: StudyProgram[] = [
         type: "domaine",
         value: "Biologie & Santé",
         label: "Spécialités SVT + physique-chimie, ou SVT + mathématiques, recommandées",
-        aliases: ["Sciences fondamentales"],
+        aliases: ["Chimie", "Physique"],
       },
     ],
     coreCourses: [
@@ -1589,7 +1591,7 @@ export const FORMATIONS: StudyProgram[] = [
         type: "domaine",
         value: "Biologie & Santé",
         label: "Bons résultats en mathématiques et en sciences au secondaire",
-        aliases: ["Sciences fondamentales"],
+        aliases: ["Chimie", "Physique"],
       },
     ],
     coreCourses: [
@@ -1625,7 +1627,7 @@ export const FORMATIONS: StudyProgram[] = [
         type: "domaine",
         value: "Biologie & Santé",
         label: "Solides connaissances en biologie générale ; chimistes et physiciens admis dans certains cas",
-        aliases: ["Sciences fondamentales"],
+        aliases: ["Chimie", "Physique"],
       },
     ],
     coreCourses: [
@@ -1695,7 +1697,7 @@ export const FORMATIONS: StudyProgram[] = [
         type: "domaine",
         value: "Biologie & Santé",
         label: "Ouvert aux étudiants et professionnels de parcours académiques et professionnels variés",
-        aliases: ["Sciences politiques", "Économie & Gestion", "Mathématiques", "Data Science & IA", "Sciences fondamentales"],
+        aliases: ["Sciences politiques", "Économie & Gestion", "Mathématiques", "Data Science & IA", "Physique", "Chimie"],
       },
       { id: "r3", type: "competence", value: "Anglais courant", label: "Programme 100 % en anglais ; test d'anglais exigé" },
     ],

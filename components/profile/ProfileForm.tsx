@@ -14,6 +14,8 @@ import {
   ACADEMIC_STANDINGS,
   CURRENT_DEGREE_SUGGESTIONS,
   DOMAINS,
+  LEGACY_DOMAINS,
+  isCurrentDomain,
   STUDY_GOALS,
   SUGGESTED_COURSES,
   SUGGESTED_SKILLS,
@@ -49,7 +51,9 @@ export function ProfileForm() {
   const searchParams = useSearchParams();
 
   const [currentLevel, setCurrentLevel] = useState<AcademicLevel>("Licence 3");
-  const [fieldOfStudy, setFieldOfStudy] = useState<Domain>(DEFAULT_DOMAIN);
+  // "" = domaine à choisir (profil enregistré avec un ancien domaine, voir LEGACY_DOMAINS).
+  const [fieldOfStudy, setFieldOfStudy] = useState<Domain | "">(DEFAULT_DOMAIN);
+  const [legacyField, setLegacyField] = useState<string | null>(null);
   const [currentDegree, setCurrentDegree] = useState("");
   const [courses, setCourses] = useState<string[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
@@ -67,7 +71,15 @@ export function ProfileForm() {
     // localStorage n'existe pas côté serveur : on ne peut hydrater le formulaire qu'après le montage.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentLevel(existing.currentLevel);
-    setFieldOfStudy((existing.fieldOfStudy as Domain) ?? DEFAULT_DOMAIN);
+    if (isCurrentDomain(existing.fieldOfStudy)) {
+      setFieldOfStudy(existing.fieldOfStudy);
+    } else if (existing.fieldOfStudy in LEGACY_DOMAINS) {
+      // Ancien domaine scindé : l'étudiant choisit lui-même, on ne devine pas.
+      setFieldOfStudy("");
+      setLegacyField(existing.fieldOfStudy);
+    } else {
+      setFieldOfStudy(DEFAULT_DOMAIN);
+    }
     setCurrentDegree(existing.currentDegree);
     setCourses(existing.courses.map((c) => c.name));
     setSkills(existing.skills);
@@ -121,6 +133,7 @@ export function ProfileForm() {
     clearProfile();
     setCurrentLevel("Licence 3");
     setFieldOfStudy(DEFAULT_DOMAIN);
+    setLegacyField(null);
     setCurrentDegree("");
     setCourses([]);
     setSkills([]);
@@ -136,6 +149,7 @@ export function ProfileForm() {
     const example = EXAMPLE_STUDENT_PROFILE;
     setCurrentLevel(example.currentLevel);
     setFieldOfStudy(example.fieldOfStudy as Domain);
+    setLegacyField(null);
     setCurrentDegree(example.currentDegree);
     setCourses(example.courses.map((c) => c.name));
     setSkills(example.skills);
@@ -196,12 +210,23 @@ export function ProfileForm() {
               value={fieldOfStudy}
               onChange={(e) => setFieldOfStudy(e.target.value as Domain)}
             >
+              {fieldOfStudy === "" && (
+                <option value="" disabled>
+                  Choisissez votre domaine…
+                </option>
+              )}
               {DOMAINS.map((domain) => (
                 <option key={domain} value={domain}>
                   {domain}
                 </option>
               ))}
             </Select>
+            {fieldOfStudy === "" && legacyField && (
+              <p className="mt-1.5 text-xs font-medium text-amber-700">
+                Votre profil indiquait « {legacyField} », désormais séparé en{" "}
+                {LEGACY_DOMAINS[legacyField].join(" et ")} pour un matching plus juste : choisissez le vôtre.
+              </p>
+            )}
           </div>
 
           {fieldOfStudy === HEALTH_DOMAIN && (
@@ -295,7 +320,7 @@ export function ProfileForm() {
         <CourseSkillEditor
           label="Vos matières"
           items={courses}
-          suggestions={SUGGESTED_COURSES[fieldOfStudy] ?? []}
+          suggestions={fieldOfStudy ? SUGGESTED_COURSES[fieldOfStudy] : []}
           placeholder="ex : Bases de données"
           onChange={setCourses}
         />
@@ -309,7 +334,7 @@ export function ProfileForm() {
         <CourseSkillEditor
           label="Vos compétences"
           items={skills}
-          suggestions={SUGGESTED_SKILLS[fieldOfStudy] ?? []}
+          suggestions={fieldOfStudy ? SUGGESTED_SKILLS[fieldOfStudy] : []}
           placeholder="ex : Python"
           onChange={setSkills}
         />
