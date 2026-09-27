@@ -49,6 +49,8 @@ describe("documentSuggestionFor", () => {
       "f-master-maths-appliquees-stats-lille",
       "f-master-chimie-strasbourg",
       "f-master-physique-lyon1",
+      "f-master-bmc-sorbonne",
+      "f-master-bioinformatique-bordeaux",
     ]);
   });
 });

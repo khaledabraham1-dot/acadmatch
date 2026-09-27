@@ -31,7 +31,8 @@ import type { AcademicItem, Importance, StudyProgram } from "@/types";
  * l'ingénieur (Strasbourg, ULiège, Sorbonne, Lille, Centrale Nantes), puis
  * Droit (Bordeaux, ULB, Strasbourg, Aix-Marseille, Toulouse), puis
  * Mathématiques (Rennes, UNamur, Paris-Saclay, Grenoble, Lille), puis
- * Sciences fondamentales (Montpellier, UNamur, Strasbourg, Lyon 1, ENS-PSL). Chaque fiche ajoutée
+ * Sciences fondamentales (Montpellier, UNamur, Strasbourg, Lyon 1, ENS-PSL), puis
+ * Biologie & Santé (Nancy, ULB, Sorbonne, Bordeaux, EHESP). Chaque fiche ajoutée
  * a aussi ses frais sourcés dans data/budget.ts (un test l'impose).
  *
  * Pour toute formation FICTIVE de démonstration ajoutée plus tard (tests,
@@ -1519,6 +1520,193 @@ export const FORMATIONS: StudyProgram[] = [
     ],
     skills: [skill("Anglais courant", "essentielle"), skill("Rigueur scientifique", "essentielle")],
     source: "https://psl.eu/en/education/master-s-degree-physics",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+
+  // -------------------------------------------------------------------------
+  // Biologie & Santé — ajoutées et vérifiées le 2026-09-27. Volontairement
+  // AUCUNE formation de médecine/pharmacie (PASS/LAS en France, concours en
+  // Belgique) : accès très contraint pour les internationaux, expliqué par
+  // l'encart sourcé de data/healthStudiesAccess.ts plutôt que par des fiches
+  // qui laisseraient croire à une admission sur dossier.
+  // -------------------------------------------------------------------------
+  {
+    id: "f-licence-sciences-vie-lorraine",
+    name: "Licence Sciences de la vie",
+    institution: { name: "Université de Lorraine — Faculté des sciences et technologies", city: "Nancy", country: "France" },
+    level: "Licence 1",
+    goal: "Licence",
+    field: "Biologie & Santé",
+    description:
+      "Licence de 3 ans (180 crédits ECTS) pour comprendre le vivant de la molécule à l'écosystème : L1 personnalisable (biologie-géologie, chimie, intelligence artificielle, parcours accompagné avec renfort en maths, physique et chimie, ou option Accès Santé), puis 7 parcours de L3 dont biochimie et biologie moléculaire, biologie cellulaire et physiologie animale, du gène à l'écosystème. Environ 98 % des diplômés poursuivent en master.",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    applicationProcedure:
+      "Parcoursup pour les bacheliers ; candidats internationaux : contacter le service des admissions de la faculté. L'option LAS (Licence Accès Santé) permet, sous conditions et dès la L2, de candidater en médecine, pharmacie, odontologie, maïeutique, kinésithérapie ou ergothérapie.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Baccalauréat ou équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Biologie & Santé",
+        label: "Spécialités SVT + physique-chimie, ou SVT + mathématiques, recommandées",
+        aliases: ["Sciences fondamentales"],
+      },
+    ],
+    coreCourses: [
+      course("Biologie cellulaire", "essentielle"),
+      course("Biochimie", "importante", ["Biologie moléculaire"]),
+      course("Chimie générale", "importante"),
+      course("Génétique", "utile"),
+      course("Écologie", "utile"),
+    ],
+    skills: [skill("Rigueur scientifique", "importante"), skill("Expérimentation", "utile")],
+    source: "https://fst.univ-lorraine.fr/formations/licence-sciences-de-la-vie/",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-bachelier-biologie-ulb",
+    name: "Bachelier en sciences biologiques",
+    institution: { name: "Université libre de Bruxelles (ULB) — Faculté des Sciences", city: "Bruxelles", country: "Belgique" },
+    level: "Licence 1",
+    goal: "Licence",
+    field: "Biologie & Santé",
+    description:
+      "Bachelier de 3 ans en français, à Bruxelles (campus de la Plaine) ou à Charleroi (avec l'UMONS) : formation générale en mathématiques, physique, chimie et sciences de la terre, et formation aux sciences du vivant — zoologie, botanique, évolution et écologie, physiologie, génétique, biochimie, biologie cellulaire et moléculaire, microbiologie. À Charleroi, le 1er bloc est polyvalent (tronc commun puis option chimie, biologie, pharmacie ou sciences biomédicales).",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    applicationProcedure:
+      "Candidature en ligne à l'ULB, avec preuve de la demande d'équivalence du diplôme secondaire auprès de la Fédération Wallonie-Bruxelles. Candidats hors UE non assimilés : moyenne d'au moins 13/20 et 12/20 dans les matières liées (pour les sciences : seconde langue, mathématiques et sciences), frais de dossier de 200 € non remboursables ; dossier à déposer généralement entre mi-février et le 31 mars de l'année de la rentrée.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Diplôme secondaire reconnu équivalent au CESS belge" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Biologie & Santé",
+        label: "Bons résultats en mathématiques et en sciences au secondaire",
+        aliases: ["Sciences fondamentales"],
+      },
+    ],
+    coreCourses: [
+      course("Biologie cellulaire", "essentielle", ["Biologie"]),
+      course("Chimie générale", "essentielle"),
+      course("Physique générale", "importante", ["Physique"]),
+      course("Génétique", "utile"),
+      course("Physiologie", "utile"),
+    ],
+    skills: [skill("Rigueur scientifique", "importante"), skill("Expérimentation", "utile")],
+    source: "https://www.ulb.be/fr/programme/ba-biol",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-bmc-sorbonne",
+    name: "Master Biologie moléculaire et cellulaire (BMC)",
+    institution: { name: "Sorbonne Université — Faculté des Sciences et Ingénierie", city: "Paris", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Biologie & Santé",
+    description:
+      "Master de 2 ans, l'un des plus grands de France en biologie : M1 organisé en parcours — biologie cellulaire, du développement et des cellules souches, biotechnologies, génétique et épigénétique, immunologie, microbiologie, systèmes biologiques et concepts physiques, bio-informatique, interfaces chimie-biologie — dont un parcours international en anglais (From fundamental molecular biosciences to biotherapies). Alternance possible dans certains parcours.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : Mon Master (17 février - 16 mars 2026), puis eCandidat de Sorbonne Université (26 mars - 11 juin 2026) ; candidats résidant dans un pays à procédure Campus France : passer par cette procédure. Sur dossier, entretien dans certains cas.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence scientifique « Sciences de la vie »" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Biologie & Santé",
+        label: "Solides connaissances en biologie générale ; chimistes et physiciens admis dans certains cas",
+        aliases: ["Sciences fondamentales"],
+      },
+    ],
+    coreCourses: [
+      course("Biologie cellulaire", "essentielle"),
+      course("Biologie moléculaire", "essentielle", ["Biochimie"]),
+      course("Génétique", "importante", ["Épigénétique"]),
+      course("Immunologie", "utile"),
+      course("Microbiologie", "utile"),
+    ],
+    skills: [skill("Expérimentation", "essentielle"), skill("Anglais courant", "utile")],
+    source: "https://sciences.sorbonne-universite.fr/formation-sciences/offre-de-formation/masters/master-biologie-moleculaire-et-cellulaire-bmc-2",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-bioinformatique-bordeaux",
+    name: "Master Bio-informatique",
+    institution: { name: "Université de Bordeaux — Unité de formation de biologie", city: "Bordeaux", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Biologie & Santé",
+    description:
+      "Master de 2 ans (120 crédits ECTS) formant des ingénieurs en bio-informatique pour la recherche et l'industrie (santé, agronomie, environnement), pensé pour des biologistes : aucun prérequis en informatique. M1 : algorithmique et programmation, biostatistiques, omiques, traitement d'images, bases de données, séquençage haut débit, projet ; trois parcours dont un parcours international en anglais (Bioinformatics and Omics, avec l'Université du Pays basque à Bilbao). M2 conclu par un stage de 6 mois.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure: "Master 1 : plateforme nationale Mon Master (jusqu'à 15 vœux en phase principale), sur dossier.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Bac+3 dans le domaine ; licence Sciences de la vie et de la Terre recommandée" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Biologie & Santé",
+        label: "Formation en biologie — aucun prérequis en informatique ou algorithmique",
+      },
+    ],
+    coreCourses: [
+      course("Algorithmique", "importante", ["Programmation"]),
+      course("Biostatistiques", "importante", ["Statistiques"]),
+      course("Génomique", "importante", ["Omiques", "Séquençage"]),
+      course("Bases de données", "utile"),
+      course("Biologie moléculaire", "utile"),
+    ],
+    skills: [skill("Python", "utile"), skill("R", "utile"), skill("Anglais courant", "utile")],
+    source: "https://biologie.u-bordeaux.fr/formation/master/master-bio-informatique",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-mph-ehesp",
+    name: "Master of Public Health (MPH)",
+    institution: { name: "EHESP — École des hautes études en santé publique", city: "Rennes", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Biologie & Santé",
+    description:
+      "Master de santé publique de 2 ans entièrement en anglais (aucun niveau de français exigé), à vocation internationale : 1re année à Rennes, 2e année à Paris avec une spécialisation selon le projet professionnel. Cinq disciplines socles en 1re année : sciences sociales et comportementales en santé publique, management et analyse des politiques de santé, épidémiologie, sciences de l'information et biostatistiques, santé environnementale et au travail. Promotions aux parcours académiques et professionnels très variés ; entrée directe en 2e année possible.",
+    requiredLevel: "Licence 3",
+    language: "Anglais",
+    applicationProcedure:
+      "Candidature en ligne auprès de l'EHESP : M1 du 8 décembre 2025 au 20 février 2026 (rentrée 2026), résultats mi-avril ; test d'anglais obligatoire avant l'examen du dossier (à programmer tôt).",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Au moins une licence (bachelor) pour l'entrée en 1re année" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Biologie & Santé",
+        label: "Ouvert aux étudiants et professionnels de parcours académiques et professionnels variés",
+        aliases: ["Sciences politiques", "Économie & Gestion", "Mathématiques", "Data Science & IA", "Sciences fondamentales"],
+      },
+      { id: "r3", type: "competence", value: "Anglais courant", label: "Programme 100 % en anglais ; test d'anglais exigé" },
+    ],
+    coreCourses: [
+      course("Épidémiologie", "essentielle"),
+      course("Biostatistiques", "essentielle", ["Statistiques"]),
+      course("Politiques de santé", "importante", ["Management et analyse des politiques de santé"]),
+      course("Sciences sociales en santé publique", "utile", ["Sociologie"]),
+      course("Santé environnementale", "utile", ["Santé au travail"]),
+    ],
+    skills: [skill("Anglais courant", "essentielle"), skill("Analyse de données", "importante", ["R"])],
+    source: "https://mph.ehesp.fr/apply/2026-2027-intake-applications/",
     verifiedAt: "2026-09-27",
     verificationStatus: "vérifiée",
     demo: false,

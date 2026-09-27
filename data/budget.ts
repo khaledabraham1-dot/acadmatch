@@ -89,6 +89,16 @@ const UCLOUVAIN_FEE: TuitionFee = {
     note: "Droits d'inscription complets 2026-2027 (grille validée le 10/06/2026). Tarifs réduits selon les revenus : 835 € (condition intermédiaire), 374 € (condition modeste), 0 € (boursiers).",
   };
 
+/** Grille ULB 2026-2027 : mêmes droits pour tous les bacheliers et masters. */
+const ULB_FEE: TuitionFee = {
+  eu: { cents: 119_400, academicYear: "2026-2027", source: "https://www.ulb.be/en/enrolment/tuitions-fees" },
+  nonEu: { cents: 536_900, academicYear: "2026-2027", source: "https://www.ulb.be/en/enrolment/tuitions-fees" },
+  nonEuNote:
+    "1 194 € plus 4 175 € de frais supplémentaires pour les ressortissants de pays hors UE non exemptés (les pays exemptés paient 1 194 €). S'y ajoutent 200 € de frais de dossier à la candidature, non remboursables.",
+  scope: "annuel",
+  note: "Droits d'inscription complets 2026-2027. Tarifs réduits selon les revenus : 835 € (condition intermédiaire), 374 € (condition modeste), 0 € (boursiers).",
+};
+
 /** Grille UNamur 2026-2027 : mêmes droits pour tous les bacheliers. */
 const UNAMUR_FEE: TuitionFee = {
   eu: { cents: 119_400, academicYear: "2026-2027", source: "https://www.unamur.be/en/registration/international/fees" },
@@ -174,13 +184,18 @@ export const TUITION_FEES: Record<string, TuitionFee> = {
   "f-licence-droit-bordeaux": FRENCH_LICENCE,
   "f-master-droit-europeen-strasbourg": FRENCH_MASTER,
   "f-master-droit-affaires-amu": FRENCH_MASTER,
-  "f-bachelier-droit-ulb": {
-    eu: { cents: 119_400, academicYear: "2026-2027", source: "https://www.ulb.be/en/enrolment/tuitions-fees" },
-    nonEu: { cents: 536_900, academicYear: "2026-2027", source: "https://www.ulb.be/en/enrolment/tuitions-fees" },
+  "f-bachelier-droit-ulb": ULB_FEE,
+  "f-bachelier-biologie-ulb": ULB_FEE,
+  "f-licence-sciences-vie-lorraine": FRENCH_LICENCE,
+  "f-master-bmc-sorbonne": FRENCH_MASTER,
+  "f-master-bioinformatique-bordeaux": FRENCH_MASTER,
+  "f-mph-ehesp": {
+    eu: { cents: 195_500, academicYear: "2026-2027", source: "https://mph.ehesp.fr/financial-information/fees/" },
+    nonEu: { cents: 565_000, academicYear: "2026-2027", source: "https://mph.ehesp.fr/financial-information/fees/" },
     nonEuNote:
-      "1 194 € plus 4 175 € de frais supplémentaires pour les ressortissants de pays hors UE non exemptés (les pays exemptés paient 1 194 €). S'y ajoutent 200 € de frais de dossier à la candidature, non remboursables.",
+      "1 700 € de frais de programme plus 3 950 € de droits différenciés. Exonérés des droits différenciés notamment : résidents du Québec, titulaires d'une carte de résident longue durée ou résidents fiscaux en France depuis 2 ans, réfugiés et bénéficiaires de la protection subsidiaire.",
     scope: "annuel",
-    note: "Droits d'inscription complets 2026-2027. Tarifs réduits selon les revenus : 835 € (condition intermédiaire), 374 € (condition modeste), 0 € (boursiers).",
+    note: "Étudiants de l'UE : 1 700 € de frais de programme plus 255 € de droits nationaux ; les étudiants français ne paient que les 255 € de droits nationaux.",
   },
   "f-llm-international-economic-law-toulouse": {
     eu: {

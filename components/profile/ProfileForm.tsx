@@ -36,6 +36,7 @@ import { CourseSkillEditor } from "@/components/profile/CourseSkillEditor";
 import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
 import { DegreeEquivalenceHelper } from "@/components/profile/DegreeEquivalenceHelper";
 import { CatalogueScopeNotice } from "@/components/ui/CatalogueScopeNotice";
+import { HEALTH_DOMAIN, HealthStudiesNotice } from "@/components/ui/HealthStudiesNotice";
 import { FORMATIONS } from "@/data/formations";
 import { isGoalCoveredByCatalogue } from "@/lib/search/filters";
 import { EXAMPLE_PROFILE_LABEL, EXAMPLE_STUDENT_PROFILE } from "@/data/example-profile";
@@ -202,6 +203,10 @@ export function ProfileForm() {
               ))}
             </Select>
           </div>
+
+          {fieldOfStudy === HEALTH_DOMAIN && (
+            <HealthStudiesNotice className="sm:col-span-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-relaxed text-slate-700" />
+          )}
 
           <div className="sm:col-span-2">
             <Label htmlFor="currentDegree">Diplôme actuel / en cours</Label>

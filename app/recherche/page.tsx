@@ -25,6 +25,7 @@ import { getRecommendations } from "@/lib/matching/recommendations";
 import { validateStoredProfile } from "@/lib/profile/validation";
 import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
 import { CatalogueScopeNotice } from "@/components/ui/CatalogueScopeNotice";
+import { HEALTH_DOMAIN, HealthStudiesNotice } from "@/components/ui/HealthStudiesNotice";
 import { RecommendationsSection } from "@/components/recommendations/RecommendationsSection";
 import {
   ALL_CITIES,
@@ -120,7 +121,7 @@ export default function RecherchePage() {
   return (
     <AppShell
       title="Rechercher une formation"
-      description="Trouvez la formation française qui correspond à votre parcours. Cochez 2 ou 3 fiches pour les comparer."
+      description="Trouvez la formation qui correspond à votre parcours, en France et en Belgique. Cochez 2 ou 3 fiches pour les comparer."
     >
       {FORMATIONS.some((f) => f.demo) && (
         <div className="mb-6">
@@ -152,6 +153,8 @@ export default function RecherchePage() {
         goal={profile?.goal}
         className="mb-6 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm leading-relaxed text-slate-600"
       />
+
+      {profile?.fieldOfStudy === HEALTH_DOMAIN && <HealthStudiesNotice className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm leading-relaxed text-slate-700" />}
 
       <RecommendationsSection
         recommendations={recommendations}
