@@ -89,6 +89,16 @@ const UCLOUVAIN_FEE: TuitionFee = {
     note: "Droits d'inscription complets 2026-2027 (grille validée le 10/06/2026). Tarifs réduits selon les revenus : 835 € (condition intermédiaire), 374 € (condition modeste), 0 € (boursiers).",
   };
 
+/** Grille ULiège 2026-2027 : mêmes droits pour tous les bacheliers et masters. */
+const ULIEGE_FEE: TuitionFee = {
+  eu: { cents: 119_400, academicYear: "2026-2027", source: "https://www.enseignement.uliege.be/cms/c_17654509/fr/droits-d-inscription" },
+  nonEu: { cents: 536_900, academicYear: "2026-2027", source: "https://www.enseignement.uliege.be/cms/c_17654509/fr/droits-d-inscription" },
+  nonEuNote:
+    "1 194 € plus une contribution supplémentaire de 4 175 € pour les étudiants hors UE non assimilés. Exemptés notamment : nationalités listées par l'ARES, diplômés d'au moins 2 ans du secondaire en Fédération Wallonie-Bruxelles, boursiers WBI.",
+  scope: "annuel",
+  note: "Droits d'inscription complets 2026-2027. Tarifs réduits selon les revenus : 835 € (condition intermédiaire), 374 € (condition modeste), 0 € (boursiers).",
+};
+
 /** Grille ULB 2026-2027 : mêmes droits pour tous les bacheliers et masters. */
 const ULB_FEE: TuitionFee = {
   eu: { cents: 119_400, academicYear: "2026-2027", source: "https://www.ulb.be/en/enrolment/tuitions-fees" },
@@ -165,21 +175,26 @@ export const TUITION_FEES: Record<string, TuitionFee> = {
   "f-licence-spi-strasbourg": FRENCH_LICENCE,
   "f-master-mecanique-sorbonne": FRENCH_MASTER,
   "f-master-ase-lille": FRENCH_MASTER,
-  "f-bachelier-ingenieur-civil-uliege": {
+  "f-bachelier-ingenieur-civil-uliege": ULIEGE_FEE,
+  "f-bachelier-sciences-politiques-uliege": ULIEGE_FEE,
+  "f-licence-science-politique-lille": FRENCH_LICENCE,
+  "f-master-science-politique-paris1": FRENCH_MASTER,
+  "f-master-relations-internationales-uclouvain": UCLOUVAIN_FEE,
+  "f-master-international-security-sciences-po": {
     eu: {
-      cents: 119_400,
+      cents: 2_064_000,
       academicYear: "2026-2027",
-      source: "https://www.enseignement.uliege.be/cms/c_17654509/fr/droits-d-inscription",
+      source: "https://www.sciencespo.fr/students/en/fees-funding/tuition-fees/",
     },
     nonEu: {
-      cents: 536_900,
+      cents: 2_064_000,
       academicYear: "2026-2027",
-      source: "https://www.enseignement.uliege.be/cms/c_17654509/fr/droits-d-inscription",
+      source: "https://www.sciencespo.fr/students/en/fees-funding/tuition-fees/",
     },
     nonEuNote:
-      "1 194 € plus une contribution supplémentaire de 4 175 € pour les étudiants hors UE non assimilés. Exemptés notamment : nationalités listées par l'ARES, diplômés d'au moins 2 ans du secondaire en Fédération Wallonie-Bruxelles, boursiers WBI.",
+      "20 640 € par an quand le foyer fiscal des parents est hors de l'Espace économique européen. Bourses Sciences Po possibles (dont la bourse Émile Boutmy) — à vérifier selon le profil.",
     scope: "annuel",
-    note: "Droits d'inscription complets 2026-2027. Tarifs réduits selon les revenus : 835 € (condition intermédiaire), 374 € (condition modeste), 0 € (boursiers).",
+    note: "Foyer fiscal dans l'EEE : droits calculés selon les revenus du foyer, de 0 € à 20 640 € par an — le montant affiché est le maximum.",
   },
   "f-licence-droit-bordeaux": FRENCH_LICENCE,
   "f-master-droit-europeen-strasbourg": FRENCH_MASTER,

@@ -32,7 +32,8 @@ import type { AcademicItem, Importance, StudyProgram } from "@/types";
  * Droit (Bordeaux, ULB, Strasbourg, Aix-Marseille, Toulouse), puis
  * Mathématiques (Rennes, UNamur, Paris-Saclay, Grenoble, Lille), puis
  * Sciences fondamentales (Montpellier, UNamur, Strasbourg, Lyon 1, ENS-PSL), puis
- * Biologie & Santé (Nancy, ULB, Sorbonne, Bordeaux, EHESP). Chaque fiche ajoutée
+ * Biologie & Santé (Nancy, ULB, Sorbonne, Bordeaux, EHESP), puis
+ * Sciences politiques (Lille, ULiège, Paris 1, UCLouvain, Sciences Po). Chaque fiche ajoutée
  * a aussi ses frais sourcés dans data/budget.ts (un test l'impose).
  *
  * Pour toute formation FICTIVE de démonstration ajoutée plus tard (tests,
@@ -1707,6 +1708,194 @@ export const FORMATIONS: StudyProgram[] = [
     ],
     skills: [skill("Anglais courant", "essentielle"), skill("Analyse de données", "importante", ["R"])],
     source: "https://mph.ehesp.fr/apply/2026-2027-intake-applications/",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+
+  // -------------------------------------------------------------------------
+  // Sciences politiques — ajoutées et vérifiées le 2026-09-27. Écartés :
+  // Licence de Lyon 2 (page officielle derrière une connexion, invérifiable)
+  // et Master Relations internationales de Lyon 3 (la fiche officielle
+  // annonce que la 1re année ne sera plus proposée à la rentrée 2026-2027).
+  // -------------------------------------------------------------------------
+  {
+    id: "f-licence-science-politique-lille",
+    name: "Licence Science politique",
+    institution: { name: "Université de Lille — Faculté des sciences juridiques, politiques et sociales", city: "Lille", country: "France" },
+    level: "Licence 1",
+    goal: "Licence",
+    field: "Sciences politiques",
+    description:
+      "Licence de 3 ans pluridisciplinaire et ouverte sur le monde contemporain : institutions politiques et administration, partis, mouvements sociaux, élections, politiques publiques, idées politiques, politique comparée, études européennes et relations internationales, avec des bases de droit, d'économie et de sociologie. Parcours science politique ou double diplôme avec l'ESJ Academy (journalisme).",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    applicationProcedure:
+      "L1 : Parcoursup (de mi-janvier à mi-mars) ; formation non sélective mais avec un très grand nombre de candidatures pour les places disponibles. Candidats internationaux : procédure spécifique de l'université.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Baccalauréat ou équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences politiques",
+        label: "Intérêt pour les sciences humaines et sociales et les questions internationales ; aisance à l'écrit et à l'oral pour argumenter",
+        aliases: ["Droit", "Économie & Gestion"],
+      },
+    ],
+    coreCourses: [
+      course("Institutions politiques", "essentielle"),
+      course("Histoire des idées politiques", "importante", ["Idées politiques"]),
+      course("Relations internationales", "importante"),
+      course("Sociologie politique", "utile", ["Sociologie"]),
+      course("Droit constitutionnel", "utile"),
+    ],
+    skills: [skill("Argumentation", "essentielle"), skill("Rédaction académique", "importante")],
+    source: "https://formation.univ-lille.fr/fr/offre-de-formation/licence-lmd-XA/licence-science-politique-MG002441.html",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-bachelier-sciences-politiques-uliege",
+    name: "Bachelier en sciences politiques, orientation générale",
+    institution: { name: "Université de Liège (ULiège) — Faculté de Droit, de Science politique et de Criminologie", city: "Liège", country: "Belgique" },
+    level: "Licence 1",
+    goal: "Licence",
+    field: "Sciences politiques",
+    description:
+      "Bachelier de 3 ans (180 crédits ECTS), campus du Sart-Tilman : des doctrines politiques à la socio-politique, histoire politique belge et internationale, géopolitique, niveaux de décision européen, international, national et local. Plus de 40 crédits de droit, et dès le 1er bloc une option de 30 crédits au choix : politique, philosophie, économie et culture (PPEC), droit (qui permet une réorientation vers le droit) ou criminologie. Au moins une langue étrangère exigée.",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    applicationProcedure:
+      "Inscription auprès de l'ULiège ; diplôme secondaire étranger : équivalence de la Fédération Wallonie-Bruxelles requise. Conditions et calendrier propres aux candidats hors UE à vérifier auprès du service des inscriptions.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Diplôme secondaire reconnu équivalent au CESS belge" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences politiques",
+        label: "Intérêt pour la vie politique, le droit et les relations internationales",
+        aliases: ["Droit", "Économie & Gestion"],
+      },
+    ],
+    coreCourses: [
+      course("Science politique", "essentielle", ["Institutions politiques"]),
+      course("Histoire politique", "importante", ["Histoire des idées politiques"]),
+      course("Droit constitutionnel", "importante", ["Introduction au droit"]),
+      course("Géopolitique", "utile", ["Relations internationales"]),
+      course("Économie politique", "utile"),
+    ],
+    skills: [skill("Argumentation", "importante"), skill("Anglais courant", "utile")],
+    source: "https://www.programmes.uliege.be/cocoon/formations/descr/D1POLI01.html",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-science-politique-paris1",
+    name: "Master Science politique",
+    institution: { name: "Université Paris 1 Panthéon-Sorbonne — École de science politique de la Sorbonne", city: "Paris", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Sciences politiques",
+    description:
+      "Master de 2 ans, 180 places en M1 : trois unités mêlant sociologie politique, institutions, théorie, communication politique et relations internationales, avec un séminaire de professionnalisation et une expérience professionnelle dès le M1. Nombreux parcours de M2 : affaires publiques européennes, communication et pouvoir, conflits et crises internationales, développement et action humanitaire, politique comparée Afrique/Moyen-Orient, action publique et territoires, transitions écologiques…",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Sélection sur dossier en M1, avec de très nombreuses candidatures : formation antérieure en sciences sociales du politique, notes de licence, motivation, cohérence du projet. Plateforme et calendrier de candidature en M1 à confirmer sur la page de la formation. Maîtrise du français indispensable.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence en sciences humaines et sociales (science politique, droit…) ou diplôme d'IEP" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences politiques",
+        label: "Formation antérieure en sciences sociales du politique, prioritaire à l'admission",
+        aliases: ["Droit"],
+      },
+    ],
+    coreCourses: [
+      course("Sociologie politique", "essentielle"),
+      course("Théorie politique", "importante", ["Histoire des idées politiques"]),
+      course("Relations internationales", "importante"),
+      course("Institutions politiques", "importante"),
+      course("Communication politique", "utile"),
+    ],
+    skills: [skill("Rédaction académique", "essentielle"), skill("Argumentation", "importante")],
+    source: "https://formations.pantheonsorbonne.fr/fr/catalogue-des-formations/master-M/master-science-politique-KBVX30AP.html",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-relations-internationales-uclouvain",
+    name: "Master [120] en sciences politiques, orientation relations internationales",
+    institution: { name: "UCLouvain — Faculté des sciences économiques, sociales, politiques et de communication", city: "Louvain-la-Neuve", country: "Belgique" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Sciences politiques",
+    description:
+      "Master de 2 ans (120 crédits ECTS) en français, avec des activités en anglais : l'environnement international du niveau municipal à l'ONU, négociations entre États, rôle des ONG, rapports de puissance, gestion des crises internationales, études de cas sur plusieurs régions du monde. Finalités : diplomatie et résolution des conflits, études régionales (Asie, Afrique, Amérique latine, monde arabo-musulman, grande Europe), renforcement linguistique ou droit international.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Diplôme étranger : admission sur dossier (compléments possibles jusqu'à 60 crédits). Français B1 minimum et anglais B2 à prouver. Diplômés d'universités hors Europe : moyenne d'au moins 13/20 sur l'ensemble des années (dérogation possible avec une expérience professionnelle significative attestée).",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Bachelier (licence) en sciences politiques ou administratives" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences politiques",
+        label: "Formation en sciences politiques ou sciences administratives",
+      },
+      { id: "r3", type: "competence", value: "Anglais courant", label: "Anglais B2 exigé dans le dossier" },
+    ],
+    coreCourses: [
+      course("Relations internationales", "essentielle"),
+      course("Géopolitique", "importante"),
+      course("Gestion des crises internationales", "importante", ["Résolution des conflits"]),
+      course("Droit international", "utile"),
+      course("Études régionales", "utile"),
+    ],
+    skills: [skill("Anglais courant", "importante"), skill("Argumentation", "importante")],
+    source: "https://uclouvain.be/prog-2026-spri2m",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-international-security-sciences-po",
+    name: "Master in International Security (PSIA)",
+    institution: { name: "Sciences Po — Paris School of International Affairs (PSIA)", city: "Paris", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Sciences politiques",
+    description:
+      "Master de 2 ans entièrement en anglais : trois semestres de cours puis un semestre de stage ou de mémoire. Cours fondamentaux en études stratégiques, économie de la défense, analyse des conflits, consolidation de la paix et diplomatie, puis deux concentrations au choix — régionales (Afrique, Asie, Europe, Amériques, Moyen-Orient) ou thématiques (renseignement, droits humains, migrations, risques globaux, environnement…). Débouchés : administrations, renseignement, organisations internationales (ONU, OTAN, UE), ONG, entreprises.",
+    requiredLevel: "Licence 3",
+    language: "Anglais",
+    applicationProcedure:
+      "Procédure internationale de Sciences Po (diplôme non français) : ouverture fin septembre 2026 pour la rentrée 2027, dates limites propres à chaque master ; admissibilité puis admission ; dossier avec références académiques, tests de langue si requis et lettre de motivation ; frais de dossier de 150 € (exonérations : boursiers CROUS, réfugiés…).",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence (bachelor, 180 ECTS) ou équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences politiques",
+        label: "Diplôme de premier cycle, sans restriction de discipline dans la procédure internationale",
+        aliases: ["Droit", "Économie & Gestion"],
+      },
+      { id: "r3", type: "competence", value: "Anglais courant", label: "Programme 100 % en anglais" },
+    ],
+    coreCourses: [
+      course("Études stratégiques", "essentielle", ["Relations internationales"]),
+      course("Analyse des conflits", "essentielle", ["Géopolitique"]),
+      course("Diplomatie", "importante"),
+      course("Économie de la défense", "utile"),
+      course("Consolidation de la paix", "utile"),
+    ],
+    skills: [skill("Anglais courant", "essentielle"), skill("Rédaction académique", "importante")],
+    source: "https://www.sciencespo.fr/psia/academics/masters/master-international-security/",
     verifiedAt: "2026-09-27",
     verificationStatus: "vérifiée",
     demo: false,
