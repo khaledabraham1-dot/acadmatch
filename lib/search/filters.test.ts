@@ -144,3 +144,14 @@ describe("isGoalCoveredByCatalogue", () => {
     expect(isGoalCoveredByCatalogue(formations, undefined)).toBe(true);
   });
 });
+
+describe("coveredDomains / formatList", () => {
+  it("liste les domaines du catalogue dans l'ordre du formulaire", async () => {
+    const { coveredDomains, formatList } = await import("@/lib/search/filters");
+    const { FORMATIONS } = await import("@/data/formations");
+    const domains = coveredDomains(FORMATIONS);
+    expect(domains.slice(0, 3)).toEqual(["Informatique", "Data Science & IA", "Économie & Gestion"]);
+    expect(formatList(["A"])).toBe("A");
+    expect(formatList(["A", "B", "C"])).toBe("A, B et C");
+  });
+});

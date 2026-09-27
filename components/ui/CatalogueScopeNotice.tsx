@@ -1,5 +1,5 @@
 import { FORMATIONS } from "@/data/formations";
-import { isGoalCoveredByCatalogue } from "@/lib/search/filters";
+import { coveredDomains, formatList, isGoalCoveredByCatalogue } from "@/lib/search/filters";
 import type { StudyGoal } from "@/types";
 
 /**
@@ -21,6 +21,7 @@ export function CatalogueScopeNotice({
   goal?: StudyGoal | null;
 }) {
   const goalCovered = isGoalCoveredByCatalogue(FORMATIONS, goal);
+  const domains = formatList(coveredDomains(FORMATIONS));
 
   return (
     <aside
@@ -32,10 +33,10 @@ export function CatalogueScopeNotice({
     >
       <p className="font-medium text-slate-800">Périmètre actuel du catalogue</p>
       <p className="mt-1">
-        AcadMatch couvre pour l&apos;instant un premier socle de formations, très majoritairement en
-        France (et un premier établissement belge, à titre expérimental), en{" "}
-        <strong className="font-semibold text-slate-800">Data Science, IA et Informatique</strong>,
-        vérifiées auprès de sources officielles. Ce n&apos;est pas (encore) l&apos;ensemble des
+        AcadMatch couvre pour l&apos;instant un premier socle de {FORMATIONS.length} formations, très
+        majoritairement en France (et quelques-unes en Belgique), en{" "}
+        <strong className="font-semibold text-slate-800">{domains}</strong>, vérifiées auprès de sources
+        officielles. Ce n&apos;est pas (encore) l&apos;ensemble des
         formations disponibles — l&apos;objectif est la fiabilité du matching, pas le volume.
       </p>
       {!goalCovered && goal && (

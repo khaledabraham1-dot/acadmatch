@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Menu, X, ShieldCheck } from "lucide-react";
 import { Logo } from "@/components/shell/Logo";
 import { SidebarNav } from "@/components/shell/SidebarNav";
+import { FORMATIONS } from "@/data/formations";
+import { coveredDomains, formatList } from "@/lib/search/filters";
 
 interface AppShellProps {
   title: string;
@@ -21,7 +23,7 @@ function SidebarContent() {
       <div className="mx-4 mt-6 flex items-start gap-2.5 rounded-xl bg-white/5 p-3.5 text-xs text-slate-400">
         <ShieldCheck className="size-4 shrink-0 text-slate-500" aria-hidden />
         <p>
-          Formations vérifiées sur un périmètre ciblé (Data Science, IA, Informatique). Le score
+          Formations vérifiées sur un périmètre ciblé ({formatList(coveredDomains(FORMATIONS))}). Le score
           n&apos;est pas une promesse d&apos;admission.
         </p>
       </div>

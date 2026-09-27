@@ -74,6 +74,21 @@ const FRENCH_ENGINEER = frenchPublicFee(
   "Droits nationaux du diplôme d'ingénieur des écoles relevant du ministère de l'Enseignement supérieur.",
 );
 
+/** Grille UCLouvain 2026-2027 : mêmes droits pour tous les programmes de bachelier et de master. */
+const UCLOUVAIN_FEE: TuitionFee = {
+    eu: {
+      cents: 119_400,
+      academicYear: "2026-2027",
+      source:
+        "https://uclouvain.be/en/system/files?file=uclouvain_assetmanager%2Fgroups%2Fcms-editors-sic%2FSIC-D10%2FLes+droits+d%27inscription+%C3%A0+l%27UCLouvain%2FGrille+tarifaire+2026-2027.pdf",
+    },
+    nonEu: null,
+    nonEuNote:
+      "Une contribution supplémentaire peut s'ajouter pour les étudiants hors UE non assimilés : elle dépend de la nationalité et du programme, et UCLouvain ne la communique qu'au cours de l'inscription. Montant non publié — à demander au Service des inscriptions.",
+    scope: "annuel",
+    note: "Droits d'inscription complets 2026-2027 (grille validée le 10/06/2026). Tarifs réduits selon les revenus : 835 € (condition intermédiaire), 374 € (condition modeste), 0 € (boursiers).",
+  };
+
 export const TUITION_FEES: Record<string, TuitionFee> = {
   "f-m2ds-ip-paris": {
     eu: {
@@ -113,19 +128,20 @@ export const TUITION_FEES: Record<string, TuitionFee> = {
   "f-but-info-nantes": { ...FRENCH_LICENCE, note: "Le BUT relève des droits nationaux de licence." },
   "f-insa-lyon-info-parallele": FRENCH_ENGINEER,
   "f-ing-info-enseirb-matmeca": FRENCH_ENGINEER,
-  "f-date-uclouvain": {
-    eu: {
-      cents: 119_400,
-      academicYear: "2026-2027",
-      source:
-        "https://uclouvain.be/en/system/files?file=uclouvain_assetmanager%2Fgroups%2Fcms-editors-sic%2FSIC-D10%2FLes+droits+d%27inscription+%C3%A0+l%27UCLouvain%2FGrille+tarifaire+2026-2027.pdf",
-    },
-    nonEu: null,
+  "f-licence-eco-gestion-tse": FRENCH_LICENCE,
+  "f-licence-eco-gestion-amu": FRENCH_LICENCE,
+  "f-master-finance-ift-lyon3": FRENCH_MASTER,
+  "f-m1-economics-tse": {
+    eu: { cents: 575_500, academicYear: "2026-2027", source: "https://www.tse-fr.eu/tuition-fees" },
+    nonEu: { cents: 945_000, academicYear: "2026-2027", source: "https://www.tse-fr.eu/tuition-fees" },
     nonEuNote:
-      "Une contribution supplémentaire peut s'ajouter pour les étudiants hors UE non assimilés : elle dépend de la nationalité et du programme, et UCLouvain ne la communique qu'au cours de l'inscription. Montant non publié — à demander au Service des inscriptions.",
+      "Droits différenciés (3 950 €) à la place des droits nationaux, plus les 5 500 € de frais spécifiques. " +
+      FRENCH_EXEMPTION_NOTE,
     scope: "annuel",
-    note: "Droits d'inscription complets 2026-2027 (grille validée le 10/06/2026). Tarifs réduits selon les revenus : 835 € (condition intermédiaire), 374 € (condition modeste), 0 € (boursiers).",
+    note: "Droits nationaux de master (255 €) plus 5 500 € de frais spécifiques au parcours international (préparation professionnelle, soutien linguistique). TSE exonère chaque année plusieurs admis de ces 5 500 € ; boursiers CROUS exonérés des droits.",
   },
+  "f-date-uclouvain": UCLOUVAIN_FEE,
+  "f-master-gestion-uclouvain": UCLOUVAIN_FEE,
 };
 
 export interface CountryBudgetRules {

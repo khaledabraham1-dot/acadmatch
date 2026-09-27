@@ -1,5 +1,6 @@
 import type { StudyProgram } from "@/types";
 import { normalize } from "@/lib/utils";
+import { DOMAINS } from "@/data/subjects";
 
 /** Valeurs "aucun filtre" des sélecteurs de la page recherche — affichées comme option par défaut. */
 export const ALL_LEVELS = "Tous les niveaux";
@@ -77,4 +78,21 @@ export function isGoalCoveredByCatalogue(
 ): boolean {
   if (!goal) return true;
   return formations.some((formation) => formation.goal === goal);
+}
+
+/**
+ * Domaines réellement couverts par le catalogue, dans l'ordre du
+ * formulaire de profil — le texte de périmètre affiché partout (bandeau,
+ * barre latérale, avertissement) en dérive, pour ne plus jamais annoncer un
+ * périmètre périmé quand le catalogue s'élargit.
+ */
+export function coveredDomains(formations: StudyProgram[]): string[] {
+  const fields = new Set(formations.map((f) => f.field));
+  return [...DOMAINS.filter((d) => fields.has(d)), ...[...fields].filter((f) => !(DOMAINS as readonly string[]).includes(f))];
+}
+
+/** "A, B et C". */
+export function formatList(items: string[]): string {
+  if (items.length <= 1) return items.join("");
+  return `${items.slice(0, -1).join(", ")} et ${items[items.length - 1]}`;
 }

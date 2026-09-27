@@ -35,8 +35,10 @@ describe("documentSuggestionFor", () => {
     expect(documentSuggestionFor("Parcoursup pour les bacheliers français, UE/EEE/Suisse.")).toBeNull();
   });
 
-  it("correspond à exactement 1 formation du catalogue réel actuel (SCDI Sorbonne) — documente l'état, pas une règle figée", () => {
+  it("correspond aux seules formations dont la procédure confirmée est Mon Master — documente l'état, pas une règle figée", () => {
     const matches = FORMATIONS.filter((f) => documentSuggestionFor(f.applicationProcedure) !== null);
-    expect(matches.map((f) => f.id)).toEqual(["f-scdi-sorbonne"]);
+    // Toute nouvelle correspondance doit être vérifiée : une procédure qui cite
+    // Mon Master comme simple possibilité recevrait à tort cette liste.
+    expect(matches.map((f) => f.id)).toEqual(["f-scdi-sorbonne", "f-master-finance-ift-lyon3"]);
   });
 });

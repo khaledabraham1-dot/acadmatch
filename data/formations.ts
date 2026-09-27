@@ -25,6 +25,11 @@ import type { AcademicItem, Importance, StudyProgram } from "@/types";
  * (`StudyProgram`/`Institution`, phase 1) sur un vrai cas étranger avant
  * d'élargir le catalogue belge.
  *
+ * Élargissement du catalogue (2026-09-27) : ouverture domaine par domaine,
+ * 2 licences + 3 masters par domaine, plusieurs villes — Économie & Gestion
+ * d'abord (TSE, Aix-Marseille, iaelyon, UCLouvain LSM). Chaque fiche ajoutée
+ * a aussi ses frais sourcés dans data/budget.ts (un test l'impose).
+ *
  * Pour toute formation FICTIVE de démonstration ajoutée plus tard (tests,
  * prototypage), utiliser `demo: true` et une URL sous
  * `https://demo.acadmatch.fr/...` — jamais présentée comme réelle dans l'UI
@@ -557,6 +562,202 @@ export const FORMATIONS: StudyProgram[] = [
     skills: [skill("Programmation orientée objet", "essentielle"), skill("Anglais courant", "utile")],
     source: "https://formation.bordeaux-inp.fr/fr/offre-de-formation/titre-d-ingenieur-DING/ingenieur-specialite-informatique-LUMF0005.html",
     verifiedAt: "2026-09-21",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+
+  // -------------------------------------------------------------------------
+  // Économie & Gestion — ajoutées et vérifiées le 2026-09-27 (élargissement du
+  // catalogue : 2 licences + 3 masters par domaine, plusieurs villes).
+  // -------------------------------------------------------------------------
+  {
+    id: "f-licence-eco-gestion-tse",
+    name: "Licence Économie — parcours Économie et Gestion (L1-L2)",
+    institution: { name: "Université Toulouse Capitole — Toulouse School of Economics (TSE)", city: "Toulouse", country: "France" },
+    level: "Licence 1",
+    goal: "Licence",
+    field: "Économie & Gestion",
+    description:
+      "Cycle préparatoire de deux ans de Toulouse School of Economics, avec mathématiques renforcées : formation de base solide en sciences économiques et de gestion (microéconomie et macroéconomie, mathématiques, statistiques, économétrie, gestion), menant aux L3 puis aux masters de TSE et de Toulouse School of Management.",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    applicationProcedure:
+      "L1 : Parcoursup pour les bacheliers (vœux de janvier à mars) ; procédure DAP pour les candidats hors Union européenne. Les titulaires d'un diplôme étranger peuvent aussi candidater directement en L2, sur dossier.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Baccalauréat ou équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Économie & Gestion",
+        label: "Mathématiques conservées en terminale recommandées (spécialité ou option)",
+        aliases: ["Mathématiques"],
+      },
+    ],
+    coreCourses: [
+      course("Microéconomie", "essentielle"),
+      course("Macroéconomie", "essentielle"),
+      course("Mathématiques appliquées", "importante"),
+      course("Statistiques", "importante"),
+      course("Économétrie", "utile"),
+    ],
+    skills: [skill("Rigueur mathématique", "importante"), skill("Analyse de données", "utile")],
+    source: "https://www.ut-capitole.fr/accueil/formations/nos-diplomes/licences/licence-l1-l2-mention-economie-parcours-type-economie-et-gestion",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-licence-eco-gestion-amu",
+    name: "Licence Économie et Gestion — L1 portail commun",
+    institution: { name: "Aix-Marseille Université — Faculté d'Économie et de Gestion", city: "Aix-en-Provence", country: "France" },
+    level: "Licence 1",
+    goal: "Licence",
+    field: "Économie & Gestion",
+    description:
+      "Première année commune (économie-gestion, gestion, AES) sur les sites d'Aix-en-Provence et de Marseille, puis spécialisation progressive dès le 2e semestre, avec un cursus international optionnel en anglais ; objectif principal : la poursuite en master d'économie ou de gestion.",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    applicationProcedure:
+      "Parcoursup pour les bacheliers (vœux de janvier à mars) ; procédure DAP pour les candidats hors Union européenne.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Baccalauréat général ou équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Économie & Gestion",
+        label: "Intérêt marqué pour les questions économiques, sociales et managériales",
+        aliases: ["Mathématiques", "Sciences politiques"],
+      },
+    ],
+    coreCourses: [
+      course("Microéconomie", "essentielle"),
+      course("Mathématiques appliquées", "importante"),
+      course("Macroéconomie", "importante"),
+      course("Statistiques", "importante"),
+      course("Comptabilité", "utile"),
+      course("Marketing", "utile"),
+    ],
+    skills: [skill("Analyse de données", "utile"), skill("Rigueur mathématique", "utile")],
+    source: "https://feg.univ-amu.fr/en/study-programs/bachelors/l1-economics-management-common-portal",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-m1-economics-tse",
+    name: "Master 1 Economics (parcours international)",
+    institution: { name: "Université Toulouse Capitole — Toulouse School of Economics (TSE)", city: "Toulouse", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Économie & Gestion",
+    description:
+      "Première année de master en économie de Toulouse School of Economics, entièrement en anglais : formation rigoureuse aux grands champs de l'économie (théorie des jeux, incitations, macroéconomie, économétrie appliquée, programmation R, économie publique, évaluation des politiques), ouvrant sur les M2 de TSE.",
+    requiredLevel: "Licence 3",
+    language: "Anglais",
+    applicationProcedure:
+      "Sélection sur dossier par le comité de TSE ; programme destiné notamment aux étudiants internationaux non francophones. Plateforme et calendrier de candidature à confirmer sur la page admissions de TSE (non précisés sur la page du programme).",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence (BA/BSc) en économie ou en mathématiques appliquées" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Économie & Gestion",
+        label: "Cursus en économie ou mathématiques appliquées jugé cohérent par le comité de sélection",
+        aliases: ["Mathématiques"],
+      },
+      { id: "r3", type: "competence", value: "Anglais courant", label: "Programme 100 % en anglais" },
+    ],
+    coreCourses: [
+      course("Théorie des jeux", "essentielle", ["Microéconomie"]),
+      course("Macroéconomie", "essentielle"),
+      course("Économétrie", "essentielle"),
+      course("Programmation R", "importante"),
+      course("Économie publique", "utile"),
+    ],
+    skills: [skill("Économétrie", "essentielle"), skill("Anglais courant", "essentielle"), skill("R", "importante")],
+    source: "https://www.ut-capitole.fr/home/course-offer/english-taught-courses/masters-degree-1st-year-economics",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-finance-ift-lyon3",
+    name: "Master Finance — parcours Ingénierie financière et transaction (IFT)",
+    institution: { name: "Université Jean Moulin Lyon 3 — iaelyon School of Management", city: "Lyon", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Économie & Gestion",
+    description:
+      "Master de 2 ans formant aux métiers de l'ingénierie financière et du conseil en transaction (fusions-acquisitions, capital-investissement, banque d'investissement, due diligences) : analyse et évaluation financière, analyses comptables approfondies, finance d'entreprise, audit financier appliqué ; promotions de 24 étudiants maximum.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier — résultats académiques, test SIM Score IAE Message (TAGE MAGE ou GMAT tolérés pour les candidats internationaux), test d'anglais (TOEIC, TOEFL, IELTS…), CV et lettre de motivation. Master 2 : eCandidat (Université Lyon 3).",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence ou 180 crédits ECTS dans un diplôme équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Économie & Gestion",
+        label: "Cursus en sciences de gestion ou compatible (université ou école de management)",
+      },
+    ],
+    coreCourses: [
+      course("Analyse financière", "essentielle", ["Analyse et évaluation financière"]),
+      course("Finance d'entreprise", "essentielle"),
+      course("Comptabilité", "importante", ["Analyses comptables et financières"]),
+      course("Audit financier", "importante"),
+      course("Stratégie financière", "utile"),
+    ],
+    skills: [skill("Analyse financière", "essentielle"), skill("Anglais courant", "importante"), skill("Excel", "utile")],
+    source: "https://iae.univ-lyon3.fr/master-ingenierie-financiere-et-transaction-ift",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-gestion-uclouvain",
+    name: "Master [120] en sciences de gestion (Master in Management)",
+    institution: {
+      name: "UCLouvain — Louvain School of Management (LSM)",
+      city: "Louvain-la-Neuve",
+      country: "Belgique",
+    },
+    level: "Master 1",
+    goal: "Master",
+    field: "Économie & Gestion",
+    description:
+      "Master de 2 ans (120 crédits ECTS) entièrement en anglais : tronc commun (transition écologique, transformation digitale, responsabilité sociétale), projet de conseil et stage obligatoire d'au moins 60 jours, majeure au choix (finance, marketing, ressources humaines…) et échange possible dans plus de 130 universités partenaires.",
+    requiredLevel: "Licence 3",
+    language: "Anglais",
+    applicationProcedure:
+      "Candidature en ligne à l'UCLouvain. Pour un diplôme non belge, analyse du dossier par la faculté : admission directe, admission avec compléments (jusqu'à 60 crédits) ou refus. Dates limites différentes selon la nationalité et le besoin de visa.",
+    prerequisites: [
+      {
+        id: "r1",
+        type: "niveau",
+        value: "Licence 3",
+        label: "Bachelier en économie et gestion (diplômes non belges reconnus acceptés, sur analyse du dossier)",
+      },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Économie & Gestion",
+        label: "Formation en gestion, économie et méthodes quantitatives, ou sciences sociales avec mineure en gestion",
+        aliases: ["Sciences politiques", "Droit"],
+      },
+      { id: "r3", type: "competence", value: "Anglais courant", label: "Programme entièrement en anglais" },
+    ],
+    coreCourses: [
+      course("Transformation digitale", "importante"),
+      course("Responsabilité sociétale des entreprises", "importante", ["RSE"]),
+      course("Finance d'entreprise", "utile"),
+      course("Marketing", "utile"),
+      course("Gestion des ressources humaines", "utile"),
+    ],
+    skills: [skill("Anglais courant", "essentielle"), skill("Gestion de projet", "importante")],
+    source: "https://uclouvain.be/prog-2026-gest2m",
+    verifiedAt: "2026-09-27",
     verificationStatus: "vérifiée",
     demo: false,
   },
