@@ -30,7 +30,8 @@ import type { AcademicItem, Importance, StudyProgram } from "@/types";
  * d'abord (TSE, Aix-Marseille, iaelyon, UCLouvain LSM), puis Sciences de
  * l'ingénieur (Strasbourg, ULiège, Sorbonne, Lille, Centrale Nantes), puis
  * Droit (Bordeaux, ULB, Strasbourg, Aix-Marseille, Toulouse), puis
- * Mathématiques (Rennes, UNamur, Paris-Saclay, Grenoble, Lille). Chaque fiche ajoutée
+ * Mathématiques (Rennes, UNamur, Paris-Saclay, Grenoble, Lille), puis
+ * Sciences fondamentales (Montpellier, UNamur, Strasbourg, Lyon 1, ENS-PSL). Chaque fiche ajoutée
  * a aussi ses frais sourcés dans data/budget.ts (un test l'impose).
  *
  * Pour toute formation FICTIVE de démonstration ajoutée plus tard (tests,
@@ -1328,6 +1329,196 @@ export const FORMATIONS: StudyProgram[] = [
     ],
     skills: [skill("R", "importante"), skill("Python", "importante"), skill("Analyse de données", "utile")],
     source: "https://formation.univ-lille.fr/fr/offre-de-formation/master-lmd-XB/master-mathematiques-appliquees-statistiques-MG191719.html",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+
+  // -------------------------------------------------------------------------
+  // Sciences fondamentales (physique, chimie) — ajoutées et vérifiées le
+  // 2026-09-27. Bachelier en chimie de l'UMONS écarté : conditions hors UE
+  // des diplômes étrangers non publiées clairement — UNamur retenue, dont les
+  // règles le sont.
+  // -------------------------------------------------------------------------
+  {
+    id: "f-licence-physique-montpellier",
+    name: "Licence Physique",
+    institution: { name: "Université de Montpellier — Faculté des sciences", city: "Montpellier", country: "France" },
+    level: "Licence 1",
+    goal: "Licence",
+    field: "Sciences fondamentales",
+    description:
+      "Licence de 3 ans commençant par une L1 dans le portail PCSI (physique, chimie, sciences de l'ingénieur) : maîtrise progressive des concepts de base de la physique et des outils mathématiques et numériques pour analyser, décrire et modéliser un système physique. Enseignement en cours magistraux (1/3), travaux dirigés (1/2) et travaux pratiques (1/6) ; variantes renforcées CUPGE Physique et mathématiques.",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    applicationProcedure:
+      "L1 : Parcoursup pour les bacheliers ; candidats hors UE : procédure Campus France selon le pays.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Baccalauréat ou diplôme équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences fondamentales",
+        label: "Spécialités mathématiques, physique-chimie ou sciences de l'ingénieur recommandées ; mathématiques expertes appréciées",
+        aliases: ["Mathématiques", "Sciences de l'ingénieur"],
+      },
+    ],
+    coreCourses: [
+      course("Physique générale", "essentielle", ["Physique"]),
+      course("Mécanique", "importante"),
+      course("Mathématiques appliquées", "importante", ["Analyse"]),
+      course("Chimie générale", "utile"),
+      course("Méthodologie expérimentale", "utile", ["Travaux pratiques"]),
+    ],
+    skills: [skill("Rigueur scientifique", "essentielle"), skill("Python", "utile")],
+    source: "https://licence-physique.edu.umontpellier.fr/l1-physique/",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-bachelier-chimie-unamur",
+    name: "Bachelier en sciences chimiques",
+    institution: { name: "Université de Namur (UNamur) — Faculté des sciences", city: "Namur", country: "Belgique" },
+    level: "Licence 1",
+    goal: "Licence",
+    field: "Sciences fondamentales",
+    description:
+      "Bachelier de 3 ans (180 crédits ECTS) : chimie générale et organique, physique, outils mathématiques et biologie en 1re année ; chimie analytique, chimie physique, chimie quantique, chimie inorganique et biochimie en 2e ; spectroscopie, électrochimie, chimie macromoléculaire et travaux pratiques poussés en 3e. Anglais scientifique chaque année. Débouchés : R&D industrielle, recherche, enseignement, pharmaceutique, environnement.",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    applicationProcedure:
+      "Pas d'examen d'entrée. Candidats hors UE : diplôme secondaire obtenu il y a 3 ans au plus, moyenne d'au moins 13/20, français B2 certifié (TCF, DELF ou DALF) exigé pour la chimie, demande d'équivalence à la Fédération Wallonie-Bruxelles (avant le 15 juillet), frais d'examen du dossier de 200 € non remboursables ; dossier complet avant le 31 mars si un visa étudiant est nécessaire.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Diplôme secondaire reconnu équivalent (13/20 minimum pour les candidats hors UE)" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences fondamentales",
+        label: "Bases scientifiques du secondaire (chimie, physique, mathématiques)",
+        aliases: ["Biologie & Santé"],
+      },
+    ],
+    coreCourses: [
+      course("Chimie générale", "essentielle"),
+      course("Chimie organique", "essentielle"),
+      course("Physique générale", "importante", ["Physique"]),
+      course("Mathématiques appliquées", "importante"),
+      course("Biologie cellulaire", "utile", ["Biologie"]),
+    ],
+    skills: [skill("Rigueur scientifique", "essentielle"), skill("Expérimentation", "importante")],
+    source: "https://www.unamur.be/fr/bachelier-en-sciences-chimiques-2026-2027",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-chimie-strasbourg",
+    name: "Master Chimie — parcours Chimie moléculaire et supramoléculaire",
+    institution: { name: "Université de Strasbourg — Faculté de chimie & ECPM", city: "Strasbourg", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Sciences fondamentales",
+    description:
+      "Parcours phare de la faculté de chimie de Strasbourg, berceau de la chimie supramoléculaire (prix Nobel Lehn 1987, Sauvage 2016), en partenariat avec l'école d'ingénieurs ECPM : chimie organique, chimie de coordination, chimie supramoléculaire et détermination structurale par spectroscopie, avec 80 h de TP de synthèse et 60 h de TP de chimie physique en M1. Enseignement en français et en anglais, partenariats internationaux.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier puis entretien avec la commission pédagogique pour les candidats présélectionnés.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence de chimie ou de physique-chimie (mention AB fortement recommandée)" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences fondamentales",
+        label: "Solide niveau en chimie organique, inorganique et organométallique, suivie en L2 et L3",
+        aliases: ["Biologie & Santé"],
+      },
+      { id: "r3", type: "matiere", value: "Chimie organique", label: "Chimie organique approfondie" },
+      { id: "r4", type: "competence", value: "Anglais courant", label: "Français et anglais de niveau B2" },
+    ],
+    coreCourses: [
+      course("Chimie organique", "essentielle"),
+      course("Chimie de coordination", "essentielle", ["Chimie inorganique"]),
+      course("Chimie supramoléculaire", "importante"),
+      course("Spectroscopie", "importante", ["Détermination structurale"]),
+      course("Chimie physique", "utile"),
+    ],
+    skills: [skill("Expérimentation", "essentielle", ["Synthèse"]), skill("Anglais courant", "importante")],
+    source: "https://chimie.unistra.fr/formation/master/odf-parcours-chimie-moleculaire-et-supramoleculaire-PR402-15010/",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-physique-lyon1",
+    name: "Master Physique fondamentale et applications",
+    institution: { name: "Université Claude Bernard Lyon 1 — Département de physique", city: "Villeurbanne", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Sciences fondamentales",
+    description:
+      "Master de 2 ans couvrant un large spectre de la physique, ouvert à la recherche comme à l'industrie. Trois M1 au choix, chacun recruté séparément : physique appliquée (vers les M2 CDIM et PHYSMAN), matière et lumière, quantique et complexe (vers MAX et Q-Light), univers et interactions fondamentales (vers ASTRO, COSMO, SUBA). Quatre unités du 1er semestre peuvent être suivies en anglais ; cours de français langue étrangère pour les non-francophones.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, une candidature par parcours de M1 (CV détaillé, relevés de notes depuis le bac, lettre de motivation) ; le parcours accepté est suivi toute l'année de M1.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence de physique (européenne) ou diplôme étranger reconnu équivalent ; élèves ingénieurs sur accord pédagogique" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences fondamentales",
+        label: "Formation en physique",
+        aliases: ["Sciences de l'ingénieur"],
+      },
+    ],
+    coreCourses: [
+      course("Physique quantique", "essentielle", ["Mécanique quantique"]),
+      course("Physique statistique", "importante", ["Thermodynamique"]),
+      course("Optique", "importante"),
+      course("Physique de la matière condensée", "utile"),
+      course("Méthodes numériques", "utile", ["Programmation scientifique"]),
+    ],
+    skills: [skill("Rigueur scientifique", "essentielle"), skill("Python", "utile")],
+    source: "https://master-physique.univ-lyon1.fr/m1/",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-icfp-psl",
+    name: "Master ICFP — Physique fondamentale (International Centre for Fundamental Physics)",
+    institution: { name: "Université PSL — École normale supérieure, Département de physique", city: "Paris", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Sciences fondamentales",
+    description:
+      "Master de 2 ans (120 crédits ECTS) entièrement en anglais, très sélectif, co-organisé par l'ENS-PSL avec Sorbonne Université, Université Paris Cité et Paris-Saclay : M1 presque entièrement à la carte en physique moderne puis stage, M2 en matière condensée, matière molle et physique biologique, physique quantique ou physique théorique, avec stage de recherche. Voie privilégiée vers le doctorat.",
+    requiredLevel: "Licence 3",
+    language: "Anglais",
+    applicationProcedure:
+      "M1 : candidature sur le portail de PSL (session 2026 : du 24 novembre 2025 au 23 janvier 2026 ; résultats fin mai). Admission très sélective ; anglais de niveau C1 exigé. Bourses possibles pour les étudiants venant de l'étranger.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence (BSc) ou cycle d'ingénieur avec de solides bases en physique et en mathématiques" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences fondamentales",
+        label: "Formation approfondie en physique et en mathématiques",
+        aliases: ["Sciences de l'ingénieur", "Mathématiques"],
+      },
+      { id: "r3", type: "competence", value: "Anglais courant", label: "Anglais niveau C1 exigé" },
+    ],
+    coreCourses: [
+      course("Physique quantique", "essentielle", ["Mécanique quantique"]),
+      course("Physique statistique", "essentielle"),
+      course("Physique de la matière condensée", "importante"),
+      course("Physique théorique", "utile"),
+      course("Analyse", "utile", ["Mathématiques appliquées"]),
+    ],
+    skills: [skill("Anglais courant", "essentielle"), skill("Rigueur scientifique", "essentielle")],
+    source: "https://psl.eu/en/education/master-s-degree-physics",
     verifiedAt: "2026-09-27",
     verificationStatus: "vérifiée",
     demo: false,

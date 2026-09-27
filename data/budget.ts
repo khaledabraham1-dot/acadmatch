@@ -89,6 +89,16 @@ const UCLOUVAIN_FEE: TuitionFee = {
     note: "Droits d'inscription complets 2026-2027 (grille validée le 10/06/2026). Tarifs réduits selon les revenus : 835 € (condition intermédiaire), 374 € (condition modeste), 0 € (boursiers).",
   };
 
+/** Grille UNamur 2026-2027 : mêmes droits pour tous les bacheliers. */
+const UNAMUR_FEE: TuitionFee = {
+  eu: { cents: 119_400, academicYear: "2026-2027", source: "https://www.unamur.be/en/registration/international/fees" },
+  nonEu: { cents: 536_900, academicYear: "2026-2027", source: "https://www.unamur.be/en/registration/international/fees" },
+  nonEuNote:
+    "5 369 € pour les ressortissants hors UE de pays non listés par l'ARES ; 1 194 € pour les pays listés ; ressortissants des pays les moins avancés (liste ONU) exonérés de la contribution supplémentaire. S'y ajoutent 200 € de frais d'examen du dossier, non remboursables.",
+  scope: "annuel",
+  note: "Droits d'inscription complets 2026-2027, sous réserve de la publication du décret sur le minerval progressif.",
+};
+
 export const TUITION_FEES: Record<string, TuitionFee> = {
   "f-m2ds-ip-paris": {
     eu: {
@@ -201,13 +211,19 @@ export const TUITION_FEES: Record<string, TuitionFee> = {
     nonEuNote:
       "Les établissements grenoblois accueillent les étudiants internationaux aux mêmes tarifs que les étudiants français et européens : tout étudiant qui en exprime le besoin est exonéré des droits différenciés.",
   },
-  "f-bachelier-maths-unamur": {
-    eu: { cents: 119_400, academicYear: "2026-2027", source: "https://www.unamur.be/en/registration/international/fees" },
-    nonEu: { cents: 536_900, academicYear: "2026-2027", source: "https://www.unamur.be/en/registration/international/fees" },
+  "f-bachelier-maths-unamur": UNAMUR_FEE,
+  "f-bachelier-chimie-unamur": UNAMUR_FEE,
+  "f-licence-physique-montpellier": FRENCH_LICENCE,
+  "f-master-chimie-strasbourg": FRENCH_MASTER,
+  "f-master-physique-lyon1": FRENCH_MASTER,
+  "f-master-icfp-psl": {
+    eu: { cents: 25_500, academicYear: "2026-2027", source: "https://psl.eu/en/education/master-s-degree-physics" },
+    nonEu: { cents: 395_000, academicYear: "2026-2027", source: "https://psl.eu/en/education/master-s-degree-physics" },
     nonEuNote:
-      "5 369 € pour les ressortissants hors UE de pays non listés par l'ARES ; 1 194 € pour les pays listés ; ressortissants des pays les moins avancés (liste ONU) exonérés de la contribution supplémentaire. S'y ajoutent 200 € de frais d'examen du dossier, non remboursables.",
+      "Droits différenciés pour les étudiants hors UE non exonérés. Des bourses sont proposées aux étudiants venant de l'étranger, en M1 comme en M2 (renouvelables). " +
+      FRENCH_EXEMPTION_NOTE,
     scope: "annuel",
-    note: "Droits d'inscription complets 2026-2027, sous réserve de la publication du décret sur le minerval progressif.",
+    note: "Droits nationaux de master.",
   },
   "f-msc-advanced-manufacturing-centrale-nantes": {
     eu: { cents: 25_500, academicYear: "2026-2027", source: "https://www.ec-nantes.fr/english-version/study/tuition-fees" },

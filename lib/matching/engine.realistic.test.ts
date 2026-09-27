@@ -130,7 +130,16 @@ describe("plafond hors domaine — catalogue multi-domaines", () => {
     // pour un profil de mécanique — le niveau et la langue suffisaient à
     // franchir le seuil de 45, et "Sciences de l'ingénieur" ressemblait à
     // "Sciences politiques" par le seul mot "Sciences".
-    for (const formation of FORMATIONS.filter((f) => f.goal === "Master" && f.field !== "Sciences de l'ingénieur")) {
+    // Sont exclues les formations qui déclarent ACCEPTER ce domaine (valeur ou
+    // alias d'un prérequis "domaine", ex: master de physique ouvert aux élèves
+    // ingénieurs) : pour elles, un bon score est légitime et sourcé.
+    const acceptsEngineering = (f: (typeof FORMATIONS)[number]) =>
+      f.prerequisites.some(
+        (r) => r.type === "domaine" && [r.value, ...(r.aliases ?? [])].includes("Sciences de l'ingénieur"),
+      );
+    const outsideDomain = FORMATIONS.filter((f) => f.goal === "Master" && !acceptsEngineering(f));
+    expect(outsideDomain.length).toBeGreaterThanOrEqual(15);
+    for (const formation of outsideDomain) {
       const result = computeCompatibility(mechanics, formation);
       expect(result.overallScore, formation.id).toBeLessThan(45);
     }

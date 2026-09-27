@@ -47,6 +47,8 @@ describe("documentSuggestionFor", () => {
       "f-m1-maths-fondamentales-paris-saclay",
       "f-m1-applied-maths-grenoble",
       "f-master-maths-appliquees-stats-lille",
+      "f-master-chimie-strasbourg",
+      "f-master-physique-lyon1",
     ]);
   });
 });
