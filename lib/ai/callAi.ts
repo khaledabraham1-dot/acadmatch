@@ -67,3 +67,60 @@ export async function callAi({
     return { ok: false, reason: "error" };
   }
 }
+
+/** Modèle des extractions de documents : lecture fiable de scans et relevés étrangers (voir docs/ai-integration.md). */
+export const AI_EXTRACTION_MODEL = "claude-opus-5";
+
+interface CallAiStructuredParams {
+  userId: string;
+  feature: string;
+  system: string;
+  /** Blocs de contenu du message utilisateur (document/image + consigne). */
+  content: Anthropic.Beta.BetaContentBlockParam[];
+  /** Schéma JSON imposé à la réponse (sorties structurées). */
+  schema: Record<string, unknown>;
+}
+
+/**
+ * Variante de `callAi` pour les extractions structurées (import du relevé
+ * de notes) : même contrôle de configuration et même quota, mais modèle
+ * plus capable, sortie JSON garantie conforme au schéma, et repli
+ * automatique côté serveur vers un autre modèle si le premier décline la
+ * requête (`fallbacks: "default"`). Renvoie le JSON brut, à valider par
+ * l'appelant.
+ */
+export async function callAiStructured({
+  userId,
+  feature,
+  system,
+  content,
+  schema,
+}: CallAiStructuredParams): Promise<AiCallResult> {
+  if (!isAiConfigured()) return { ok: false, reason: "not_configured" };
+
+  const usage = await checkAndRecordAiUsage(userId, feature);
+  if (!usage.allowed) return { ok: false, reason: "quota_exceeded" };
+
+  try {
+    const response = await getAiClient().beta.messages.create({
+      model: AI_EXTRACTION_MODEL,
+      max_tokens: 16000,
+      betas: ["server-side-fallback-2026-07-01"],
+      fallbacks: "default",
+      output_config: { effort: "medium", format: { type: "json_schema", schema } },
+      system,
+      messages: [{ role: "user", content }],
+    });
+
+    // Refus de toute la chaîne de modèles, ou réponse tronquée : JSON inutilisable.
+    if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") {
+      return { ok: false, reason: "error" };
+    }
+    const textBlock = response.content.find(
+      (block): block is Anthropic.Beta.BetaTextBlock => block.type === "text",
+    );
+    return textBlock ? { ok: true, text: textBlock.text } : { ok: false, reason: "error" };
+  } catch {
+    return { ok: false, reason: "error" };
+  }
+}

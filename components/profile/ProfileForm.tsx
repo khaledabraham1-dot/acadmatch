@@ -36,6 +36,7 @@ import { Label, Select, Input, Textarea } from "@/components/ui/Field";
 import { MAX_EXPERIENCES_LENGTH } from "@/lib/ai/promptContext";
 import { Button } from "@/components/ui/Button";
 import { CourseSkillEditor } from "@/components/profile/CourseSkillEditor";
+import { TranscriptImport } from "@/components/profile/TranscriptImport";
 import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
 import { DegreeEquivalenceHelper } from "@/components/profile/DegreeEquivalenceHelper";
 import { CatalogueScopeNotice } from "@/components/ui/CatalogueScopeNotice";
@@ -329,6 +330,21 @@ export function ProfileForm() {
           Ajoutez les matières marquantes de votre parcours (recommandé : au moins{" "}
           {RECOMMENDED_COURSES}). Elles seront comparées au contenu des formations.
         </p>
+        <div className="mb-6">
+          <TranscriptImport
+            existingCourses={courses}
+            currentLevel={currentLevel}
+            currentStanding={academicStanding}
+            onAddCourses={(names) =>
+              setCourses((current) => [
+                ...current,
+                ...names.filter((n) => !current.some((c) => c.toLocaleLowerCase("fr") === n.toLocaleLowerCase("fr"))),
+              ])
+            }
+            onApplyLevel={setCurrentLevel}
+            onApplyStanding={setAcademicStanding}
+          />
+        </div>
         <CourseSkillEditor
           label="Vos matières"
           items={courses}

@@ -1,0 +1,281 @@
+"use client";
+
+import { useId, useState } from "react";
+import Link from "next/link";
+import { FileUp, Loader2, ScanText, ShieldCheck } from "lucide-react";
+import type { AcademicLevel, AcademicStanding } from "@/types";
+import { Button } from "@/components/ui/Button";
+import { aiErrorMessage, useAiAccess } from "@/components/ai/AiFeature";
+import {
+  ACCEPTED_TRANSCRIPT_TYPES,
+  MAX_TRANSCRIPT_BYTES,
+  standingFromAverage,
+  type TranscriptExtraction,
+} from "@/lib/ai/transcriptPrompt";
+
+/**
+ * Import du relevé de notes (voir app/api/releve/route.ts) : l'étudiant
+ * choisit un PDF ou une photo, l'IA propose les matières lues, l'étudiant
+ * coche ce qu'il garde. Rien n'entre dans le profil sans son clic, et le
+ * fichier n'est conservé nulle part.
+ */
+
+const IMPORT_ERRORS: Record<string, string> = {
+  unsupported_file: "Format non pris en charge : utilisez un PDF ou une photo (JPEG, PNG, WebP).",
+  file_too_large: "Fichier trop lourd (4 Mo maximum) : exportez un PDF plus léger ou prenez une photo.",
+  not_a_transcript: "Ce document ne ressemble pas à un relevé de notes. Vérifiez le fichier choisi.",
+  no_course_found: "Aucune matière lisible n'a été trouvée. Essayez un PDF ou une photo plus nette, bien cadrée.",
+};
+
+/** Les photos de téléphone dépassent souvent 4 Mo : on les réduit dans le navigateur avant l'envoi. */
+const MAX_IMAGE_SIDE = 2000;
+
+async function prepareFile(file: File): Promise<File> {
+  if (!file.type.startsWith("image/")) return file;
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, MAX_IMAGE_SIDE / Math.max(bitmap.width, bitmap.height));
+    if (scale === 1 && file.size <= MAX_TRANSCRIPT_BYTES / 2) return file;
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    canvas.getContext("2d")?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.85));
+    return blob ? new File([blob], "releve.jpg", { type: "image/jpeg" }) : file;
+  } catch {
+    return file;
+  }
+}
+
+interface TranscriptImportProps {
+  existingCourses: string[];
+  currentLevel: AcademicLevel;
+  currentStanding: AcademicStanding;
+  onAddCourses: (names: string[]) => void;
+  onApplyLevel: (level: AcademicLevel) => void;
+  onApplyStanding: (standing: AcademicStanding) => void;
+}
+
+export function TranscriptImport({
+  existingCourses,
+  currentLevel,
+  currentStanding,
+  onAddCourses,
+  onApplyLevel,
+  onApplyStanding,
+}: TranscriptImportProps) {
+  const { configured, user, authLoading } = useAiAccess();
+  const inputId = useId();
+  const [file, setFile] = useState<File | null>(null);
+  const [consent, setConsent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [extraction, setExtraction] = useState<TranscriptExtraction | null>(null);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [addedCount, setAddedCount] = useState<number | null>(null);
+
+  const alreadyInProfile = (name: string) =>
+    existingCourses.some((c) => c.toLocaleLowerCase("fr") === name.toLocaleLowerCase("fr"));
+
+  async function handleAnalyze() {
+    if (!file || !consent) return;
+    setLoading(true);
+    setError(null);
+    setExtraction(null);
+    setAddedCount(null);
+    try {
+      const body = new FormData();
+      body.append("file", await prepareFile(file));
+      const response = await fetch("/api/releve", { method: "POST", body });
+      const data = await response.json().catch(() => null);
+      if (!data?.ok) {
+        const reason: string = data?.reason ?? "error";
+        setError(IMPORT_ERRORS[reason] ?? aiErrorMessage(reason));
+        return;
+      }
+      const result = data.extraction as TranscriptExtraction;
+      setExtraction(result);
+      setSelected(new Set(result.courses.filter((c) => !alreadyInProfile(c.name)).map((c) => c.name)));
+    } catch {
+      setError(aiErrorMessage("error"));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function toggle(name: string) {
+    setSelected((current) => {
+      const next = new Set(current);
+      if (next.has(name)) next.delete(name);
+      else next.add(name);
+      return next;
+    });
+  }
+
+  function handleAdd() {
+    const names = extraction?.courses.map((c) => c.name).filter((n) => selected.has(n)) ?? [];
+    onAddCourses(names);
+    setAddedCount(names.length);
+    setSelected(new Set());
+  }
+
+  if (!configured) return null;
+
+  const suggestedStanding = extraction?.averageOn20 != null ? standingFromAverage(extraction.averageOn20) : null;
+
+  return (
+    <div className="rounded-2xl border border-blue-100 bg-blue-50/50 p-4 sm:p-5">
+      <div className="flex items-start gap-3">
+        <ScanText className="mt-0.5 size-5 shrink-0 text-blue-600" aria-hidden />
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold text-slate-900">Importer mon relevé de notes (recommandé)</p>
+          <p className="mt-1 text-sm text-slate-600">
+            AcadMatch lit vos matières à votre place : un profil complet donne un score bien plus fiable
+            qu&apos;une saisie à la main. Vous validez chaque matière avant qu&apos;elle soit ajoutée.
+          </p>
+        </div>
+      </div>
+      <div>
+        {authLoading ? null : !user ? (
+          <p className="mt-3 text-sm text-blue-800">
+            <Link href="/compte" className="font-medium underline underline-offset-2">
+              Connectez-vous
+            </Link>{" "}
+            (compte gratuit) pour importer votre relevé — vous pouvez aussi saisir vos matières ci-dessous.
+          </p>
+        ) : (
+          <div className="mt-4 space-y-3">
+            <div className="flex flex-wrap items-center gap-3">
+              <label
+                htmlFor={inputId}
+                className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
+              >
+                <FileUp className="size-4" aria-hidden />
+                {file ? "Changer de fichier" : "Choisir un PDF ou une photo"}
+              </label>
+              <input
+                id={inputId}
+                type="file"
+                accept={ACCEPTED_TRANSCRIPT_TYPES.join(",")}
+                className="sr-only"
+                onChange={(e) => {
+                  setFile(e.target.files?.[0] ?? null);
+                  setError(null);
+                }}
+              />
+              {file && <span className="truncate text-sm text-slate-600">{file.name}</span>}
+            </div>
+
+            <label className="flex items-start gap-2 text-xs leading-relaxed text-slate-600">
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+                className="mt-0.5"
+              />
+              <span>
+                <ShieldCheck className="mr-1 inline size-3.5 text-slate-500" aria-hidden />
+                J&apos;accepte que ce document soit transmis à Claude (Anthropic) uniquement pour en lire les
+                matières. AcadMatch ne le conserve pas et n&apos;en extrait aucune donnée personnelle (nom,
+                numéro étudiant…). Moins de 15 ans : demandez d&apos;abord l&apos;accord d&apos;un parent.
+              </span>
+            </label>
+
+            <Button type="button" size="sm" disabled={!file || !consent || loading} onClick={handleAnalyze}>
+              {loading ? <Loader2 className="size-4 animate-spin" aria-hidden /> : <ScanText className="size-4" aria-hidden />}
+              {loading ? "Lecture du relevé… (jusqu'à une minute)" : "Analyser mon relevé"}
+            </Button>
+
+            {error && <p className="text-sm text-red-700">{error}</p>}
+          </div>
+        )}
+
+        {extraction && (
+          <div className="mt-5 space-y-4 rounded-xl border border-slate-200 bg-white p-3 sm:p-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="text-sm font-medium text-slate-900">
+                {extraction.courses.length} matière{extraction.courses.length > 1 ? "s" : ""} lue
+                {extraction.courses.length > 1 ? "s" : ""} — décochez celles à ne pas garder
+              </p>
+              <div className="flex gap-2 text-xs">
+                <button
+                  type="button"
+                  className="text-blue-600 hover:text-blue-700"
+                  onClick={() => setSelected(new Set(extraction.courses.filter((c) => !alreadyInProfile(c.name)).map((c) => c.name)))}
+                >
+                  Tout cocher
+                </button>
+                <button type="button" className="text-slate-500 hover:text-slate-700" onClick={() => setSelected(new Set())}>
+                  Tout décocher
+                </button>
+              </div>
+            </div>
+
+            <ul className="max-h-80 space-y-1.5 overflow-y-auto pr-1">
+              {extraction.courses.map((course) => {
+                const inProfile = alreadyInProfile(course.name);
+                return (
+                  <li key={course.name}>
+                    <label className="flex items-start gap-2.5 rounded-lg px-2 py-1.5 text-sm hover:bg-slate-50">
+                      <input
+                        type="checkbox"
+                        className="mt-1"
+                        disabled={inProfile}
+                        checked={inProfile || selected.has(course.name)}
+                        onChange={() => toggle(course.name)}
+                      />
+                      <span className="min-w-0">
+                        <span className="font-medium text-slate-800">{course.name}</span>
+                        {course.grade && <span className="ml-2 text-xs text-slate-500">{course.grade}</span>}
+                        {inProfile && <span className="ml-2 text-xs text-emerald-600">déjà dans votre profil</span>}
+                        {course.originalName !== course.name && (
+                          <span className="block text-xs text-slate-400">Sur le relevé : {course.originalName}</span>
+                        )}
+                      </span>
+                    </label>
+                  </li>
+                );
+              })}
+            </ul>
+
+            {extraction.warnings.length > 0 && (
+              <ul className="list-disc space-y-0.5 pl-5 text-xs text-amber-700">
+                {extraction.warnings.map((w) => (
+                  <li key={w}>{w}</li>
+                ))}
+              </ul>
+            )}
+
+            <div className="flex flex-wrap items-center gap-2">
+              <Button type="button" size="sm" className="h-auto min-h-9 py-1.5" disabled={selected.size === 0} onClick={handleAdd}>
+                Ajouter {selected.size} matière{selected.size > 1 ? "s" : ""} à mon profil
+              </Button>
+              {extraction.levelHint && extraction.levelHint !== currentLevel && (
+                <Button type="button" size="sm" variant="outline" className="h-auto min-h-9 py-1.5" onClick={() => onApplyLevel(extraction.levelHint!)}>
+                  Niveau lu : {extraction.levelHint} — l&apos;utiliser
+                </Button>
+              )}
+              {suggestedStanding && suggestedStanding !== currentStanding && (
+                <Button type="button" size="sm" variant="outline" className="h-auto min-h-9 py-1.5" onClick={() => onApplyStanding(suggestedStanding)}>
+                  Moyenne {String(extraction.averageOn20).replace(".", ",")}/20 → « {suggestedStanding} »
+                </Button>
+              )}
+            </div>
+            {addedCount !== null && (
+              <p className="text-sm text-emerald-700">
+                {addedCount} matière{addedCount > 1 ? "s" : ""} ajoutée{addedCount > 1 ? "s" : ""} — pensez à
+                enregistrer votre profil.
+              </p>
+            )}
+            {extraction.gradingScale && extraction.averageOn20 != null && extraction.gradingScale !== "/20" && (
+              <p className="text-xs text-slate-500">
+                Moyenne convertie depuis le barème « {extraction.gradingScale} » : conversion approximative, à
+                vérifier.
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

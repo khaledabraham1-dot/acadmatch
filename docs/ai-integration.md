@@ -27,6 +27,14 @@ pas un raisonnement de pointe, et le roadmap est explicite sur le contrôle
 des coûts pour toute feature IA. Point d'ajustement unique
 (`lib/ai/config.ts`) si une feature future a réellement besoin de plus.
 
+**Exception : l'import du relevé de notes utilise Claude Opus 5**
+(`AI_EXTRACTION_MODEL`, `callAiStructured` dans `lib/ai/callAi.ts`). Lire
+une photo de téléphone ou un relevé étranger (abréviations, barèmes, autre
+langue) demande une lecture fiable : une erreur fausse tout le matching de
+l'étudiant, et l'appel est unique par étudiant (quelques centimes), pas
+répété. Sortie JSON garantie par les sorties structurées, et repli
+automatique côté serveur si le modèle décline (`fallbacks: "default"`).
+
 **Les fonctionnalités IA nécessitent un compte** (Phase 5), contrairement
 au reste d'AcadMatch qui reste utilisable sans connexion. Impossible
 d'appliquer un quota par utilisateur à un visiteur anonyme sans identifiant
@@ -90,6 +98,7 @@ d'appels avec RLS) — à exécuter dans le même SQL Editor Supabase que
 |---|---|---|
 | Lettre de motivation (Phase 17) | `app/api/lettre-motivation/route.ts` | `lettre-motivation` |
 | Préparation aux entretiens (Phase 18) | `app/api/entretien/route.ts` | `entretien-questions`, `entretien-feedback` |
+| Import du relevé de notes | `app/api/releve/route.ts` | `releve-notes` |
 
 Toutes partagent `lib/ai/routeAuth.ts` (compte requis, dégradation 503/401,
 traduction des échecs typés), `lib/ai/promptContext.ts` (mise en forme du
@@ -103,3 +112,21 @@ Seule source d'expériences autorisée pour l'IA : le champ optionnel
 `StudentProfile.experiences` (formulaire de profil). Aucune fonctionnalité
 n'invente d'expérience, et la préparation aux entretiens ne rédige jamais
 la réponse à la place de l'étudiant — elle la commente.
+
+### Import du relevé de notes — règles
+
+- **L'étudiant valide tout** : l'extraction n'est qu'une proposition, revue
+  matière par matière (`components/profile/TranscriptImport.tsx`) ; le
+  niveau et l'auto-évaluation déduits de la moyenne ne sont que des
+  suggestions à accepter d'un clic.
+- **Données personnelles** : consentement explicite avant l'envoi ; le
+  fichier est lu en mémoire puis oublié (jamais stocké ni journalisé) ; le
+  prompt interdit d'extraire nom, numéro étudiant, date de naissance ou
+  adresse (vérifié sur un relevé fictif qui en contenait).
+- **Formats** : PDF, JPEG, PNG, WebP, 4 Mo maximum (limite de corps de
+  requête de Vercel : 4,5 Mo) ; les photos sont réduites dans le navigateur
+  avant l'envoi.
+- **Vocabulaire** : le prompt fournit les intitulés du catalogue pour que
+  les matières lues soient comparables par le moteur, sans jamais
+  rapprocher deux sujets différents ni remplacer un sujet par un format de
+  cours (TP, projet, stage) — règle ajustée après deux essais réels.
