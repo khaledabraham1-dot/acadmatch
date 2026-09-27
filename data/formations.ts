@@ -28,7 +28,8 @@ import type { AcademicItem, Importance, StudyProgram } from "@/types";
  * Élargissement du catalogue (2026-09-27) : ouverture domaine par domaine,
  * 2 licences + 3 masters par domaine, plusieurs villes — Économie & Gestion
  * d'abord (TSE, Aix-Marseille, iaelyon, UCLouvain LSM), puis Sciences de
- * l'ingénieur (Strasbourg, ULiège, Sorbonne, Lille, Centrale Nantes). Chaque fiche ajoutée
+ * l'ingénieur (Strasbourg, ULiège, Sorbonne, Lille, Centrale Nantes), puis
+ * Droit (Bordeaux, ULB, Strasbourg, Aix-Marseille, Toulouse). Chaque fiche ajoutée
  * a aussi ses frais sourcés dans data/budget.ts (un test l'impose).
  *
  * Pour toute formation FICTIVE de démonstration ajoutée plus tard (tests,
@@ -946,6 +947,193 @@ export const FORMATIONS: StudyProgram[] = [
     ],
     skills: [skill("CAO", "essentielle"), skill("Anglais courant", "essentielle"), skill("Modélisation numérique", "utile")],
     source: "https://www.ec-nantes.fr/study/masters/advanced-manufacturing",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+
+  // -------------------------------------------------------------------------
+  // Droit — ajoutées et vérifiées le 2026-09-27. Discipline la plus liée à un
+  // pays : on privilégie les licences généralistes et, en master, le droit
+  // européen/international (transposable) plus un LL.M. en anglais.
+  // -------------------------------------------------------------------------
+  {
+    id: "f-licence-droit-bordeaux",
+    name: "Licence en droit",
+    institution: { name: "Université de Bordeaux — Faculté de droit et science politique", city: "Pessac", country: "France" },
+    level: "Licence 1",
+    goal: "Licence",
+    field: "Droit",
+    description:
+      "Licence de 3 ans donnant une culture juridique générale — droit privé, droit public, droit de l'Union européenne, droit international, histoire du droit et des institutions — puis une spécialisation en L3 (droit privé, droit public, droit de l'entreprise, droit international et européen, droit judiciaire, administration publique, science politique). Ouvre sur les masters de droit et la préparation au CRFPA (avocat).",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    applicationProcedure:
+      "L1 : Parcoursup pour les bacheliers ; étudiants internationaux : candidature individuelle ou programme d'échange (procédure selon le pays, détaillée sur la page de la faculté). La maîtrise du français écrit et oral est explicitement attendue.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Baccalauréat ou équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Droit",
+        label: "Très bonne expression écrite et orale en français, goût pour l'argumentation",
+        aliases: ["Sciences politiques", "Économie & Gestion"],
+      },
+    ],
+    coreCourses: [
+      course("Droit civil", "essentielle", ["Droit privé"]),
+      course("Droit constitutionnel", "essentielle", ["Droit public"]),
+      course("Histoire du droit et des institutions", "importante"),
+      course("Droit de l'Union européenne", "utile", ["Droit européen"]),
+      course("Droit international", "utile"),
+    ],
+    skills: [skill("Rédaction juridique", "importante"), skill("Argumentation", "importante")],
+    source: "https://droit.u-bordeaux.fr/formations/offre-de-formation/licences/licence-en-droit",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-bachelier-droit-ulb",
+    name: "Bachelier en droit",
+    institution: { name: "Université libre de Bruxelles (ULB) — Faculté de Droit et de Criminologie", city: "Bruxelles", country: "Belgique" },
+    level: "Licence 1",
+    goal: "Licence",
+    field: "Droit",
+    description:
+      "Bachelier de 3 ans en français (campus du Solbosch, aussi organisé à Mons avec l'UMONS) : méthodologie juridique et critique des sources, cours d'introduction au droit et une large ouverture aux sciences humaines (philosophie, sociologie, économie politique, histoire, psychologie), avec néerlandais et anglais ; mène au master en droit.",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    applicationProcedure:
+      "Candidature en ligne à l'ULB, avec preuve de la demande d'équivalence du diplôme secondaire auprès de la Fédération Wallonie-Bruxelles. Candidats hors UE non assimilés : moyenne d'au moins 13/20 au diplôme secondaire et 12/20 dans les matières liées (langues pour le droit), niveau B2 en français si le français n'était pas au programme, frais de dossier de 200 € non remboursables ; dossier à déposer généralement entre mi-février et le 31 mars de l'année de la rentrée.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Diplôme secondaire reconnu équivalent au CESS belge" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Droit",
+        label: "Bons résultats en langues (première et deuxième langue) ; français B2 minimum",
+        aliases: ["Sciences politiques", "Économie & Gestion"],
+      },
+    ],
+    coreCourses: [
+      course("Méthodologie juridique", "essentielle", ["Méthodologie"]),
+      course("Introduction au droit", "essentielle", ["Droit civil", "Droit constitutionnel"]),
+      course("Économie politique", "utile", ["Macroéconomie"]),
+      course("Philosophie", "utile"),
+      course("Sociologie", "utile"),
+    ],
+    skills: [skill("Argumentation", "importante"), skill("Rédaction juridique", "utile")],
+    source: "https://www.ulb.be/fr/programme/ba-droi",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-droit-europeen-strasbourg",
+    name: "Master Droit européen",
+    institution: { name: "Université de Strasbourg — Faculté de droit, de sciences politiques et de gestion", city: "Strasbourg", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Droit",
+    description:
+      "Master de 2 ans (120 crédits ECTS) au cœur de la capitale européenne : M1 centré sur le droit du marché intérieur, le contentieux de l'Union européenne ou le contentieux administratif et le droit public des affaires, puis cinq parcours en M2 — droit et politiques de l'UE, droit de l'économie et de la régulation, produits de santé, droit international et européen des affaires, espace de liberté, de sécurité et de justice.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Sélection sur dossier en M1. Plateforme et calendrier de candidature à confirmer sur les pages admissions de l'Université de Strasbourg (non précisés sur la page du programme).",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence de droit, diplôme d'IEP ou licence AES parcours droit" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Droit",
+        label: "Très bon niveau en droit de l'Union européenne, bon niveau en droit public (constitutionnel, administratif, international)",
+        aliases: ["Sciences politiques"],
+      },
+      { id: "r3", type: "competence", value: "Anglais courant", label: "Très bonne maîtrise de l'anglais, prérequis du recrutement" },
+    ],
+    coreCourses: [
+      course("Droit du marché intérieur", "essentielle", ["Droit de l'Union européenne", "Droit européen"]),
+      course("Contentieux de l'Union européenne", "importante", ["Droit de l'Union européenne"]),
+      course("Droit public des affaires", "importante", ["Droit administratif"]),
+      course("Droit de la concurrence", "utile"),
+      course("Droit international", "utile"),
+    ],
+    skills: [skill("Anglais courant", "essentielle"), skill("Rédaction juridique", "importante")],
+    source: "https://formations.unistra.fr/fr/formations/master-MAS/master-droit-europeen-ME76.html",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-droit-affaires-amu",
+    name: "Master Droit des affaires",
+    institution: { name: "Aix-Marseille Université — Faculté de droit et de science politique", city: "Aix-en-Provence", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Droit",
+    description:
+      "Master de 2 ans, sélectif dès le M1, avec un tronc commun en droit spécial des sociétés, restructurations d'entreprises, droit de la concurrence et droit de la consommation, puis 17 parcours en M2 (droit des affaires internationales, compliance, droit du sport, droit chinois des affaires, droit maritime…) à Aix-en-Provence, Marseille ou à distance.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Sélection sur dossier dès le M1 : résultats d'ensemble et dans les matières fondamentales de droit privé et public, projet professionnel, stages et niveau d'anglais. Plateforme et calendrier à confirmer sur la page admissions de la faculté.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence en droit ou équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Droit",
+        label: "Solides résultats en droit privé et en droit public",
+      },
+      { id: "r3", type: "matiere", value: "Droit des contrats", label: "Bases en droit des contrats et des sociétés" },
+    ],
+    coreCourses: [
+      course("Droit des sociétés", "essentielle", ["Droit spécial des sociétés"]),
+      course("Droit de la concurrence", "essentielle"),
+      course("Droit des contrats", "importante", ["Droit civil"]),
+      course("Droit de la consommation", "importante"),
+      course("Droit des entreprises en difficulté", "utile", ["Restructurations d'entreprises"]),
+    ],
+    skills: [skill("Rédaction juridique", "essentielle"), skill("Anglais juridique", "utile")],
+    source: "https://formations.univ-amu.fr/fr/master/5DAF",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-llm-international-economic-law-toulouse",
+    name: "Master/LL.M. International Economic Law",
+    institution: { name: "Université Toulouse Capitole — European School of Law", city: "Toulouse", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Droit",
+    description:
+      "Master de 2 ans (120 crédits ECTS) entièrement en anglais : droit de l'Union européenne, droits fondamentaux, droit international public et privé en M1, puis marché intérieur, concurrence, droit pénal international, droit international des sociétés, droit financier, de l'investissement et du commerce, et économie numérique ; stage ou mémoire en fin de M2. 28 places en M1.",
+    requiredLevel: "Licence 3",
+    language: "Anglais",
+    applicationProcedure:
+      "Candidature sur la plateforme de la European School of Law (Toulouse Capitole) ; campagne pour les étudiants internationaux ouverte jusqu'au 26 avril (date de la dernière campagne publiée). Sélection sur dossier : résultats, niveau d'anglais, expériences et motivation.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence de droit française ou diplôme juridique étranger équivalent à 180 ECTS" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Droit",
+        label: "Formation juridique (licence en droit ou équivalent)",
+      },
+      { id: "r3", type: "competence", value: "Anglais courant", label: "Anglais B2 minimum (C1 pour la mobilité à Stetson University)" },
+    ],
+    coreCourses: [
+      course("Droit de l'Union européenne", "essentielle", ["Droit européen"]),
+      course("Droit international public", "essentielle", ["Droit international"]),
+      course("Droit international privé", "importante", ["Droit international"]),
+      course("Droit de la concurrence", "importante"),
+      course("Droit du commerce international", "utile"),
+    ],
+    skills: [skill("Anglais juridique", "essentielle", ["Anglais courant"]), skill("Rédaction juridique", "importante")],
+    source: "https://www.ut-capitole.fr/home/course-offer/english-taught-courses/master-ll-m-international-economic-law",
     verifiedAt: "2026-09-27",
     verificationStatus: "vérifiée",
     demo: false,

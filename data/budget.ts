@@ -161,6 +161,29 @@ export const TUITION_FEES: Record<string, TuitionFee> = {
     scope: "annuel",
     note: "Droits d'inscription complets 2026-2027. Tarifs réduits selon les revenus : 835 € (condition intermédiaire), 374 € (condition modeste), 0 € (boursiers).",
   },
+  "f-licence-droit-bordeaux": FRENCH_LICENCE,
+  "f-master-droit-europeen-strasbourg": FRENCH_MASTER,
+  "f-master-droit-affaires-amu": FRENCH_MASTER,
+  "f-bachelier-droit-ulb": {
+    eu: { cents: 119_400, academicYear: "2026-2027", source: "https://www.ulb.be/en/enrolment/tuitions-fees" },
+    nonEu: { cents: 536_900, academicYear: "2026-2027", source: "https://www.ulb.be/en/enrolment/tuitions-fees" },
+    nonEuNote:
+      "1 194 € plus 4 175 € de frais supplémentaires pour les ressortissants de pays hors UE non exemptés (les pays exemptés paient 1 194 €). S'y ajoutent 200 € de frais de dossier à la candidature, non remboursables.",
+    scope: "annuel",
+    note: "Droits d'inscription complets 2026-2027. Tarifs réduits selon les revenus : 835 € (condition intermédiaire), 374 € (condition modeste), 0 € (boursiers).",
+  },
+  "f-llm-international-economic-law-toulouse": {
+    eu: {
+      cents: 450_000,
+      academicYear: "2025-2026",
+      source: "https://www.ut-capitole.fr/home/course-offer/english-taught-courses/master-ll-m-international-economic-law",
+    },
+    nonEu: null,
+    nonEuNote:
+      "La page publie 4 500 € par an sans distinguer UE et hors UE ni préciser si les droits nationaux ou différenciés s'y ajoutent — à confirmer auprès de esl-admission@ut-capitole.fr.",
+    scope: "annuel",
+    note: "4 500 € par an, montant publié pour 2025-2026 (dernière fiche disponible).",
+  },
   "f-msc-advanced-manufacturing-centrale-nantes": {
     eu: { cents: 25_500, academicYear: "2026-2027", source: "https://www.ec-nantes.fr/english-version/study/tuition-fees" },
     nonEu: { cents: 1_200_000, academicYear: "2026-2027", source: "https://www.ec-nantes.fr/english-version/study/tuition-fees" },
