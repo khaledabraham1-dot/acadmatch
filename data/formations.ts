@@ -27,7 +27,8 @@ import type { AcademicItem, Importance, StudyProgram } from "@/types";
  *
  * Élargissement du catalogue (2026-09-27) : ouverture domaine par domaine,
  * 2 licences + 3 masters par domaine, plusieurs villes — Économie & Gestion
- * d'abord (TSE, Aix-Marseille, iaelyon, UCLouvain LSM). Chaque fiche ajoutée
+ * d'abord (TSE, Aix-Marseille, iaelyon, UCLouvain LSM), puis Sciences de
+ * l'ingénieur (Strasbourg, ULiège, Sorbonne, Lille, Centrale Nantes). Chaque fiche ajoutée
  * a aussi ses frais sourcés dans data/budget.ts (un test l'impose).
  *
  * Pour toute formation FICTIVE de démonstration ajoutée plus tard (tests,
@@ -757,6 +758,194 @@ export const FORMATIONS: StudyProgram[] = [
     ],
     skills: [skill("Anglais courant", "essentielle"), skill("Gestion de projet", "importante")],
     source: "https://uclouvain.be/prog-2026-gest2m",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+
+  // -------------------------------------------------------------------------
+  // Sciences de l'ingénieur — ajoutées et vérifiées le 2026-09-27 (même règle :
+  // 2 licences + 3 masters, plusieurs villes).
+  // -------------------------------------------------------------------------
+  {
+    id: "f-licence-spi-strasbourg",
+    name: "Licence Sciences pour l'ingénieur (SPI)",
+    institution: { name: "Université de Strasbourg — Faculté de physique et ingénierie", city: "Strasbourg", country: "France" },
+    level: "Licence 1",
+    goal: "Licence",
+    field: "Sciences de l'ingénieur",
+    description:
+      "Licence de 3 ans (180 crédits ECTS) : une L1 d'orientation en physique, mathématiques, chimie et informatique, une L2 élargie (mécanique du solide, électromagnétisme, thermodynamique, matériaux, électrotechnique) puis une L3 au choix parmi quatre parcours — systèmes électroniques, mécanique et génie industriel, mécatronique, sciences pour l'ingénieur et santé.",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    applicationProcedure:
+      "L1 : Parcoursup pour les bacheliers (vœux de janvier à mars) ; procédure DAP pour les candidats hors Union européenne.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Baccalauréat ou équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences de l'ingénieur",
+        label: "Bases en mathématiques et en physique attendues (la L1 les consolide)",
+        aliases: ["Sciences fondamentales", "Mathématiques"],
+      },
+    ],
+    coreCourses: [
+      course("Mécanique", "essentielle", ["Mécanique du solide"]),
+      course("Électronique", "importante", ["Systèmes électroniques"]),
+      course("Mathématiques appliquées", "importante"),
+      course("Thermodynamique", "utile"),
+      course("Électrotechnique", "utile"),
+    ],
+    skills: [skill("Rigueur scientifique", "importante"), skill("Gestion de projet", "utile")],
+    source: "https://physique-ingenierie.unistra.fr/formations/licences/licence-sciences-pour-lingenieur/",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-bachelier-ingenieur-civil-uliege",
+    name: "Bachelier en sciences de l'ingénieur, orientation ingénieur civil",
+    institution: { name: "Université de Liège (ULiège) — Faculté des Sciences appliquées", city: "Liège", country: "Belgique" },
+    level: "Licence 1",
+    goal: "Licence",
+    field: "Sciences de l'ingénieur",
+    description:
+      "Bachelier de 3 ans (180 crédits ECTS), première étape des 5 ans d'études d'ingénieur civil : sciences fondamentales et appliquées (mathématiques, physique, chimie, informatique), sciences de l'ingénieur, sciences sociales (droit, économie) et anglais, avant le master d'ingénieur civil.",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    applicationProcedure:
+      "Réussite obligatoire de l'examen spécial d'admission (« examen d'entrée ») avant l'inscription : quatre épreuves écrites de mathématiques sur deux jours (trigonométrie et calcul numérique, géométrie, algèbre, analyse), deux sessions par an (début juillet et début septembre). Ce n'est pas un concours : environ 80 % des candidats le réussissent. Conditions propres aux diplômes étrangers à confirmer auprès de la faculté.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Diplôme de fin d'études secondaires, puis réussite de l'examen d'entrée" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences de l'ingénieur",
+        label: "Mathématiques de niveau renforcé (programme à 6 h/semaine des trois dernières années du secondaire)",
+        aliases: ["Mathématiques", "Sciences fondamentales"],
+      },
+      { id: "r3", type: "matiere", value: "Analyse", label: "Analyse, algèbre, géométrie et trigonométrie : matières de l'examen d'entrée" },
+    ],
+    coreCourses: [
+      course("Analyse", "essentielle"),
+      course("Algèbre linéaire", "essentielle", ["Algèbre"]),
+      course("Physique générale", "importante"),
+      course("Mécanique", "importante"),
+      course("Programmation", "utile", ["Informatique"]),
+    ],
+    skills: [skill("Rigueur mathématique", "essentielle"), skill("Rigueur scientifique", "importante")],
+    source: "https://www.programmes.uliege.be/cocoon/20262027/formations/condacp/A1ICIV01.html",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-mecanique-sorbonne",
+    name: "Master Mécanique",
+    institution: { name: "Sorbonne Université — Faculté des Sciences et Ingénierie", city: "Paris", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Sciences de l'ingénieur",
+    description:
+      "Master de 2 ans formant des spécialistes des phénomènes, procédés et systèmes mécaniques, avec un fort accent sur la modélisation analytique, la simulation numérique et l'expérimentation : M1 en tronc commun, puis parcours en M2 (acoustique, solides et structures, mécanique numérique, fluides, énergétique). Plus d'un diplômé sur cinq poursuit en thèse.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier et entretien. Certains parcours sont proposés en anglais.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence générale (bac+3) ou équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences de l'ingénieur",
+        label: "Solide formation en mécanique, physique ou mathématiques",
+        aliases: ["Sciences fondamentales", "Mathématiques"],
+      },
+      { id: "r3", type: "matiere", value: "Mécanique", label: "Bases solides en mécanique" },
+    ],
+    coreCourses: [
+      course("Mécanique des milieux continus", "essentielle", ["Mécanique"]),
+      course("Mécanique des fluides", "essentielle"),
+      course("Méthodes numériques", "importante", ["Simulation numérique"]),
+      course("Thermodynamique", "utile", ["Énergétique"]),
+      course("Acoustique", "utile"),
+    ],
+    skills: [skill("Modélisation numérique", "importante", ["Simulation numérique"]), skill("Python", "utile")],
+    source: "https://masters-sdi.sorbonne-universite.fr/la-mention-mecanique",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-ase-lille",
+    name: "Master Automatique et systèmes électriques (ASE)",
+    institution: { name: "Université de Lille — Faculté des sciences et technologies", city: "Villeneuve-d'Ascq", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Sciences de l'ingénieur",
+    description:
+      "Master de 2 ans en génie électrique et automatique : M1 commun au 1er semestre (modélisation, conception de systèmes de conversion d'énergie, méthodes et outils de l'automatique), puis orientation systèmes électriques ou automatique ; en M2, parcours réseaux d'énergie électrique, véhicules intelligents électriques, systèmes et machines autonomes, ou génie électrique pour le développement durable.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier ; les candidats résidant dans un pays à procédure « Études en France » passent par cette procédure.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence EEA (électronique, énergie électrique, automatique) ou équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences de l'ingénieur",
+        label: "Formation en électronique, génie électrique ou automatique",
+        aliases: ["Sciences fondamentales"],
+      },
+    ],
+    coreCourses: [
+      course("Automatique", "essentielle"),
+      course("Électrotechnique", "essentielle", ["Conversion d'énergie", "Génie électrique"]),
+      course("Électronique", "importante", ["Électronique de puissance"]),
+      course("Modélisation des systèmes", "importante"),
+      course("Anglais", "utile"),
+    ],
+    skills: [skill("Systèmes embarqués", "utile"), skill("Gestion de projet", "utile")],
+    source: "https://formation.univ-lille.fr/fr/offre-de-formation/master-lmd-XB/master-automatique-et-systemes-electriques-MG001978.html",
+    verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-msc-advanced-manufacturing-centrale-nantes",
+    name: "MSc Mechanical Engineering — Advanced Manufacturing (M-ENG AM)",
+    institution: { name: "Centrale Nantes", city: "Nantes", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Sciences de l'ingénieur",
+    description:
+      "Master of Science de 2 ans entièrement en anglais, accrédité par le ministère de l'Enseignement supérieur : mécanique des milieux continus et des fluides, méthodes numériques, CAO, matériaux et conception mécanique en M1, puis fabrication additive, CAO/FAO/commande numérique et optimisation des procédés en M2, qui se termine par un stage ou mémoire de 6 mois rémunéré.",
+    requiredLevel: "Licence 3",
+    language: "Anglais",
+    applicationProcedure:
+      "Candidature en ligne sur eCandidat (Centrale Nantes), ouverte le 28 octobre 2026 pour la rentrée 2027 ; trois vagues d'admission en M1, de mi-décembre 2026 à fin avril 2027. Dossier : relevés de notes et diplôme, CV et lettre, deux lettres de recommandation académiques, test d'anglais (IELTS 6.5, TOEFL iBT 80, TOEIC 800 ou équivalent) et passeport.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Bachelor (ingénierie, sciences ou technologie) ou équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences de l'ingénieur",
+        label: "Cursus scientifique ou technologique avec un bon niveau en mathématiques",
+        aliases: ["Sciences fondamentales", "Mathématiques"],
+      },
+      { id: "r3", type: "competence", value: "Anglais courant", label: "Programme 100 % en anglais ; certificat exigé (ex. IELTS 6.5)" },
+    ],
+    coreCourses: [
+      course("Mécanique des milieux continus", "essentielle", ["Mécanique"]),
+      course("Conception mécanique", "essentielle", ["CAO"]),
+      course("Méthodes numériques", "importante"),
+      course("Mécanique des fluides", "importante"),
+      course("Science des matériaux", "utile", ["Matériaux"]),
+    ],
+    skills: [skill("CAO", "essentielle"), skill("Anglais courant", "essentielle"), skill("Modélisation numérique", "utile")],
+    source: "https://www.ec-nantes.fr/study/masters/advanced-manufacturing",
     verifiedAt: "2026-09-27",
     verificationStatus: "vérifiée",
     demo: false,

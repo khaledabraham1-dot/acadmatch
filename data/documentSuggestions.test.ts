@@ -39,6 +39,11 @@ describe("documentSuggestionFor", () => {
     const matches = FORMATIONS.filter((f) => documentSuggestionFor(f.applicationProcedure) !== null);
     // Toute nouvelle correspondance doit être vérifiée : une procédure qui cite
     // Mon Master comme simple possibilité recevrait à tort cette liste.
-    expect(matches.map((f) => f.id)).toEqual(["f-scdi-sorbonne", "f-master-finance-ift-lyon3"]);
+    expect(matches.map((f) => f.id)).toEqual([
+      "f-scdi-sorbonne",
+      "f-master-finance-ift-lyon3",
+      "f-master-mecanique-sorbonne",
+      "f-master-ase-lille",
+    ]);
   });
 });

@@ -142,6 +142,33 @@ export const TUITION_FEES: Record<string, TuitionFee> = {
   },
   "f-date-uclouvain": UCLOUVAIN_FEE,
   "f-master-gestion-uclouvain": UCLOUVAIN_FEE,
+  "f-licence-spi-strasbourg": FRENCH_LICENCE,
+  "f-master-mecanique-sorbonne": FRENCH_MASTER,
+  "f-master-ase-lille": FRENCH_MASTER,
+  "f-bachelier-ingenieur-civil-uliege": {
+    eu: {
+      cents: 119_400,
+      academicYear: "2026-2027",
+      source: "https://www.enseignement.uliege.be/cms/c_17654509/fr/droits-d-inscription",
+    },
+    nonEu: {
+      cents: 536_900,
+      academicYear: "2026-2027",
+      source: "https://www.enseignement.uliege.be/cms/c_17654509/fr/droits-d-inscription",
+    },
+    nonEuNote:
+      "1 194 € plus une contribution supplémentaire de 4 175 € pour les étudiants hors UE non assimilés. Exemptés notamment : nationalités listées par l'ARES, diplômés d'au moins 2 ans du secondaire en Fédération Wallonie-Bruxelles, boursiers WBI.",
+    scope: "annuel",
+    note: "Droits d'inscription complets 2026-2027. Tarifs réduits selon les revenus : 835 € (condition intermédiaire), 374 € (condition modeste), 0 € (boursiers).",
+  },
+  "f-msc-advanced-manufacturing-centrale-nantes": {
+    eu: { cents: 25_500, academicYear: "2026-2027", source: "https://www.ec-nantes.fr/english-version/study/tuition-fees" },
+    nonEu: { cents: 1_200_000, academicYear: "2026-2027", source: "https://www.ec-nantes.fr/english-version/study/tuition-fees" },
+    nonEuNote:
+      "12 000 € par an, garantis pour la durée du programme ; 2 000 € de réduction en candidatant au 1er tour et en payant dans le mois suivant l'admission. Quelques exonérations partielles de 6 000 €/an sur excellence ; boursiers du gouvernement français et Eiffel exonérés.",
+    scope: "annuel",
+    note: "Étudiants européens : droits nationaux de master. Stage de fin d'études de 6 mois rémunéré (gratification légale).",
+  },
 };
 
 export interface CountryBudgetRules {
