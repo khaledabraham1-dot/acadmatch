@@ -181,3 +181,37 @@ describe("plafond hors domaine — catalogue multi-domaines", () => {
     expect(notFluent.overallScore).toBeLessThan(fluent.overallScore);
   });
 });
+
+describe("synonymes et preuve de contenu — domaines Droit / Sciences politiques", () => {
+  it("un politiste ne ressort plus « compatible » sur un master de droit des affaires qui exige une licence de droit", () => {
+    // Cas observé le 2026-09-27 : 86/100, car la table de synonymes du MVP
+    // rendait "Droit international" équivalent à "Droit des sociétés".
+    const politist: StudentProfile = {
+      currentLevel: "Licence 3",
+      fieldOfStudy: "Sciences politiques",
+      currentDegree: "Licence Science politique",
+      courses: [
+        { id: "1", name: "Relations internationales" },
+        { id: "2", name: "Géopolitique" },
+        { id: "3", name: "Droit international" },
+        { id: "4", name: "Diplomatie" },
+      ],
+      skills: ["Anglais courant", "Argumentation"],
+      goal: "Master",
+      languages: ["Français", "Anglais"],
+    };
+    const businessLaw = FORMATIONS.find((f) => f.id === "f-master-droit-affaires-amu")!;
+    expect(computeCompatibility(politist, businessLaw).overallScore).toBeLessThan(45);
+
+    const lawyer: StudentProfile = {
+      ...politist,
+      fieldOfStudy: "Droit",
+      courses: [
+        { id: "1", name: "Droit civil" },
+        { id: "2", name: "Droit des contrats" },
+        { id: "3", name: "Droit des sociétés" },
+      ],
+    };
+    expect(computeCompatibility(lawyer, businessLaw).overallScore).toBeGreaterThanOrEqual(85);
+  });
+});

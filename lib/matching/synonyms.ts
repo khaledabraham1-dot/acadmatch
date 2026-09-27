@@ -8,6 +8,14 @@ import { normalize } from "@/lib/utils";
  * C'est volontairement une liste courte et lisible plutôt qu'un modèle de
  * langage : on peut l'étendre au fil du temps ou la remplacer plus tard par
  * un moteur plus avancé (voir lib/matching/engine.ts).
+ *
+ * N'y mettre que de VRAIES équivalences. Deux groupes du MVP (toutes les
+ * matières de droit entre elles ; relations internationales = institutions
+ * politiques = méthodologie de recherche) ont été retirés le 2026-09-27 :
+ * sans effet tant que le catalogue était informatique, ils gonflaient les
+ * scores une fois les domaines Droit et Sciences politiques ouverts
+ * ("Droit international" comptait comme "Droit des sociétés"). Les
+ * équivalences propres à une formation passent par les `aliases` de sa fiche.
  */
 const SYNONYM_GROUPS: string[][] = [
   ["python", "programmation python"],
@@ -31,24 +39,9 @@ const SYNONYM_GROUPS: string[][] = [
   ["anglais courant", "anglais juridique", "anglais scientifique", "anglais technique", "anglais"],
   ["gestion de projet", "conduite de projet"],
   ["analyse de donnees", "econometrie"],
-  [
-    "droit des contrats",
-    "droit des societes",
-    "droit fiscal",
-    "droit international prive",
-    "droit civil",
-    "droit constitutionnel",
-    "droit international",
-  ],
   ["redaction juridique", "redaction academique", "argumentation"],
   ["programmation r", "r"],
   ["git", "devops", "tests logiciels"],
-  [
-    "relations internationales",
-    "institutions politiques",
-    "histoire des idees politiques",
-    "methodologie de recherche",
-  ],
   ["marketing", "marketing digital"],
   ["systemes d'information", "transformation digitale"],
   ["reseaux informatiques", "systemes d'exploitation"],

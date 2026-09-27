@@ -333,9 +333,29 @@ function computeContentScore(
  * compressé (x0,25). Un plafond sec rendrait égaux des profils réellement
  * différents (ex: à l'aise ou non en anglais) — l'ordre entre eux doit
  * rester juste même hors domaine.
+ *
+ * La "preuve de contenu" qui relâche le plafond ne compte QUE les
+ * correspondances fortes (un partiel vaut 60 dans le score de contenu
+ * affiché, mais 0 ici) : hors domaine, un partiel vient souvent d'un seul
+ * mot générique partagé ("Droit international" ~ "Droit des sociétés"), ce
+ * qui ne prouve pas les bases d'une autre discipline — cas observé : un
+ * profil de science politique à 86/100 sur un master de droit des affaires.
  */
 const DOMAIN_MISMATCH_BASE_CAP = 25;
 const DOMAIN_MISMATCH_COMPRESSION = 0.25;
+const OUTSIDE_DOMAIN_EVIDENCE_POINTS: Record<MatchStrength, number> = { forte: 100, partielle: 0, manquant: 0 };
+
+/** Preuve de contenu hors domaine : moyenne pondérée des matières, partiels peu comptés. */
+function outsideDomainEvidence(formation: StudyProgram, rows: SubjectMatch[]): number {
+  let total = 0;
+  let weights = 0;
+  formation.coreCourses.forEach((item, index) => {
+    const weight = IMPORTANCE_WEIGHT[item.importance] ?? 1;
+    total += OUTSIDE_DOMAIN_EVIDENCE_POINTS[rows[index]?.strength ?? "manquant"] * weight;
+    weights += weight;
+  });
+  return weights === 0 ? 100 : Math.round(total / weights);
+}
 
 /** Le domaine d'études du profil est-il absent de TOUS les domaines exigés ? false si la formation n'en exige aucun. */
 function isOutsideRequiredDomain(profile: StudentProfile, formation: StudyProgram): boolean {
@@ -376,7 +396,7 @@ export function computeCompatibility(profile: StudentProfile, formation: StudyPr
   );
 
   const outsideDomain = isOutsideRequiredDomain(profile, formation);
-  const domainCap = DOMAIN_MISMATCH_BASE_CAP + content.score;
+  const domainCap = DOMAIN_MISMATCH_BASE_CAP + outsideDomainEvidence(formation, content.rows);
   const domainCapped = outsideDomain && weightedScore > domainCap;
   const overallScore = domainCapped
     ? Math.round(domainCap + (weightedScore - domainCap) * DOMAIN_MISMATCH_COMPRESSION)
