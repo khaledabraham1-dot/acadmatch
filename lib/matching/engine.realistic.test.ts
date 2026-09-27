@@ -109,3 +109,66 @@ describe("moteur de matching sur le catalogue réel — profils réalistes", () 
     expect(firstNonSpecialiseIndex).toBeGreaterThan(lastSpecialiseIndex);
   });
 });
+
+describe("plafond hors domaine — catalogue multi-domaines", () => {
+  const mechanics: StudentProfile = {
+    currentLevel: "Licence 3",
+    fieldOfStudy: "Sciences de l'ingénieur",
+    currentDegree: "Licence Mécanique",
+    courses: [
+      { id: "1", name: "Mécanique" },
+      { id: "2", name: "Mécanique des fluides" },
+      { id: "3", name: "Thermodynamique" },
+    ],
+    skills: ["CAO"],
+    goal: "Master",
+    languages: ["Français", "Anglais"],
+  };
+
+  it("un étudiant en mécanique ne voit AUCUN master d'un autre domaine en « Partiellement compatible » ou mieux", () => {
+    // Cas observé le 2026-09-27 : Master Droit européen (Strasbourg) à 47/100
+    // pour un profil de mécanique — le niveau et la langue suffisaient à
+    // franchir le seuil de 45, et "Sciences de l'ingénieur" ressemblait à
+    // "Sciences politiques" par le seul mot "Sciences".
+    for (const formation of FORMATIONS.filter((f) => f.goal === "Master" && f.field !== "Sciences de l'ingénieur")) {
+      const result = computeCompatibility(mechanics, formation);
+      expect(result.overallScore, formation.id).toBeLessThan(45);
+    }
+  });
+
+  it("le plafond est signalé et expliqué, jamais appliqué en silence", async () => {
+    const { buildDecisionAid } = await import("@/lib/matching/explanation");
+    const formation = FORMATIONS.find((f) => f.id === "f-master-droit-europeen-strasbourg")!;
+    const result = computeCompatibility(mechanics, formation);
+    expect(result.domainCapped).toBe(true);
+    const aid = buildDecisionAid(mechanics, formation, result);
+    expect(aid.paragraphs.some((p) => p.includes("score est volontairement limité"))).toBe(true);
+  });
+
+  it("une réorientation voisine ou déclarée n'est pas plafonnée (Informatique → Data Science, Droit → gestion UCLouvain)", () => {
+    const info: StudentProfile = {
+      ...mechanics,
+      fieldOfStudy: "Informatique",
+      courses: [
+        { id: "1", name: "Algorithmique" },
+        { id: "2", name: "Bases de données" },
+        { id: "3", name: "Machine Learning" },
+      ],
+      skills: ["Python"],
+    };
+    const date = FORMATIONS.find((f) => f.id === "f-date-uclouvain")!;
+    expect(computeCompatibility(info, date).domainCapped).toBeUndefined();
+
+    const law: StudentProfile = { ...mechanics, fieldOfStudy: "Droit", courses: [{ id: "1", name: "Droit civil" }], skills: [] };
+    const management = FORMATIONS.find((f) => f.id === "f-master-gestion-uclouvain")!;
+    expect(computeCompatibility(law, management).domainCapped).toBeUndefined();
+  });
+
+  it("hors domaine, le plafond reste souple : l'ordre entre profils différents est préservé", () => {
+    const formation = FORMATIONS.find((f) => f.id === "f-llm-international-economic-law-toulouse")!;
+    const fluent = computeCompatibility(mechanics, formation);
+    const notFluent = computeCompatibility({ ...mechanics, languages: ["Français"] }, formation);
+    expect(fluent.domainCapped).toBe(true);
+    expect(notFluent.overallScore).toBeLessThan(fluent.overallScore);
+  });
+});

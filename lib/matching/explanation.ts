@@ -155,6 +155,12 @@ export function buildDecisionAid(
     `Le point le plus fragile de votre dossier pour cette formation est ${CRITERION_LABELS[weakestCriterion]} (${weakestScore}/100).`,
   );
 
+  if (result.domainCapped) {
+    paragraphs.push(
+      `Votre domaine d'études (${profile.fieldOfStudy}) n'est pas celui attendu (${formation.field}) et votre profil ne montre pas encore les matières de base de cette formation : le score est volontairement limité. Une réorientation reste possible, à condition de prouver ces bases (cours, certification, projet).`,
+    );
+  }
+
   if (!languageOk) {
     paragraphs.push(
       `La formation est enseignée en ${formation.language}, langue que vous n'avez pas indiquée comme confortable — cela pèse sur les prérequis.`,

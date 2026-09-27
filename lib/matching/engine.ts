@@ -219,6 +219,18 @@ function requirementWeight(requirement: Requirement): number {
   return PREREQUISITE_TYPE_WEIGHT[requirement.type] ?? 1;
 }
 
+/**
+ * Le domaine d'études est choisi dans une liste fermée (`DOMAINS`) : on le
+ * compare donc exactement au domaine exigé et à ses alias déclarés, jamais
+ * mot à mot — sinon "Sciences de l'ingénieur" et "Sciences politiques"
+ * se ressemblaient par le seul mot "Sciences". Les domaines réellement
+ * voisins sont déclarés explicitement dans chaque fiche via `aliases`.
+ */
+function domainRequirementStrength(requirement: Requirement, fieldOfStudy: string): MatchStrength {
+  const field = normalize(fieldOfStudy);
+  return namesOf(requirement).some((name) => normalize(name) === field) ? "forte" : "manquant";
+}
+
 /** L'étudiant est-il à l'aise pour suivre des cours dans la langue d'enseignement de la formation ? */
 function computeLanguageStrength(profile: StudentProfile, formation: StudyProgram): MatchStrength {
   const comfortable = profile.languages.some((lang) => normalize(lang) === normalize(formation.language));
@@ -252,7 +264,7 @@ function computePrerequisitesScore(profile: StudentProfile, formation: StudyProg
         break;
       }
       case "domaine":
-        strength = bestMatch(namesOf(requirement), [profile.fieldOfStudy]).strength;
+        strength = domainRequirementStrength(requirement, profile.fieldOfStudy);
         break;
       case "matiere":
         strength = bestMatch(namesOf(requirement), profile.courses.map((course) => course.name)).strength;
@@ -303,6 +315,38 @@ function computeContentScore(
 }
 
 /**
+ * Plafond "hors domaine". Sans lui, le niveau (25 %) et les prérequis
+ * génériques (niveau, langue) suffisaient à donner ~45/100 — donc
+ * "Partiellement compatible" — à une formation d'un domaine sans aucun
+ * rapport (ex: licence de mécanique → master de droit européen), faux
+ * signal devenu fréquent avec un catalogue multi-domaines.
+ *
+ * Le plafond ne s'applique que si le domaine exigé est ABSENT du profil, et
+ * il se relâche à mesure que le profil prouve le contenu de la formation :
+ * une vraie réorientation (ex: informatique → data science, avec les
+ * matières qui vont avec) n'est pas pénalisée, seule l'absence de toute
+ * preuve l'est. Le contenu seul compte ici, pas les compétences : des
+ * compétences transverses ("Anglais courant", "Python") ne prouvent pas
+ * qu'on a les bases d'un autre domaine.
+ *
+ * Plafond SOUPLE : au-delà du plafond, le score n'est pas écrasé mais
+ * compressé (x0,25). Un plafond sec rendrait égaux des profils réellement
+ * différents (ex: à l'aise ou non en anglais) — l'ordre entre eux doit
+ * rester juste même hors domaine.
+ */
+const DOMAIN_MISMATCH_BASE_CAP = 25;
+const DOMAIN_MISMATCH_COMPRESSION = 0.25;
+
+/** Le domaine d'études du profil est-il absent de TOUS les domaines exigés ? false si la formation n'en exige aucun. */
+function isOutsideRequiredDomain(profile: StudentProfile, formation: StudyProgram): boolean {
+  const domainRequirements = formation.prerequisites.filter((requirement) => requirement.type === "domaine");
+  return (
+    domainRequirements.length > 0 &&
+    domainRequirements.every((requirement) => domainRequirementStrength(requirement, profile.fieldOfStudy) === "manquant")
+  );
+}
+
+/**
  * Calcule le résultat de compatibilité entre un profil étudiant et une formation.
  * Fonction pure : mêmes entrées → même résultat, sans effet de bord.
  */
@@ -324,12 +368,19 @@ export function computeCompatibility(profile: StudentProfile, formation: StudyPr
     levelDegree,
   };
 
-  const overallScore = Math.round(
+  const weightedScore = Math.round(
     breakdown.prerequisites * ENGINE_WEIGHTS.prerequisites +
       breakdown.academicContent * ENGINE_WEIGHTS.academicContent +
       breakdown.skills * ENGINE_WEIGHTS.skills +
       breakdown.levelDegree * ENGINE_WEIGHTS.levelDegree,
   );
+
+  const outsideDomain = isOutsideRequiredDomain(profile, formation);
+  const domainCap = DOMAIN_MISMATCH_BASE_CAP + content.score;
+  const domainCapped = outsideDomain && weightedScore > domainCap;
+  const overallScore = domainCapped
+    ? Math.round(domainCap + (weightedScore - domainCap) * DOMAIN_MISMATCH_COMPRESSION)
+    : weightedScore;
 
   // Fusionne les tableaux de correspondance matières + compétences, sans doublons.
   const seen = new Set<string>();
@@ -356,5 +407,6 @@ export function computeCompatibility(profile: StudentProfile, formation: StudyPr
     strengths,
     gaps,
     matches,
+    ...(domainCapped ? { domainCapped: true } : {}),
   };
 }

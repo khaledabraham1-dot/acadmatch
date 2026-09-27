@@ -256,6 +256,12 @@ export interface CompatibilityResult {
   strengths: string[];
   gaps: string[];
   matches: SubjectMatch[];
+  /**
+   * Score plafonné parce que le domaine d'études exigé est absent du profil
+   * et que le contenu de la formation n'y apparaît pas (voir
+   * DOMAIN_MISMATCH_BASE_CAP dans lib/matching/engine.ts). Absent sinon.
+   */
+  domainCapped?: boolean;
 }
 
 /**
