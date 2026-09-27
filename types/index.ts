@@ -359,3 +359,26 @@ export interface InterviewPrep {
   language: string;
   generatedAt: string;
 }
+
+/**
+ * Budget prévisionnel d'une formation (Phase 19) — uniquement les choix et
+ * hypothèses de l'étudiant. Les coûts officiels (frais de scolarité, CVEC,
+ * seuil de ressources visa) ne sont jamais stockés ici : ils sont relus à
+ * chaque calcul depuis data/budget.ts, pour qu'une mise à jour sourcée se
+ * répercute sur tous les budgets existants. Montants en centimes d'euro.
+ */
+export interface BudgetPlan {
+  formationId: string;
+  /** Tarif applicable : UE/EEE/Suisse (ou assimilé) ou hors UE. */
+  feeProfile: "ue" | "hors-ue";
+  /** Année académique visée, ex: "2027-2028". */
+  targetYear: string;
+  /** Nombre de mois couverts par le budget (dépenses et ressources mensuelles). */
+  months: number;
+  monthlyCosts: { housing: number; transport: number; food: number; other: number };
+  oneOffCosts: { administrative: number; settling: number; other: number };
+  monthlyResources: { scholarship: number; family: number; job: number; other: number };
+  oneOffResources: { savings: number; other: number };
+  /** Devise d'affichage complémentaire (l'euro reste la référence). */
+  displayCurrency?: { code: string; rate: number };
+}

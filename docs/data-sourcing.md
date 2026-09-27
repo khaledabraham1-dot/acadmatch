@@ -75,3 +75,31 @@ Avant d'ajouter la première formation d'un pays donné :
 3. Ne dupliquer aucune règle de scoring : le moteur de matching
    (`lib/matching/engine.ts`) reste académique et indépendant du pays —
    seules les données (`Institution`, `applicationProcedure`) changent.
+
+## Coûts du budget (Phase 19) — `data/budget.ts`
+
+Mêmes règles que pour les formations, appliquées aux montants :
+
+- **Un montant = une source officielle + une année académique.** Frais de
+  scolarité lus sur la page ou le PDF de l'établissement ; droits nationaux
+  et CVEC sur Service-Public ; seuil de ressources visa sur Campus France
+  (France) et via l'Office des étrangers (Belgique) ; parités fixes sur le
+  site de la Direction générale du Trésor.
+- **Les sites secondaires ne servent qu'à trouver la source**, jamais de
+  source eux-mêmes : lors de la vérification du 2026-09-27, plusieurs
+  donnaient 254 € pour le master au lieu des 255 € officiels, ou un seuil
+  visa de 615 €/mois périmé depuis le 1er août 2026 (877,50 €).
+- **Montant non publié = déclaré non publié** (`nonEu: null` + note), jamais
+  estimé : ex. contribution supplémentaire hors UE à UCLouvain.
+- **Pas de montant de vie courante (loyer, transport) sans source
+  officielle stable** : ces postes restent des hypothèses de l'étudiant,
+  avec un lien vers la source officielle quand elle existe.
+- Le calculateur (`lib/budget.ts`) présente automatiquement un montant
+  d'une autre année que celle visée comme une **estimation** — il n'est
+  donc jamais faux d'y laisser le dernier montant publié, seulement moins
+  précis.
+
+**Revérification annuelle, en juillet** : les droits nationaux (arrêté
+indexé), les grilles des établissements, la CVEC et le seuil visa (indexé
+sur le SMIC) sont publiés pour la rentrée suivante entre juin et août.
+Mettre à jour `academicYear` avec chaque montant, et `BUDGET_VERIFIED_AT`.

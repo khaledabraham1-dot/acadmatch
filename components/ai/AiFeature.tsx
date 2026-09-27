@@ -5,13 +5,12 @@ import Link from "next/link";
 import type { User } from "@supabase/supabase-js";
 import { AlertCircle, ShieldAlert } from "lucide-react";
 import type { Application } from "@/types";
-import { getFormationById } from "@/data/formations";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/client";
 import { MAX_AI_REQUESTS_PER_DAY } from "@/lib/ai/config";
 import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
-import { Select } from "@/components/ui/Field";
+import { FormationPicker } from "@/components/shared/FormationPicker";
 
 /**
  * Briques communes aux fonctionnalités IA (lettre de motivation — Phase 17,
@@ -130,46 +129,25 @@ export function ApplicationPicker({
   basePath: string;
   description: string;
 }) {
-  const [picked, setPicked] = useState("");
-
   return (
-    <Card>
-      <h2 className="mb-1 text-sm font-semibold text-slate-900">Choisissez une candidature</h2>
-      <p className="mb-4 text-sm text-slate-500">
-        {description}, suivie dans{" "}
-        <Link href="/candidatures" className="font-medium text-blue-600 hover:text-blue-700">
-          le suivi des candidatures
-        </Link>
-        .
-      </p>
-      {applications.length > 0 ? (
-        <div className="flex flex-wrap items-end gap-3">
-          <div className="min-w-0 flex-1">
-            <Select value={picked} onChange={(e) => setPicked(e.target.value)}>
-              <option value="">Choisissez une formation…</option>
-              {applications.map((a) => {
-                const f = getFormationById(a.formationId);
-                return f ? (
-                  <option key={a.formationId} value={a.formationId}>
-                    {f.name} — {f.institution.name}
-                  </option>
-                ) : null;
-              })}
-            </Select>
-          </div>
-          <LinkButton
-            href={picked ? `${basePath}?formationId=${picked}` : "#"}
-            size="md"
-            className={!picked ? "pointer-events-none opacity-50" : undefined}
-          >
-            Continuer
-          </LinkButton>
-        </div>
-      ) : (
+    <FormationPicker
+      formationIds={applications.map((a) => a.formationId)}
+      basePath={basePath}
+      title="Choisissez une candidature"
+      description={
+        <>
+          {description}, suivie dans{" "}
+          <Link href="/candidatures" className="font-medium text-blue-600 hover:text-blue-700">
+            le suivi des candidatures
+          </Link>
+          .
+        </>
+      }
+      emptyState={
         <LinkButton href="/candidatures" size="sm" variant="outline">
           Suivre une candidature
         </LinkButton>
-      )}
-    </Card>
+      }
+    />
   );
 }

@@ -1,4 +1,4 @@
-import type { Application, InterviewPrep, InterviewQuestionCategory, StudentProfile } from "@/types";
+import type { Application, BudgetPlan, InterviewPrep, InterviewQuestionCategory, StudentProfile } from "@/types";
 import { INTERVIEW_QUESTION_CATEGORIES } from "@/types";
 
 /**
@@ -296,4 +296,62 @@ export function compareResultsHref(ids: string[]): string {
   if (unique.length === 0) return "/recherche";
   if (unique.length === 1) return `/resultat?formationId=${encodeURIComponent(unique[0])}`;
   return `/resultat?compare=${unique.map(encodeURIComponent).join(",")}`;
+}
+
+// ---------------------------------------------------------------------------
+// Budgets prévisionnels (Phase 19) — un budget par formation, indépendant
+// des candidatures : on chiffre souvent une formation avant de décider d'y
+// candidater. Seules les hypothèses de l'étudiant sont stockées (voir
+// `BudgetPlan`), jamais les coûts officiels, relus depuis data/budget.ts.
+// ---------------------------------------------------------------------------
+
+const BUDGETS_KEY = "acadmatch:budgets";
+
+function isCentsRecord(value: unknown, keys: string[]): boolean {
+  if (!value || typeof value !== "object") return false;
+  const record = value as Record<string, unknown>;
+  return keys.every((k) => Number.isInteger(record[k]) && (record[k] as number) >= 0);
+}
+
+function isValidBudgetPlan(value: unknown): value is BudgetPlan {
+  if (!value || typeof value !== "object") return false;
+  const plan = value as Record<string, unknown>;
+  const currency = plan.displayCurrency as Record<string, unknown> | undefined;
+  return (
+    typeof plan.formationId === "string" &&
+    (plan.feeProfile === "ue" || plan.feeProfile === "hors-ue") &&
+    typeof plan.targetYear === "string" &&
+    /^\d{4}-\d{4}$/.test(plan.targetYear) &&
+    Number.isInteger(plan.months) &&
+    isCentsRecord(plan.monthlyCosts, ["housing", "transport", "food", "other"]) &&
+    isCentsRecord(plan.oneOffCosts, ["administrative", "settling", "other"]) &&
+    isCentsRecord(plan.monthlyResources, ["scholarship", "family", "job", "other"]) &&
+    isCentsRecord(plan.oneOffResources, ["savings", "other"]) &&
+    (currency === undefined ||
+      (typeof currency.code === "string" && typeof currency.rate === "number" && currency.rate > 0))
+  );
+}
+
+export function loadBudgetPlan(formationId: string): BudgetPlan | null {
+  const storage = getStorage();
+  if (!storage) return null;
+  try {
+    const parsed = JSON.parse(storage.getItem(BUDGETS_KEY) ?? "{}") as Record<string, unknown>;
+    const plan = parsed?.[formationId];
+    return isValidBudgetPlan(plan) && plan.formationId === formationId ? plan : null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveBudgetPlan(plan: BudgetPlan): void {
+  const storage = getStorage();
+  if (!storage) return;
+  try {
+    const current = JSON.parse(storage.getItem(BUDGETS_KEY) ?? "{}") as Record<string, unknown>;
+    const next = current && typeof current === "object" && !Array.isArray(current) ? current : {};
+    storage.setItem(BUDGETS_KEY, JSON.stringify({ ...next, [plan.formationId]: plan }));
+  } catch {
+    // Non bloquant.
+  }
 }

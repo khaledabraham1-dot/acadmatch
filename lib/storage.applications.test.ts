@@ -40,3 +40,42 @@ describe("loadApplications — préparation d'entretien (Phase 18)", () => {
     }
   });
 });
+
+describe("budgets (Phase 19)", () => {
+  beforeEach(() => vi.unstubAllGlobals());
+  afterEach(() => vi.unstubAllGlobals());
+
+  const validPlan = {
+    formationId: "f-a",
+    feeProfile: "hors-ue",
+    targetYear: "2027-2028",
+    months: 12,
+    monthlyCosts: { housing: 50_000, transport: 0, food: 0, other: 0 },
+    oneOffCosts: { administrative: 0, settling: 0, other: 0 },
+    monthlyResources: { scholarship: 0, family: 0, job: 0, other: 0 },
+    oneOffResources: { savings: 0, other: 0 },
+  };
+
+  it("relit un budget valide et ignore un budget corrompu ou mal rattaché", async () => {
+    const { loadBudgetPlan } = await import("@/lib/storage");
+    stubLocalStorage({
+      "acadmatch:budgets": JSON.stringify({
+        "f-a": validPlan,
+        "f-b": { ...validPlan, formationId: "f-b", monthlyCosts: { housing: -1, transport: 0, food: 0, other: 0 } },
+        "f-c": { ...validPlan, formationId: "f-other" },
+      }),
+    });
+    expect(loadBudgetPlan("f-a")).toEqual(validPlan);
+    expect(loadBudgetPlan("f-b")).toBeNull();
+    expect(loadBudgetPlan("f-c")).toBeNull();
+    expect(loadBudgetPlan("inconnu")).toBeNull();
+  });
+
+  it("enregistre un budget sans écraser ceux des autres formations", async () => {
+    const { loadBudgetPlan, saveBudgetPlan } = await import("@/lib/storage");
+    stubLocalStorage({ "acadmatch:budgets": JSON.stringify({ "f-a": validPlan }) });
+    saveBudgetPlan({ ...validPlan, formationId: "f-z", feeProfile: "ue" } as never);
+    expect(loadBudgetPlan("f-a")).toEqual(validPlan);
+    expect(loadBudgetPlan("f-z")?.feeProfile).toBe("ue");
+  });
+});
