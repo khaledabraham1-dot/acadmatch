@@ -147,8 +147,8 @@ export const COUNTRY_BUDGET_RULES: Record<string, CountryBudgetRules> = {
     visaMonthlyMinimum: {
       cents: 87_750,
       academicYear: "2026-2027",
-      source:
-        "https://www.japon.campusfrance.org/fr/modification-du-montant-des-ressources-exigees-pour-les-demandes-de-visa-etudiant-a-compter-du-1er",
+      // Service-Public (vérifié le 01/08/2026), recoupé avec l'annonce de Campus France du 24/07/2026.
+      source: "https://www.service-public.gouv.fr/particuliers/vosdroits/F2231",
       note: "Minimum exigé pour les demandes de visa étudiant déposées depuis le 1er août 2026 (615 €/mois auparavant). Montant revu à chaque revalorisation du SMIC.",
     },
   },

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { MapPin, MessagesSquare, PenLine, Trash2, Wallet } from "lucide-react";
+import { MapPin, MessagesSquare, PenLine, Stamp, Trash2, Wallet } from "lucide-react";
 import type { Application, StudyProgram } from "@/types";
 import { APPLICATION_STATUSES } from "@/types";
 import { documentSuggestionFor } from "@/data/documentSuggestions";
@@ -179,6 +179,10 @@ export function ApplicationCard({ application, formation, onChange, onRemove }: 
         <LinkButton href={`/budget?formationId=${formation.id}`} size="sm" variant="outline">
           <Wallet className="size-3.5" />
           Budget
+        </LinkButton>
+        <LinkButton href={`/visa?formationId=${formation.id}`} size="sm" variant="outline">
+          <Stamp className="size-3.5" />
+          Visa
         </LinkButton>
       </div>
     </Card>

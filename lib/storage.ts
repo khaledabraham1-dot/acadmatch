@@ -1,5 +1,6 @@
 import type { Application, BudgetPlan, InterviewPrep, InterviewQuestionCategory, StudentProfile } from "@/types";
 import { INTERVIEW_QUESTION_CATEGORIES } from "@/types";
+import type { VisaAnswers } from "@/lib/visa";
 
 /**
  * Persistance locale (aucun compte, aucune base de données pour ce prototype).
@@ -351,6 +352,40 @@ export function saveBudgetPlan(plan: BudgetPlan): void {
     const current = JSON.parse(storage.getItem(BUDGETS_KEY) ?? "{}") as Record<string, unknown>;
     const next = current && typeof current === "object" && !Array.isArray(current) ? current : {};
     storage.setItem(BUDGETS_KEY, JSON.stringify({ ...next, [plan.formationId]: plan }));
+  } catch {
+    // Non bloquant.
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Réponses du parcours visa (Phase 20) : nationalité et pays de résidence,
+// communes à toutes les formations (elles décrivent l'étudiant, pas la
+// formation). Relues avec validation : un pays inconnu est ignoré.
+// ---------------------------------------------------------------------------
+
+const VISA_ANSWERS_KEY = "acadmatch:visa";
+
+export function loadVisaAnswers(validCountries: readonly string[]): VisaAnswers | null {
+  const storage = getStorage();
+  if (!storage) return null;
+  try {
+    const parsed = JSON.parse(storage.getItem(VISA_ANSWERS_KEY) ?? "null") as Partial<VisaAnswers> | null;
+    if (!parsed || (parsed.citizenship !== "ue" && parsed.citizenship !== "hors-ue")) return null;
+    const residenceCountry =
+      typeof parsed.residenceCountry === "string" && validCountries.includes(parsed.residenceCountry)
+        ? parsed.residenceCountry
+        : "";
+    return { citizenship: parsed.citizenship, residenceCountry };
+  } catch {
+    return null;
+  }
+}
+
+export function saveVisaAnswers(answers: VisaAnswers): void {
+  const storage = getStorage();
+  if (!storage) return;
+  try {
+    storage.setItem(VISA_ANSWERS_KEY, JSON.stringify(answers));
   } catch {
     // Non bloquant.
   }

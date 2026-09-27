@@ -130,7 +130,13 @@ function lineTotal(line: BudgetLine): number {
   return line.cents * line.multiplier;
 }
 
-export function computeBudget(plan: BudgetPlan, formation: StudyProgram): BudgetSummary {
+/**
+ * `forceVisaCheck` : calcule la vérification visa quel que soit le tarif
+ * choisi — la page Visa sait, elle, que l'étudiant a besoin d'un visa
+ * (un étudiant hors UE « assimilé » paie le tarif UE mais peut en avoir
+ * besoin).
+ */
+export function computeBudget(plan: BudgetPlan, formation: StudyProgram, forceVisaCheck = false): BudgetSummary {
   const months = clampMonths(plan.months);
   const costs: BudgetLine[] = [];
   const missingOfficialAmounts: string[] = [];
@@ -189,7 +195,7 @@ export function computeBudget(plan: BudgetPlan, formation: StudyProgram): Budget
     balanceCents: totalResourcesCents - totalCostCents,
     costByKind,
     missingOfficialAmounts,
-    visaCheck: computeVisaCheck(plan, costs, totalResourcesCents, months, rules),
+    visaCheck: computeVisaCheck(plan, costs, totalResourcesCents, months, rules, forceVisaCheck),
   };
 }
 
@@ -206,8 +212,9 @@ function computeVisaCheck(
   totalResourcesCents: number,
   months: number,
   rules: (typeof COUNTRY_BUDGET_RULES)[string] | undefined,
+  force: boolean,
 ): VisaCheck | null {
-  if (plan.feeProfile !== "hors-ue" || !rules?.visaMonthlyMinimum) return null;
+  if ((!force && plan.feeProfile !== "hors-ue") || !rules?.visaMonthlyMinimum) return null;
   const fixedCosts = sum(costs.filter((l) => l.multiplier === 1).map(lineTotal));
   const availableMonthlyCents = Math.floor((totalResourcesCents - fixedCosts) / months);
   return {

@@ -80,6 +80,19 @@ export function toggleChecklistItemRequired(items: ChecklistItem[], id: string):
 }
 
 /**
+ * Ajoute des actions à une checklist en ignorant celles déjà présentes
+ * (même comparaison que pour les documents suggérés) — un second clic ne
+ * duplique rien, et une action déjà cochée reste cochée.
+ */
+export function addChecklistLabelsOnce(items: ChecklistItem[], labels: string[], source?: string): ChecklistItem[] {
+  const existingLabels = new Set(items.map((item) => normalize(item.label)));
+  const toAdd = labels
+    .filter((label) => !existingLabels.has(normalize(label)))
+    .map((label) => ({ id: randomChecklistItemId(), label, done: false, ...(source ? { source } : {}) }));
+  return [...items, ...toAdd];
+}
+
+/**
  * Ajoute les documents d'un jeu de suggestions officielles (Phase 15) à une
  * checklist, avec leur `required`/`source` déjà sourcés — ignore les
  * libellés déjà présents (comparaison insensible à la casse/accents) pour

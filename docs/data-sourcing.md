@@ -103,3 +103,18 @@ Mêmes règles que pour les formations, appliquées aux montants :
 indexé), les grilles des établissements, la CVEC et le seuil visa (indexé
 sur le SMIC) sont publiés pour la rentrée suivante entre juin et août.
 Mettre à jour `academicYear` avec chaque montant, et `BUDGET_VERIFIED_AT`.
+
+## Démarches visa (Phase 20) — `data/visa.ts`
+
+Version légère assumée : AcadMatch **oriente** (besoin d'un visa, procédure
+selon le pays de résidence, lien avec le budget) et **renvoie vers la source
+officielle** de chaque étape. Ne jamais y recopier la liste des pièces, les
+délais ni les frais : ils varient selon le consulat et changent souvent
+(lors de la vérification du 2026-09-27, deux sources donnaient deux montants
+différents pour la taxe de validation du VLS-TS). Un test interdit tout
+montant en euros dans les descriptions d'étapes.
+
+La liste des pays « Études en France » est copiée de la page **française**
+de Campus France (la version anglaise omettait le Pakistan) ; un test
+vérifie qu'elle compte toujours 73 pays. À revérifier à chaque mise à jour
+de cette page, et le seuil de ressources (indexé sur le SMIC) chaque année.
