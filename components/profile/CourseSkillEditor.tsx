@@ -11,13 +11,20 @@ interface CourseSkillEditorProps {
   items: string[];
   suggestions: string[];
   placeholder: string;
+  /** Vocabulaire reconnu par le catalogue, proposé en autocomplétion à la frappe. */
+  vocabulary?: string[];
   onChange: (items: string[]) => void;
 }
 
+/** Suggestions visibles avant « Voir plus ». */
+const VISIBLE_SUGGESTIONS = 10;
+
 /** Éditeur de liste (matières ou compétences) : suggestions rapides + ajout manuel. */
-export function CourseSkillEditor({ label, hint, items, suggestions, placeholder, onChange }: CourseSkillEditorProps) {
+export function CourseSkillEditor({ label, hint, items, suggestions, placeholder, vocabulary, onChange }: CourseSkillEditorProps) {
   const [draft, setDraft] = useState("");
+  const [showAll, setShowAll] = useState(false);
   const inputId = useId();
+  const listId = useId();
 
   function addItem(value: string) {
     const trimmed = value.trim();
@@ -72,7 +79,16 @@ export function CourseSkillEditor({ label, hint, items, suggestions, placeholder
             handleAdd();
           }}
           placeholder={placeholder}
+          list={vocabulary?.length ? listId : undefined}
+          autoComplete="off"
         />
+        {vocabulary && vocabulary.length > 0 && (
+          <datalist id={listId}>
+            {vocabulary.map((word) => (
+              <option key={word} value={word} />
+            ))}
+          </datalist>
+        )}
         <button
           type="button"
           onClick={handleAdd}
@@ -85,12 +101,21 @@ export function CourseSkillEditor({ label, hint, items, suggestions, placeholder
       </div>
 
       {remainingSuggestions.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {remainingSuggestions.slice(0, 8).map((s) => (
+        <div className="flex flex-wrap items-center gap-2">
+          {(showAll ? remainingSuggestions : remainingSuggestions.slice(0, VISIBLE_SUGGESTIONS)).map((s) => (
             <SuggestionChip key={s} onClick={() => addItem(s)}>
               {s}
             </SuggestionChip>
           ))}
+          {remainingSuggestions.length > VISIBLE_SUGGESTIONS && (
+            <button
+              type="button"
+              onClick={() => setShowAll((value) => !value)}
+              className="px-2 py-1.5 text-sm font-medium text-blue-600 hover:text-blue-700"
+            >
+              {showAll ? "Voir moins" : `Voir plus (${remainingSuggestions.length - VISIBLE_SUGGESTIONS})`}
+            </button>
+          )}
         </div>
       )}
     </div>

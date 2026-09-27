@@ -30,6 +30,7 @@ import {
   validateProfileDraft,
 } from "@/lib/profile/validation";
 import { generateId } from "@/lib/utils";
+import { catalogueVocabulary, suggestedCourses, suggestedSkills } from "@/lib/profile/suggestions";
 import { Card } from "@/components/ui/Card";
 import { Label, Select, Input, Textarea } from "@/components/ui/Field";
 import { MAX_EXPERIENCES_LENGTH } from "@/lib/ai/promptContext";
@@ -45,6 +46,8 @@ import { EXAMPLE_PROFILE_LABEL, EXAMPLE_STUDENT_PROFILE } from "@/data/example-p
 import { ArrowRight, FlaskConical } from "lucide-react";
 
 const DEFAULT_DOMAIN: Domain = "Informatique";
+const COURSE_VOCABULARY = catalogueVocabulary(FORMATIONS, "matiere");
+const SKILL_VOCABULARY = catalogueVocabulary(FORMATIONS, "competence");
 
 export function ProfileForm() {
   const router = useRouter();
@@ -89,6 +92,15 @@ export function ProfileForm() {
     setExperiences(existing.experiences ?? "");
     setHasExistingProfile(true);
   }, []);
+
+  const courseSuggestions = useMemo(
+    () => (fieldOfStudy ? suggestedCourses(FORMATIONS, fieldOfStudy, SUGGESTED_COURSES[fieldOfStudy]) : []),
+    [fieldOfStudy],
+  );
+  const skillSuggestions = useMemo(
+    () => (fieldOfStudy ? suggestedSkills(FORMATIONS, fieldOfStudy, SUGGESTED_SKILLS[fieldOfStudy]) : []),
+    [fieldOfStudy],
+  );
 
   const validation = useMemo(
     () =>
@@ -320,7 +332,8 @@ export function ProfileForm() {
         <CourseSkillEditor
           label="Vos matières"
           items={courses}
-          suggestions={fieldOfStudy ? SUGGESTED_COURSES[fieldOfStudy] : []}
+          suggestions={courseSuggestions}
+          vocabulary={COURSE_VOCABULARY}
           placeholder="ex : Bases de données"
           onChange={setCourses}
         />
@@ -334,7 +347,8 @@ export function ProfileForm() {
         <CourseSkillEditor
           label="Vos compétences"
           items={skills}
-          suggestions={fieldOfStudy ? SUGGESTED_SKILLS[fieldOfStudy] : []}
+          suggestions={skillSuggestions}
+          vocabulary={SKILL_VOCABULARY}
           placeholder="ex : Python"
           onChange={setSkills}
         />
