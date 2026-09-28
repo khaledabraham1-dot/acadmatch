@@ -37,6 +37,7 @@ import { MAX_EXPERIENCES_LENGTH } from "@/lib/ai/promptContext";
 import { Button } from "@/components/ui/Button";
 import { CourseSkillEditor } from "@/components/profile/CourseSkillEditor";
 import { TranscriptImport } from "@/components/profile/TranscriptImport";
+import { SyllabusImport } from "@/components/profile/SyllabusImport";
 import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
 import { DegreeEquivalenceHelper } from "@/components/profile/DegreeEquivalenceHelper";
 import { CatalogueScopeNotice } from "@/components/ui/CatalogueScopeNotice";
@@ -49,6 +50,18 @@ import { ArrowRight, FlaskConical } from "lucide-react";
 const DEFAULT_DOMAIN: Domain = "Informatique";
 const COURSE_VOCABULARY = catalogueVocabulary(FORMATIONS, "matiere");
 const SKILL_VOCABULARY = catalogueVocabulary(FORMATIONS, "competence");
+
+/** Ajoute les libellés importés absents de la liste (casse ignorée), dans l'ordre. */
+function appendMissing(current: string[], names: string[]): string[] {
+  const seen = new Set(current.map((c) => c.toLocaleLowerCase("fr")));
+  const additions = names.filter((n) => {
+    const key = n.toLocaleLowerCase("fr");
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  return [...current, ...additions];
+}
 
 export function ProfileForm() {
   const router = useRouter();
@@ -335,12 +348,7 @@ export function ProfileForm() {
             existingCourses={courses}
             currentLevel={currentLevel}
             currentStanding={academicStanding}
-            onAddCourses={(names) =>
-              setCourses((current) => [
-                ...current,
-                ...names.filter((n) => !current.some((c) => c.toLocaleLowerCase("fr") === n.toLocaleLowerCase("fr"))),
-              ])
-            }
+            onAddCourses={(names) => setCourses((current) => appendMissing(current, names))}
             onApplyLevel={setCurrentLevel}
             onApplyStanding={setAcademicStanding}
           />
@@ -360,6 +368,14 @@ export function ProfileForm() {
         <p className="mb-5 text-sm text-slate-500">
           Vos compétences techniques ou transversales (recommandé : au moins {RECOMMENDED_SKILLS}).
         </p>
+        <div className="mb-6">
+          <SyllabusImport
+            existingCourses={courses}
+            existingSkills={skills}
+            onAddCourses={(names) => setCourses((current) => appendMissing(current, names))}
+            onAddSkills={(names) => setSkills((current) => appendMissing(current, names))}
+          />
+        </div>
         <CourseSkillEditor
           label="Vos compétences"
           items={skills}

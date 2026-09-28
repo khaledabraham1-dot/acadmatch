@@ -99,6 +99,7 @@ d'appels avec RLS) — à exécuter dans le même SQL Editor Supabase que
 | Lettre de motivation (Phase 17) | `app/api/lettre-motivation/route.ts` | `lettre-motivation` |
 | Préparation aux entretiens (Phase 18) | `app/api/entretien/route.ts` | `entretien-questions`, `entretien-feedback` |
 | Import du relevé de notes | `app/api/releve/route.ts` | `releve-notes` |
+| Import du programme de formation | `app/api/programme/route.ts` | `programme-formation` |
 
 Toutes partagent `lib/ai/routeAuth.ts` (compte requis, dégradation 503/401,
 traduction des échecs typés), `lib/ai/promptContext.ts` (mise en forme du
@@ -130,3 +131,25 @@ la réponse à la place de l'étudiant — elle la commente.
   les matières lues soient comparables par le moteur, sans jamais
   rapprocher deux sujets différents ni remplacer un sujet par un format de
   cours (TP, projet, stage) — règle ajustée après deux essais réels.
+
+### Import du programme de formation — règles
+
+Complément du relevé (`lib/ai/syllabusPrompt.ts`,
+`components/profile/SyllabusImport.tsx`) : le relevé dit quels cours ont été
+**suivis**, le programme (descriptif des enseignements, syllabus, supplément
+au diplôme) dit ce qu'ils **contenaient**.
+
+- **Seuls les cours suivis comptent** : chaque module est rapproché des
+  matières déjà dans le profil ; le serveur n'accepte qu'un rapprochement
+  vers une matière réellement envoyée. Les modules non reconnus (souvent
+  des options non choisies) sont proposés décochés.
+- **Compétence = descriptif** : jamais déduite du seul intitulé ; un
+  module sans descriptif ne donne aucune compétence. Libellés au niveau
+  d'un thème, d'un outil ou d'un langage, dans le vocabulaire du catalogue
+  quand c'est le même sujet.
+- **PDF, photo ou texte collé** (40 000 caractères au plus), même modèle,
+  même quota et mêmes garanties de confidentialité que le relevé.
+- Vérifié le 2026-09-28 par un vrai appel (programme SMI, Kénitra) :
+  POO reconnue comme « Programmation orientée objet », option non suivie
+  laissée décochée, aucune donnée personnelle renvoyée (nom, CNE,
+  enseignant).

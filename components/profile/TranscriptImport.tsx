@@ -6,9 +6,9 @@ import { FileUp, Loader2, ScanText, ShieldCheck } from "lucide-react";
 import type { AcademicLevel, AcademicStanding } from "@/types";
 import { Button } from "@/components/ui/Button";
 import { aiErrorMessage, useAiAccess } from "@/components/ai/AiFeature";
+import { prepareUpload } from "@/components/profile/prepareUpload";
 import {
   ACCEPTED_TRANSCRIPT_TYPES,
-  MAX_TRANSCRIPT_BYTES,
   standingFromAverage,
   type TranscriptExtraction,
 } from "@/lib/ai/transcriptPrompt";
@@ -26,26 +26,6 @@ const IMPORT_ERRORS: Record<string, string> = {
   not_a_transcript: "Ce document ne ressemble pas à un relevé de notes. Vérifiez le fichier choisi.",
   no_course_found: "Aucune matière lisible n'a été trouvée. Essayez un PDF ou une photo plus nette, bien cadrée.",
 };
-
-/** Les photos de téléphone dépassent souvent 4 Mo : on les réduit dans le navigateur avant l'envoi. */
-const MAX_IMAGE_SIDE = 2000;
-
-async function prepareFile(file: File): Promise<File> {
-  if (!file.type.startsWith("image/")) return file;
-  try {
-    const bitmap = await createImageBitmap(file);
-    const scale = Math.min(1, MAX_IMAGE_SIDE / Math.max(bitmap.width, bitmap.height));
-    if (scale === 1 && file.size <= MAX_TRANSCRIPT_BYTES / 2) return file;
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.round(bitmap.width * scale);
-    canvas.height = Math.round(bitmap.height * scale);
-    canvas.getContext("2d")?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.85));
-    return blob ? new File([blob], "releve.jpg", { type: "image/jpeg" }) : file;
-  } catch {
-    return file;
-  }
-}
 
 interface TranscriptImportProps {
   existingCourses: string[];
@@ -85,7 +65,7 @@ export function TranscriptImport({
     setAddedCount(null);
     try {
       const body = new FormData();
-      body.append("file", await prepareFile(file));
+      body.append("file", await prepareUpload(file));
       const response = await fetch("/api/releve", { method: "POST", body });
       const data = await response.json().catch(() => null);
       if (!data?.ok) {
