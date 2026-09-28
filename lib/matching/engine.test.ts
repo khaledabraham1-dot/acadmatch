@@ -318,3 +318,32 @@ describe("computeCompatibility", () => {
     expect(computeCompatibility(uncomfortable, formation).breakdown.prerequisites).toBe(67);
   });
 });
+
+describe("langues déclarées comme preuve de compétence", () => {
+  const base: StudentProfile = {
+    currentLevel: "Licence 3",
+    fieldOfStudy: "Informatique",
+    currentDegree: "Licence Informatique",
+    courses: [{ id: "1", name: "Machine Learning" }],
+    skills: ["Python"],
+    goal: "Master",
+    languages: ["Français"],
+  };
+  const formation = makeFormation({
+    skills: [skill("Python"), skill("Anglais courant")],
+    prerequisites: [
+      requirement({ type: "niveau", value: "Licence 3" }),
+      requirement({ type: "competence", value: "Anglais courant" }),
+    ],
+  });
+
+  it("« Anglais » coché dans les langues satisfait « Anglais courant » sans devoir l'ajouter aux compétences", () => {
+    const withEnglish = computeCompatibility({ ...base, languages: ["Français", "Anglais"] }, formation);
+    expect(withEnglish.breakdown.skills).toBe(100);
+    expect(withEnglish.breakdown.prerequisites).toBe(100);
+    expect(withEnglish.gaps).not.toContain("Anglais courant");
+
+    const withoutEnglish = computeCompatibility(base, formation);
+    expect(withoutEnglish.gaps).toContain("Anglais courant");
+  });
+});

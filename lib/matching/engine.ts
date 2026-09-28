@@ -272,7 +272,7 @@ function computePrerequisitesScore(profile: StudentProfile, formation: StudyProg
         strength = bestMatch(namesOf(requirement), profile.courses.map((course) => course.name)).strength;
         break;
       case "competence":
-        strength = bestMatch(namesOf(requirement), profile.skills).strength;
+        strength = bestMatch(namesOf(requirement), [...profile.skills, ...profile.languages]).strength;
         break;
       default:
         strength = "manquant";
@@ -375,8 +375,11 @@ function isOutsideRequiredDomain(profile: StudentProfile, formation: StudyProgra
 export function computeCompatibility(profile: StudentProfile, formation: StudyProgram): CompatibilityResult {
   // Les matières et compétences renseignées forment un même bassin de
   // comparaison : un cours "Machine Learning" peut légitimement démontrer
-  // à la fois un contenu académique et une compétence.
-  const studentPool = [...profile.courses.map((course) => course.name), ...profile.skills];
+  // à la fois un contenu académique et une compétence. Les langues
+  // déclarées en font aussi partie : un étudiant qui a coché "Anglais" ne
+  // doit pas en plus penser à ajouter "Anglais courant" à ses compétences
+  // pour satisfaire une formation qui l'exige.
+  const studentPool = [...profile.courses.map((course) => course.name), ...profile.skills, ...profile.languages];
 
   const content = computeContentScore(formation.coreCourses, studentPool);
   const skills = computeContentScore(formation.skills, studentPool);

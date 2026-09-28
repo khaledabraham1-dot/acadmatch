@@ -62,6 +62,19 @@ const skill = (name: string, importance: Importance, aliases?: string[]) =>
 
 const VERIFIED_AT = "2026-09-17";
 
+/**
+ * Compétences = ce que le jury attend À L'ENTRÉE (2026-09-28), jamais ce que
+ * la formation enseigne : comparer un étudiant au contenu futur d'un master
+ * le pénaliserait pour ne pas déjà savoir ce qu'il vient y apprendre (le
+ * contenu, lui, est déjà couvert par `coreCourses`). Quand la page officielle
+ * énonce des compétences ou connaissances attendues (prérequis, examen
+ * d'entrée, spécialités recommandées, conditions d'accès), elles remplacent
+ * les compétences génériques et la citation figure en commentaire au-dessus
+ * de `skills`. Sinon, les compétences tirées du programme sont conservées —
+ * jamais d'invention pour combler le silence d'une page.
+ */
+const ENTRY_SKILLS_VERIFIED_AT = "2026-09-28";
+
 export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-m2ds-ip-paris",
@@ -232,13 +245,13 @@ export const FORMATIONS: StudyProgram[] = [
       course("Programmation scientifique", "importante"),
       course("Algèbre linéaire", "utile"),
     ],
+    // Page officielle : « compétences avancées dans le domaine des probabilités et de la statistique ».
     skills: [
+      skill("Probabilités", "essentielle"),
       skill("Statistiques", "essentielle"),
-      skill("Python", "importante"),
-      skill("Rigueur mathématique", "importante"),
     ],
     source: "https://isup.sorbonne-universite.fr/formations/filiere-data-science-ds",
-    verifiedAt: VERIFIED_AT,
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -418,13 +431,17 @@ export const FORMATIONS: StudyProgram[] = [
       course("Statistiques", "essentielle"),
       course("Cybersécurité", "utile", ["Cryptographie", "Sécurité informatique"]),
     ],
+    // Page officielle : « solid skills […] of the three fundamental pillars of data science -
+    // mathematics, statistics and computer science » + « good command of technical English ».
+    // Le Machine Learning s'apprend dans le master : ce n'est pas une compétence d'entrée.
     skills: [
-      skill("Machine Learning", "essentielle"),
+      skill("Mathématiques", "essentielle", ["Mathématiques appliquées", "Algèbre linéaire", "Analyse"]),
       skill("Statistiques", "essentielle"),
-      skill("Anglais courant", "essentielle"),
+      skill("Programmation", "essentielle", ["Python", "Java", "Programmation orientée objet"]),
+      skill("Anglais courant", "essentielle", ["Anglais technique"]),
     ],
     source: "https://uclouvain.be/en-prog-2026-date2m",
-    verifiedAt: "2026-09-21",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -479,13 +496,22 @@ export const FORMATIONS: StudyProgram[] = [
       // spécialisation (trouvé lors de l'audit Phase 7).
       course("Intelligence Artificielle", "utile", ["IA", "Machine Learning"]),
     ],
+    // Page officielle : « Skills in Mathematics (algebra, probability theory) and Informatics
+    // (C/C++/JAVA, algorithms, Computer architectures, Operating Systems principles), Data bases
+    // and Software Engineering are required. »
     skills: [
-      skill("Programmation", "essentielle"),
+      skill("Programmation C/C++/Java", "essentielle", ["Java", "C", "C++", "Programmation", "Programmation orientée objet"]),
+      skill("Algorithmique", "essentielle"),
+      skill("Architecture des ordinateurs", "importante"),
+      skill("Systèmes d'exploitation", "importante"),
       skill("Bases de données", "importante"),
+      skill("Génie logiciel", "importante"),
+      skill("Algèbre", "importante", ["Algèbre linéaire"]),
+      skill("Probabilités", "importante"),
       skill("Anglais courant", "essentielle"),
     ],
     source: "https://ensimag.grenoble-inp.fr/fr/formation/master-of-science-in-informatics-at-grenoble",
-    verifiedAt: "2026-09-21",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -606,9 +632,10 @@ export const FORMATIONS: StudyProgram[] = [
       course("Statistiques", "importante"),
       course("Économétrie", "utile"),
     ],
-    skills: [skill("Rigueur mathématique", "importante"), skill("Analyse de données", "utile")],
+    // Page officielle : « Il est recommandé d'avoir conservé un enseignement de mathématiques en terminale ».
+    skills: [skill("Mathématiques", "importante", ["Rigueur mathématique", "Mathématiques appliquées"])],
     source: "https://www.ut-capitole.fr/accueil/formations/nos-diplomes/licences/licence-l1-l2-mention-economie-parcours-type-economie-et-gestion",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -707,6 +734,13 @@ export const FORMATIONS: StudyProgram[] = [
         value: "Économie & Gestion",
         label: "Cursus en sciences de gestion ou compatible (université ou école de management)",
       },
+      {
+        id: "r3",
+        type: "matiere",
+        value: "Finance d'entreprise",
+        label: "Prérequis indispensables en finance d'entreprise",
+        importance: "essentielle",
+      },
     ],
     coreCourses: [
       course("Analyse financière", "essentielle", ["Analyse et évaluation financière"]),
@@ -715,9 +749,17 @@ export const FORMATIONS: StudyProgram[] = [
       course("Audit financier", "importante"),
       course("Stratégie financière", "utile"),
     ],
-    skills: [skill("Analyse financière", "essentielle"), skill("Anglais courant", "importante"), skill("Excel", "utile")],
+    // Page officielle : « prérequis indispensables en finance d'entreprise » ; « la connaissance de la
+    // comptabilité générale, de la fiscalité et du droit des sociétés » est un atout ; test d'anglais exigé.
+    skills: [
+      skill("Finance d'entreprise", "essentielle"),
+      skill("Comptabilité générale", "importante", ["Comptabilité"]),
+      skill("Fiscalité", "utile"),
+      skill("Droit des sociétés", "utile"),
+      skill("Anglais courant", "importante"),
+    ],
     source: "https://iae.univ-lyon3.fr/master-ingenierie-financiere-et-transaction-ift",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -839,9 +881,16 @@ export const FORMATIONS: StudyProgram[] = [
       course("Mécanique", "importante"),
       course("Programmation", "utile", ["Informatique"]),
     ],
-    skills: [skill("Rigueur mathématique", "essentielle"), skill("Rigueur scientifique", "importante")],
+    // Matières de l'examen spécial d'admission (page officielle) : algèbre, analyse, géométrie,
+    // géométrie analytique et trigonométrie, au niveau des mathématiques à 6 h/semaine.
+    skills: [
+      skill("Analyse", "essentielle"),
+      skill("Algèbre", "essentielle", ["Algèbre linéaire"]),
+      skill("Géométrie", "importante", ["Géométrie analytique"]),
+      skill("Trigonométrie", "importante"),
+    ],
     source: "https://www.programmes.uliege.be/cocoon/20262027/formations/condacp/A1ICIV01.html",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1136,9 +1185,17 @@ export const FORMATIONS: StudyProgram[] = [
       course("Droit de la concurrence", "importante"),
       course("Droit du commerce international", "utile"),
     ],
-    skills: [skill("Anglais juridique", "essentielle", ["Anglais courant"]), skill("Rédaction juridique", "importante")],
+    // Page officielle : « A solid grounding in the fundamental areas of public and private law »,
+    // anglais académique et juridique à l'écrit et à l'oral, « complex legal reasoning », travail en groupe.
+    skills: [
+      skill("Droit public", "essentielle", ["Droit constitutionnel", "Droit administratif", "Droit international public"]),
+      skill("Droit privé", "essentielle", ["Droit civil", "Droit des contrats"]),
+      skill("Anglais juridique", "essentielle", ["Anglais courant"]),
+      skill("Rédaction juridique", "importante", ["Raisonnement juridique"]),
+      skill("Travail en équipe", "utile"),
+    ],
     source: "https://www.ut-capitole.fr/home/course-offer/english-taught-courses/master-ll-m-international-economic-law",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1179,9 +1236,10 @@ export const FORMATIONS: StudyProgram[] = [
       course("Statistiques", "utile"),
       course("Programmation scientifique", "utile", ["Informatique"]),
     ],
-    skills: [skill("Rigueur mathématique", "essentielle"), skill("Python", "utile")],
+    // Page officielle : spécialité mathématiques en première et terminale « fortement recommandé[e] ».
+    skills: [skill("Mathématiques", "essentielle", ["Rigueur mathématique", "Spécialité mathématiques"])],
     source: "https://math.univ-rennes.fr/le-portail-mathematiques-et-applications-l1-l2",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1251,9 +1309,19 @@ export const FORMATIONS: StudyProgram[] = [
       course("Géométrie", "importante", ["Géométrie différentielle"]),
       course("Équations aux dérivées partielles", "utile", ["EDP"]),
     ],
-    skills: [skill("Rigueur mathématique", "essentielle"), skill("Anglais courant", "utile")],
+    // Prérequis des cours listés sur la page officielle : algèbre de L1-L2, « intégration et topologie
+    // de licence », « mesure et intégration L3 », analyse fonctionnelle L3, probabilités de licence ;
+    // « bonne connaissance de l'anglais à la lecture » pour certaines options.
+    skills: [
+      skill("Algèbre", "essentielle", ["Algèbre linéaire"]),
+      skill("Topologie", "importante"),
+      skill("Théorie de la mesure et intégration", "importante", ["Intégration", "Théorie de la mesure", "Mesure et intégration"]),
+      skill("Analyse fonctionnelle", "importante"),
+      skill("Probabilités", "importante"),
+      skill("Anglais courant", "utile"),
+    ],
     source: "https://www.universite-paris-saclay.fr/en/education/masters-degree/mathematics-and-applications/m1-mathematiques-fondamentales-et-applications",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1293,9 +1361,14 @@ export const FORMATIONS: StudyProgram[] = [
       course("Programmation scientifique", "importante", ["Programmation numérique"]),
       course("Cryptographie", "utile"),
     ],
-    skills: [skill("Anglais courant", "essentielle"), skill("Python", "importante"), skill("Rigueur mathématique", "importante")],
+    // Page officielle : « background in both mathematics and numerical programming », anglais B2.
+    skills: [
+      skill("Mathématiques", "essentielle", ["Mathématiques appliquées", "Analyse", "Algèbre linéaire", "Rigueur mathématique"]),
+      skill("Programmation numérique", "essentielle", ["Programmation scientifique", "Python", "Méthodes numériques"]),
+      skill("Anglais courant", "essentielle"),
+    ],
     source: "https://applied-math-master.imag.fr/admission/",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1374,9 +1447,15 @@ export const FORMATIONS: StudyProgram[] = [
       course("Chimie générale", "utile"),
       course("Méthodologie expérimentale", "utile", ["Travaux pratiques"]),
     ],
-    skills: [skill("Rigueur scientifique", "essentielle"), skill("Python", "utile")],
+    // Spécialités recommandées par la page officielle : « Mathématiques, Physique-Chimie ou Sciences de
+    // l'Ingénieur ; Maths expertes est un plus ».
+    skills: [
+      skill("Mathématiques", "importante", ["Spécialité mathématiques", "Mathématiques appliquées"]),
+      skill("Physique-chimie", "importante", ["Physique", "Physique générale", "Sciences de l'ingénieur"]),
+      skill("Mathématiques expertes", "utile"),
+    ],
     source: "https://licence-physique.edu.umontpellier.fr/l1-physique/",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1410,9 +1489,15 @@ export const FORMATIONS: StudyProgram[] = [
       course("Mathématiques appliquées", "importante"),
       course("Biologie cellulaire", "utile", ["Biologie"]),
     ],
-    skills: [skill("Rigueur scientifique", "essentielle"), skill("Expérimentation", "importante")],
+    // Profil décrit par la page officielle : « à l'aise en mathématiques et en sciences », rigueur et
+    // précision — sans exiger d'options avancées dans le secondaire (d'où « importante », pas « essentielle »).
+    skills: [
+      skill("Mathématiques", "importante", ["Mathématiques appliquées"]),
+      skill("Sciences (chimie, physique)", "importante", ["Chimie générale", "Physique-chimie", "Physique générale", "Chimie"]),
+      skill("Rigueur scientifique", "importante"),
+    ],
     source: "https://www.unamur.be/fr/bachelier-en-sciences-chimiques-2026-2027",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1448,9 +1533,16 @@ export const FORMATIONS: StudyProgram[] = [
       course("Spectroscopie", "importante", ["Détermination structurale"]),
       course("Chimie physique", "utile"),
     ],
-    skills: [skill("Expérimentation", "essentielle", ["Synthèse"]), skill("Anglais courant", "importante")],
+    // Page officielle : « Un bon niveau en chimie organique, inorganique et chimie organométallique est
+    // attendu » ; français et anglais B2.
+    skills: [
+      skill("Chimie organique", "essentielle"),
+      skill("Chimie inorganique", "essentielle", ["Chimie de coordination"]),
+      skill("Chimie organométallique", "importante"),
+      skill("Anglais courant", "importante"),
+    ],
     source: "https://chimie.unistra.fr/formation/master/odf-parcours-chimie-moleculaire-et-supramoleculaire-PR402-15010/",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1521,9 +1613,15 @@ export const FORMATIONS: StudyProgram[] = [
       course("Physique théorique", "utile"),
       course("Analyse", "utile", ["Mathématiques appliquées"]),
     ],
-    skills: [skill("Anglais courant", "essentielle"), skill("Rigueur scientifique", "essentielle")],
+    // Page officielle : « a solid basic education in fundamental physics and mathematics » ; entrée
+    // directe en M2 : « thorough training in quantum mechanics and statistical physics ».
+    skills: [
+      skill("Physique fondamentale", "essentielle", ["Physique générale", "Physique quantique", "Mécanique quantique", "Physique statistique"]),
+      skill("Mathématiques", "essentielle", ["Mathématiques appliquées", "Analyse", "Algèbre linéaire"]),
+      skill("Anglais courant", "essentielle"),
+    ],
     source: "https://psl.eu/en/education/master-s-degree-physics",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1565,9 +1663,15 @@ export const FORMATIONS: StudyProgram[] = [
       course("Génétique", "utile"),
       course("Écologie", "utile"),
     ],
-    skills: [skill("Rigueur scientifique", "importante"), skill("Expérimentation", "utile")],
+    // Page officielle : « d'avoir suivi les spécialités SVT et Physique-Chimie ou Sciences de la Vie et
+    // de la Terre et Mathématiques » (recommandé).
+    skills: [
+      skill("Sciences de la vie et de la Terre (SVT)", "importante", ["SVT", "Biologie", "Biologie cellulaire"]),
+      skill("Physique-chimie", "utile", ["Chimie générale", "Physique générale"]),
+      skill("Mathématiques", "utile", ["Mathématiques appliquées"]),
+    ],
     source: "https://fst.univ-lorraine.fr/formations/licence-sciences-de-la-vie/",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1601,9 +1705,14 @@ export const FORMATIONS: StudyProgram[] = [
       course("Génétique", "utile"),
       course("Physiologie", "utile"),
     ],
-    skills: [skill("Rigueur scientifique", "importante"), skill("Expérimentation", "utile")],
+    // Conditions ULB pour les candidats hors UE : au moins 12/20 dans les matières liées — pour les
+    // sciences, « seconde langue, mathématiques et sciences ».
+    skills: [
+      skill("Mathématiques", "importante", ["Mathématiques appliquées"]),
+      skill("Sciences (biologie, chimie, physique)", "importante", ["Biologie", "Biologie cellulaire", "Chimie générale", "Physique générale", "SVT", "Physique-chimie"]),
+    ],
     source: "https://www.ulb.be/fr/programme/ba-biol",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1637,9 +1746,13 @@ export const FORMATIONS: StudyProgram[] = [
       course("Immunologie", "utile"),
       course("Microbiologie", "utile"),
     ],
-    skills: [skill("Expérimentation", "essentielle"), skill("Anglais courant", "utile")],
+    // Page officielle : licence Sciences de la vie « avec de solides connaissances en biologie générale ».
+    skills: [
+      skill("Biologie générale", "essentielle", ["Biologie", "Biologie cellulaire", "Biologie moléculaire", "Génétique", "Physiologie"]),
+      skill("Anglais courant", "utile"),
+    ],
     source: "https://sciences.sorbonne-universite.fr/formation-sciences/offre-de-formation/masters/master-biologie-moleculaire-et-cellulaire-bmc-2",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1671,7 +1784,12 @@ export const FORMATIONS: StudyProgram[] = [
       course("Bases de données", "utile"),
       course("Biologie moléculaire", "utile"),
     ],
-    skills: [skill("Python", "utile"), skill("R", "utile"), skill("Anglais courant", "utile")],
+    // Master pensé pour des biologistes, « aucun prérequis en informatique » : Python ou R n'y sont pas
+    // des compétences d'entrée (ils s'apprennent en M1) — on attend une base en biologie.
+    skills: [
+      skill("Biologie", "importante", ["Biologie cellulaire", "Biologie moléculaire", "Génétique", "Biochimie"]),
+      skill("Anglais courant", "utile"),
+    ],
     source: "https://biologie.u-bordeaux.fr/formation/master/master-bio-informatique",
     verifiedAt: "2026-09-27",
     verificationStatus: "vérifiée",
@@ -1823,9 +1941,16 @@ export const FORMATIONS: StudyProgram[] = [
       course("Institutions politiques", "importante"),
       course("Communication politique", "utile"),
     ],
-    skills: [skill("Rédaction académique", "essentielle"), skill("Argumentation", "importante")],
+    // Page officielle : la commission privilégie le « niveau de formation antérieure en sciences
+    // sociales du politique (science politique, histoire, sociologie, philosophie) ».
+    skills: [
+      skill("Science politique", "essentielle", ["Sociologie politique", "Institutions politiques", "Théorie politique", "Histoire des idées politiques"]),
+      skill("Sociologie", "importante"),
+      skill("Histoire", "utile", ["Histoire politique"]),
+      skill("Philosophie", "utile"),
+    ],
     source: "https://formations.pantheonsorbonne.fr/fr/catalogue-des-formations/master-M/master-science-politique-KBVX30AP.html",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1859,9 +1984,19 @@ export const FORMATIONS: StudyProgram[] = [
       course("Droit international", "utile"),
       course("Études régionales", "utile"),
     ],
-    skills: [skill("Anglais courant", "importante"), skill("Argumentation", "importante")],
+    // Conditions d'accès officielles (prog-2026-spri2m-cond_adm) : accès direct avec 35 crédits de
+    // sciences politiques couvrant introduction à la science politique, méthodes en sciences sociales,
+    // géopolitique, relations internationales, institutions et politiques européennes, et anglais B2.
+    skills: [
+      skill("Science politique", "essentielle", ["Introduction à la science politique", "Institutions politiques", "Sociologie politique"]),
+      skill("Méthodes en sciences sociales", "importante", ["Méthodologie de recherche", "Méthodes des sciences sociales"]),
+      skill("Géopolitique", "importante"),
+      skill("Relations internationales", "importante"),
+      skill("Institutions européennes", "importante", ["Institutions et politiques européennes", "Droit de l'Union européenne"]),
+      skill("Anglais courant", "essentielle"),
+    ],
     source: "https://uclouvain.be/prog-2026-spri2m",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_SKILLS_VERIFIED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },

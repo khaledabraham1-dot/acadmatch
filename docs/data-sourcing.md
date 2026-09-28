@@ -41,6 +41,26 @@ comme telle est toujours préférable à une donnée fausse et silencieuse.
    npm run test                 # régressions du moteur/recherche/intégrité
    ```
 
+## Compétences (`skills`) : ce qui est attendu à l'entrée
+
+Depuis le 2026-09-28, `skills` décrit ce que le jury attend **avant**
+l'entrée, jamais ce que la formation enseigne (le contenu est dans
+`coreCourses`). Sinon, un étudiant de L3 serait pénalisé pour ne pas déjà
+maîtriser le Machine Learning qu'un master va justement lui apprendre.
+
+- **Où chercher** : prérequis ou « profil attendu » de la page de la
+  formation, page « conditions d'accès » (UCLouvain : suffixe `-cond_adm`),
+  programme de l'examen d'entrée (ULiège), spécialités de lycée
+  recommandées (licences françaises).
+- **Citer** la phrase officielle en commentaire au-dessus de `skills`.
+- **Page muette** : garder les compétences tirées du programme, sans
+  inventer. Au 2026-09-28, 19 fiches sur 48 ont des compétences d'entrée
+  sourcées ; Mon Master (application JavaScript) n'est pas lisible
+  automatiquement et reste la prochaine source à exploiter.
+- **Ne pas confondre avec les langues** : l'étudiant déclare ses langues
+  dans son profil, et le moteur les compte comme preuve (« Anglais » satisfait
+  « Anglais courant »).
+
 ## `institution.country`
 
 Ajouté en Phase 1 (architecture internationale) pour remplacer un pays

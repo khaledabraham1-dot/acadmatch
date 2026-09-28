@@ -253,3 +253,48 @@ describe("séparation Physique / Chimie (ex-« Sciences fondamentales »)", () =
     }
   });
 });
+
+describe("compétences attendues à l'entrée, tirées des pages officielles (2026-09-28)", () => {
+  it("un L3 informatique qui a exactement ce que MoSIG exige (C/Java, algorithmique, systèmes, bases de données) voit MoSIG en tête des masters", () => {
+    const profile: StudentProfile = {
+      currentLevel: "Licence 3",
+      fieldOfStudy: "Informatique",
+      currentDegree: "Licence Informatique",
+      courses: [
+        { id: "1", name: "Algorithmique" },
+        { id: "2", name: "Bases de données" },
+        { id: "3", name: "Systèmes d'exploitation" },
+        { id: "4", name: "Architecture des ordinateurs" },
+        { id: "5", name: "Probabilités" },
+      ],
+      skills: ["Java", "C"],
+      goal: "Master",
+      languages: ["Français", "Anglais"],
+    };
+    const masters = FORMATIONS.filter((f) => f.goal === "Master")
+      .map((f) => ({ id: f.id, score: computeCompatibility(profile, f).overallScore }))
+      .sort((a, b) => b.score - a.score);
+    expect(masters[0].id).toBe("f-mosig-grenoble-inp");
+  });
+
+  it("le master de bio-informatique de Bordeaux, sans prérequis en informatique, ne pénalise pas un biologiste qui ne code pas", () => {
+    const biologist: StudentProfile = {
+      currentLevel: "Licence 3",
+      fieldOfStudy: "Biologie & Santé",
+      currentDegree: "Licence Sciences de la vie",
+      courses: [
+        { id: "1", name: "Biologie moléculaire" },
+        { id: "2", name: "Génétique" },
+        { id: "3", name: "Biostatistiques" },
+      ],
+      skills: [],
+      goal: "Master",
+      languages: ["Français"],
+    };
+    const bioinfo = FORMATIONS.find((f) => f.id === "f-master-bioinformatique-bordeaux")!;
+    const withPython = computeCompatibility({ ...biologist, skills: ["Python"] }, bioinfo);
+    const withoutPython = computeCompatibility(biologist, bioinfo);
+    expect(withoutPython.overallScore).toBe(withPython.overallScore);
+    expect(withoutPython.gaps).not.toContain("Python");
+  });
+});
