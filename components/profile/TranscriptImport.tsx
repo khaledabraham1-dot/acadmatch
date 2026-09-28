@@ -118,7 +118,7 @@ export function TranscriptImport({
       <div>
         {authLoading ? null : !user ? (
           <p className="mt-3 text-sm text-blue-800">
-            <Link href="/compte" className="font-medium underline underline-offset-2">
+            <Link href="/compte?next=/profil" className="font-medium underline underline-offset-2">
               Connectez-vous
             </Link>{" "}
             (compte gratuit) pour importer votre relevé — vous pouvez aussi saisir vos matières ci-dessous.

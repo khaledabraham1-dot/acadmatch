@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Hint, Input, Label } from "@/components/ui/Field";
+import { safeInternalPath } from "@/lib/profile/validation";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -23,9 +24,11 @@ export function LoginForm() {
     event.preventDefault();
     setStatus("sending");
     const supabase = createClient();
+    // `?next=` : revenir là où l'étudiant a demandé à se connecter (ex : l'import de documents du profil).
+    const next = safeInternalPath(new URLSearchParams(window.location.search).get("next"), "/compte");
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${window.location.origin}/auth/confirm?next=/compte` },
+      options: { emailRedirectTo: `${window.location.origin}/auth/confirm?next=${encodeURIComponent(next)}` },
     });
     setStatus(error ? "error" : "sent");
   }

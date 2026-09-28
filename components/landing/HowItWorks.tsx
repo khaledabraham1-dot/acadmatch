@@ -3,15 +3,15 @@ import { ClipboardList, Search, LineChart } from "lucide-react";
 const STEPS = [
   {
     icon: ClipboardList,
-    title: "Renseignez votre parcours",
+    title: "Partez de vos documents",
     description:
-      "Niveau, diplôme, domaine, matières étudiées et compétences — en quelques minutes, sans compte.",
+      "Importez votre relevé de notes et le programme de vos cours (compte gratuit), ou renseignez votre parcours à la main, sans compte.",
   },
   {
     icon: Search,
     title: "Choisissez une formation",
     description:
-      "Parcourez des formations françaises vérifiées, ou comparez-en 2 à 3 côte à côte.",
+      "Parcourez des formations vérifiées en France et en Belgique, ou comparez-en 2 à 3 côte à côte.",
   },
   {
     icon: LineChart,
@@ -28,7 +28,7 @@ export function HowItWorks() {
         <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
           Comment ça marche
         </h2>
-        <p className="mt-3 text-slate-500">Trois étapes, aucune inscription.</p>
+        <p className="mt-3 text-slate-500">Trois étapes. Un compte gratuit seulement pour importer vos documents.</p>
       </div>
       <div className="grid gap-6 sm:grid-cols-3">
         {STEPS.map((step, index) => {

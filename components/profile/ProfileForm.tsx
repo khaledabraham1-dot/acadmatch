@@ -38,6 +38,7 @@ import { Button } from "@/components/ui/Button";
 import { CourseSkillEditor } from "@/components/profile/CourseSkillEditor";
 import { TranscriptImport } from "@/components/profile/TranscriptImport";
 import { SyllabusImport } from "@/components/profile/SyllabusImport";
+import { DocumentQuickStart } from "@/components/profile/DocumentQuickStart";
 import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
 import { DegreeEquivalenceHelper } from "@/components/profile/DegreeEquivalenceHelper";
 import { CatalogueScopeNotice } from "@/components/ui/CatalogueScopeNotice";
@@ -79,14 +80,22 @@ export function ProfileForm() {
   const [academicStanding, setAcademicStanding] = useState<AcademicStanding>(NEUTRAL_ACADEMIC_STANDING);
   const [experiences, setExperiences] = useState("");
   const [hasExistingProfile, setHasExistingProfile] = useState(false);
+  // Nouveau visiteur (aucun profil enregistré) : les imports de documents
+  // passent en tête du formulaire. Décidé une seule fois au montage — ils ne
+  // doivent pas changer de place (et perdre leur état) pendant l'import.
+  const [startWithDocuments, setStartWithDocuments] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
 
   // Pré-remplit le formulaire si un profil existe déjà (édition, retour en arrière).
   useEffect(() => {
     const existing = loadProfile();
-    if (!existing) return;
+    if (!existing) {
+      // localStorage n'existe pas côté serveur : décision possible seulement après le montage.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setStartWithDocuments(true);
+      return;
+    }
     // localStorage n'existe pas côté serveur : on ne peut hydrater le formulaire qu'après le montage.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentLevel(existing.currentLevel);
     if (isCurrentDomain(existing.fieldOfStudy)) {
       setFieldOfStudy(existing.fieldOfStudy);
@@ -196,8 +205,29 @@ export function ProfileForm() {
     }
   }
 
+  const transcriptImport = (
+    <TranscriptImport
+      existingCourses={courses}
+      currentLevel={currentLevel}
+      currentStanding={academicStanding}
+      onAddCourses={(names) => setCourses((current) => appendMissing(current, names))}
+      onApplyLevel={setCurrentLevel}
+      onApplyStanding={setAcademicStanding}
+    />
+  );
+  const syllabusImport = (
+    <SyllabusImport
+      existingCourses={courses}
+      existingSkills={skills}
+      onAddCourses={(names) => setCourses((current) => appendMissing(current, names))}
+      onAddSkills={(names) => setSkills((current) => appendMissing(current, names))}
+    />
+  );
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+      {startWithDocuments && <DocumentQuickStart transcriptImport={transcriptImport} syllabusImport={syllabusImport} />}
+
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4">
         <p className="text-sm text-slate-600">
           Pressé ? Chargez un parcours type pour voir immédiatement comment fonctionne AcadMatch.
@@ -343,16 +373,7 @@ export function ProfileForm() {
           Ajoutez les matières marquantes de votre parcours (recommandé : au moins{" "}
           {RECOMMENDED_COURSES}). Elles seront comparées au contenu des formations.
         </p>
-        <div className="mb-6">
-          <TranscriptImport
-            existingCourses={courses}
-            currentLevel={currentLevel}
-            currentStanding={academicStanding}
-            onAddCourses={(names) => setCourses((current) => appendMissing(current, names))}
-            onApplyLevel={setCurrentLevel}
-            onApplyStanding={setAcademicStanding}
-          />
-        </div>
+        {!startWithDocuments && <div className="mb-6">{transcriptImport}</div>}
         <CourseSkillEditor
           label="Vos matières"
           items={courses}
@@ -368,14 +389,7 @@ export function ProfileForm() {
         <p className="mb-5 text-sm text-slate-500">
           Vos compétences techniques ou transversales (recommandé : au moins {RECOMMENDED_SKILLS}).
         </p>
-        <div className="mb-6">
-          <SyllabusImport
-            existingCourses={courses}
-            existingSkills={skills}
-            onAddCourses={(names) => setCourses((current) => appendMissing(current, names))}
-            onAddSkills={(names) => setSkills((current) => appendMissing(current, names))}
-          />
-        </div>
+        {!startWithDocuments && <div className="mb-6">{syllabusImport}</div>}
         <CourseSkillEditor
           label="Vos compétences"
           items={skills}
