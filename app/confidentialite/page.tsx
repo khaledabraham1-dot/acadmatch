@@ -70,7 +70,17 @@ export default function ConfidentialitePage() {
         </p>
       </Section>
 
-      <Section title="3. Avec un compte (optionnel)">
+      <Section title="3. Mesure d'audience, sans cookie">
+        <p>
+          Pour savoir quelles pages sont utiles et où les étudiants décrochent, nous comptons les visites avec
+          Vercel Web Analytics. Aucun cookie n&apos;est déposé et aucun identifiant ne vous suit d&apos;un jour à
+          l&apos;autre : chaque visite est rattachée à une empreinte calculée à partir de la requête, remise à
+          zéro chaque jour. Nous ne voyons que des chiffres agrégés (pages vues, pays, type d&apos;appareil,
+          site d&apos;origine), jamais qui vous êtes ni le contenu de votre profil.
+        </p>
+      </Section>
+
+      <Section title="4. Avec un compte (optionnel)">
         <ul>
           <li>
             <strong>Votre adresse e-mail</strong>, pour vous envoyer un lien de connexion. Aucun mot de passe
@@ -92,7 +102,7 @@ export default function ConfidentialitePage() {
         </ul>
       </Section>
 
-      <Section title="4. Fonctionnalités d'intelligence artificielle">
+      <Section title="5. Fonctionnalités d'intelligence artificielle">
         <p>
           Ces fonctionnalités exigent un compte et utilisent Claude, le modèle d&apos;Anthropic. Voici exactement
           ce qui lui est transmis :
@@ -123,14 +133,15 @@ export default function ConfidentialitePage() {
         </p>
       </Section>
 
-      <Section title="5. Pourquoi nous avons le droit de traiter ces données">
+      <Section title="6. Pourquoi nous avons le droit de traiter ces données">
         <ul>
           <li>
             <strong>Exécution du service que vous demandez</strong> : compte, sauvegarde du profil, fonctionnalités
             d&apos;IA.
           </li>
           <li>
-            <strong>Intérêt légitime</strong> : sécurité du site, limites d&apos;usage, prévention des abus.
+            <strong>Intérêt légitime</strong> : sécurité du site, limites d&apos;usage, prévention des abus, mesure
+            d&apos;audience anonyme.
           </li>
           <li>
             <strong>Votre consentement</strong> : transmission d&apos;un document à l&apos;IA, que vous donnez en
@@ -140,7 +151,7 @@ export default function ConfidentialitePage() {
         </ul>
       </Section>
 
-      <Section title="6. Prestataires et transferts hors de l'Union européenne">
+      <Section title="7. Prestataires et transferts hors de l'Union européenne">
         <p>Nous ne vendons ni ne partageons vos données. Seuls ces prestataires y accèdent, pour faire fonctionner le service :</p>
         <ul>
           {SUBPROCESSORS.map((processor) => (
@@ -156,7 +167,7 @@ export default function ConfidentialitePage() {
         </p>
       </Section>
 
-      <Section title="7. Durée de conservation">
+      <Section title="8. Durée de conservation">
         <ul>
           <li>Documents importés : non conservés par AcadMatch (30 jours au plus chez Anthropic, voir ci-dessus).</li>
           <li>Compte, profil sauvegardé et compteur d&apos;usage : jusqu&apos;à la suppression de votre compte.</li>
@@ -165,7 +176,7 @@ export default function ConfidentialitePage() {
         </ul>
       </Section>
 
-      <Section title="8. Vos droits">
+      <Section title="9. Vos droits">
         <p>
           Vous pouvez accéder à vos données, les corriger, les supprimer, en obtenir une copie, vous opposer à un
           traitement ou en demander la limitation. Deux droits sont disponibles directement dans{" "}
@@ -193,14 +204,14 @@ export default function ConfidentialitePage() {
         </ul>
       </Section>
 
-      <Section title="9. Mineurs">
+      <Section title="10. Mineurs">
         <p>
           AcadMatch s&apos;adresse aux lycéens et étudiants. Si vous avez moins de 15 ans, demandez l&apos;accord
           d&apos;un parent avant de créer un compte ou d&apos;importer un document.
         </p>
       </Section>
 
-      <Section title="10. Sécurité">
+      <Section title="11. Sécurité">
         <p>
           Connexions chiffrées (HTTPS), accès à la base limité à votre propre ligne par des règles appliquées
           côté serveur, clés secrètes jamais exposées au navigateur, et en-têtes de sécurité empêchant le site
@@ -209,7 +220,7 @@ export default function ConfidentialitePage() {
         </p>
       </Section>
 
-      <Section title="11. Modifications">
+      <Section title="12. Modifications">
         <p>
           Cette politique suit le fonctionnement réel du site : elle est mise à jour dès qu&apos;une
           fonctionnalité change la manière dont vos données sont utilisées. La date en haut de page indique la

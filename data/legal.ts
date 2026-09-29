@@ -10,7 +10,7 @@
  */
 
 /** Date de dernière mise à jour affichée en tête des trois pages (AAAA-MM-JJ). */
-export const LEGAL_UPDATED_AT = "2026-09-29";
+export const LEGAL_UPDATED_AT = "2026-09-30";
 
 export const EDITOR = {
   /** Nom complet de l'éditeur, personne physique (obligatoire avant mise en ligne). */
@@ -46,7 +46,7 @@ export interface Subprocessor {
 export const SUBPROCESSORS: Subprocessor[] = [
   {
     name: "Vercel",
-    role: "Hébergement du site et exécution des fonctions serveur",
+    role: "Hébergement du site, exécution des fonctions serveur et mesure d'audience sans cookie",
     location: "États-Unis (réseau mondial)",
     privacyUrl: "https://vercel.com/legal/privacy-policy",
   },

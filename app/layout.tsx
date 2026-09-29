@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { SITE_NAME, siteUrl } from "@/lib/site";
 
@@ -34,6 +35,15 @@ export const metadata: Metadata = {
   formatDetection: { telephone: false },
 };
 
+/**
+ * Vercel Web Analytics, sans cookie ni identifiant persistant : servi depuis
+ * notre propre domaine (/_vercel/insights), donc aucune origine tierce à
+ * ouvrir dans la CSP. Chargé seulement sur Vercel, où ce chemin existe.
+ * Script direct plutôt que le paquet @vercel/analytics, dont les peer
+ * dependencies optionnelles (SvelteKit, Vite 8) cassent l'installation npm.
+ */
+const WEB_ANALYTICS_ENABLED = process.env.VERCEL === "1";
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
@@ -42,6 +52,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-white text-slate-900">
         {children}
+        {WEB_ANALYTICS_ENABLED && <Script src="/_vercel/insights/script.js" strategy="afterInteractive" />}
       </body>
     </html>
   );
