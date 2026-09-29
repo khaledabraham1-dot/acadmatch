@@ -44,3 +44,14 @@ jobs:
       # se dégrade proprement sans Supabase ni clé IA (lib/supabase/config.ts).
       - name: Build
         run: npm run build
+      - name: Navigateur des tests de parcours
+        run: npx playwright install --with-deps chromium
+      - name: Parcours de bout en bout (ordinateur + mobile 360px)
+        run: npm run test:e2e
+      - name: Traces des échecs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: test-results/
+          retention-days: 7
