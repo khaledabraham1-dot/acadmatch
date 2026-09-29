@@ -8,15 +8,16 @@ questions (clé serveur, quotas, échecs) à chaque nouvelle feature.
 
 ## Ce qui existe
 
-- `lib/ai/config.ts` — `isAiConfigured()`, le modèle utilisé (`AI_MODEL`),
-  le quota journalier (`MAX_AI_REQUESTS_PER_DAY`).
+- `lib/ai/config.ts` — `isAiConfigured()`, les modèles (`AI_MODEL`,
+  `AI_EXTRACTION_MODEL`), les tarifs et le budget (voir « Budget IA » plus bas).
 - `lib/ai/client.ts` — client Anthropic serveur (`server-only`, clé jamais
   exposée au navigateur — même principe que `lib/supabase/admin.ts`).
-- `lib/ai/rateLimit.ts` — quota journalier par utilisateur, basé sur la
-  table `ai_usage` (Supabase, RLS scopée à `auth.uid()`).
+- `lib/ai/rateLimit.ts` — réservation puis règlement de chaque appel sur le
+  budget (fonctions Postgres de `supabase/migrations/0003_ai_budget.sql`).
 - `lib/ai/callAi.ts` — point d'entrée unique : `callAi({ userId, feature,
   system, messages })`, renvoie `{ ok: true, text }` ou `{ ok: false,
-  reason }` (`"not_configured" | "quota_exceeded" | "error"`) — jamais une
+  reason }` (`"not_configured" | "quota_exceeded" | "budget_exhausted" |
+  "document_too_long" | "error"`) — jamais une
   exception à gérer au cas par cas dans chaque feature.
 
 ## Décisions et pourquoi
@@ -153,3 +154,37 @@ au diplôme) dit ce qu'ils **contenaient**.
   POO reconnue comme « Programmation orientée objet », option non suivie
   laissée décochée, aucune donnée personnelle renvoyée (nom, CNE,
   enseignant).
+
+## Budget IA (audit pré-lancement, 2026-09-29)
+
+Le crédit Anthropic est limité : chaque appel payant passe par trois
+barrières, dans cet ordre.
+
+1. **Taille du document** (imports seulement) : les tokens sont comptés
+   gratuitement avant l'envoi ; au-delà de `MAX_IMPORT_INPUT_TOKENS`
+   (40 000), refus `document_too_long`, sans rien facturer ni décompter.
+2. **Quota de l'étudiant**, par famille et par jour UTC
+   (`USER_DAILY_LIMITS`) : 4 imports, 15 générations de texte.
+3. **Budget quotidien de tout le site**, en dollars : `AI_DAILY_BUDGET_USD`
+   (Vercel), 0,50 $ par défaut ; « 0 » coupe toute l'IA (interrupteur
+   d'urgence). C'est la vraie protection contre des comptes créés en série.
+
+La réservation (`reserve_ai_call`) est atomique — un verrou Postgres
+sérialise les appels simultanés, qui contournaient l'ancien « compter puis
+insérer » — et réserve le **pire cas** du coût (`ESTIMATED_COST_USD`) ;
+`settle_ai_call` le remplace ensuite par le coût réel (`costOfCall`, depuis
+l'usage renvoyé par l'API). Plusieurs appels en vol ne peuvent donc jamais
+dépasser le budget. Ces deux fonctions ne sont appelables qu'avec la clé
+secrète (serveur) ; le navigateur ne peut plus écrire dans `ai_usage`.
+
+En cas de doute on refuse : sans `SUPABASE_SECRET_KEY` ou si la base ne
+répond pas, aucun appel payant n'est fait.
+
+**Ordre de déploiement** : exécuter `0003_ai_budget.sql` dans Supabase
+AVANT de déployer ce code — sinon toutes les fonctionnalités IA échouent
+proprement (« erreur ») faute de fonction `reserve_ai_call`.
+
+**En complément, côté Anthropic** : fixer une limite de dépense mensuelle
+dans la console (Settings → Limits) et une clé dédiée à AcadMatch — le
+budget applicatif ne voit pas les autres projets qui partagent le crédit.
+

@@ -35,7 +35,13 @@ export function aiErrorResponse(reason: string, status: number): NextResponse {
 
 /** Traduit un échec typé de callAi en réponse HTTP. */
 export function aiFailureResponse(result: Extract<AiCallResult, { ok: false }>): NextResponse {
-  return aiErrorResponse(result.reason, result.reason === "quota_exceeded" ? 429 : 503);
+  const status =
+    result.reason === "quota_exceeded" || result.reason === "budget_exhausted"
+      ? 429
+      : result.reason === "document_too_long"
+        ? 413
+        : 503;
+  return aiErrorResponse(result.reason, status);
 }
 
 /** Corps JSON de la requête, ou null s'il est illisible. */
