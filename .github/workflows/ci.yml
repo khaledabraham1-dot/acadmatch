@@ -1,0 +1,45 @@
+# Vérifie chaque push et chaque pull request avant qu'un bug n'atteigne les
+# étudiants. Vercel déploie en parallèle : un ❌ ici signale un déploiement
+# à corriger (ou à annuler depuis le tableau de bord Vercel).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Chaque lundi : les fiches du catalogue vieillissent même sans commit
+    # (dates de vérification, sessions de candidature passées).
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Types
+        run: npx tsc --noEmit
+      - name: Tests
+        run: npm test
+      - name: Catalogue
+        run: npm run audit:catalogue
+      # Build sans aucune variable d'environnement : vérifie aussi que le site
+      # se dégrade proprement sans Supabase ni clé IA (lib/supabase/config.ts).
+      - name: Build
+        run: npm run build
