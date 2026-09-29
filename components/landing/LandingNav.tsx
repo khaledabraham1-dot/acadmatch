@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Logo } from "@/components/shell/Logo";
 import { LinkButton } from "@/components/ui/Button";
 
@@ -13,9 +14,9 @@ export function LandingNav() {
           <a href="#exemple" className="hover:text-slate-900">
             Exemple de résultat
           </a>
-          <a href="/recherche" className="hover:text-slate-900">
+          <Link href="/formations" className="hover:text-slate-900">
             Formations
-          </a>
+          </Link>
         </nav>
         {/*
           Vérifié au navigateur à 320px : "Analyser mon profil" ne tenait pas

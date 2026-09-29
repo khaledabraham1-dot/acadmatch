@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
+import { PRIVATE_PAGE_ROBOTS } from "@/lib/site";
 import { Suspense } from "react";
 import { AppShell } from "@/components/shell/AppShell";
 import { InterviewPrepView } from "@/components/interview/InterviewPrepView";
+
+export const metadata: Metadata = {
+  title: "Préparation aux entretiens",
+  robots: PRIVATE_PAGE_ROBOTS,
+};
 
 export default function EntretiensPage() {
   return (

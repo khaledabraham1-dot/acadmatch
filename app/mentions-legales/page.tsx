@@ -4,7 +4,8 @@ import { ContactEmail, EditorName, ExternalLink, LegalPage, Section } from "@/co
 import { EDITOR, HOST } from "@/data/legal";
 
 export const metadata: Metadata = {
-  title: "Mentions légales — AcadMatch",
+  title: "Mentions légales",
+  alternates: { canonical: "/mentions-legales" },
   description: "Éditeur, hébergeur et contact du site AcadMatch.",
 };
 

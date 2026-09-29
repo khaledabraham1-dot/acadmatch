@@ -33,8 +33,9 @@ jobs:
       - run: npm ci
       - name: Lint
         run: npm run lint
+      # PageProps / LayoutProps sont générés par Next (dossier .next, non versionné).
       - name: Types
-        run: npx tsc --noEmit
+        run: npx next typegen && npx tsc --noEmit
       - name: Tests
         run: npm test
       - name: Catalogue

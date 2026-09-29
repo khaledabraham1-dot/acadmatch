@@ -5,7 +5,8 @@ import { EDITOR } from "@/data/legal";
 import { USER_DAILY_LIMITS } from "@/lib/ai/config";
 
 export const metadata: Metadata = {
-  title: "Conditions d'utilisation — AcadMatch",
+  title: "Conditions d'utilisation",
+  alternates: { canonical: "/conditions" },
   description: "Les règles d'utilisation d'AcadMatch, ce que le score signifie et ce qu'il ne garantit pas.",
 };
 

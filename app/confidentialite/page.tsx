@@ -4,7 +4,8 @@ import { ContactEmail, EditorName, ExternalLink, LegalPage, Section } from "@/co
 import { AUTHORITIES, LOCAL_STORAGE_ITEMS, SUBPROCESSORS } from "@/data/legal";
 
 export const metadata: Metadata = {
-  title: "Politique de confidentialité — AcadMatch",
+  title: "Politique de confidentialité",
+  alternates: { canonical: "/confidentialite" },
   description:
     "Quelles données AcadMatch utilise, où elles sont stockées, combien de temps, et comment exercer vos droits.",
 };

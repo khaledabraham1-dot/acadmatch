@@ -5,6 +5,8 @@ import { Card } from "@/components/ui/Card";
 
 interface EligibilitySectionProps {
   formation: StudyProgram;
+  /** Page publique de la formation : aucun score n'est affiché au-dessus. */
+  standalone?: boolean;
 }
 
 /**
@@ -14,7 +16,7 @@ interface EligibilitySectionProps {
  * un pays non encore couvert par `data/eligibility.ts`, plutôt que
  * d'inventer un contenu générique.
  */
-export function EligibilitySection({ formation }: EligibilitySectionProps) {
+export function EligibilitySection({ formation, standalone = false }: EligibilitySectionProps) {
   const guide = ELIGIBILITY_GUIDES_BY_COUNTRY[formation.institution.country];
   if (!guide) return null;
 
@@ -26,8 +28,8 @@ export function EligibilitySection({ formation }: EligibilitySectionProps) {
       </h2>
       <p className="mb-4 text-sm text-slate-500">
         Ces parcours déterminent qui peut candidater par quelle voie (nationalité, pays de résidence) —
-        indépendamment de la compatibilité académique évaluée ci-dessus. Vérifiez toujours votre cas précis sur
-        la source officielle.
+        indépendamment de la compatibilité académique{standalone ? "" : " évaluée ci-dessus"}. Vérifiez toujours
+        votre cas précis sur la source officielle.
       </p>
       <ul className="space-y-2.5 text-sm text-slate-700">
         {guide.pathways.map((pathway) => (

@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
+import { PRIVATE_PAGE_ROBOTS } from "@/lib/site";
 import { AppShell } from "@/components/shell/AppShell";
 import { ApplicationsView } from "@/components/applications/ApplicationsView";
+
+export const metadata: Metadata = {
+  title: "Suivi des candidatures",
+  robots: PRIVATE_PAGE_ROBOTS,
+};
 
 export default function CandidaturesPage() {
   return (

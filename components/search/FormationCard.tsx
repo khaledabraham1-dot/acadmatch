@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { MapPin, GraduationCap, ChevronDown, ArrowRight, Bookmark, BookmarkCheck } from "lucide-react";
 import type { StudyProgram } from "@/types";
 import { Card } from "@/components/ui/Card";
@@ -9,6 +10,7 @@ import { LinkButton } from "@/components/ui/Button";
 import { getCompatibilityLabel } from "@/lib/matching/labels";
 import { MAX_COMPARE_FORMATIONS } from "@/lib/storage";
 import { cn } from "@/lib/utils";
+import { formationPath } from "@/lib/site";
 
 interface FormationCardProps {
   formation: StudyProgram;
@@ -63,7 +65,15 @@ export function FormationCard({
               <Badge tone="neutral">{formation.field}</Badge>
               {formation.language !== "Français" && <Badge tone="neutral">{formation.language}</Badge>}
             </div>
-            <h3 className="text-lg font-semibold text-slate-900">{formation.name}</h3>
+            <h3 className="text-lg font-semibold text-slate-900">
+              {formation.demo ? (
+                formation.name
+              ) : (
+                <Link href={formationPath(formation)} className="hover:text-blue-700 hover:underline">
+                  {formation.name}
+                </Link>
+              )}
+            </h3>
             <p className="mt-0.5 flex items-center gap-1.5 text-sm text-slate-500">
               <GraduationCap className="size-4" />
               {formation.institution.name}
