@@ -14,7 +14,7 @@ export const LEGAL_UPDATED_AT = "2026-09-29";
 
 export const EDITOR = {
   /** Nom complet de l'éditeur, personne physique (obligatoire avant mise en ligne). */
-  name: "",
+  name: "SOULEYMANE Khaled",
   status: "Particulier (personne physique), éditeur non professionnel",
   country: "Bénin",
   email: "souleymanekhaled12@gmail.com",
