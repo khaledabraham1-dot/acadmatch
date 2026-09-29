@@ -220,7 +220,10 @@ export function SyllabusImport({ existingCourses, existingSkills, onAddCourses, 
               <ShieldCheck className="mr-1 inline size-3.5 text-slate-500" aria-hidden />
               J&apos;accepte que ce document soit transmis à Claude (Anthropic) uniquement pour en lire les cours.
               AcadMatch ne le conserve pas et n&apos;en extrait aucune donnée personnelle. Moins de 15 ans :
-              demandez d&apos;abord l&apos;accord d&apos;un parent.
+              demandez d&apos;abord l&apos;accord d&apos;un parent.{" "}
+              <Link href="/confidentialite" target="_blank" className="underline underline-offset-2">
+                En savoir plus
+              </Link>
             </span>
           </label>
 

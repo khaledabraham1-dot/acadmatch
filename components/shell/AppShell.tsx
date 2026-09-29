@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Menu, X, ShieldCheck } from "lucide-react";
 import { Logo } from "@/components/shell/Logo";
 import { SidebarNav } from "@/components/shell/SidebarNav";
@@ -15,7 +16,9 @@ interface AppShellProps {
 
 function SidebarContent() {
   return (
-    <div className="flex h-full flex-col bg-slate-900 py-6">
+    // overflow-y-auto : avec 12 entrées, la sidebar dépasse un écran de portable (~730px
+    // utiles) — sans défilement, l'encart et les liens légaux du bas étaient inaccessibles.
+    <div className="flex h-full flex-col overflow-y-auto bg-slate-900 py-6 [color-scheme:dark]">
       <div className="px-5 pb-6">
         <Logo dark />
       </div>
@@ -27,6 +30,17 @@ function SidebarContent() {
           n&apos;est pas une promesse d&apos;admission.
         </p>
       </div>
+      <nav aria-label="Informations légales" className="mt-auto flex flex-wrap gap-x-3 gap-y-1 px-5 pt-6 text-xs text-slate-500">
+        <Link href="/mentions-legales" className="hover:text-slate-300">
+          Mentions légales
+        </Link>
+        <Link href="/confidentialite" className="hover:text-slate-300">
+          Confidentialité
+        </Link>
+        <Link href="/conditions" className="hover:text-slate-300">
+          Conditions
+        </Link>
+      </nav>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Mail } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/Card";
@@ -72,6 +73,17 @@ export function LoginForm() {
         {status === "error" && (
           <Hint>Une erreur est survenue. Vérifiez l&apos;adresse et réessayez.</Hint>
         )}
+        <p className="text-xs leading-relaxed text-slate-500">
+          En créant un compte, vous acceptez les{" "}
+          <Link href="/conditions" className="underline underline-offset-2 hover:text-slate-700">
+            conditions d&apos;utilisation
+          </Link>
+          . Votre e-mail sert uniquement à vous connecter —{" "}
+          <Link href="/confidentialite" className="underline underline-offset-2 hover:text-slate-700">
+            confidentialité
+          </Link>
+          .
+        </p>
       </form>
     </Card>
   );
