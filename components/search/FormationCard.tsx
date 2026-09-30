@@ -84,9 +84,18 @@ export function FormationCard({
           </div>
 
           {compat && score !== null ? (
-            <div className="text-right">
+            <div className="flex flex-col items-end gap-1.5">
+              {/* Anneau Radar : la part remplie = le score (app/globals.css, .score-ring). */}
+              <span
+                className="score-ring grid size-14 place-items-center rounded-full"
+                style={{ "--p": score } as React.CSSProperties}
+              >
+                <span className="font-display text-[17px] font-semibold tracking-[-0.03em] text-slate-900">
+                  {score}
+                  <span className="text-[10px]">%</span>
+                </span>
+              </span>
               <Badge tone={compat.tone}>{compat.label}</Badge>
-              <p className="mt-1 text-2xl font-semibold text-slate-900">{score}%</p>
             </div>
           ) : (
             <Badge tone="neutral">Profil requis</Badge>

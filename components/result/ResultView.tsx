@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ClipboardCheck, BookOpen, Wrench, GraduationCap, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { StudentProfile } from "@/types";
 import { getFormationById } from "@/data/formations";
 import { loadProfile, saveSelectedFormationId } from "@/lib/storage";
@@ -13,8 +13,8 @@ import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { DemoDataBadge } from "@/components/ui/DemoDataBadge";
 import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
-import { ScoreCircle } from "@/components/result/ScoreCircle";
-import { CriteriaBar } from "@/components/result/CriteriaBar";
+import { ScoreHeadline } from "@/components/result/ScoreHeadline";
+import { RadarChart } from "@/components/result/RadarChart";
 import { StrengthsGaps } from "@/components/result/StrengthsGaps";
 import { MatchTable } from "@/components/result/MatchTable";
 import { ComparisonSummary } from "@/components/result/ComparisonSummary";
@@ -151,39 +151,15 @@ export function ResultView() {
       <ComparisonSummary profile={profile} formation={formation} />
 
       <Card>
-        <h2 className="mb-6 text-base font-semibold text-slate-900">Résultats de compatibilité</h2>
+        <h2 className="mb-5 text-base font-bold text-slate-900">Résultats de compatibilité</h2>
         {/*
-          minmax(0,1fr), pas juste 1fr : sans le minmax, la colonne des
-          barres de critère ne pouvait pas rétrécir sous la largeur
-          intrinsèque de son contenu et débordait horizontalement autour de
-          768-900px (constaté en testant la responsivité).
+          Identité Radar : le score en grand, puis son détail en radar à quatre
+          axes. minmax(0,1fr) : la colonne du radar doit pouvoir rétrécir sans
+          faire déborder la carte (même piège que l'ancienne grille à barres).
         */}
-        <div className="grid gap-8 sm:grid-cols-[auto_minmax(0,1fr)]">
-          <div className="flex justify-center sm:border-r sm:border-slate-100 sm:pr-8">
-            <ScoreCircle score={result.overallScore} />
-          </div>
-          <div className="flex flex-col justify-center gap-4">
-            <CriteriaBar
-              label="Prérequis"
-              score={result.breakdown.prerequisites}
-              icon={<ClipboardCheck className="size-4" />}
-            />
-            <CriteriaBar
-              label="Contenu académique"
-              score={result.breakdown.academicContent}
-              icon={<BookOpen className="size-4" />}
-            />
-            <CriteriaBar
-              label="Compétences"
-              score={result.breakdown.skills}
-              icon={<Wrench className="size-4" />}
-            />
-            <CriteriaBar
-              label="Niveau / dossier"
-              score={result.breakdown.levelDegree}
-              icon={<GraduationCap className="size-4" />}
-            />
-          </div>
+        <div className="grid items-center gap-6 sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-10">
+          <ScoreHeadline score={result.overallScore} />
+          <RadarChart breakdown={result.breakdown} className="mx-auto max-w-[340px]" />
         </div>
       </Card>
 

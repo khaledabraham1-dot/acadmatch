@@ -20,12 +20,12 @@ export default function GlobalError({ reset }: { error: Error & { digest?: strin
           padding: "24px",
           textAlign: "center",
           fontFamily: "system-ui, sans-serif",
-          color: "#0f172a",
-          background: "#f8fafc",
+          color: "#0d1b16",
+          background: "#f3f5f4",
         }}
       >
         <h1 style={{ fontSize: "1.125rem", fontWeight: 600 }}>AcadMatch a rencontré une erreur</h1>
-        <p style={{ color: "#64748b", maxWidth: "28rem" }}>
+        <p style={{ color: "#66756e", maxWidth: "28rem" }}>
           Veuillez réessayer. Si le problème persiste, essayez de recharger la page depuis un
           autre navigateur.
         </p>
@@ -35,7 +35,7 @@ export default function GlobalError({ reset }: { error: Error & { digest?: strin
             height: "44px",
             padding: "0 20px",
             borderRadius: "12px",
-            background: "#2563eb",
+            background: "#0a7d55",
             color: "#ffffff",
             fontWeight: 500,
             border: "none",

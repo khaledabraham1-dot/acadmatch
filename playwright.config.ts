@@ -13,7 +13,7 @@ export default defineConfig({
   // Un seul serveur `next start` : au-delà de 2 navigateurs en parallèle, il sature
   // (constaté : délais dépassés à 12 workers, tout passe à 1-2).
   fullyParallel: true,
-  workers: 2,
+  workers: process.env.CI ? 2 : 1,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [["github"], ["list"]] : "list",

@@ -1,17 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Figtree, Unbounded } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { SITE_NAME, siteUrl } from "@/lib/site";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Identité « Radar » : Figtree pour le texte (très lisible sur petit écran),
+// Unbounded pour les grands titres et les scores. Voir app/globals.css.
+const figtree = Figtree({
+  variable: "--font-figtree",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const unbounded = Unbounded({
+  variable: "--font-unbounded",
   subsets: ["latin"],
+  weight: ["500", "600"],
 });
 
 const DEFAULT_DESCRIPTION =
@@ -48,9 +51,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="fr"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${figtree.variable} ${unbounded.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-white text-slate-900">
+      <body className="min-h-full flex flex-col bg-background font-sans text-slate-900">
         {children}
         {WEB_ANALYTICS_ENABLED && <Script src="/_vercel/insights/script.js" strategy="afterInteractive" />}
       </body>

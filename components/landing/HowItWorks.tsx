@@ -24,8 +24,8 @@ const STEPS = [
 export function HowItWorks() {
   return (
     <section id="comment-ca-marche" className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-      <div className="mb-12 text-center">
-        <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+      <div className="mb-8 max-w-2xl">
+        <h2 className="font-display text-2xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-3xl">
           Comment ça marche
         </h2>
         <p className="mt-3 text-slate-500">Trois étapes. Un compte gratuit seulement pour importer vos documents.</p>
@@ -34,11 +34,11 @@ export function HowItWorks() {
         {STEPS.map((step, index) => {
           const Icon = step.icon;
           return (
-            <div key={step.title} className="relative rounded-2xl border border-slate-200 bg-white p-6">
+            <div key={step.title} className="relative rounded-[18px] border border-slate-200 bg-white p-6">
               <div className="mb-4 flex size-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                 <Icon className="size-5" />
               </div>
-              <span className="text-xs font-semibold text-blue-600">Étape {index + 1}</span>
+              <span className="font-display text-xs font-semibold text-blue-600">Étape {index + 1}</span>
               <h3 className="mt-1 text-lg font-semibold text-slate-900">{step.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-slate-500">{step.description}</p>
             </div>

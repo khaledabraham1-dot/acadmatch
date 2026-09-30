@@ -4,7 +4,7 @@ import { LinkButton } from "@/components/ui/Button";
 
 export function LandingNav() {
   return (
-    <header className="border-b border-slate-100">
+    <header className="border-b border-slate-200 bg-slate-50">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-4 sm:px-6">
         <Logo />
         <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 sm:flex">

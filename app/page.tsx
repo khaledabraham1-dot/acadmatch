@@ -13,7 +13,7 @@ export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-1 flex-col bg-white">
+    <div className="flex min-h-screen flex-1 flex-col bg-slate-50">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteJsonLd(siteUrl())) }} />
       <LandingNav />
       <main id="contenu-principal" className="flex-1">

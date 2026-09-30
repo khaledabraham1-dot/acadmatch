@@ -6,19 +6,20 @@ type Variant = "primary" | "secondary" | "ghost" | "outline";
 type Size = "sm" | "md" | "lg";
 
 const VARIANT_CLASSES: Record<Variant, string> = {
-  primary: "bg-blue-600 text-white hover:bg-blue-700 shadow-sm shadow-blue-600/20",
+  primary: "bg-blue-600 text-white hover:bg-blue-700",
   secondary: "bg-slate-900 text-white hover:bg-slate-800",
-  outline: "border border-slate-200 text-slate-700 hover:bg-slate-50 bg-white",
+  outline: "border border-slate-200 text-slate-900 hover:border-slate-300 hover:bg-slate-50 bg-white",
   ghost: "text-slate-600 hover:bg-slate-100",
 };
 
 const SIZE_CLASSES: Record<Size, string> = {
-  sm: "h-9 px-3 text-sm",
-  md: "h-11 px-5 text-sm",
-  lg: "h-12 px-6 text-base",
+  sm: "h-10 px-3.5 text-sm",
+  md: "h-12 px-5 text-[15px]",
+  lg: "h-[52px] px-6 text-base",
 };
 
-const BASE = "inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none";
+// Identité Radar : cibles de 48px et plus au pouce, rayon 14px, texte gras.
+const BASE = "inline-flex items-center justify-center gap-2 rounded-[14px] font-bold transition-colors disabled:opacity-50 disabled:pointer-events-none";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;

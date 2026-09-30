@@ -19,7 +19,7 @@ export function ogCard({ eyebrow, title, subtitle }: { eyebrow: string; title: s
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "64px 72px",
-          background: "#0f172a",
+          background: "#0d1b16",
           color: "#ffffff",
         }}
       >
@@ -32,7 +32,7 @@ export function ogCard({ eyebrow, title, subtitle }: { eyebrow: string; title: s
               width: 56,
               height: 56,
               borderRadius: 14,
-              background: "#2563eb",
+              background: "#0a7d55",
               fontSize: 32,
               fontWeight: 700,
             }}
@@ -42,11 +42,11 @@ export function ogCard({ eyebrow, title, subtitle }: { eyebrow: string; title: s
           <div style={{ fontSize: 34, fontWeight: 600 }}>AcadMatch</div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <div style={{ fontSize: 28, color: "#93c5fd" }}>{eyebrow}</div>
+          <div style={{ fontSize: 28, color: "#6fbe97" }}>{eyebrow}</div>
           <div style={{ fontSize: title.length > 60 ? 52 : 64, fontWeight: 700, lineHeight: 1.1 }}>{title}</div>
-          <div style={{ fontSize: 30, color: "#cbd5e1" }}>{subtitle}</div>
+          <div style={{ fontSize: 30, color: "#c3cdc8" }}>{subtitle}</div>
         </div>
-        <div style={{ display: "flex", fontSize: 24, color: "#94a3b8" }}>
+        <div style={{ display: "flex", fontSize: 24, color: "#8f9d96" }}>
           Prérequis vérifiés sur les sources officielles · Gratuit
         </div>
       </div>
