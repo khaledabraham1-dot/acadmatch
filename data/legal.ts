@@ -77,7 +77,7 @@ export const LOCAL_STORAGE_ITEMS: { key: string; content: string }[] = [
   { key: "acadmatch:applications", content: "Votre suivi de candidatures : notes, brouillons de lettre de motivation, préparations d'entretien" },
   { key: "acadmatch:budgets", content: "Vos budgets prévisionnels" },
   { key: "acadmatch:visa", content: "Vos réponses au parcours visa (nationalité, pays de résidence)" },
-  { key: "acadmatch:feedback", content: "Vos avis sur les résultats" },
+  { key: "acadmatch:feedback", content: "Vos avis sur les résultats en attente d'envoi (réseau coupé), effacés une fois envoyés" },
   { key: "acadmatch:sync", content: "La date de vos dernières modifications et le compte auquel elles appartiennent, pour la synchronisation" },
 ];
 

@@ -1,27 +1,36 @@
 import { describe, expect, it } from "vitest";
-import { buildFeedbackMailto, FEEDBACK_LABELS } from "@/lib/feedback";
-import type { FeedbackEntry } from "@/lib/feedback";
+import { FAIRNESS_LABELS, FEEDBACK_LABELS, toFeedbackRow, type FeedbackPayload } from "@/lib/feedback";
 
-describe("feedback MVP", () => {
-  it("expose les trois niveaux d'aide", () => {
+const payload: FeedbackPayload = {
+  formationId: "f-mosig-grenoble-inp",
+  score: 67.4,
+  helpfulness: "oui",
+  scoreFairness: "trop-haut",
+  comment: "  Clair  ",
+  profileField: "Informatique",
+  profileLevel: "Licence 3",
+  scoreEstimate: false,
+  fromTranscript: true,
+};
+
+describe("avis sur les résultats", () => {
+  it("expose les réponses attendues par la base", () => {
     expect(Object.keys(FEEDBACK_LABELS)).toEqual(["oui", "partiellement", "non"]);
+    expect(Object.keys(FAIRNESS_LABELS)).toEqual(["trop-haut", "juste", "trop-bas"]);
   });
 
-  it("ne construit pas de mailto sans e-mail configuré", () => {
-    const entry: FeedbackEntry = {
-      id: "fb-1",
-      createdAt: "2026-09-17T00:00:00.000Z",
-      helpfulness: "oui",
-      comment: "Clair",
-      formationId: "f-m2ds-ip-paris",
-      score: 78,
-    };
-    // En test Vitest, NEXT_PUBLIC_FEEDBACK_EMAIL n'est en général pas défini.
-    const mailto = buildFeedbackMailto(entry);
-    if (!process.env.NEXT_PUBLIC_FEEDBACK_EMAIL) {
-      expect(mailto).toBeNull();
-    } else {
-      expect(mailto).toMatch(/^mailto:/);
-    }
+  it("construit une ligne anonyme, bornée comme les contraintes SQL", () => {
+    const row = toFeedbackRow({ ...payload, comment: "x".repeat(5000), score: 140 });
+    expect(row.comment).toHaveLength(1000);
+    expect(row.score).toBe(100);
+    expect(Object.keys(row)).not.toContain("email");
+    expect(Object.keys(row)).not.toContain("user_id");
+  });
+
+  it("nettoie le commentaire et arrondit le score", () => {
+    const row = toFeedbackRow(payload);
+    expect(row.comment).toBe("Clair");
+    expect(row.score).toBe(67);
+    expect(row.from_transcript).toBe(true);
   });
 });

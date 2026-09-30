@@ -9,6 +9,7 @@ import { loadProfile, saveSelectedFormationId } from "@/lib/storage";
 import { computeCompatibility } from "@/lib/matching/engine";
 import { buildDecisionAid } from "@/lib/matching/explanation";
 import { validateStoredProfile } from "@/lib/profile/validation";
+import { validTranscriptAverage } from "@/lib/profile/grades";
 import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { DemoDataBadge } from "@/components/ui/DemoDataBadge";
@@ -190,7 +191,14 @@ export function ResultView() {
 
       <OfficialSourceCard formation={formation} />
 
-      <ResultFeedback formationId={formation.id} score={result.overallScore} />
+      <ResultFeedback
+        formationId={formation.id}
+        score={result.overallScore}
+        profileField={profile.fieldOfStudy}
+        profileLevel={profile.currentLevel}
+        scoreEstimate={Boolean(result.evidenceCapped || result.noContentMatch)}
+        fromTranscript={validTranscriptAverage(profile) !== null}
+      />
 
       <p className="rounded-xl bg-slate-50 p-4 text-xs leading-relaxed text-slate-500">
         Ce score ne garantit pas l&apos;admission et n&apos;est pas une probabilité d&apos;acceptation :

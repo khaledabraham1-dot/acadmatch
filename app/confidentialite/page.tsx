@@ -40,7 +40,7 @@ export default function ConfidentialitePage() {
         </p>
       </Section>
 
-      <Section title="2. Sans compte : tout reste sur votre appareil">
+      <Section title="2. Sans compte : votre projet reste sur votre appareil">
         <p>
           Ce que vous saisissez est enregistré dans le stockage local de votre navigateur (localStorage), sur
           votre appareil uniquement. Nous n&apos;y avons pas accès. Effacer les données du site dans votre
@@ -80,7 +80,18 @@ export default function ConfidentialitePage() {
         </p>
       </Section>
 
-      <Section title="4. Avec un compte (optionnel)">
+      <Section title="4. Vos avis sur les résultats">
+        <p>
+          Si vous répondez à la question « Votre avis » sous un résultat, votre réponse est envoyée de façon{" "}
+          <strong>anonyme</strong> : ni nom, ni e-mail, ni compte. Elle est accompagnée seulement de la formation,
+          du score affiché, du domaine et du niveau de votre profil, et de l&apos;indication que le score était une
+          estimation ou s&apos;appuyait sur votre relevé. Elle sert uniquement à rendre les scores plus justes.
+          N&apos;écrivez pas d&apos;information personnelle dans le commentaire : un avis anonyme ne peut pas être
+          retrouvé ensuite pour être modifié ou supprimé.
+        </p>
+      </Section>
+
+      <Section title="5. Avec un compte (optionnel)">
         <ul>
           <li>
             <strong>Votre adresse e-mail</strong>, pour vous envoyer un lien de connexion. Aucun mot de passe
@@ -104,7 +115,7 @@ export default function ConfidentialitePage() {
         </ul>
       </Section>
 
-      <Section title="5. Fonctionnalités d'intelligence artificielle">
+      <Section title="6. Fonctionnalités d'intelligence artificielle">
         <p>
           Ces fonctionnalités exigent un compte et utilisent Claude, le modèle d&apos;Anthropic. Voici exactement
           ce qui lui est transmis :
@@ -135,7 +146,7 @@ export default function ConfidentialitePage() {
         </p>
       </Section>
 
-      <Section title="6. Pourquoi nous avons le droit de traiter ces données">
+      <Section title="7. Pourquoi nous avons le droit de traiter ces données">
         <ul>
           <li>
             <strong>Exécution du service que vous demandez</strong> : compte, sauvegarde du profil, fonctionnalités
@@ -143,7 +154,7 @@ export default function ConfidentialitePage() {
           </li>
           <li>
             <strong>Intérêt légitime</strong> : sécurité du site, limites d&apos;usage, prévention des abus, mesure
-            d&apos;audience anonyme.
+            d&apos;audience anonyme, amélioration des scores grâce aux avis anonymes.
           </li>
           <li>
             <strong>Votre consentement</strong> : transmission d&apos;un document à l&apos;IA, que vous donnez en
@@ -153,7 +164,7 @@ export default function ConfidentialitePage() {
         </ul>
       </Section>
 
-      <Section title="7. Prestataires et transferts hors de l'Union européenne">
+      <Section title="8. Prestataires et transferts hors de l'Union européenne">
         <p>Nous ne vendons ni ne partageons vos données. Seuls ces prestataires y accèdent, pour faire fonctionner le service :</p>
         <ul>
           {SUBPROCESSORS.map((processor) => (
@@ -169,16 +180,17 @@ export default function ConfidentialitePage() {
         </p>
       </Section>
 
-      <Section title="8. Durée de conservation">
+      <Section title="9. Durée de conservation">
         <ul>
           <li>Documents importés : non conservés par AcadMatch (30 jours au plus chez Anthropic, voir ci-dessus).</li>
           <li>Compte, projet synchronisé et compteur d&apos;usage : jusqu&apos;à la suppression de votre compte.</li>
+          <li>Avis anonymes : conservés tant qu&apos;ils servent à améliorer les scores ; ils ne sont rattachés à personne.</li>
           <li>Données locales : jusqu&apos;à ce que vous les effaciez de votre navigateur.</li>
           <li>Journaux techniques de l&apos;hébergeur (adresse IP, page demandée) : durée courte fixée par Vercel, pour la sécurité.</li>
         </ul>
       </Section>
 
-      <Section title="9. Vos droits">
+      <Section title="10. Vos droits">
         <p>
           Vous pouvez accéder à vos données, les corriger, les supprimer, en obtenir une copie, vous opposer à un
           traitement ou en demander la limitation. Deux droits sont disponibles directement dans{" "}
@@ -206,14 +218,14 @@ export default function ConfidentialitePage() {
         </ul>
       </Section>
 
-      <Section title="10. Mineurs">
+      <Section title="11. Mineurs">
         <p>
           AcadMatch s&apos;adresse aux lycéens et étudiants. Si vous avez moins de 15 ans, demandez l&apos;accord
           d&apos;un parent avant de créer un compte ou d&apos;importer un document.
         </p>
       </Section>
 
-      <Section title="11. Sécurité">
+      <Section title="12. Sécurité">
         <p>
           Connexions chiffrées (HTTPS), accès à la base limité à votre propre ligne par des règles appliquées
           côté serveur, clés secrètes jamais exposées au navigateur, et en-têtes de sécurité empêchant le site
@@ -222,7 +234,7 @@ export default function ConfidentialitePage() {
         </p>
       </Section>
 
-      <Section title="12. Modifications">
+      <Section title="13. Modifications">
         <p>
           Cette politique suit le fonctionnement réel du site : elle est mise à jour dès qu&apos;une
           fonctionnalité change la manière dont vos données sont utilisées. La date en haut de page indique la
