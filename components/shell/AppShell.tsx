@@ -37,6 +37,9 @@ function SidebarContent() {
         <SyncBadge dark />
       </div>
       <nav aria-label="Informations légales" className="flex flex-wrap gap-x-3 gap-y-1 px-5 pt-6 text-xs text-slate-300">
+        <Link href="/methode" className="hover:text-white">
+          Méthode du score
+        </Link>
         <Link href="/mentions-legales" className="hover:text-white">
           Mentions légales
         </Link>

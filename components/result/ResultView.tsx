@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import type { StudentProfile } from "@/types";
@@ -153,7 +154,12 @@ export function ResultView() {
       <ComparisonSummary profile={profile} formation={formation} />
 
       <Card>
-        <h2 className="mb-5 text-base font-bold text-slate-900">Résultats de compatibilité</h2>
+        <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="text-base font-bold text-slate-900">Résultats de compatibilité</h2>
+          <Link href="/methode" className="text-sm font-bold text-blue-700 underline underline-offset-2">
+            Comment ce score est-il calculé ?
+          </Link>
+        </div>
         {/*
           Identité Radar : le score en grand, puis son détail en radar à quatre
           axes. minmax(0,1fr) : la colonne du radar doit pouvoir rétrécir sans

@@ -19,8 +19,8 @@ export const TIER_LABEL: Record<SelectivityTier, string> = {
 };
 
 /** Seuils sur la part de candidatures qui reçoivent une proposition (Mon Master) ou le taux d'accès (Parcoursup). */
-const VERY_SELECTIVE_BELOW = 0.2;
-const SELECTIVE_BELOW = 0.5;
+export const VERY_SELECTIVE_BELOW = 0.2;
+export const SELECTIVE_BELOW = 0.5;
 /** En dessous, trop peu de candidats venant de l'étranger pour afficher une proportion qui ait un sens. */
 export const MIN_FROM_ABROAD_CANDIDATES = 10;
 

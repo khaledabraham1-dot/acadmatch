@@ -45,6 +45,7 @@ test.describe("accessibilité WCAG AA", () => {
     "/visa",
     "/compte",
     "/confidentialite",
+    "/methode",
   ]) {
     test(path, async ({ page }) => {
       await audit(page, path);

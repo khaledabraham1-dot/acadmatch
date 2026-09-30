@@ -57,7 +57,7 @@ export const ENGINE_WEIGHTS: CompatibilityBreakdown = {
 // Une correspondance partielle reste un signal positif réel (matière proche,
 // formulation différente) — elle vaut donc plus qu'une simple moyenne 50/50
 // avec l'absence totale de correspondance.
-const STRENGTH_POINTS: Record<MatchStrength, number> = {
+export const STRENGTH_POINTS: Record<MatchStrength, number> = {
   forte: 100,
   partielle: 60,
   manquant: 0,
@@ -108,7 +108,7 @@ function levelRank(level: string): number {
  * profil stocké avant son ajout, ou choix de ne pas répondre) reçoit
  * `NEUTRAL_ACADEMIC_STANDING` : aucun ajustement, ni pénalité ni bonus.
  */
-const ACADEMIC_STANDING_ADJUSTMENT: Record<AcademicStanding, number> = {
+export const ACADEMIC_STANDING_ADJUSTMENT: Record<AcademicStanding, number> = {
   "Résultats modestes": -12,
   "Résultats dans la moyenne": 0,
   "Bons résultats": 8,
@@ -138,7 +138,7 @@ const ACADEMIC_STANDING_ADJUSTMENT: Record<AcademicStanding, number> = {
  * (ACADEMIC_STANDING_ADJUSTMENT), faute de connaître la barre réelle.
  * Un profil qui n'a pas renseigné ses résultats n'est ni pénalisé ni avantagé.
  */
-const SELECTIVITY_STANDING_ADJUSTMENT: Record<SelectivityTier, Record<AcademicStanding, number>> = {
+export const SELECTIVITY_STANDING_ADJUSTMENT: Record<SelectivityTier, Record<AcademicStanding, number>> = {
   "très sélective": { "Résultats modestes": -20, "Résultats dans la moyenne": -8, "Bons résultats": 0, "Excellents résultats": 3 },
   sélective: { "Résultats modestes": -10, "Résultats dans la moyenne": -3, "Bons résultats": 2, "Excellents résultats": 4 },
   accessible: { "Résultats modestes": -3, "Résultats dans la moyenne": 0, "Bons résultats": 1, "Excellents résultats": 2 },
@@ -333,8 +333,8 @@ function computeContentScore(
  * qui ne prouve pas les bases d'une autre discipline — cas observé : un
  * profil de science politique à 86/100 sur un master de droit des affaires.
  */
-const DOMAIN_MISMATCH_BASE_CAP = 25;
-const DOMAIN_MISMATCH_COMPRESSION = 0.25;
+export const DOMAIN_MISMATCH_BASE_CAP = 25;
+export const DOMAIN_MISMATCH_COMPRESSION = 0.25;
 const OUTSIDE_DOMAIN_EVIDENCE_POINTS: Record<MatchStrength, number> = { forte: 100, partielle: 0, manquant: 0 };
 
 /** Preuve de contenu hors domaine : moyenne pondérée des matières, partiels peu comptés. */
@@ -366,9 +366,9 @@ function outsideDomainEvidence(formation: StudyProgram, rows: SubjectMatch[]): n
 // on ne plafonne jamais un profil qui suit nos propres recommandations.
 export const EVIDENCE_FULL_ITEMS = RECOMMENDED_COURSES + RECOMMENDED_SKILLS;
 // 0 preuve reconnue → 15 ; puis +12 par preuve (27, 39, 51, 63) ; aucun plafond à 5.
-const EVIDENCE_CAP_BASE = 15;
-const EVIDENCE_CAP_PER_ITEM = 12;
-const EVIDENCE_COMPRESSION = 0.25;
+export const EVIDENCE_CAP_BASE = 15;
+export const EVIDENCE_CAP_PER_ITEM = 12;
+export const EVIDENCE_COMPRESSION = 0.25;
 
 /**
  * Nombre de preuves distinctes du profil : matières + compétences RECONNUES
