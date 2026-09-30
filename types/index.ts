@@ -274,6 +274,11 @@ export interface CompatibilityResult {
    * SELECTIVITY_STANDING_ADJUSTMENT dans lib/matching/engine.ts). Absent si nul.
    */
   selectivityAdjustment?: number;
+  /**
+   * true quand aucune matière ni compétence du profil ne correspond au
+   * programme : score plafonné à NO_CONTENT_MATCH_CEILING (engine.ts).
+   */
+  noContentMatch?: boolean;
 }
 
 /**

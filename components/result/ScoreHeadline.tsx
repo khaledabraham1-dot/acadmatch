@@ -6,13 +6,13 @@ import { cn } from "@/lib/utils";
 export function ScoreHeadline({
   score,
   size = "lg",
-  estimate = false,
+  note,
   className,
 }: {
   score: number;
   size?: "md" | "lg";
-  /** Score plafonné faute de preuves (CompatibilityResult.evidenceCapped). */
-  estimate?: boolean;
+  /** Précision sous le score : « estimation, profil incomplet », « profil non évaluable »… */
+  note?: string;
   className?: string;
 }) {
   const { label, tone } = getCompatibilityLabel(score);
@@ -29,7 +29,7 @@ export function ScoreHeadline({
       </p>
       <div className="grid gap-1">
         <Badge tone={tone}>{label}</Badge>
-        <p className="text-sm text-slate-500">{estimate ? "sur 100 · estimation, profil incomplet" : "sur 100"}</p>
+        <p className="text-sm text-slate-500">{note ? `sur 100 · ${note}` : "sur 100"}</p>
       </div>
     </div>
   );

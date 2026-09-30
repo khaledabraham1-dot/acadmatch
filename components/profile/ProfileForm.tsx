@@ -48,7 +48,6 @@ import { isGoalCoveredByCatalogue } from "@/lib/search/filters";
 import { EXAMPLE_PROFILE_LABEL, EXAMPLE_STUDENT_PROFILE } from "@/data/example-profile";
 import { ArrowRight, FlaskConical } from "lucide-react";
 
-const DEFAULT_DOMAIN: Domain = "Informatique";
 const COURSE_VOCABULARY = catalogueVocabulary(FORMATIONS, "matiere");
 const SKILL_VOCABULARY = catalogueVocabulary(FORMATIONS, "competence");
 
@@ -69,8 +68,12 @@ export function ProfileForm() {
   const searchParams = useSearchParams();
 
   const [currentLevel, setCurrentLevel] = useState<AcademicLevel>("Licence 3");
-  // "" = domaine à choisir (profil enregistré avec un ancien domaine, voir LEGACY_DOMAINS).
-  const [fieldOfStudy, setFieldOfStudy] = useState<Domain | "">(DEFAULT_DOMAIN);
+  // "" = domaine à choisir. Aucun domaine présélectionné (audit du 2026-09-30) :
+  // l'ancien défaut « Informatique » orientait les suggestions de tout nouveau
+  // visiteur vers l'informatique, quel que soit son parcours.
+  const [fieldOfStudy, setFieldOfStudy] = useState<Domain | "">("");
+  // Domaine d'où viennent les matières déjà saisies, quand l'étudiant en change.
+  const [previousDomain, setPreviousDomain] = useState<Domain | null>(null);
   const [legacyField, setLegacyField] = useState<string | null>(null);
   const [currentDegree, setCurrentDegree] = useState("");
   const [courses, setCourses] = useState<string[]>([]);
@@ -104,7 +107,7 @@ export function ProfileForm() {
       setFieldOfStudy("");
       setLegacyField(existing.fieldOfStudy);
     } else {
-      setFieldOfStudy(DEFAULT_DOMAIN);
+      setFieldOfStudy("");
     }
     setCurrentDegree(existing.currentDegree);
     setCourses(existing.courses.map((c) => c.name));
@@ -164,10 +167,28 @@ export function ProfileForm() {
     router.push(next);
   }
 
+  // Le formulaire contient-il encore le profil exemple (chargé plus tôt) ?
+  // Sans ce signal, un visiteur qui avait cliqué « Essayer un exemple »
+  // retrouvait des matières d'informatique en décrivant son propre parcours.
+  const isExampleProfile =
+    fieldOfStudy === EXAMPLE_STUDENT_PROFILE.fieldOfStudy &&
+    courses.join("|") === EXAMPLE_STUDENT_PROFILE.courses.map((c) => c.name).join("|") &&
+    skills.join("|") === EXAMPLE_STUDENT_PROFILE.skills.join("|");
+
+  function handleDomainChange(next: Domain) {
+    // Changer de domaine avec des matières déjà saisies : proposer de repartir
+    // de zéro plutôt que de garder, sans le dire, celles d'un autre parcours.
+    if (fieldOfStudy && fieldOfStudy !== next && (courses.length > 0 || skills.length > 0)) {
+      setPreviousDomain((prev) => prev ?? fieldOfStudy);
+    }
+    setFieldOfStudy(next);
+  }
+
   function handleClear() {
     clearProfile();
     setCurrentLevel("Licence 3");
-    setFieldOfStudy(DEFAULT_DOMAIN);
+    setFieldOfStudy("");
+    setPreviousDomain(null);
     setLegacyField(null);
     setCurrentDegree("");
     setCourses([]);
@@ -228,6 +249,17 @@ export function ProfileForm() {
     <form onSubmit={handleSubmit} className="space-y-6" noValidate>
       {startWithDocuments && <DocumentQuickStart transcriptImport={transcriptImport} syllabusImport={syllabusImport} />}
 
+      {isExampleProfile && (
+        <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4">
+          <p className="text-sm text-amber-900">
+            Ce formulaire contient le <strong>profil exemple</strong> ({EXAMPLE_PROFILE_LABEL}), pas le vôtre.
+          </p>
+          <Button type="button" size="sm" variant="secondary" onClick={handleClear}>
+            Repartir d&apos;un profil vide
+          </Button>
+        </div>
+      )}
+
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4">
         <p className="text-sm text-slate-600">
           Pressé ? Chargez un parcours type pour voir immédiatement comment fonctionne AcadMatch.
@@ -264,7 +296,7 @@ export function ProfileForm() {
             <Select
               id="fieldOfStudy"
               value={fieldOfStudy}
-              onChange={(e) => setFieldOfStudy(e.target.value as Domain)}
+              onChange={(e) => handleDomainChange(e.target.value as Domain)}
             >
               {fieldOfStudy === "" && (
                 <option value="" disabled>
@@ -277,6 +309,31 @@ export function ProfileForm() {
                 </option>
               ))}
             </Select>
+            {previousDomain && previousDomain !== fieldOfStudy && (courses.length > 0 || skills.length > 0) && (
+              <div role="status" className="mt-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs leading-relaxed text-amber-900">
+                Vos matières et compétences actuelles viennent peut-être de votre profil en {previousDomain}.
+                <span className="mt-2 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCourses([]);
+                      setSkills([]);
+                      setPreviousDomain(null);
+                    }}
+                    className="rounded-lg bg-amber-900 px-3 py-1.5 font-bold text-white"
+                  >
+                    Vider matières et compétences
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPreviousDomain(null)}
+                    className="rounded-lg px-3 py-1.5 font-bold text-amber-900 underline underline-offset-2"
+                  >
+                    Les garder
+                  </button>
+                </span>
+              </div>
+            )}
             {fieldOfStudy === "" && legacyField && (
               <p className="mt-1.5 text-xs font-medium text-amber-700">
                 Votre profil indiquait « {legacyField} », désormais séparé en{" "}

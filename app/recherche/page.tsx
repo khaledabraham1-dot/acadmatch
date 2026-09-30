@@ -93,7 +93,7 @@ export default function RecherchePage() {
     return new Map(
       FORMATIONS.map((formation) => {
         const result = computeCompatibility(profile, formation);
-        return [formation.id, { score: result.overallScore, estimate: Boolean(result.evidenceCapped) }];
+        return [formation.id, { score: result.overallScore, estimate: Boolean(result.evidenceCapped || result.noContentMatch) }];
       }),
     );
   }, [profile]);

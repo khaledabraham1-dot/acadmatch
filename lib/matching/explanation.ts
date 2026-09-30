@@ -5,7 +5,7 @@ import type {
   StudentProfile,
   StudyProgram,
 } from "@/types";
-import { ENGINE_WEIGHTS, EVIDENCE_FULL_ITEMS, profileEvidenceCount } from "@/lib/matching/engine";
+import { ENGINE_WEIGHTS, EVIDENCE_FULL_ITEMS, NO_CONTENT_MATCH_CEILING, profileEvidenceCount } from "@/lib/matching/engine";
 import { admissionRate, selectivityOf, selectivityTier, TIER_LABEL } from "@/lib/selectivity";
 import { getCompatibilityLabel } from "@/lib/matching/labels";
 import { normalize } from "@/lib/utils";
@@ -178,10 +178,16 @@ export function buildDecisionAid(
     );
   }
 
-  if (result.evidenceCapped) {
+  if (result.noContentMatch) {
+    paragraphs.push(
+      `Aucune de vos matières ni de vos compétences ne correspond au programme de cette formation : votre profil ne permet pas de l'évaluer, et le score reste au plus à ${NO_CONTENT_MATCH_CEILING}/100. Vérifiez l'intitulé de vos matières (ou importez votre relevé de notes) : un mot non reconnu ne compte pas.`,
+    );
+  }
+
+  if (result.evidenceCapped && !result.noContentMatch) {
     const count = profileEvidenceCount(profile);
     paragraphs.push(
-      `Votre profil ne compte que ${count} matière${count > 1 ? "s" : ""} et compétence${count > 1 ? "s" : ""} : c'est trop peu pour juger votre dossier, comme le dirait un jury. Le score est donc volontairement limité. Importez votre relevé de notes, ou ajoutez au moins ${EVIDENCE_FULL_ITEMS} matières et compétences au total, pour obtenir un score complet.`,
+      `Votre profil ne compte que ${count} matière${count > 1 ? "s" : ""} ou compétence${count > 1 ? "s" : ""} reconnue${count > 1 ? "s" : ""} : c'est trop peu pour juger votre dossier, comme le dirait un jury. Le score est donc volontairement limité. Importez votre relevé de notes, ou ajoutez au moins ${EVIDENCE_FULL_ITEMS} vraies matières et compétences au total, pour obtenir un score complet.`,
     );
   }
 

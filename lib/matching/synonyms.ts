@@ -62,3 +62,8 @@ export function areSynonyms(a: string, b: string): boolean {
   if (groupA === -1) return false;
   return groupA === synonymGroupOf(b);
 }
+
+/** Tous les termes des groupes de synonymes (vocabulaire reconnu, lib/matching/vocabulary.ts). */
+export function synonymTerms(): string[] {
+  return SYNONYM_GROUPS.flat();
+}

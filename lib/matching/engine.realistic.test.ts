@@ -210,6 +210,8 @@ describe("synonymes et preuve de contenu — domaines Droit / Sciences politique
         { id: "1", name: "Droit civil" },
         { id: "2", name: "Droit des contrats" },
         { id: "3", name: "Droit des sociétés" },
+        // 5e preuve : « Anglais courant » est une langue, pas une preuve (vocabulary.ts).
+        { id: "4", name: "Droit commercial" },
       ],
     };
     expect(computeCompatibility(lawyer, businessLaw).overallScore).toBeGreaterThanOrEqual(85);

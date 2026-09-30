@@ -97,3 +97,13 @@ test("menu mobile en tuiles : il défile seul et la page derrière reste immobil
   await expect(menu).toBeHidden();
   expect(await page.evaluate(() => document.body.style.overflow)).toBe("");
 });
+
+test("profil : aucun domaine imposé, et un mot absurde est signalé tout de suite", async ({ page }) => {
+  await page.goto("/profil");
+  await page.waitForLoadState("networkidle");
+  await expect(page.locator("#fieldOfStudy")).toHaveValue("");
+  const courses = page.getByRole("combobox", { name: "Vos matières" });
+  await courses.fill("Girafe");
+  await courses.press("Enter");
+  await expect(page.getByText(/Non reconnu comme matière ou compétence : « Girafe »/)).toBeVisible();
+});

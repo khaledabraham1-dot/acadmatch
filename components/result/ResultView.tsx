@@ -159,7 +159,16 @@ export function ResultView() {
           faire déborder la carte (même piège que l'ancienne grille à barres).
         */}
         <div className="grid items-center gap-6 sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-10">
-          <ScoreHeadline score={result.overallScore} estimate={result.evidenceCapped} />
+          <ScoreHeadline
+            score={result.overallScore}
+            note={
+              result.noContentMatch
+                ? "profil non évaluable pour cette formation"
+                : result.evidenceCapped
+                  ? "estimation, profil incomplet"
+                  : undefined
+            }
+          />
           <RadarChart breakdown={result.breakdown} className="mx-auto max-w-[340px]" />
         </div>
       </Card>

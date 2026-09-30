@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
+import { isLanguageTerm, isRecognizedTerm } from "@/lib/matching/vocabulary";
 import { Chip, SuggestionChip } from "@/components/ui/Chip";
 import { Input } from "@/components/ui/Field";
 import { Plus } from "lucide-react";
@@ -42,6 +43,11 @@ export function CourseSkillEditor({ label, hint, items, suggestions, placeholder
     setDraft("");
   }
 
+  // Libellés qui ne comptent pas dans le score (lib/matching/vocabulary.ts) :
+  // on le dit tout de suite, plutôt que de laisser croire qu'ils pèsent.
+  const unrecognized = items.filter((item) => !isRecognizedTerm(item) && !isLanguageTerm(item));
+  const languages = items.filter(isLanguageTerm);
+
   const remainingSuggestions = suggestions.filter(
     (s) => !items.some((item) => item.toLowerCase() === s.toLowerCase()),
   );
@@ -56,11 +62,27 @@ export function CourseSkillEditor({ label, hint, items, suggestions, placeholder
       {items.length > 0 && (
         <div className="mb-3 flex flex-wrap gap-2">
           {items.map((item) => (
-            <Chip key={item} onRemove={() => removeItem(item)}>
+            <Chip
+              key={item}
+              onRemove={() => removeItem(item)}
+              className={unrecognized.includes(item) || languages.includes(item) ? "bg-amber-50 text-amber-900 ring-1 ring-inset ring-amber-300" : undefined}
+            >
               {item}
             </Chip>
           ))}
         </div>
+      )}
+      {unrecognized.length > 0 && (
+        <p role="status" className="mb-3 text-xs leading-relaxed text-amber-800">
+          Non reconnu{unrecognized.length > 1 ? "s" : ""} comme matière ou compétence : {unrecognized.map((u) => `« ${u} »`).join(", ")}.{" "}
+          {unrecognized.length > 1 ? "Ils ne comptent" : "Il ne compte"} pas dans le score. Vérifiez l&apos;intitulé ou choisissez une suggestion.
+        </p>
+      )}
+      {languages.length > 0 && (
+        <p role="status" className="mb-3 text-xs leading-relaxed text-amber-800">
+          {languages.map((l) => `« ${l} »`).join(", ")} : une langue ne compte pas comme matière ou compétence.
+          Cochez-la plutôt dans les langues de cours, plus haut.
+        </p>
       )}
 
       {/*

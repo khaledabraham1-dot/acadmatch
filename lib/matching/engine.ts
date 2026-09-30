@@ -15,7 +15,8 @@ import {
 import { RECOMMENDED_COURSES, RECOMMENDED_SKILLS } from "@/lib/profile/validation";
 import { selectivityOf, selectivityTier, type SelectivityTier } from "@/lib/selectivity";
 import { normalize } from "@/lib/utils";
-import { areSynonyms } from "@/lib/matching/synonyms";
+import { similarity, strengthFromScore } from "@/lib/matching/similarity";
+import { isLanguageTerm, isRecognizedTerm } from "@/lib/matching/vocabulary";
 import { domainEquivalents } from "@/data/subjects";
 
 /**
@@ -51,63 +52,6 @@ export const ENGINE_WEIGHTS: CompatibilityBreakdown = {
   skills: 0.2,
   levelDegree: 0.25,
 };
-
-const STOPWORDS = new Set([
-  "de", "des", "du", "la", "le", "les", "et", "en", "pour", "l", "d", "aux",
-  "au", "a", "une", "un", "ou", "sur", "avec",
-]);
-
-function tokenize(value: string): string[] {
-  return normalize(value)
-    .split(/[^a-z0-9]+/)
-    .filter((token) => token.length > 1 && !STOPWORDS.has(token));
-}
-
-/** Similarité entre deux libellés, de 0 (aucun rapport) à 1 (équivalents). */
-function similarity(a: string, b: string): number {
-  const na = normalize(a);
-  const nb = normalize(b);
-  if (!na || !nb) return 0;
-  if (na === nb) return 1;
-  if (areSynonyms(na, nb)) return 0.9;
-
-  // Comparaison MOT à mot (jamais caractère à caractère) à partir d'ici :
-  // un test `na.includes(nb)` sur les chaînes brutes ferait matcher "R" dans
-  // "droit" ou "Git" dans "digitale", par pur hasard de lettres. `tokenize`
-  // filtre déjà les mots d'une seule lettre, donc un intitulé comme "R" tombe
-  // ici à un ensemble de mots vide et ne matche plus jamais accidentellement.
-  const ta = tokenize(a);
-  const tb = tokenize(b);
-  if (ta.length === 0 || tb.length === 0) return 0;
-  const setA = new Set(ta);
-  const setB = new Set(tb);
-  const intersection = [...setA].filter((token) => setB.has(token)).length;
-  const union = new Set([...setA, ...setB]).size;
-  const jaccard = union === 0 ? 0 : intersection / union;
-
-  // Un intitulé entièrement contenu, mot pour mot, dans un intitulé plus
-  // long est un signal positif : soit une reformulation plus détaillée
-  // ("Bases de données" ⊆ "Bases de données médicales"), soit une
-  // spécialisation du même thème ("Droit" ⊆ "Droit des sociétés"). On ne
-  // le traite comme une correspondance FORTE que si au moins deux mots sont
-  // partagés : un seul mot générique en commun ("Analyse" ⊆ "Analyse
-  // financière") est un signal réel mais plus faible — la matière commune
-  // peut recouvrir des domaines différents — d'où une correspondance
-  // partielle plutôt que forte.
-  const [smaller, larger] = setA.size <= setB.size ? [setA, setB] : [setB, setA];
-  const isFullyContained = smaller.size > 0 && [...smaller].every((token) => larger.has(token));
-  if (isFullyContained) {
-    return smaller.size >= 2 ? 0.8 : Math.max(jaccard, 0.5);
-  }
-
-  return jaccard;
-}
-
-function strengthFromScore(score: number): MatchStrength {
-  if (score >= 0.6) return "forte";
-  if (score >= 0.25) return "partielle";
-  return "manquant";
-}
 
 // Une correspondance partielle reste un signal positif réel (matière proche,
 // formulation différente) — elle vaut donc plus qu'une simple moyenne 50/50
@@ -419,14 +363,32 @@ function outsideDomainEvidence(formation: StudyProgram, rows: SubjectMatch[]): n
 // Aligné sur le profil « solide » annoncé à l'étudiant (lib/profile/validation.ts) :
 // on ne plafonne jamais un profil qui suit nos propres recommandations.
 export const EVIDENCE_FULL_ITEMS = RECOMMENDED_COURSES + RECOMMENDED_SKILLS;
-const EVIDENCE_CAP_BASE = 40;
-const EVIDENCE_CAP_PER_ITEM = 8;
+// 0 preuve reconnue → 15 ; puis +12 par preuve (27, 39, 51, 63) ; aucun plafond à 5.
+const EVIDENCE_CAP_BASE = 15;
+const EVIDENCE_CAP_PER_ITEM = 12;
 const EVIDENCE_COMPRESSION = 0.25;
 
-/** Nombre de preuves distinctes du profil : matières + compétences, sans doublons. */
+/**
+ * Nombre de preuves distinctes du profil : matières + compétences RECONNUES
+ * (lib/matching/vocabulary.ts), sans doublons. Un mot quelconque (« Girafe »)
+ * n'est pas une preuve.
+ */
 export function profileEvidenceCount(profile: StudentProfile): number {
-  return new Set([...profile.courses.map((course) => course.name), ...profile.skills].map(normalize).filter(Boolean)).size;
+  return new Set(
+    [...profile.courses.map((course) => course.name), ...profile.skills]
+      .filter((label) => isRecognizedTerm(label) && !isLanguageTerm(label))
+      .map(normalize)
+      .filter(Boolean),
+  ).size;
 }
+
+/**
+ * Aucune matière ni compétence du profil ne correspond au programme : le
+ * profil n'apporte aucune preuve pour CETTE formation, quel que soit ce
+ * qu'il déclare (niveau, domaine, langue). Le score ne peut pas dépasser ce
+ * plafond, comme un jury qui ne trouve rien de pertinent dans un dossier.
+ */
+export const NO_CONTENT_MATCH_CEILING = 20;
 
 /** Plafond du score selon le nombre de preuves ; null quand le profil est assez documenté. */
 export function evidenceCap(evidenceCount: number): number | null {
@@ -490,9 +452,13 @@ export function computeCompatibility(profile: StudentProfile, formation: StudyPr
 
   const evidenceCeiling = evidenceCap(profileEvidenceCount(profile));
   const evidenceCapped = evidenceCeiling !== null && afterDomain > evidenceCeiling;
-  const overallScore = evidenceCapped
+  const afterEvidence = evidenceCapped
     ? Math.round(evidenceCeiling + (afterDomain - evidenceCeiling) * EVIDENCE_COMPRESSION)
     : afterDomain;
+
+  // Sans aucune preuve reconnue, les langues seules (« Anglais » ↔ « Anglais courant ») ne suffisent pas.
+  const noContentMatch = (content.score === 0 && skills.score === 0) || profileEvidenceCount(profile) === 0;
+  const overallScore = noContentMatch ? Math.min(afterEvidence, NO_CONTENT_MATCH_CEILING) : afterEvidence;
 
   // Fusionne les tableaux de correspondance matières + compétences, sans doublons.
   const seen = new Set<string>();
@@ -521,6 +487,7 @@ export function computeCompatibility(profile: StudentProfile, formation: StudyPr
     matches,
     ...(domainCapped ? { domainCapped: true } : {}),
     ...(evidenceCapped ? { evidenceCapped: true } : {}),
+    ...(noContentMatch ? { noContentMatch: true } : {}),
     ...(selectivityAdjustment !== 0 ? { selectivityAdjustment } : {}),
   };
 }
