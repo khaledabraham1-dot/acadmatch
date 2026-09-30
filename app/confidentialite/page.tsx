@@ -113,7 +113,7 @@ export default function ConfidentialitePage() {
             choisissez, après votre accord explicite. Un relevé contient souvent votre nom, votre date de
             naissance ou votre numéro étudiant : vous pouvez les masquer avant l&apos;import, ils ne sont pas
             nécessaires. Le document est lu en mémoire puis oublié : AcadMatch ne l&apos;écrit ni sur disque,
-            ni en base, ni dans les journaux. Seule la liste de matières que vous validez rejoint votre profil.
+            ni en base, ni dans les journaux. Seules la liste de matières que vous validez et la moyenne lue sur le relevé (utilisée pour évaluer vos résultats) rejoignent votre profil.
           </li>
           <li>
             <strong>Lettre de motivation et préparation aux entretiens</strong> : votre profil académique (sans

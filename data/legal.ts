@@ -70,7 +70,7 @@ export const SUBPROCESSORS: Subprocessor[] = [
  * le sauvegarder sur son compte.
  */
 export const LOCAL_STORAGE_ITEMS: { key: string; content: string }[] = [
-  { key: "acadmatch:profile", content: "Votre profil académique (niveau, diplôme, matières, compétences, langues, expériences)" },
+  { key: "acadmatch:profile", content: "Votre profil académique (niveau, diplôme, matières, compétences, langues, expériences, et la moyenne lue sur votre relevé si vous l'importez)" },
   { key: "acadmatch:selectedFormationId", content: "La formation que vous consultez" },
   { key: "acadmatch:savedFormationIds", content: "Vos formations sauvegardées" },
   { key: "acadmatch:compareIds", content: "Les formations de votre comparateur" },

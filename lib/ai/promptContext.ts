@@ -1,4 +1,5 @@
 import type { StudentProfile, StudyProgram } from "@/types";
+import { describeAverage, validTranscriptAverage } from "@/lib/profile/grades";
 
 /**
  * Mise en forme texte du profil et de la formation, partagée par toutes les
@@ -25,7 +26,10 @@ export function formatProfile(profile: StudentProfile): string {
   if (profile.skills.length > 0) {
     lines.push(`Compétences : ${profile.skills.join(", ")}`);
   }
-  if (profile.academicStanding) {
+  const transcript = validTranscriptAverage(profile);
+  if (transcript) {
+    lines.push(`Moyenne lue sur le relevé de notes : ${describeAverage(transcript)}`);
+  } else if (profile.academicStanding) {
     lines.push(`Auto-évaluation du dossier : ${profile.academicStanding}`);
   }
   const experiences = profile.experiences?.trim();

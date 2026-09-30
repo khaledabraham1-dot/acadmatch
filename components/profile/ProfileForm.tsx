@@ -8,7 +8,9 @@ import {
   type AcademicStanding,
   type StudentProfile,
   type StudyGoal,
+  type TranscriptAverage,
 } from "@/types";
+import { describeAverage, mentionFor, standingFromAverage, validTranscriptAverage } from "@/lib/profile/grades";
 import {
   ACADEMIC_LEVELS,
   ACADEMIC_STANDINGS,
@@ -82,6 +84,8 @@ export function ProfileForm() {
   const [languages, setLanguages] = useState<string[]>(["Français"]);
   const [academicStanding, setAcademicStanding] = useState<AcademicStanding>(NEUTRAL_ACADEMIC_STANDING);
   const [experiences, setExperiences] = useState("");
+  // Moyenne lue sur le relevé importé : remplace l'auto-évaluation dans le score.
+  const [transcriptAverage, setTranscriptAverage] = useState<TranscriptAverage | null>(null);
   const [hasExistingProfile, setHasExistingProfile] = useState(false);
   // Nouveau visiteur (aucun profil enregistré) : les imports de documents
   // passent en tête du formulaire. Décidé une seule fois au montage — ils ne
@@ -116,6 +120,7 @@ export function ProfileForm() {
     setLanguages(existing.languages ?? ["Français"]);
     setAcademicStanding(existing.academicStanding ?? NEUTRAL_ACADEMIC_STANDING);
     setExperiences(existing.experiences ?? "");
+    setTranscriptAverage(validTranscriptAverage(existing));
     setHasExistingProfile(true);
   }, []);
 
@@ -158,6 +163,7 @@ export function ProfileForm() {
       languages,
       academicStanding,
       ...(experiences.trim() ? { experiences: experiences.trim() } : {}),
+      ...(transcriptAverage ? { transcriptAverage } : {}),
     };
 
     saveProfile(profile);
@@ -197,6 +203,7 @@ export function ProfileForm() {
     setLanguages(["Français"]);
     setAcademicStanding(NEUTRAL_ACADEMIC_STANDING);
     setExperiences("");
+    setTranscriptAverage(null);
     setHasExistingProfile(false);
     setSubmitAttempted(false);
   }
@@ -212,6 +219,7 @@ export function ProfileForm() {
     setGoal(example.goal);
     setLanguages(example.languages);
     setAcademicStanding(example.academicStanding ?? NEUTRAL_ACADEMIC_STANDING);
+    setTranscriptAverage(null);
     setSubmitAttempted(false);
   }
 
@@ -230,10 +238,9 @@ export function ProfileForm() {
     <TranscriptImport
       existingCourses={courses}
       currentLevel={currentLevel}
-      currentStanding={academicStanding}
       onAddCourses={(names) => setCourses((current) => appendMissing(current, names))}
       onApplyLevel={setCurrentLevel}
-      onApplyStanding={setAcademicStanding}
+      onApplyAverage={setTranscriptAverage}
     />
   );
   const syllabusImport = (
@@ -367,6 +374,25 @@ export function ProfileForm() {
 
           <div className="sm:col-span-2">
             <Label htmlFor="academicStanding">Vos résultats académiques</Label>
+            {transcriptAverage ? (
+              <div className="rounded-[14px] border border-blue-200 bg-blue-50 px-3.5 py-3 text-sm text-slate-800">
+                <p>
+                  <strong className="font-bold">D&apos;après votre relevé : {describeAverage(transcriptAverage)}</strong>, mention «&nbsp;
+                  {mentionFor(transcriptAverage.valueOn20)}&nbsp;» → {standingFromAverage(transcriptAverage.valueOn20)}.
+                </p>
+                <p className="mt-1 text-xs text-slate-600">
+                  Ce sont vos vraies notes qui comptent dans le score, pas une auto-évaluation.{" "}
+                  <button
+                    type="button"
+                    onClick={() => setTranscriptAverage(null)}
+                    className="font-bold text-slate-700 underline underline-offset-2"
+                  >
+                    Ne plus utiliser la moyenne du relevé
+                  </button>
+                </p>
+              </div>
+            ) : (
+              <>
             <Select
               id="academicStanding"
               value={academicStanding}
@@ -379,10 +405,12 @@ export function ProfileForm() {
               ))}
             </Select>
             <p className="mt-1.5 text-xs text-slate-500">
-              Auto-évaluation honnête, quel que soit votre système de notation d&apos;origine. Elle
-              affine légèrement la compatibilité « Niveau / dossier » — elle ne vous exclut jamais
-              d&apos;une formation.
+              Auto-évaluation honnête, quel que soit votre système de notation d&apos;origine. Elle compte
+              dans le score, surtout face aux formations très sélectives. Importez votre relevé : votre vraie
+              moyenne la remplacera.
             </p>
+              </>
+            )}
           </div>
 
           <div className="sm:col-span-2">

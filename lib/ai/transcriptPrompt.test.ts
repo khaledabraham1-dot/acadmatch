@@ -91,9 +91,10 @@ describe("prompt et garde-fous", () => {
   });
 
   it("traduit une moyenne sur 20 en suggestion d'auto-évaluation", () => {
+    // Seuils des mentions officielles (lib/profile/grades.ts) : TB ≥ 16, B ≥ 14, AB ≥ 12.
     expect(standingFromAverage(17)).toBe("Excellents résultats");
-    expect(standingFromAverage(13.5)).toBe("Bons résultats");
-    expect(standingFromAverage(11)).toBe("Résultats dans la moyenne");
-    expect(standingFromAverage(8)).toBe("Résultats modestes");
+    expect(standingFromAverage(14.5)).toBe("Bons résultats");
+    expect(standingFromAverage(13.5)).toBe("Résultats dans la moyenne");
+    expect(standingFromAverage(11)).toBe("Résultats modestes");
   });
 });

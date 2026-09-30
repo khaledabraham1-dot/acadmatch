@@ -86,6 +86,21 @@ export interface StudentProfile {
    * enregistré avant l'ajout de ce champ reste valide sans migration.
    */
   experiences?: string;
+  /**
+   * Moyenne lue sur le relevé de notes importé (2026-09-30). Quand elle est
+   * présente, elle REMPLACE l'auto-évaluation `academicStanding` dans le score
+   * (lib/profile/grades.ts). Optionnelle : un profil sans import n'en a pas.
+   */
+  transcriptAverage?: TranscriptAverage;
+}
+
+/** Moyenne tirée d'un relevé de notes, ramenée sur 20 (barème fiable uniquement). */
+export interface TranscriptAverage {
+  valueOn20: number;
+  /** Moyenne générale imprimée, ou moyenne simple des notes lisibles (sans coefficients). */
+  basis: "moyenne-generale" | "moyenne-des-notes";
+  /** Nombre de notes utilisées quand basis = "moyenne-des-notes". */
+  gradeCount?: number;
 }
 
 /** Type de correspondance entre un élément du profil étudiant et une exigence de formation. */

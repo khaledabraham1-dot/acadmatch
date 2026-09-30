@@ -3,20 +3,21 @@
 import { useId, useState } from "react";
 import Link from "next/link";
 import { FileUp, Loader2, ScanText, ShieldCheck } from "lucide-react";
-import type { AcademicLevel, AcademicStanding } from "@/types";
+import type { AcademicLevel, TranscriptAverage } from "@/types";
+import { describeAverage, mentionFor, transcriptAverageFrom } from "@/lib/profile/grades";
 import { Button } from "@/components/ui/Button";
 import { aiErrorMessage, useAiAccess } from "@/components/ai/AiFeature";
 import { prepareUpload } from "@/components/profile/prepareUpload";
 import {
   ACCEPTED_TRANSCRIPT_TYPES,
-  standingFromAverage,
   type TranscriptExtraction,
 } from "@/lib/ai/transcriptPrompt";
 
 /**
  * Import du relevé de notes (voir app/api/releve/route.ts) : l'étudiant
  * choisit un PDF ou une photo, l'IA propose les matières lues, l'étudiant
- * coche ce qu'il garde. Rien n'entre dans le profil sans son clic, et le
+ * coche ce qu'il garde : aucune matière n'entre sans son clic. La moyenne lue
+ * (barème fiable) est appliquée d'office et affichée. Le
  * fichier n'est conservé nulle part.
  */
 
@@ -30,19 +31,18 @@ const IMPORT_ERRORS: Record<string, string> = {
 interface TranscriptImportProps {
   existingCourses: string[];
   currentLevel: AcademicLevel;
-  currentStanding: AcademicStanding;
   onAddCourses: (names: string[]) => void;
   onApplyLevel: (level: AcademicLevel) => void;
-  onApplyStanding: (standing: AcademicStanding) => void;
+  /** Moyenne lue sur le relevé (barème fiable) : remplace l'auto-évaluation dans le score. */
+  onApplyAverage: (average: TranscriptAverage) => void;
 }
 
 export function TranscriptImport({
   existingCourses,
   currentLevel,
-  currentStanding,
   onAddCourses,
   onApplyLevel,
-  onApplyStanding,
+  onApplyAverage,
 }: TranscriptImportProps) {
   const { configured, user, authLoading } = useAiAccess();
   const inputId = useId();
@@ -75,6 +75,10 @@ export function TranscriptImport({
       }
       const result = data.extraction as TranscriptExtraction;
       setExtraction(result);
+      // La moyenne est un fait lu sur le document : appliquée d'office (le
+      // score se fonde sur les vraies notes), et affichée ci-dessous.
+      const average = transcriptAverageFrom(result);
+      if (average) onApplyAverage(average);
       setSelected(new Set(result.courses.filter((c) => !alreadyInProfile(c.name)).map((c) => c.name)));
     } catch {
       setError(aiErrorMessage("error"));
@@ -101,7 +105,7 @@ export function TranscriptImport({
 
   if (!configured) return null;
 
-  const suggestedStanding = extraction?.averageOn20 != null ? standingFromAverage(extraction.averageOn20) : null;
+  const average = extraction ? transcriptAverageFrom(extraction) : null;
 
   return (
     <div className="rounded-2xl border border-blue-100 bg-blue-50/50 p-4 sm:p-5">
@@ -238,11 +242,7 @@ export function TranscriptImport({
                   Niveau lu : {extraction.levelHint} — l&apos;utiliser
                 </Button>
               )}
-              {suggestedStanding && suggestedStanding !== currentStanding && (
-                <Button type="button" size="sm" variant="outline" className="h-auto min-h-9 py-1.5" onClick={() => onApplyStanding(suggestedStanding)}>
-                  Moyenne {String(extraction.averageOn20).replace(".", ",")}/20 → « {suggestedStanding} »
-                </Button>
-              )}
+
             </div>
             {addedCount !== null && (
               <p className="text-sm text-emerald-700">
@@ -250,10 +250,17 @@ export function TranscriptImport({
                 enregistrer votre profil.
               </p>
             )}
-            {extraction.gradingScale && extraction.averageOn20 != null && extraction.gradingScale !== "/20" && (
+            {average ? (
+              <p className="rounded-xl bg-white px-3 py-2.5 text-sm text-slate-700 ring-1 ring-inset ring-blue-100">
+                <strong className="font-bold text-slate-900">Moyenne retenue : {describeAverage(average)}</strong>, mention «&nbsp;
+                {mentionFor(average.valueOn20)}&nbsp;». Vos résultats sont désormais évalués d&apos;après votre relevé, et
+                non d&apos;après une auto-évaluation.
+              </p>
+            ) : (
               <p className="text-xs text-slate-500">
-                Moyenne convertie depuis le barème « {extraction.gradingScale} » : conversion approximative, à
-                vérifier.
+                Pas de moyenne exploitable sur ce relevé
+                {extraction.gradingScale ? ` (barème « ${extraction.gradingScale} », non converti automatiquement vers /20)` : ""} :
+                vos résultats restent ceux que vous déclarez.
               </p>
             )}
           </div>

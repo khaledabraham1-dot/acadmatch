@@ -7,6 +7,7 @@ import type {
 } from "@/types";
 import { ENGINE_WEIGHTS, EVIDENCE_FULL_ITEMS, NO_CONTENT_MATCH_CEILING, profileEvidenceCount } from "@/lib/matching/engine";
 import { admissionRate, selectivityOf, selectivityTier, TIER_LABEL } from "@/lib/selectivity";
+import { describeAverage, effectiveStanding, validTranscriptAverage } from "@/lib/profile/grades";
 import { getCompatibilityLabel } from "@/lib/matching/labels";
 import { normalize } from "@/lib/utils";
 
@@ -173,8 +174,12 @@ export function buildDecisionAid(
           ? ` (taux d'accès Parcoursup : ${Math.round(rate * 100)} %)`
           : ` (${Math.round(rate * 100)} % des candidatures reçoivent une proposition, chiffres officiels)`;
     const points = Math.abs(result.selectivityAdjustment);
+    const transcript = validTranscriptAverage(profile);
+    const resultsLabel = transcript
+      ? `vos notes réelles, ${describeAverage(transcript)},`
+      : `vos résultats déclarés (« ${effectiveStanding(profile).standing} »)`;
     paragraphs.push(
-      `${tier ? TIER_LABEL[tier] : "Sélectivité connue"} pour cette formation${figure} : vos résultats (« ${profile.academicStanding} ») ${result.selectivityAdjustment > 0 ? "ajoutent" : "retirent"} ${points} point${points > 1 ? "s" : ""} au score. Ce sont des résultats déclarés : le jury, lui, regardera vos notes réelles.`,
+      `${tier ? TIER_LABEL[tier] : "Sélectivité connue"} pour cette formation${figure} : ${resultsLabel} ${result.selectivityAdjustment > 0 ? "ajoutent" : "retirent"} ${points} point${points > 1 ? "s" : ""} au score.${transcript ? "" : " Ce sont des résultats déclarés : le jury, lui, regardera vos notes réelles (importez votre relevé pour qu'elles comptent ici)."}`,
     );
   }
 

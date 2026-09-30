@@ -1,5 +1,5 @@
 import { ACADEMIC_LEVELS } from "@/data/subjects";
-import type { AcademicLevel, AcademicStanding } from "@/types";
+import type { AcademicLevel } from "@/types";
 
 /**
  * Import du relevé de notes — prompt, schéma de sortie et validation (pur,
@@ -164,15 +164,5 @@ export function parseTranscriptExtraction(raw: string): TranscriptExtraction | n
   };
 }
 
-/**
- * Suggestion d'auto-évaluation à partir d'une moyenne sur 20 — seulement
- * une SUGGESTION que l'étudiant accepte ou non : la conversion d'un barème
- * étranger vers /20 reste approximative, et la barre de chaque jury
- * n'est pas connue.
- */
-export function standingFromAverage(averageOn20: number): AcademicStanding {
-  if (averageOn20 >= 16) return "Excellents résultats";
-  if (averageOn20 >= 13) return "Bons résultats";
-  if (averageOn20 >= 10) return "Résultats dans la moyenne";
-  return "Résultats modestes";
-}
+/** Seuils des mentions : voir lib/profile/grades.ts (source unique). */
+export { standingFromAverage } from "@/lib/profile/grades";

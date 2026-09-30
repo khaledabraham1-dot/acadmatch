@@ -14,6 +14,7 @@ import {
 } from "@/types";
 import { RECOMMENDED_COURSES, RECOMMENDED_SKILLS } from "@/lib/profile/validation";
 import { selectivityOf, selectivityTier, type SelectivityTier } from "@/lib/selectivity";
+import { effectiveStanding } from "@/lib/profile/grades";
 import { normalize } from "@/lib/utils";
 import { similarity, strengthFromScore } from "@/lib/matching/similarity";
 import { isLanguageTerm, isRecognizedTerm } from "@/lib/matching/vocabulary";
@@ -146,8 +147,9 @@ const SELECTIVITY_STANDING_ADJUSTMENT: Record<SelectivityTier, Record<AcademicSt
 /** Ajustement global (points) selon résultats et sélectivité ; 0 si l'un des deux est inconnu. */
 export function selectivityStandingAdjustment(profile: StudentProfile, formation: StudyProgram): number {
   const tier = selectivityTier(selectivityOf(formation.id));
-  if (!tier || !profile.academicStanding) return 0;
-  return SELECTIVITY_STANDING_ADJUSTMENT[tier][profile.academicStanding];
+  const { standing } = effectiveStanding(profile);
+  if (!tier || !standing) return 0;
+  return SELECTIVITY_STANDING_ADJUSTMENT[tier][standing];
 }
 
 function computeLevelDegreeScore(profile: StudentProfile, formation: StudyProgram): number {
@@ -164,7 +166,7 @@ function computeLevelDegreeScore(profile: StudentProfile, formation: StudyProgra
 
   // Sélectivité publiée : les résultats pèsent sur le score global (plus bas), pas ici.
   const selectivityKnown = selectivityTier(selectivityOf(formation.id)) !== null;
-  const standing = selectivityKnown ? NEUTRAL_ACADEMIC_STANDING : (profile.academicStanding ?? NEUTRAL_ACADEMIC_STANDING);
+  const standing = selectivityKnown ? NEUTRAL_ACADEMIC_STANDING : (effectiveStanding(profile).standing ?? NEUTRAL_ACADEMIC_STANDING);
   const afterStanding = afterGoal + ACADEMIC_STANDING_ADJUSTMENT[standing];
   return Math.min(100, Math.max(0, afterStanding));
 }
