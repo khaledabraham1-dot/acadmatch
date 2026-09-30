@@ -11,7 +11,7 @@ const STRENGTH_CONFIG: Record<SubjectMatch["strength"], { label: string; tone: "
 export function MatchTable({ matches }: { matches: SubjectMatch[] }) {
   if (matches.length === 0) {
     return (
-      <p className="text-sm text-slate-400">
+      <p className="text-sm text-slate-500">
         Aucune matière ou compétence à comparer. Complétez votre profil pour obtenir une analyse détaillée.
       </p>
     );
@@ -36,7 +36,7 @@ export function MatchTable({ matches }: { matches: SubjectMatch[] }) {
               </div>
               <p className="text-sm text-slate-500">
                 {match.strength === "manquant" ? (
-                  <span className="text-slate-400">Aucune correspondance dans votre profil</span>
+                  <span className="text-slate-500">Aucune correspondance dans votre profil</span>
                 ) : (
                   <>Votre profil : {match.studentItem}</>
                 )}
@@ -52,10 +52,10 @@ export function MatchTable({ matches }: { matches: SubjectMatch[] }) {
         scrolle alors horizontalement dans son propre cadre plutôt que de
         faire déborder toute la page.
       */}
-      <div className="hidden overflow-x-auto sm:block">
+      <div className="hidden overflow-x-auto sm:block" tabIndex={0} role="region" aria-label="Correspondance des matières">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-400">
+            <tr className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500">
               <th className="py-2.5 pr-4 font-medium">Votre matière / compétence</th>
               <th className="py-2.5 pr-4 font-medium">Exigence de la formation</th>
               <th className="py-2.5 font-medium">Correspondance</th>
@@ -68,7 +68,7 @@ export function MatchTable({ matches }: { matches: SubjectMatch[] }) {
                 <tr key={`${match.formationRequirement}-${index}`}>
                   <td className="py-3 pr-4 text-slate-700">
                     {match.strength === "manquant" ? (
-                      <span className="text-slate-400">—</span>
+                      <span className="text-slate-500">—</span>
                     ) : (
                       match.studentItem
                     )}

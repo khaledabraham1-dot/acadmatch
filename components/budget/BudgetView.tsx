@@ -98,7 +98,7 @@ export function BudgetView() {
   return (
     <div key={plan.formationId} className="space-y-4">
       <Card>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Formation</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Formation</p>
         <h2 className="mt-1 font-semibold text-slate-900">{formation.name}</h2>
         <p className="mt-0.5 text-sm text-slate-500">
           {formation.institution.name} · {formation.institution.city} ({formation.institution.country})
@@ -380,7 +380,7 @@ function MoneyFieldset<K extends string>({
 }) {
   return (
     <fieldset className="mt-5">
-      <legend className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">{legend}</legend>
+      <legend className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">{legend}</legend>
       <div className="grid gap-3 sm:grid-cols-2">
         {fields.map((field) => (
           <MoneyInput
@@ -434,7 +434,7 @@ function MoneyInput({
             if (parsed !== null) setValue(centsToInput(parsed));
           }}
         />
-        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">€</span>
+        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">€</span>
       </div>
       {invalid && <p className="mt-1 text-xs text-red-600">Montant invalide (ex : 450 ou 450,50).</p>}
       {hint && !invalid && (
@@ -463,7 +463,7 @@ function SummaryCard({ summary, plan }: { summary: BudgetSummary; plan: BudgetPl
               label={
                 <span className="flex items-center gap-2">
                   <KindBadge kind={kind} />
-                  <span className="text-xs text-slate-400">{KIND_HELP[kind]}</span>
+                  <span className="text-xs text-slate-500">{KIND_HELP[kind]}</span>
                 </span>
               }
               cents={summary.costByKind[kind]}

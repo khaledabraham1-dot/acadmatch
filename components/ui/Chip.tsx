@@ -25,7 +25,7 @@ export function Chip({ children, onRemove, className }: ChipProps) {
           // nettement sous la taille confortable au toucher sur mobile, alors
           // que retirer une matière/compétence est une action fréquente du
           // formulaire de profil.
-          className="rounded-full p-1.5 text-slate-400 hover:bg-slate-200 hover:text-slate-600"
+          className="rounded-full p-1.5 text-slate-500 hover:bg-slate-200 hover:text-slate-600"
         >
           <X className="size-3.5" />
         </button>

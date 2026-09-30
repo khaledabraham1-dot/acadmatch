@@ -179,7 +179,7 @@ export default function RecherchePage() {
 
       <div className="mb-6 space-y-3">
         <div className="relative">
-          <SearchIcon className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+          <SearchIcon className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-500" />
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -264,7 +264,7 @@ export default function RecherchePage() {
       </div>
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-slate-500">
           {splitByDomain ? (
             <>
               <strong className="font-bold text-slate-900">
@@ -343,7 +343,7 @@ export default function RecherchePage() {
         )}
         {filtered.length === 0 && (
           <div className="rounded-2xl border border-dashed border-slate-200 p-8 text-center">
-            <p className="text-sm text-slate-400">Aucune formation ne correspond à votre recherche.</p>
+            <p className="text-sm text-slate-500">Aucune formation ne correspond à votre recherche.</p>
             <button
               type="button"
               onClick={resetFilters}

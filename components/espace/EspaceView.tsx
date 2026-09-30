@@ -148,7 +148,7 @@ export function EspaceView() {
           <Bookmark className="size-4 text-slate-500" />
           Formations sauvegardées
           {savedFormations.length > 0 && (
-            <span className="text-sm font-normal text-slate-400">({savedFormations.length})</span>
+            <span className="text-sm font-normal text-slate-500">({savedFormations.length})</span>
           )}
         </h2>
         {savedFormations.length > 0 ? (
@@ -168,7 +168,7 @@ export function EspaceView() {
           </div>
         ) : (
           <Card className="border-dashed text-center">
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-500">
               Aucune formation sauvegardée pour l&apos;instant. Sur{" "}
               <Link href="/recherche" className="font-medium text-blue-600 hover:text-blue-700">
                 la recherche
@@ -213,7 +213,7 @@ export function EspaceView() {
           </Card>
         ) : (
           <Card className="border-dashed text-center">
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-500">
               Aucune comparaison en cours. Sur{" "}
               <Link href="/recherche" className="font-medium text-blue-600 hover:text-blue-700">
                 la recherche
@@ -230,7 +230,7 @@ export function EspaceView() {
           <ClipboardList className="size-4 text-slate-500" />
           Candidatures
           {applications.length > 0 && (
-            <span className="text-sm font-normal text-slate-400">({applications.length})</span>
+            <span className="text-sm font-normal text-slate-500">({applications.length})</span>
           )}
         </h2>
         {applications.length > 0 ? (
@@ -254,7 +254,7 @@ export function EspaceView() {
           </Card>
         ) : (
           <Card className="border-dashed text-center">
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-500">
               Aucune candidature suivie pour l&apos;instant.{" "}
               <Link href="/candidatures" className="font-medium text-blue-600 hover:text-blue-700">
                 Démarrer le suivi
@@ -280,7 +280,7 @@ export function EspaceView() {
                   className="flex items-center justify-between gap-3 text-sm"
                 >
                   <span className="min-w-0 truncate text-slate-700">{entry.label}</span>
-                  <span className="shrink-0 text-xs text-slate-400">{formatCalendarDate(entry.date)}</span>
+                  <span className="shrink-0 text-xs text-slate-500">{formatCalendarDate(entry.date)}</span>
                 </li>
               ))}
             </ul>
@@ -291,7 +291,7 @@ export function EspaceView() {
           </Card>
         ) : (
           <Card className="border-dashed text-center">
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-500">
               Aucun rappel pour l&apos;instant. Ajoutez une échéance personnelle depuis{" "}
               <Link href="/candidatures" className="font-medium text-blue-600 hover:text-blue-700">
                 le suivi des candidatures
@@ -365,7 +365,7 @@ export function EspaceView() {
           </Card>
         ) : (
           <Card className="border-dashed text-center">
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-500">
               Aucune formation ciblée pour l&apos;instant. Sauvegardez une formation ou suivez une candidature pour
               voir apparaître votre projet d&apos;études ici.
             </p>

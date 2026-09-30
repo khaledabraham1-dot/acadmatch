@@ -54,7 +54,11 @@ export function ApplicationsView() {
         <div className="min-w-0 flex-1">
           <label className="mb-1.5 block text-sm font-medium text-slate-700">Suivre une nouvelle candidature</label>
           {availableFormations.length > 0 ? (
-            <Select value={pickedFormationId} onChange={(e) => setPickedFormationId(e.target.value)}>
+            <Select
+              aria-label="Choisir une formation à suivre"
+              value={pickedFormationId}
+              onChange={(e) => setPickedFormationId(e.target.value)}
+            >
               <option value="">Choisissez une formation…</option>
               {availableFormations.map((f) => (
                 <option key={f.id} value={f.id}>
@@ -63,7 +67,7 @@ export function ApplicationsView() {
               ))}
             </Select>
           ) : (
-            <p className="text-sm text-slate-400">Toutes les formations du catalogue sont déjà suivies.</p>
+            <p className="text-sm text-slate-500">Toutes les formations du catalogue sont déjà suivies.</p>
           )}
         </div>
         <Button type="button" onClick={handleAdd} disabled={!pickedFormationId}>
@@ -74,7 +78,7 @@ export function ApplicationsView() {
 
       {sorted.length === 0 ? (
         <Card className="border-dashed text-center">
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-500">
             Aucune candidature suivie pour l&apos;instant. Choisissez une formation ci-dessus pour commencer.
           </p>
         </Card>

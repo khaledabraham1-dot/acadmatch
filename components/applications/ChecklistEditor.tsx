@@ -64,7 +64,7 @@ export function ChecklistEditor({
                   onChange={() => onToggle(item.id)}
                   className="mt-0.5 size-4 shrink-0 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20"
                 />
-                <span className={cn("min-w-0 flex-1 text-slate-700", item.done && "text-slate-400 line-through")}>
+                <span className={cn("min-w-0 flex-1 text-slate-700", item.done && "text-slate-500 line-through")}>
                   {item.label}
                   {item.source && (
                     <a
@@ -72,7 +72,7 @@ export function ChecklistEditor({
                       target="_blank"
                       rel="noopener noreferrer"
                       title="Source officielle de cette suggestion"
-                      className="ml-1 inline-flex align-middle text-slate-400 hover:text-blue-600"
+                      className="ml-1 inline-flex align-middle text-slate-500 hover:text-blue-600"
                     >
                       <ExternalLink className="size-3" />
                     </a>
@@ -98,7 +98,7 @@ export function ChecklistEditor({
                     {item.required ? "Obligatoire" : "Optionnel"}
                   </Badge>
                 </button>
-                <label className="flex shrink-0 items-center gap-1 text-slate-400">
+                <label className="flex shrink-0 items-center gap-1 text-slate-500">
                   <CalendarDays className="size-3.5" aria-hidden />
                   <input
                     type="date"
@@ -113,7 +113,7 @@ export function ChecklistEditor({
           ))}
         </ul>
       ) : (
-        <p className="text-sm text-slate-400">{emptyLabel}</p>
+        <p className="text-sm text-slate-500">{emptyLabel}</p>
       )}
       {suggestion && onAddSuggestion && (
         <button

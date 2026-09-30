@@ -212,7 +212,7 @@ export function SyllabusImport({ existingCourses, existingSkills, onAddCourses, 
                 onChange={(e) => setText(e.target.value)}
                 placeholder="Collez ici les descriptifs de vos cours (copiés depuis le site de votre université ou un PDF)…"
               />
-              <p className="mt-1 text-right text-xs text-slate-400">
+              <p className="mt-1 text-right text-xs text-slate-500">
                 {text.length.toLocaleString("fr")} / {MAX_SYLLABUS_TEXT_CHARS.toLocaleString("fr")} caractères
               </p>
             </div>
@@ -276,10 +276,10 @@ export function SyllabusImport({ existingCourses, existingSkills, onAddCourses, 
                     {item.skills.length > 0 ? (
                       <span className="block text-xs text-slate-500">{item.skills.join(" · ")}</span>
                     ) : (
-                      <span className="block text-xs text-slate-400">Pas de descriptif : aucune compétence tirée de ce cours</span>
+                      <span className="block text-xs text-slate-500">Pas de descriptif : aucune compétence tirée de ce cours</span>
                     )}
                     {item.originalName !== item.name && (
-                      <span className="block text-xs text-slate-400">Sur le document : {item.originalName}</span>
+                      <span className="block text-xs text-slate-500">Sur le document : {item.originalName}</span>
                     )}
                   </span>
                 </label>
@@ -306,7 +306,7 @@ export function SyllabusImport({ existingCourses, existingSkills, onAddCourses, 
                       <label
                         title={`Vu dans : ${from.join(", ")}`}
                         className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs ${
-                          kept ? "border-violet-200 bg-violet-50 text-violet-800" : "border-slate-200 bg-white text-slate-400 line-through"
+                          kept ? "border-violet-200 bg-violet-50 text-violet-800" : "border-slate-200 bg-white text-slate-500 line-through"
                         }`}
                       >
                         <input type="checkbox" className="size-3" disabled={inProfile} checked={kept} onChange={() => toggleSkill(skill)} />

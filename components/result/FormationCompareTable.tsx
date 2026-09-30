@@ -30,7 +30,7 @@ export function FormationCompareTable({ profile, formations }: FormationCompareT
 
   return (
     <div className="space-y-4">
-      <Card className="overflow-x-auto p-0">
+      <Card className="overflow-x-auto p-0" tabIndex={0} role="region" aria-label="Comparaison des formations">
         <table className="w-full min-w-[640px] border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
@@ -43,7 +43,7 @@ export function FormationCompareTable({ profile, formations }: FormationCompareT
                   >
                     {formation.name}
                   </Link>
-                  <p className="mt-0.5 text-[11px] font-normal normal-case tracking-normal text-slate-400">
+                  <p className="mt-0.5 text-[11px] font-normal normal-case tracking-normal text-slate-500">
                     {formation.institution.name}
                   </p>
                 </th>
@@ -149,7 +149,7 @@ export function FormationCompareTable({ profile, formations }: FormationCompareT
               {rows.map(({ formation }) => (
                 <td key={formation.id} className="px-4 py-3">
                   {formation.demo ? (
-                    <span className="text-xs text-slate-400">Démo — URL fictive</span>
+                    <span className="text-xs text-slate-500">Démo — URL fictive</span>
                   ) : (
                     <a
                       href={formation.source}

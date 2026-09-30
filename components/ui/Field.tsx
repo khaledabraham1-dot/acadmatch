@@ -32,7 +32,7 @@ export function Select({ className, children, ...props }: SelectHTMLAttributes<H
       </select>
       <ChevronDown
         aria-hidden="true"
-        className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-slate-400"
+        className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-slate-500"
       />
     </div>
   );

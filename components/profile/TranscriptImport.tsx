@@ -216,7 +216,7 @@ export function TranscriptImport({
                         {course.grade && <span className="ml-2 text-xs text-slate-500">{course.grade}</span>}
                         {inProfile && <span className="ml-2 text-xs text-emerald-600">déjà dans votre profil</span>}
                         {course.originalName !== course.name && (
-                          <span className="block text-xs text-slate-400">Sur le relevé : {course.originalName}</span>
+                          <span className="block text-xs text-slate-500">Sur le relevé : {course.originalName}</span>
                         )}
                       </span>
                     </label>

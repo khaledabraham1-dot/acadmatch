@@ -46,7 +46,8 @@ export default function ConfidentialitePage() {
           votre appareil uniquement. Nous n&apos;y avons pas accès. Effacer les données du site dans votre
           navigateur supprime tout.
         </p>
-        <div className="overflow-x-auto rounded-xl border border-slate-200">
+        {/* tabIndex : une zone qui défile doit être atteignable au clavier (WCAG, axe scrollable-region-focusable). */}
+        <div className="overflow-x-auto rounded-xl border border-slate-200" tabIndex={0} role="region" aria-label="Données gardées dans votre navigateur">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50 text-slate-500">
               <tr>

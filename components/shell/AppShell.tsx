@@ -25,8 +25,9 @@ function SidebarContent() {
         <Logo dark />
       </div>
       <SidebarNav />
-      <div className="mx-4 mt-6 flex items-start gap-2.5 rounded-xl bg-white/5 p-3.5 text-xs text-slate-400">
-        <ShieldCheck className="size-4 shrink-0 text-slate-500" aria-hidden />
+      {/* Fond sombre : gris clairs (slate-300/400), jamais les gris « texte secondaire » des fonds clairs. */}
+      <div className="mx-4 mt-6 flex items-start gap-2.5 rounded-xl bg-white/5 p-3.5 text-xs text-slate-300">
+        <ShieldCheck className="size-4 shrink-0 text-slate-400" aria-hidden />
         <p>
           Formations vérifiées sur un périmètre ciblé ({formatList(coveredDomains(FORMATIONS))}). Le score
           n&apos;est pas une promesse d&apos;admission.
@@ -35,14 +36,14 @@ function SidebarContent() {
       <div className="mt-auto px-5 pt-6">
         <SyncBadge dark />
       </div>
-      <nav aria-label="Informations légales" className=" flex flex-wrap gap-x-3 gap-y-1 px-5 pt-6 text-xs text-slate-500">
-        <Link href="/mentions-legales" className="hover:text-slate-300">
+      <nav aria-label="Informations légales" className="flex flex-wrap gap-x-3 gap-y-1 px-5 pt-6 text-xs text-slate-300">
+        <Link href="/mentions-legales" className="hover:text-white">
           Mentions légales
         </Link>
-        <Link href="/confidentialite" className="hover:text-slate-300">
+        <Link href="/confidentialite" className="hover:text-white">
           Confidentialité
         </Link>
-        <Link href="/conditions" className="hover:text-slate-300">
+        <Link href="/conditions" className="hover:text-white">
           Conditions
         </Link>
       </nav>

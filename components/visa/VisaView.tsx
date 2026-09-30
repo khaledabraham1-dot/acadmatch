@@ -84,7 +84,7 @@ export function VisaView() {
   return (
     <div className="space-y-4">
       <Card>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Formation</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Formation</p>
         <h2 className="mt-1 font-semibold text-slate-900">{formation.name}</h2>
         <p className="mt-0.5 text-sm text-slate-500">
           {formation.institution.name} · {formation.institution.city} ({formation.institution.country})
@@ -247,7 +247,7 @@ function VisaRouteCards({
   return (
     <>
       <Card>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Titre à obtenir</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Titre à obtenir</p>
         <h2 className="mt-1 font-semibold text-slate-900">{guide.visaName}</h2>
         {guide.residenceProcedure && (
           <p className="mt-3 text-sm text-slate-600">

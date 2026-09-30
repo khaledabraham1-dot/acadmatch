@@ -108,7 +108,7 @@ export function MotivationLetterView() {
   return (
     <div className="space-y-4">
       <Card>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Formation visée</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Formation visée</p>
         <h2 className="mt-1 font-semibold text-slate-900">{formation.name}</h2>
         <p className="mt-0.5 text-sm text-slate-500">
           {formation.institution.name} · {formation.institution.city}
@@ -155,7 +155,7 @@ export function MotivationLetterView() {
             <Save className="size-3.5" />
             Sauvegarder
           </Button>
-          {savedAt && <span className="text-xs text-slate-400">Sauvegardé.</span>}
+          {savedAt && <span className="text-xs text-slate-500">Sauvegardé.</span>}
         </div>
       </Card>
     </div>

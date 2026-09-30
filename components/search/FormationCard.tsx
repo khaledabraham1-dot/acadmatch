@@ -114,7 +114,7 @@ export function FormationCard({
           <label
             className={cn(
               "mt-4 inline-flex items-center gap-2 text-sm",
-              compareDisabled ? "cursor-not-allowed text-slate-400" : "cursor-pointer text-slate-700",
+              compareDisabled ? "cursor-not-allowed text-slate-500" : "cursor-pointer text-slate-700",
             )}
           >
             <input
@@ -126,7 +126,7 @@ export function FormationCard({
             />
             Comparer
             {compareDisabled && (
-              <span className="text-xs text-slate-400">(max. {MAX_COMPARE_FORMATIONS})</span>
+              <span className="text-xs text-slate-500">(max. {MAX_COMPARE_FORMATIONS})</span>
             )}
           </label>
         )}
@@ -143,7 +143,7 @@ export function FormationCard({
         {expanded && (
           <div className="mt-4 grid gap-4 border-t border-slate-100 pt-4 sm:grid-cols-3">
             <div>
-              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400">
+              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
                 Prérequis
               </p>
               <ul className="space-y-1 text-sm text-slate-600">
@@ -153,7 +153,7 @@ export function FormationCard({
               </ul>
             </div>
             <div>
-              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400">
+              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
                 Matières importantes
               </p>
               <ul className="space-y-1 text-sm text-slate-600">
@@ -163,7 +163,7 @@ export function FormationCard({
               </ul>
             </div>
             <div>
-              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400">
+              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
                 Compétences demandées
               </p>
               <ul className="space-y-1 text-sm text-slate-600">
@@ -180,7 +180,7 @@ export function FormationCard({
         {formation.demo ? (
           // Texte, pas un lien : cette URL est fictive et ne mène nulle part.
           <span
-            className="block truncate text-xs text-slate-400"
+            className="block truncate text-xs text-slate-500"
             title={`URL fictive de démonstration : ${formation.source}`}
           >
             Source (démo) : {formation.source.replace("https://", "")}

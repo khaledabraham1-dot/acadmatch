@@ -40,7 +40,7 @@ function Icon({ state }: { state: SyncState }) {
 export function SyncBadge({ dark = false }: { dark?: boolean }) {
   const { state } = useSyncStatus();
   return (
-    <p role="status" className={cn("flex items-center gap-1.5 text-xs", dark ? "text-slate-400" : "text-slate-600")}>
+    <p role="status" className={cn("flex items-center gap-1.5 text-xs", dark ? "text-slate-300" : "text-slate-600")}>
       <Icon state={state} />
       <span>
         {LABELS[state]}

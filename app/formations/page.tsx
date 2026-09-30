@@ -59,7 +59,7 @@ export default function FormationsPage() {
         {byDomain.map(({ domain, formations: list }) => (
           <section key={domain} aria-labelledby={`domaine-${domain}`}>
             <h2 id={`domaine-${domain}`} className="mb-3 text-lg font-semibold text-slate-900">
-              {domain} <span className="text-sm font-normal text-slate-400">· {list.length}</span>
+              {domain} <span className="text-sm font-normal text-slate-500">· {list.length}</span>
             </h2>
             <ul className="grid gap-3 sm:grid-cols-2">
               {list.map((formation) => (

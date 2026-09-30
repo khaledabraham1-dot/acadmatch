@@ -77,7 +77,7 @@ export function CalendarView() {
 
       {dates.length === 0 ? (
         <Card className="border-dashed text-center">
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-500">
             Aucun rappel pour l&apos;instant. Ajoutez une échéance personnelle ou une date sur un document/une
             action depuis{" "}
             <Link href="/candidatures" className="font-medium text-blue-600 hover:text-blue-700">
@@ -110,7 +110,7 @@ export function CalendarView() {
                         aria-label={entry.done ? "Marquer comme non terminé" : "Marquer comme terminé"}
                         className={cn(
                           "mt-0.5 shrink-0",
-                          toggleable ? "text-slate-400 hover:text-blue-600" : "cursor-default text-slate-300",
+                          toggleable ? "text-slate-500 hover:text-blue-600" : "cursor-default text-slate-300",
                         )}
                       >
                         {entry.done ? <CheckCircle2 className="size-5 text-emerald-600" /> : <Circle className="size-5" />}
@@ -125,7 +125,7 @@ export function CalendarView() {
                             </span>
                           )}
                         </div>
-                        <p className={cn("mt-1 text-sm text-slate-800", entry.done && "text-slate-400 line-through")}>
+                        <p className={cn("mt-1 text-sm text-slate-800", entry.done && "text-slate-500 line-through")}>
                           {entry.label}
                         </p>
                         <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-500">

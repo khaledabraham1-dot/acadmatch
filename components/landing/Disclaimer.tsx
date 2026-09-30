@@ -6,7 +6,7 @@ export function Disclaimer() {
   return (
     <section className="mx-auto max-w-4xl px-4 pb-16 sm:px-6">
       <div className="flex items-start gap-3 rounded-[18px] bg-white p-5 text-sm text-slate-600 ring-1 ring-inset ring-slate-200">
-        <ShieldAlert className="mt-0.5 size-5 shrink-0 text-slate-400" aria-hidden />
+        <ShieldAlert className="mt-0.5 size-5 shrink-0 text-slate-500" aria-hidden />
         <div className="space-y-2">
           <p>
             <strong className="font-semibold text-slate-800">AcadMatch n&apos;est pas Campus France</strong>{" "}

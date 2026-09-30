@@ -487,7 +487,7 @@ export function ProfileForm() {
 
       <Card>
         <h2 className="mb-1 text-base font-semibold text-slate-900">
-          Expériences et projets <span className="font-normal text-slate-400">(optionnel)</span>
+          Expériences et projets <span className="font-normal text-slate-500">(optionnel)</span>
         </h2>
         <p className="mb-4 text-sm text-slate-500">
           Stages, projets, jobs, engagements associatifs… Non utilisés pour la compatibilité : ce sont les

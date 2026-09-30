@@ -19,7 +19,7 @@ export function ComparisonSummary({ profile, formation }: ComparisonSummaryProps
       */}
       <Card className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
             Votre parcours
           </p>
           <p className="font-semibold text-slate-900">{profile.currentDegree}</p>
@@ -34,7 +34,7 @@ export function ComparisonSummary({ profile, formation }: ComparisonSummaryProps
 
       <Card className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
             Formation ciblée
           </p>
           <p className="font-semibold text-slate-900">{formation.name}</p>

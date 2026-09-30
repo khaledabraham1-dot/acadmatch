@@ -157,7 +157,7 @@ export function InterviewPrepView() {
   return (
     <div className="space-y-4">
       <Card>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Formation visée</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Formation visée</p>
         <h2 className="mt-1 font-semibold text-slate-900">{formation.name}</h2>
         <p className="mt-0.5 text-sm text-slate-500">
           {formation.institution.name} · {formation.institution.city}
@@ -248,7 +248,7 @@ export function InterviewPrepView() {
       {prep?.questions.map((q, index) => (
         <Card key={q.id}>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold text-slate-400">Question {index + 1}</span>
+            <span className="text-xs font-semibold text-slate-500">Question {index + 1}</span>
             <Badge tone={CATEGORY_TONES[q.category]}>{q.category}</Badge>
           </div>
           <p className="mt-2 font-medium text-slate-900" lang={english ? "en" : "fr"}>
@@ -271,7 +271,7 @@ export function InterviewPrepView() {
           />
 
           <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-slate-500">
               {q.answer.length}/{MAX_ANSWER_LENGTH}
             </span>
             <Button
@@ -292,7 +292,7 @@ export function InterviewPrepView() {
 
           {q.feedback && (
             <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Retour du jury (IA)</p>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Retour du jury (IA)</p>
               <p className="whitespace-pre-line text-sm leading-relaxed text-slate-700">{q.feedback}</p>
             </div>
           )}

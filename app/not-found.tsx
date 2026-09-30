@@ -20,7 +20,7 @@ export default function NotFound() {
             Mon profil
           </LinkButton>
         </div>
-        <p className="mt-4 text-xs text-slate-400">
+        <p className="mt-4 text-xs text-slate-500">
           <Link href="/recherche" className="hover:text-slate-600">
             Rechercher une formation
           </Link>

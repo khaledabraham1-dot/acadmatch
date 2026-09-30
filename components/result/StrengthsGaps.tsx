@@ -25,7 +25,7 @@ export function StrengthsGaps({ strengths, gaps }: StrengthsGapsProps) {
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-500">
             Aucun point fort identifié pour l&apos;instant — complétez votre profil pour affiner l&apos;analyse.
           </p>
         )}
@@ -46,7 +46,7 @@ export function StrengthsGaps({ strengths, gaps }: StrengthsGapsProps) {
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-slate-400">Aucune lacune majeure détectée par rapport à cette formation.</p>
+          <p className="text-sm text-slate-500">Aucune lacune majeure détectée par rapport à cette formation.</p>
         )}
       </Card>
     </div>
