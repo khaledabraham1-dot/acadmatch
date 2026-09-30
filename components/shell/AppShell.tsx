@@ -6,6 +6,7 @@ import { Menu, ShieldCheck } from "lucide-react";
 import { Logo } from "@/components/shell/Logo";
 import { SidebarNav } from "@/components/shell/SidebarNav";
 import { MobileMenu } from "@/components/shell/MobileMenu";
+import { SyncBadge } from "@/components/account/SyncStatus";
 import { FORMATIONS } from "@/data/formations";
 import { coveredDomains, formatList } from "@/lib/search/filters";
 
@@ -31,7 +32,10 @@ function SidebarContent() {
           n&apos;est pas une promesse d&apos;admission.
         </p>
       </div>
-      <nav aria-label="Informations légales" className="mt-auto flex flex-wrap gap-x-3 gap-y-1 px-5 pt-6 text-xs text-slate-500">
+      <div className="mt-auto px-5 pt-6">
+        <SyncBadge dark />
+      </div>
+      <nav aria-label="Informations légales" className=" flex flex-wrap gap-x-3 gap-y-1 px-5 pt-6 text-xs text-slate-500">
         <Link href="/mentions-legales" className="hover:text-slate-300">
           Mentions légales
         </Link>

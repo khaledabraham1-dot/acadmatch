@@ -87,8 +87,10 @@ export default function ConfidentialitePage() {
             n&apos;est créé ni stocké.
           </li>
           <li>
-            <strong>Votre profil académique</strong>, seulement si vous cliquez sur « Sauvegarder mon profil sur
-            mon compte ». Vos candidatures, budgets et réponses visa restent sur votre appareil.
+            <strong>Votre projet</strong> : profil académique, candidatures (avec vos brouillons de lettre et vos
+            préparations d&apos;entretien), budgets, réponses au parcours visa et formations sauvegardées. Il est
+            synchronisé automatiquement pour que vous le retrouviez sur tous vos appareils. À la déconnexion, vous
+            pouvez l&apos;effacer de l&apos;appareil (recommandé sur un ordinateur partagé).
           </li>
           <li>
             <strong>Un compteur d&apos;usage de l&apos;IA</strong> : pour chaque appel, la date, la fonctionnalité
@@ -170,7 +172,7 @@ export default function ConfidentialitePage() {
       <Section title="8. Durée de conservation">
         <ul>
           <li>Documents importés : non conservés par AcadMatch (30 jours au plus chez Anthropic, voir ci-dessus).</li>
-          <li>Compte, profil sauvegardé et compteur d&apos;usage : jusqu&apos;à la suppression de votre compte.</li>
+          <li>Compte, projet synchronisé et compteur d&apos;usage : jusqu&apos;à la suppression de votre compte.</li>
           <li>Données locales : jusqu&apos;à ce que vous les effaciez de votre navigateur.</li>
           <li>Journaux techniques de l&apos;hébergeur (adresse IP, page demandée) : durée courte fixée par Vercel, pour la sécurité.</li>
         </ul>
@@ -184,10 +186,10 @@ export default function ConfidentialitePage() {
         </p>
         <ul>
           <li>
-            <strong>Exporter mes données (JSON)</strong> : une copie de votre profil sauvegardé.
+            <strong>Exporter toutes mes données (JSON)</strong> : une copie de tout votre projet.
           </li>
           <li>
-            <strong>Supprimer mon compte</strong> : efface immédiatement votre compte, votre profil sauvegardé et
+            <strong>Supprimer mon compte</strong> : efface immédiatement votre compte, votre projet synchronisé et
             votre compteur d&apos;usage.
           </li>
         </ul>

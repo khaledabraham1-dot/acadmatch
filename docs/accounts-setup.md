@@ -84,3 +84,13 @@ candidatures, documents ou CV des phases suivantes de la roadmap, qui
 s'appuieront sur cette fondation (auth + isolation des données) une fois
 en place. Le compte reste entièrement optionnel : `localStorage` continue
 de fonctionner sans connexion, comme depuis le début.
+
+## Migration 0004 — synchronisation de tout l'espace (2026-09-30)
+
+`supabase/migrations/0004_workspaces.sql` crée la table `workspaces` (une ligne
+par étudiant, RLS : chacun sa ligne, 512 Ko maximum) et y reprend les profils
+déjà sauvegardés dans `profiles`. **À exécuter dans le SQL Editor de Supabase
+AVANT de déployer** le code qui s'en sert (lib/sync). Sans elle, l'indicateur
+affiche « Sauvegarde sur le compte impossible » et le site continue en local.
+La table `profiles` n'est plus écrite par l'application (conservée, à retirer
+plus tard).

@@ -3,9 +3,10 @@ import { INTERVIEW_QUESTION_CATEGORIES } from "@/types";
 import type { VisaAnswers } from "@/lib/visa";
 
 /**
- * Persistance locale (aucun compte, aucune base de données pour ce prototype).
- * Le profil et la formation sélectionnée voyagent d'une page à l'autre via
- * localStorage, ce qui suffit pour le parcours "tester sans créer de compte".
+ * Persistance locale : tout fonctionne sans compte, dans le navigateur. Avec
+ * un compte, les données du projet (SYNCED_KEYS) sont en plus synchronisées
+ * automatiquement (lib/sync) — ce fichier reste le seul à écrire dans
+ * localStorage, pour que chaque modification soit datée et remontée.
  *
  * Certains navigateurs (navigation privée stricte, postes verrouillés
  * d'établissement, extensions de confidentialité) refusent l'accès à
@@ -33,6 +34,30 @@ const SAVED_FORMATION_IDS_KEY = "acadmatch:savedFormationIds";
 export const MAX_SAVED_FORMATIONS = 30;
 /** Suivi des candidatures (Phase 13) — une candidature par formation (`formationId` fait clé). */
 const APPLICATIONS_KEY = "acadmatch:applications";
+/** Budgets prévisionnels (Phase 19), un par formation. */
+const BUDGETS_KEY = "acadmatch:budgets";
+/** Réponses du parcours visa (Phase 20). */
+const VISA_ANSWERS_KEY = "acadmatch:visa";
+
+
+/**
+ * Données synchronisées avec le compte (lib/sync) : tout ce qui décrit le
+ * projet de l'étudiant. Restent locales : la formation affichée et la
+ * sélection de comparaison (éphémères), les avis (envoyés à part).
+ */
+export const SYNCED_KEYS = [PROFILE_KEY, SAVED_FORMATION_IDS_KEY, APPLICATIONS_KEY, BUDGETS_KEY, VISA_ANSWERS_KEY] as const;
+export type SyncedKey = (typeof SYNCED_KEYS)[number];
+
+/** Métadonnées de synchronisation : date de dernière modification par clé et compte propriétaire. */
+export const SYNC_META_KEY = "acadmatch:sync";
+/** Événement émis à chaque modification d'une donnée synchronisée (écouté par lib/sync). */
+export const STORAGE_CHANGED_EVENT = "acadmatch-storage-changed";
+
+export interface SyncMeta {
+  /** Compte auquel appartiennent les données de cet appareil (null : jamais connecté). */
+  owner: string | null;
+  updatedAt: Partial<Record<SyncedKey, string>>;
+}
 
 function getStorage(): Storage | null {
   try {
@@ -43,14 +68,46 @@ function getStorage(): Storage | null {
   }
 }
 
-export function saveProfile(profile: StudentProfile): void {
+export function readSyncMeta(storage: Storage | null = getStorage()): SyncMeta {
+  try {
+    const parsed = JSON.parse(storage?.getItem(SYNC_META_KEY) ?? "null") as Partial<SyncMeta> | null;
+    return {
+      owner: typeof parsed?.owner === "string" ? parsed.owner : null,
+      updatedAt: parsed?.updatedAt && typeof parsed.updatedAt === "object" ? parsed.updatedAt : {},
+    };
+  } catch {
+    return { owner: null, updatedAt: {} };
+  }
+}
+
+export function writeSyncMeta(meta: SyncMeta, storage: Storage | null = getStorage()): void {
+  try {
+    storage?.setItem(SYNC_META_KEY, JSON.stringify(meta));
+  } catch {
+    // Non bloquant.
+  }
+}
+
+/**
+ * Seul point d'écriture des données synchronisées : écrit (ou efface, avec
+ * null), date la modification et prévient la synchronisation.
+ */
+function writeSynced(key: SyncedKey, raw: string | null): void {
   const storage = getStorage();
   if (!storage) return;
   try {
-    storage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    if (raw === null) storage.removeItem(key);
+    else storage.setItem(key, raw);
+    const meta = readSyncMeta(storage);
+    writeSyncMeta({ ...meta, updatedAt: { ...meta.updatedAt, [key]: new Date().toISOString() } }, storage);
+    window.dispatchEvent(new CustomEvent(STORAGE_CHANGED_EVENT, { detail: { key } }));
   } catch {
     // Stockage plein, désactivé ou bloqué : on continue sans persister.
   }
+}
+
+export function saveProfile(profile: StudentProfile): void {
+  writeSynced(PROFILE_KEY, JSON.stringify(profile));
 }
 
 export function loadProfile(): StudentProfile | null {
@@ -73,13 +130,7 @@ export function loadProfile(): StudentProfile | null {
 }
 
 export function clearProfile(): void {
-  const storage = getStorage();
-  if (!storage) return;
-  try {
-    storage.removeItem(PROFILE_KEY);
-  } catch {
-    // Rien à faire de plus si la suppression échoue.
-  }
+  writeSynced(PROFILE_KEY, null);
 }
 
 export function saveSelectedFormationId(formationId: string): void {
@@ -165,13 +216,7 @@ export function loadSavedFormationIds(): string[] {
 }
 
 function saveSavedFormationIds(ids: string[]): void {
-  const storage = getStorage();
-  if (!storage) return;
-  try {
-    storage.setItem(SAVED_FORMATION_IDS_KEY, JSON.stringify(ids.slice(0, MAX_SAVED_FORMATIONS)));
-  } catch {
-    // Non bloquant.
-  }
+  writeSynced(SAVED_FORMATION_IDS_KEY, JSON.stringify(ids.slice(0, MAX_SAVED_FORMATIONS)));
 }
 
 /** Ajoute ou retire une formation de la liste des sauvegardes. */
@@ -265,13 +310,7 @@ export function loadApplications(): Application[] {
 }
 
 function saveApplications(applications: Application[]): void {
-  const storage = getStorage();
-  if (!storage) return;
-  try {
-    storage.setItem(APPLICATIONS_KEY, JSON.stringify(applications));
-  } catch {
-    // Non bloquant.
-  }
+  writeSynced(APPLICATIONS_KEY, JSON.stringify(applications));
 }
 
 /** Crée ou met à jour (par `formationId`) une candidature suivie. */
@@ -306,7 +345,6 @@ export function compareResultsHref(ids: string[]): string {
 // `BudgetPlan`), jamais les coûts officiels, relus depuis data/budget.ts.
 // ---------------------------------------------------------------------------
 
-const BUDGETS_KEY = "acadmatch:budgets";
 
 function isCentsRecord(value: unknown, keys: string[]): boolean {
   if (!value || typeof value !== "object") return false;
@@ -351,7 +389,7 @@ export function saveBudgetPlan(plan: BudgetPlan): void {
   try {
     const current = JSON.parse(storage.getItem(BUDGETS_KEY) ?? "{}") as Record<string, unknown>;
     const next = current && typeof current === "object" && !Array.isArray(current) ? current : {};
-    storage.setItem(BUDGETS_KEY, JSON.stringify({ ...next, [plan.formationId]: plan }));
+    writeSynced(BUDGETS_KEY, JSON.stringify({ ...next, [plan.formationId]: plan }));
   } catch {
     // Non bloquant.
   }
@@ -363,7 +401,6 @@ export function saveBudgetPlan(plan: BudgetPlan): void {
 // formation). Relues avec validation : un pays inconnu est ignoré.
 // ---------------------------------------------------------------------------
 
-const VISA_ANSWERS_KEY = "acadmatch:visa";
 
 export function loadVisaAnswers(validCountries: readonly string[]): VisaAnswers | null {
   const storage = getStorage();
@@ -382,11 +419,5 @@ export function loadVisaAnswers(validCountries: readonly string[]): VisaAnswers 
 }
 
 export function saveVisaAnswers(answers: VisaAnswers): void {
-  const storage = getStorage();
-  if (!storage) return;
-  try {
-    storage.setItem(VISA_ANSWERS_KEY, JSON.stringify(answers));
-  } catch {
-    // Non bloquant.
-  }
+  writeSynced(VISA_ANSWERS_KEY, JSON.stringify(answers));
 }

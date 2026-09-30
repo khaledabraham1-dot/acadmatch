@@ -7,6 +7,7 @@ import { X } from "lucide-react";
 import { Logo } from "@/components/shell/Logo";
 import { NAV_GROUPS, NAV_ITEMS } from "@/components/shell/nav-items";
 import { cn } from "@/lib/utils";
+import { SyncBadge } from "@/components/account/SyncStatus";
 
 /**
  * Menu mobile en tuiles (identité Radar), plein écran. Il défile seul
@@ -53,6 +54,7 @@ export function MobileMenu({ onClose }: { onClose: () => void }) {
       </div>
 
       <nav className="grid gap-5 px-4 pb-8 pt-4" aria-label="Navigation principale">
+        <SyncBadge />
         {NAV_GROUPS.map((group) => (
           <section key={group} className="grid gap-2">
             <h2 className="text-xs font-extrabold uppercase tracking-[0.08em] text-slate-500">{group}</h2>

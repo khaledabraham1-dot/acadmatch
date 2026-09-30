@@ -12,7 +12,7 @@ export default function ComptePage() {
   return (
     <AppShell
       title="Mon compte"
-      description="Optionnel : sauvegardez votre profil pour le retrouver sur un autre appareil."
+      description="Optionnel : votre projet est sauvegardé automatiquement et vous le retrouvez sur tous vos appareils."
     >
       <AccountPanel />
     </AppShell>

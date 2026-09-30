@@ -1,72 +1,60 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import { Download, LogOut, Trash2, UploadCloud, DownloadCloud } from "lucide-react";
+import { Download, LogOut, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { loadProfile, saveProfile } from "@/lib/storage";
+import { SYNCED_KEYS } from "@/lib/storage";
+import { signOut, syncNow } from "@/lib/sync/client";
+import { clearLocalWorkspace, snapshotLocal } from "@/lib/sync/workspace";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { SyncPanel } from "@/components/account/SyncStatus";
 
 type ActionStatus = { kind: "idle" | "success" | "error"; message?: string };
 
 const IDLE: ActionStatus = { kind: "idle" };
 
+/** Toutes les données du projet, lisibles (JSON décodé), pour l'export RGPD. */
+function exportPayload() {
+  const workspace = snapshotLocal(window.localStorage);
+  const data: Record<string, unknown> = {};
+  for (const key of SYNCED_KEYS) {
+    const entry = workspace.entries[key];
+    if (!entry?.value) continue;
+    try {
+      data[key.replace("acadmatch:", "")] = { valeur: JSON.parse(entry.value), modifieLe: entry.updatedAt };
+    } catch {
+      data[key.replace("acadmatch:", "")] = { valeur: entry.value, modifieLe: entry.updatedAt };
+    }
+  }
+  return { exporteLe: new Date().toISOString(), donnees: data };
+}
+
 export function AccountDashboard({ user }: { user: User }) {
   const [status, setStatus] = useState<ActionStatus>(IDLE);
   const [busy, setBusy] = useState(false);
   const [deleteConfirming, setDeleteConfirming] = useState(false);
-
-  async function handleSaveToAccount() {
-    const profile = loadProfile();
-    if (!profile) {
-      setStatus({ kind: "error", message: "Aucun profil local à sauvegarder — renseignez d'abord votre profil." });
-      return;
-    }
-    setBusy(true);
-    const supabase = createClient();
-    const { error } = await supabase
-      .from("profiles")
-      .upsert({ id: user.id, data: profile, updated_at: new Date().toISOString() });
-    setBusy(false);
-    setStatus(
-      error
-        ? { kind: "error", message: "Échec de la sauvegarde. Réessayez." }
-        : { kind: "success", message: "Profil sauvegardé sur votre compte." },
-    );
-  }
-
-  async function handleLoadFromAccount() {
-    setBusy(true);
-    const supabase = createClient();
-    const { data, error } = await supabase.from("profiles").select("data").eq("id", user.id).maybeSingle();
-    setBusy(false);
-    if (error || !data) {
-      setStatus({ kind: "error", message: "Aucun profil trouvé sur votre compte." });
-      return;
-    }
-    saveProfile(data.data);
-    setStatus({ kind: "success", message: "Profil de votre compte chargé sur cet appareil." });
-  }
+  const [clearDevice, setClearDevice] = useState(false);
+  const clearId = useId();
 
   async function handleExport() {
     setBusy(true);
-    const supabase = createClient();
-    const { data } = await supabase.from("profiles").select("data, updated_at").eq("id", user.id).maybeSingle();
+    await syncNow();
     setBusy(false);
-    const payload = data ?? { data: loadProfile(), updated_at: null, note: "Profil local, jamais sauvegardé sur le compte." };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify(exportPayload(), null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "acadmatch-profil.json";
+    a.download = "acadmatch-mes-donnees.json";
     a.click();
     URL.revokeObjectURL(url);
+    setStatus({ kind: "success", message: "Export téléchargé : profil, candidatures, budgets, visa et formations sauvegardées." });
   }
 
   async function handleLogout() {
-    const supabase = createClient();
-    await supabase.auth.signOut();
+    setBusy(true);
+    await signOut(clearDevice);
     window.location.reload();
   }
 
@@ -80,6 +68,7 @@ export function AccountDashboard({ user }: { user: User }) {
     }
     const supabase = createClient();
     await supabase.auth.signOut();
+    clearLocalWorkspace(window.localStorage);
     window.location.reload();
   }
 
@@ -89,29 +78,32 @@ export function AccountDashboard({ user }: { user: User }) {
         <h2 className="text-base font-semibold text-slate-900">Mon compte</h2>
         <p className="mt-1 text-sm text-slate-500">Connecté en tant que {user.email}.</p>
 
+        <div className="mt-4">
+          <SyncPanel />
+        </div>
+
         <div className="mt-4 flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={handleSaveToAccount} disabled={busy}>
-            <UploadCloud className="size-4" aria-hidden />
-            Sauvegarder mon profil sur mon compte
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleLoadFromAccount} disabled={busy}>
-            <DownloadCloud className="size-4" aria-hidden />
-            Charger le profil de mon compte
-          </Button>
           <Button variant="outline" size="sm" onClick={handleExport} disabled={busy}>
             <Download className="size-4" aria-hidden />
-            Exporter mes données (JSON)
+            Exporter toutes mes données (JSON)
           </Button>
         </div>
 
         {status.kind !== "idle" && (
-          <p className={"mt-3 text-sm " + (status.kind === "error" ? "text-red-600" : "text-emerald-600")}>
-            {status.message}
-          </p>
+          <p className={"mt-3 text-sm " + (status.kind === "error" ? "text-red-600" : "text-emerald-700")}>{status.message}</p>
         )}
 
-        <div className="mt-5 border-t border-slate-100 pt-4">
-          <Button variant="ghost" size="sm" onClick={handleLogout}>
+        <div className="mt-5 space-y-3 border-t border-slate-100 pt-4">
+          <label htmlFor={clearId} className="flex items-start gap-2 text-sm text-slate-700">
+            <input id={clearId} type="checkbox" className="mt-1" checked={clearDevice} onChange={(e) => setClearDevice(e.target.checked)} />
+            <span>
+              Effacer aussi mon projet de cet appareil
+              <span className="block text-xs text-slate-500">
+                Recommandé sur un ordinateur partagé (cybercafé, bibliothèque). Vos données restent sur votre compte.
+              </span>
+            </span>
+          </label>
+          <Button variant="ghost" size="sm" onClick={handleLogout} disabled={busy}>
             <LogOut className="size-4" aria-hidden />
             Se déconnecter
           </Button>
@@ -120,9 +112,9 @@ export function AccountDashboard({ user }: { user: User }) {
 
       <Card className="border-red-100 bg-red-50/40">
         <h3 className="text-sm font-semibold text-slate-900">Zone dangereuse</h3>
-        <p className="mt-1 text-xs text-slate-500">
-          Supprime définitivement votre compte et le profil sauvegardé associé. Votre profil local
-          sur cet appareil (localStorage) n&apos;est pas affecté.
+        <p className="mt-1 text-xs text-slate-600">
+          Supprime définitivement votre compte et tout le projet sauvegardé (profil, candidatures, lettres,
+          budgets, visa), sur votre compte et sur cet appareil.
         </p>
         {deleteConfirming ? (
           <div className="mt-3 flex flex-wrap gap-2">

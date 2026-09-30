@@ -3,6 +3,7 @@ import { Figtree, Unbounded } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { SITE_NAME, siteUrl } from "@/lib/site";
+import { SyncManager } from "@/components/account/SyncStatus";
 
 // Identité « Radar » : Figtree pour le texte (très lisible sur petit écran),
 // Unbounded pour les grands titres et les scores. Voir app/globals.css.
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-background font-sans text-slate-900">
         {children}
+        <SyncManager />
         {WEB_ANALYTICS_ENABLED && <Script src="/_vercel/insights/script.js" strategy="afterInteractive" />}
       </body>
     </html>

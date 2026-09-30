@@ -52,7 +52,7 @@ export const SUBPROCESSORS: Subprocessor[] = [
   },
   {
     name: "Supabase",
-    role: "Comptes et envoi des liens de connexion, profils sauvegardés et compteur d'usage de l'IA",
+    role: "Comptes et envoi des liens de connexion, projets synchronisés et compteur d'usage de l'IA",
     location: "Union européenne",
     privacyUrl: "https://supabase.com/privacy",
   },
@@ -78,6 +78,7 @@ export const LOCAL_STORAGE_ITEMS: { key: string; content: string }[] = [
   { key: "acadmatch:budgets", content: "Vos budgets prévisionnels" },
   { key: "acadmatch:visa", content: "Vos réponses au parcours visa (nationalité, pays de résidence)" },
   { key: "acadmatch:feedback", content: "Vos avis sur les résultats" },
+  { key: "acadmatch:sync", content: "La date de vos dernières modifications et le compte auquel elles appartiennent, pour la synchronisation" },
 ];
 
 /** Vrai quand toutes les informations obligatoires sont renseignées. */

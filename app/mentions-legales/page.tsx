@@ -35,7 +35,7 @@ export default function MentionsLegalesPage() {
           {HOST.name}, {HOST.address} — <ExternalLink href={HOST.website}>{HOST.website.replace("https://", "")}</ExternalLink>.
         </p>
         <p>
-          Les comptes et profils sauvegardés sont stockés chez Supabase, dans l&apos;Union européenne. Le détail des
+          Les comptes et les projets synchronisés sont stockés chez Supabase, dans l&apos;Union européenne. Le détail des
           prestataires figure dans la <Link href="/confidentialite" className="text-blue-700 underline underline-offset-2">politique de confidentialité</Link>.
         </p>
       </Section>

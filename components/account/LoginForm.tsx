@@ -50,7 +50,7 @@ export function LoginForm() {
     <Card>
       <h2 className="text-base font-semibold text-slate-900">Se connecter</h2>
       <p className="mt-1 text-sm text-slate-500">
-        Optionnel : un compte permet de retrouver votre profil sur un autre appareil. AcadMatch
+        Optionnel : un compte sauvegarde automatiquement tout votre projet (profil, candidatures, lettres, budget) et vous le retrouvez sur tous vos appareils. AcadMatch
         fonctionne entièrement sans compte, comme aujourd&apos;hui.
       </p>
       <form onSubmit={handleSubmit} className="mt-4 space-y-3">
