@@ -5,7 +5,7 @@ import type {
   StudentProfile,
   StudyProgram,
 } from "@/types";
-import { ENGINE_WEIGHTS } from "@/lib/matching/engine";
+import { ENGINE_WEIGHTS, EVIDENCE_FULL_ITEMS, profileEvidenceCount } from "@/lib/matching/engine";
 import { getCompatibilityLabel } from "@/lib/matching/labels";
 import { normalize } from "@/lib/utils";
 
@@ -158,6 +158,13 @@ export function buildDecisionAid(
   if (result.domainCapped) {
     paragraphs.push(
       `Votre domaine d'études (${profile.fieldOfStudy}) n'est pas celui attendu (${formation.field}) et votre profil ne montre pas encore les matières de base de cette formation : le score est volontairement limité. Une réorientation reste possible, à condition de prouver ces bases (cours, certification, projet).`,
+    );
+  }
+
+  if (result.evidenceCapped) {
+    const count = profileEvidenceCount(profile);
+    paragraphs.push(
+      `Votre profil ne compte que ${count} matière${count > 1 ? "s" : ""} et compétence${count > 1 ? "s" : ""} : c'est trop peu pour juger votre dossier, comme le dirait un jury. Le score est donc volontairement limité. Importez votre relevé de notes, ou ajoutez au moins ${EVIDENCE_FULL_ITEMS} matières et compétences au total, pour obtenir un score complet.`,
     );
   }
 

@@ -262,6 +262,12 @@ export interface CompatibilityResult {
    * DOMAIN_MISMATCH_BASE_CAP dans lib/matching/engine.ts). Absent sinon.
    */
   domainCapped?: boolean;
+  /**
+   * true quand le score a été plafonné faute de preuves (trop peu de
+   * matières et compétences renseignées — voir EVIDENCE_FULL_ITEMS dans
+   * lib/matching/engine.ts). Absent sinon.
+   */
+  evidenceCapped?: boolean;
 }
 
 /**

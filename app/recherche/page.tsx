@@ -87,12 +87,16 @@ export default function RecherchePage() {
     setCompareIds([]);
   }
 
-  const scores = useMemo(() => {
-    if (!profile) return new Map<string, number>();
+  const results = useMemo(() => {
+    if (!profile) return new Map<string, { score: number; estimate: boolean }>();
     return new Map(
-      FORMATIONS.map((formation) => [formation.id, computeCompatibility(profile, formation).overallScore]),
+      FORMATIONS.map((formation) => {
+        const result = computeCompatibility(profile, formation);
+        return [formation.id, { score: result.overallScore, estimate: Boolean(result.evidenceCapped) }];
+      }),
     );
   }, [profile]);
+  const scores = useMemo(() => new Map([...results].map(([id, r]) => [id, r.score])), [results]);
 
   const filtered = useMemo(() => {
     return filterFormations(FORMATIONS, { query, level, domain, city, language, goal }).sort((a, b) =>
@@ -276,6 +280,7 @@ export default function RecherchePage() {
             key={formation.id}
             formation={formation}
             score={scores.get(formation.id) ?? null}
+            estimate={results.get(formation.id)?.estimate ?? false}
             selectedForCompare={compareIds.includes(formation.id)}
             compareCount={compareIds.length}
             onToggleCompare={handleToggleCompare}

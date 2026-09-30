@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { FORMATIONS } from "@/data/formations";
-import { computeCompatibility } from "@/lib/matching/engine";
+import { computeCompatibility, evidenceCap, EVIDENCE_FULL_ITEMS, profileEvidenceCount } from "@/lib/matching/engine";
 import { compareFormationsByGoalThenScore } from "@/lib/matching/ranking";
 import type { StudentProfile } from "@/types";
 
@@ -226,7 +226,9 @@ describe("séparation Physique / Chimie (ex-« Sciences fondamentales »)", () =
       { id: "2", name: "Chimie inorganique" },
       { id: "3", name: "Spectroscopie" },
     ],
-    skills: ["Expérimentation"],
+    // Deux compétences : profil « solide » (5 preuves), pour que ce test mesure
+    // la séparation des domaines et non le plafond de preuve (engine.ts).
+    skills: ["Expérimentation", "Rédaction scientifique"],
     goal: "Master",
     languages: ["Français", "Anglais"],
   };
@@ -286,6 +288,10 @@ describe("compétences attendues à l'entrée, tirées des pages officielles (20
         { id: "1", name: "Biologie moléculaire" },
         { id: "2", name: "Génétique" },
         { id: "3", name: "Biostatistiques" },
+        // Profil « solide » (5 preuves) même sans Python : sinon ajouter Python
+        // relèverait seulement le plafond de preuve, pas l'adéquation.
+        { id: "4", name: "Biochimie" },
+        { id: "5", name: "Microbiologie" },
       ],
       skills: [],
       goal: "Master",
@@ -296,5 +302,66 @@ describe("compétences attendues à l'entrée, tirées des pages officielles (20
     const withoutPython = computeCompatibility(biologist, bioinfo);
     expect(withoutPython.overallScore).toBe(withPython.overallScore);
     expect(withoutPython.gaps).not.toContain("Python");
+  });
+});
+
+describe("niveau de preuve (audit du 2026-09-30)", () => {
+  const thinM1: StudentProfile = {
+    currentLevel: "Master 1",
+    fieldOfStudy: "Data Science & IA",
+    currentDegree: "Licence en Informatique",
+    courses: [{ id: "1", name: "Machine Learning" }],
+    skills: ["Python"],
+    goal: "Master",
+    languages: ["Français", "Anglais"],
+    academicStanding: "Bons résultats",
+  };
+  const mscAi = () => FORMATIONS.find((f) => f.id === "f-msc-ai-centralesupelec")!;
+
+  it("un M1 qui ne déclare qu'une matière et une compétence n'obtient plus 84/100 sur une MSc en IA", () => {
+    const result = computeCompatibility(thinM1, mscAi());
+    expect(result.evidenceCapped).toBe(true);
+    expect(result.overallScore).toBeLessThan(65);
+  });
+
+  it("chaque preuve ajoutée relève le plafond, jamais l'inverse", () => {
+    let previous = -1;
+    for (let n = 0; n <= EVIDENCE_FULL_ITEMS; n++) {
+      const cap = evidenceCap(n);
+      const value = cap ?? 101;
+      expect(value).toBeGreaterThan(previous);
+      previous = value;
+    }
+    expect(evidenceCap(EVIDENCE_FULL_ITEMS)).toBeNull();
+  });
+
+  it("un profil qui suit nos recommandations (3 matières, 2 compétences) n'est jamais plafonné", () => {
+    const solid = {
+      ...thinM1,
+      courses: [
+        { id: "1", name: "Machine Learning" },
+        { id: "2", name: "Statistiques" },
+        { id: "3", name: "Algèbre linéaire" },
+      ],
+      skills: ["Python", "Deep Learning"],
+    };
+    expect(profileEvidenceCount(solid)).toBe(EVIDENCE_FULL_ITEMS);
+    expect(computeCompatibility(solid, mscAi()).evidenceCapped).toBeUndefined();
+  });
+
+  it("le plafond garde l'ordre entre les formations", () => {
+    const uncapped = { ...thinM1, courses: [...thinM1.courses, { id: "2", name: "a" }, { id: "3", name: "b" }, { id: "4", name: "c" }] };
+    const order = (profile: StudentProfile) =>
+      FORMATIONS.filter((f) => !f.demo)
+        .map((f) => ({ id: f.id, capped: computeCompatibility(profile, f).overallScore }))
+        .sort((a, b) => b.capped - a.capped)
+        .slice(0, 3)
+        .map((r) => r.id);
+    // Même tête de classement, profil plafonné ou non (les matières factices ne prouvent rien).
+    expect(order(thinM1)).toEqual(order(uncapped));
+  });
+
+  it("les langues ne comptent pas comme preuves", () => {
+    expect(profileEvidenceCount({ ...thinM1, languages: ["Français", "Anglais", "Espagnol"] })).toBe(2);
   });
 });

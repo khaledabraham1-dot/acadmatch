@@ -12,6 +12,7 @@ import {
   type StudyProgram,
   type SubjectMatch,
 } from "@/types";
+import { RECOMMENDED_COURSES, RECOMMENDED_SKILLS } from "@/lib/profile/validation";
 import { normalize } from "@/lib/utils";
 import { areSynonyms } from "@/lib/matching/synonyms";
 import { domainEquivalents } from "@/data/subjects";
@@ -359,6 +360,36 @@ function outsideDomainEvidence(formation: StudyProgram, rows: SubjectMatch[]): n
   return weights === 0 ? 100 : Math.round(total / weights);
 }
 
+/**
+ * Niveau de preuve (audit du 2026-09-30) : le niveau, le domaine et la
+ * langue sont DÉCLARÉS et remplissent à eux seuls les critères « prérequis »
+ * et « niveau » (55 % du poids). Sans matières ni compétences pour les
+ * étayer, un profil presque vide obtenait un score élevé — cas constaté :
+ * « Master 1, Data & IA » avec une matière et une compétence, 84/100 sur
+ * une MSc en IA. Un jury dirait « je ne peux pas juger » : le score est donc
+ * plafonné tant que le profil compte moins de EVIDENCE_FULL_ITEMS (5) preuves
+ * (matières + compétences ; les langues n'en sont pas).
+ *
+ * Plafond SOUPLE comme pour le domaine : au-delà, le score est compressé
+ * (x0,25), pas écrasé, pour garder un ordre juste entre les formations.
+ */
+// Aligné sur le profil « solide » annoncé à l'étudiant (lib/profile/validation.ts) :
+// on ne plafonne jamais un profil qui suit nos propres recommandations.
+export const EVIDENCE_FULL_ITEMS = RECOMMENDED_COURSES + RECOMMENDED_SKILLS;
+const EVIDENCE_CAP_BASE = 40;
+const EVIDENCE_CAP_PER_ITEM = 8;
+const EVIDENCE_COMPRESSION = 0.25;
+
+/** Nombre de preuves distinctes du profil : matières + compétences, sans doublons. */
+export function profileEvidenceCount(profile: StudentProfile): number {
+  return new Set([...profile.courses.map((course) => course.name), ...profile.skills].map(normalize).filter(Boolean)).size;
+}
+
+/** Plafond du score selon le nombre de preuves ; null quand le profil est assez documenté. */
+export function evidenceCap(evidenceCount: number): number | null {
+  return evidenceCount >= EVIDENCE_FULL_ITEMS ? null : EVIDENCE_CAP_BASE + EVIDENCE_CAP_PER_ITEM * evidenceCount;
+}
+
 /** Le domaine d'études du profil est-il absent de TOUS les domaines exigés ? false si la formation n'en exige aucun. */
 function isOutsideRequiredDomain(profile: StudentProfile, formation: StudyProgram): boolean {
   const domainRequirements = formation.prerequisites.filter((requirement) => requirement.type === "domaine");
@@ -403,9 +434,15 @@ export function computeCompatibility(profile: StudentProfile, formation: StudyPr
   const outsideDomain = isOutsideRequiredDomain(profile, formation);
   const domainCap = DOMAIN_MISMATCH_BASE_CAP + outsideDomainEvidence(formation, content.rows);
   const domainCapped = outsideDomain && weightedScore > domainCap;
-  const overallScore = domainCapped
+  const afterDomain = domainCapped
     ? Math.round(domainCap + (weightedScore - domainCap) * DOMAIN_MISMATCH_COMPRESSION)
     : weightedScore;
+
+  const evidenceCeiling = evidenceCap(profileEvidenceCount(profile));
+  const evidenceCapped = evidenceCeiling !== null && afterDomain > evidenceCeiling;
+  const overallScore = evidenceCapped
+    ? Math.round(evidenceCeiling + (afterDomain - evidenceCeiling) * EVIDENCE_COMPRESSION)
+    : afterDomain;
 
   // Fusionne les tableaux de correspondance matières + compétences, sans doublons.
   const seen = new Set<string>();
@@ -433,5 +470,6 @@ export function computeCompatibility(profile: StudentProfile, formation: StudyPr
     gaps,
     matches,
     ...(domainCapped ? { domainCapped: true } : {}),
+    ...(evidenceCapped ? { evidenceCapped: true } : {}),
   };
 }

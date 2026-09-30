@@ -16,6 +16,8 @@ interface FormationCardProps {
   formation: StudyProgram;
   /** Score déjà calculé côté page (null si aucun profil n'est encore renseigné). */
   score: number | null;
+  /** Score plafonné faute de preuves dans le profil (voir lib/matching/engine.ts). */
+  estimate?: boolean;
   /** La formation est-elle dans la shortlist de comparaison ? */
   selectedForCompare?: boolean;
   /** Nombre actuel d'éléments dans la shortlist (pour désactiver au plafond). */
@@ -29,6 +31,7 @@ interface FormationCardProps {
 export function FormationCard({
   formation,
   score,
+  estimate = false,
   selectedForCompare = false,
   compareCount = 0,
   onToggleCompare,
@@ -96,6 +99,7 @@ export function FormationCard({
                 </span>
               </span>
               <Badge tone={compat.tone}>{compat.label}</Badge>
+              {estimate && <span className="text-xs text-slate-500">estimation</span>}
             </div>
           ) : (
             <Badge tone="neutral">Profil requis</Badge>
