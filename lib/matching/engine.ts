@@ -234,6 +234,22 @@ function domainRequirementStrength(requirement: Requirement, fieldOfStudy: strin
   return namesOf(requirement).some((name) => fields.includes(normalize(name))) ? "forte" : "manquant";
 }
 
+/**
+ * La formation relève-t-elle du domaine de l'étudiant ? Oui si c'est son
+ * domaine, ou si ses prérequis officiels acceptent explicitement ce domaine
+ * (alias de l'exigence « domaine », ex. un master de mathématiques ouvert
+ * aux profils Data & IA). Sert à ne pas noyer l'étudiant sous des formations
+ * sans rapport avec son parcours (recherche), sans rien inventer : la
+ * parenté entre domaines vient des fiches elles-mêmes.
+ */
+export function acceptsStudentDomain(profile: Pick<StudentProfile, "fieldOfStudy">, formation: StudyProgram): boolean {
+  const fields = domainEquivalents(profile.fieldOfStudy).map(normalize);
+  if (fields.includes(normalize(formation.field))) return true;
+  return formation.prerequisites.some(
+    (requirement) => requirement.type === "domaine" && domainRequirementStrength(requirement, profile.fieldOfStudy) === "forte",
+  );
+}
+
 /** L'étudiant est-il à l'aise pour suivre des cours dans la langue d'enseignement de la formation ? */
 function computeLanguageStrength(profile: StudentProfile, formation: StudyProgram): MatchStrength {
   const comfortable = profile.languages.some((lang) => normalize(lang) === normalize(formation.language));

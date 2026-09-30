@@ -15,10 +15,15 @@ test("parcours principal : exemple → recherche → résultat", async ({ page }
   await expect(page).toHaveURL(/\/recherche/);
   // Avec un profil, chaque carte affiche un score.
   await expect(page.getByText(/\d+%/).first()).toBeVisible();
+  // Le domaine de l'étudiant d'abord, les autres repliés.
+  await expect(page.getByText(/formations? dans votre domaine/)).toBeVisible();
+  await expect(page.getByRole("button", { name: /Voir les autres domaines/ })).toBeVisible();
   await expectNoHorizontalScroll(page);
 
+  await page.waitForLoadState("networkidle");
   await page.getByRole("link", { name: /Voir la compatibilité/ }).first().click();
-  await expect(page).toHaveURL(/\/resultat\?formationId=/);
+  // Navigation client : jusqu'à 15 s sur une machine chargée (échecs intermittents à 5 s).
+  await expect(page).toHaveURL(/\/resultat\?formationId=/, { timeout: 15_000 });
   await expect(page.getByRole("heading", { name: "Correspondance des matières" })).toBeVisible();
   await expect(page.getByText(/ne garantit pas l.admission/)).toBeVisible();
   await expectNoHorizontalScroll(page);
@@ -29,7 +34,7 @@ test("une page formation est indexable et mène au calcul de compatibilité", as
   // Attendre l'hydratation : un clic trop tôt pouvait être perdu (échec intermittent constaté).
   await page.waitForLoadState("networkidle");
   await page.getByRole("link", { name: /Master 2 Data Science/ }).click();
-  await expect(page).toHaveURL(/\/formations\/f-m2ds-ip-paris$/);
+  await expect(page).toHaveURL(/\/formations\/f-m2ds-ip-paris$/, { timeout: 15_000 });
 
   await expect(page).toHaveTitle(/Master 2 Data Science/);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/formations\/f-m2ds-ip-paris$/);
@@ -38,7 +43,7 @@ test("une page formation est indexable et mène au calcul de compatibilité", as
   await expectNoHorizontalScroll(page);
 
   await page.getByRole("link", { name: /Calculer ma compatibilité/ }).click();
-  await expect(page).toHaveURL(/\/resultat\?formationId=f-m2ds-ip-paris/);
+  await expect(page).toHaveURL(/\/resultat\?formationId=f-m2ds-ip-paris/, { timeout: 15_000 });
 });
 
 test("les outils personnels ne sont pas indexés", async ({ page }) => {

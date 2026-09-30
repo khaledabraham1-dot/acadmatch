@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { FORMATIONS } from "@/data/formations";
-import { computeCompatibility, evidenceCap, EVIDENCE_FULL_ITEMS, profileEvidenceCount } from "@/lib/matching/engine";
+import { acceptsStudentDomain, computeCompatibility, evidenceCap, EVIDENCE_FULL_ITEMS, profileEvidenceCount } from "@/lib/matching/engine";
 import { compareFormationsByGoalThenScore } from "@/lib/matching/ranking";
 import type { StudentProfile } from "@/types";
 
@@ -363,5 +363,32 @@ describe("niveau de preuve (audit du 2026-09-30)", () => {
 
   it("les langues ne comptent pas comme preuves", () => {
     expect(profileEvidenceCount({ ...thinM1, languages: ["Français", "Anglais", "Espagnol"] })).toBe(2);
+  });
+});
+
+describe("domaine de l'étudiant dans la recherche (2026-09-30)", () => {
+  const catalogue = FORMATIONS.filter((f) => !f.demo);
+
+  it("chaque formation relève au moins de son propre domaine", () => {
+    for (const formation of catalogue) {
+      expect(acceptsStudentDomain({ fieldOfStudy: formation.field }, formation)).toBe(true);
+    }
+  });
+
+  it("un étudiant en Data & IA ne voit plus le droit ni la biologie parmi « son domaine »", () => {
+    const mine = catalogue.filter((f) => acceptsStudentDomain({ fieldOfStudy: "Data Science & IA" }, f));
+    expect(mine.length).toBeLessThan(catalogue.length / 2);
+    expect(mine.some((f) => f.field === "Droit")).toBe(false);
+    expect(mine.some((f) => f.field === "Data Science & IA")).toBe(true);
+  });
+
+  it("un domaine voisin n'entre que si la formation l'accepte dans ses prérequis officiels", () => {
+    for (const formation of catalogue.filter((f) => f.field !== "Informatique")) {
+      const accepted = acceptsStudentDomain({ fieldOfStudy: "Informatique" }, formation);
+      const declared = formation.prerequisites.some(
+        (r) => r.type === "domaine" && [r.value, ...(r.aliases ?? [])].includes("Informatique"),
+      );
+      expect(accepted).toBe(declared);
+    }
   });
 });

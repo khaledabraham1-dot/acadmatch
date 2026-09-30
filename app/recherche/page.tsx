@@ -19,7 +19,7 @@ import {
   toggleCompareId,
   toggleSavedFormationId,
 } from "@/lib/storage";
-import { computeCompatibility } from "@/lib/matching/engine";
+import { acceptsStudentDomain, computeCompatibility } from "@/lib/matching/engine";
 import { compareFormationsByGoalThenScore } from "@/lib/matching/ranking";
 import { getRecommendations } from "@/lib/matching/recommendations";
 import { validateStoredProfile } from "@/lib/profile/validation";
@@ -56,6 +56,7 @@ export default function RecherchePage() {
   const [city, setCity] = useState(ALL_CITIES);
   const [language, setLanguage] = useState(ALL_LANGUAGES);
   const [goal, setGoal] = useState(ALL_GOALS);
+  const [showOtherDomains, setShowOtherDomains] = useState(false);
 
   useEffect(() => {
     // localStorage n'existe pas côté serveur : la lecture doit se faire après le montage.
@@ -103,6 +104,16 @@ export default function RecherchePage() {
       compareFormationsByGoalThenScore(a, b, profile, (f) => scores.get(f.id) ?? -1),
     );
   }, [query, level, domain, city, language, goal, scores, profile]);
+
+  // Avec un profil et sans domaine choisi, on montre d'abord le domaine de
+  // l'étudiant et ceux que les formations acceptent officiellement : un
+  // étudiant en Data & IA ne doit pas croire que 48 formations le concernent
+  // (retour de Khaled, 2026-09-30). Les autres restent accessibles, repliées.
+  const splitByDomain = profile !== null && domain === ALL_DOMAINS;
+  const inDomain = splitByDomain ? filtered.filter((f) => acceptsStudentDomain(profile, f)) : filtered;
+  const otherDomains = splitByDomain ? filtered.filter((f) => !acceptsStudentDomain(profile, f)) : [];
+  // Une recherche qui ne trouve rien dans le domaine montre directement les autres.
+  const othersVisible = showOtherDomains || (inDomain.length === 0 && otherDomains.length > 0);
 
   // Top picks catalogue entier, indépendants des filtres ci-dessous (Phase 9).
   const recommendations = useMemo(() => {
@@ -254,8 +265,19 @@ export default function RecherchePage() {
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm text-slate-400">
-          {filtered.length} formation{filtered.length > 1 ? "s" : ""} trouvée
-          {filtered.length > 1 ? "s" : ""}
+          {splitByDomain ? (
+            <>
+              <strong className="font-bold text-slate-900">
+                {inDomain.length} formation{inDomain.length > 1 ? "s" : ""} dans votre domaine
+              </strong>{" "}
+              ({profile.fieldOfStudy} et domaines acceptés par les formations)
+            </>
+          ) : (
+            <>
+              {filtered.length} formation{filtered.length > 1 ? "s" : ""} trouvée
+              {filtered.length > 1 ? "s" : ""}
+            </>
+          )}
           {compareIds.length > 0 && (
             <span className="text-slate-500">
               {" "}
@@ -275,7 +297,7 @@ export default function RecherchePage() {
       </div>
 
       <div className={compareIds.length > 0 ? "space-y-4 pb-24" : "space-y-4"}>
-        {filtered.map((formation) => (
+        {inDomain.map((formation) => (
           <FormationCard
             key={formation.id}
             formation={formation}
@@ -288,6 +310,37 @@ export default function RecherchePage() {
             onToggleSave={handleToggleSave}
           />
         ))}
+        {otherDomains.length > 0 && (
+          <section aria-labelledby="autres-domaines" className="space-y-4 pt-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-6">
+              <div>
+                <h2 id="autres-domaines" className="text-base font-bold text-slate-900">
+                  Autres domaines ({otherDomains.length})
+                </h2>
+                <p className="text-sm text-slate-500">Sans rapport direct avec votre parcours : utile seulement si vous envisagez une réorientation.</p>
+              </div>
+              {inDomain.length > 0 && (
+                <Button type="button" variant="outline" size="sm" onClick={() => setShowOtherDomains((v) => !v)} aria-expanded={othersVisible}>
+                  {othersVisible ? "Masquer les autres domaines" : `Voir les autres domaines (${otherDomains.length})`}
+                </Button>
+              )}
+            </div>
+            {othersVisible &&
+              otherDomains.map((formation) => (
+                <FormationCard
+                  key={formation.id}
+                  formation={formation}
+                  score={scores.get(formation.id) ?? null}
+                  estimate={results.get(formation.id)?.estimate ?? false}
+                  selectedForCompare={compareIds.includes(formation.id)}
+                  compareCount={compareIds.length}
+                  onToggleCompare={handleToggleCompare}
+                  saved={savedIds.includes(formation.id)}
+                  onToggleSave={handleToggleSave}
+                />
+              ))}
+          </section>
+        )}
         {filtered.length === 0 && (
           <div className="rounded-2xl border border-dashed border-slate-200 p-8 text-center">
             <p className="text-sm text-slate-400">Aucune formation ne correspond à votre recherche.</p>
