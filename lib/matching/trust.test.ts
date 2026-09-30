@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { FORMATIONS } from "@/data/formations";
 import { computeCompatibility, NO_CONTENT_MATCH_CEILING, profileEvidenceCount } from "@/lib/matching/engine";
 import { isRecognizedTerm, unrecognizedTerms } from "@/lib/matching/vocabulary";
+import { similarity, strengthFromScore } from "@/lib/matching/similarity";
 import type { Domain } from "@/data/subjects";
 import type { AcademicLevel, StudentProfile, StudyGoal } from "@/types";
 
@@ -89,5 +90,44 @@ describe("vocabulaire reconnu", () => {
     for (const term of ["Girafe", "azerty", "Pizza", "go go go"]) {
       expect(isRecognizedTerm(term)).toBe(false);
     }
+  });
+});
+
+describe("intitulés qui varient selon l'université et le pays (2026-09-30)", () => {
+  const same: [string, string][] = [
+    ["Analyse II", "Analyse"],
+    ["Probabilités 3", "Probabilités"],
+    ["Algo S3", "Algorithmique"],
+    ["BDD", "Bases de données"],
+    ["SGBD", "Bases de données"],
+    ["INF301 - Génie logiciel", "Génie logiciel"],
+    ["M1102 : Bases de données", "Bases de données"],
+    ["Operating Systems", "Systèmes d'exploitation"],
+    ["Databases", "Bases de données"],
+    ["Microeconomics I", "Microéconomie"],
+    ["Contract Law", "Droit des contrats"],
+    ["Cell Biology", "Biologie cellulaire"],
+    ["Réseau informatique", "Réseaux informatiques"],
+    ["Droit des obligations (S3)", "Droit des obligations"],
+    ["Maths 2", "Mathématiques"],
+  ];
+  for (const [variant, reference] of same) {
+    it(`« ${variant} » = « ${reference} »`, () => {
+      expect(strengthFromScore(similarity(variant, reference))).toBe("forte");
+      expect(isRecognizedTerm(variant)).toBe(true);
+    });
+  }
+
+  it("ne confond pas des sujets différents à cause de la numérotation", () => {
+    expect(strengthFromScore(similarity("Analyse 2", "Analyse financière"))).not.toBe("forte");
+    expect(strengthFromScore(similarity("Web 2.0", "Web 3.0"))).not.toBe("forte");
+    expect(isRecognizedTerm("Chat 2")).toBe(false);
+  });
+
+  it("un relevé marocain codé et numéroté obtient le même score que sa version « propre »", () => {
+    const clean = profile("Informatique", ["Algorithmique", "Bases de données", "Systèmes d'exploitation", "Génie logiciel", "Programmation orientée objet"], ["Java", "SQL"]);
+    const coded = profile("Informatique", ["Algo S3", "M2104 - BDD", "Systèmes d'exploitation II", "INF301 - Génie logiciel", "POO 2"], ["Java", "SQL"]);
+    const mosig = catalogue.find((f) => f.id === "f-mosig-grenoble-inp")!;
+    expect(computeCompatibility(coded, mosig).overallScore).toBe(computeCompatibility(clean, mosig).overallScore);
   });
 });

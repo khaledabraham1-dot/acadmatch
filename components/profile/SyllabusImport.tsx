@@ -29,7 +29,7 @@ const IMPORT_ERRORS: Record<string, string> = {
   file_too_large: "Fichier trop lourd (4 Mo maximum) : ne gardez que les pages de votre année, ou collez le texte.",
   text_too_long: "Texte trop long : collez seulement les descriptifs des cours de votre année.",
   not_a_syllabus:
-    "Ce document ne décrit pas le contenu de cours. Il faut le programme détaillé (descriptif des enseignements, syllabus) — le relevé de notes s'importe au-dessus, dans « Matières ».",
+    "Ce document ne liste pas les cours d'un cursus. Il faut le programme ou la maquette de votre formation (même réduite aux intitulés des cours) — le relevé de notes s'importe au-dessus, dans « Matières ».",
   no_module_found: "Aucun cours lisible n'a été trouvé. Essayez un PDF plus net, ou collez le texte du programme.",
 };
 
@@ -126,6 +126,9 @@ export function SyllabusImport({ existingCourses, existingSkills, onAddCourses, 
   if (!configured) return null;
 
   const matchedCount = extraction?.modules.filter((m) => m.matchedCourse).length ?? 0;
+  // Maquette réduite aux intitulés (cas fréquent, surtout hors de France) :
+  // aucune compétence n'en est tirée, mais les cours suivis sont une vraie preuve.
+  const titlesOnly = extraction !== null && extraction.modules.every((m) => m.skills.length === 0);
 
   return (
     <div className="rounded-2xl border border-violet-100 bg-violet-50/50 p-4 sm:p-5">
@@ -136,7 +139,8 @@ export function SyllabusImport({ existingCourses, existingSkills, onAddCourses, 
           <p className="mt-1 text-sm text-slate-600">
             Le descriptif de vos cours (syllabus, programme détaillé, supplément au diplôme) montre ce que chaque
             cours contenait vraiment — c&apos;est ce que lit un jury. AcadMatch en tire vos compétences, en ne
-            gardant que les cours que vous avez suivis.
+            gardant que les cours que vous avez suivis. Une simple maquette avec les intitulés des cours fonctionne
+            aussi : les cours suivis rejoignent vos matières.
           </p>
           {existingCourses.length === 0 && (
             <p className="mt-2 text-sm text-violet-800">
@@ -247,6 +251,14 @@ export function SyllabusImport({ existingCourses, existingSkills, onAddCourses, 
               Les cours non reconnus sont décochés : un programme liste aussi les options que vous n&apos;avez pas
               choisies. Cochez-les seulement si vous les avez suivis.
             </p>
+            <div className="mt-2 flex flex-wrap gap-3 text-xs font-bold">
+              <button type="button" className="text-violet-700 underline underline-offset-2" onClick={() => setFollowed(new Set(extraction.modules.map((m) => m.name)))}>
+                Tout cocher (j&apos;ai suivi tous ces cours)
+              </button>
+              <button type="button" className="text-slate-600 underline underline-offset-2" onClick={() => setFollowed(new Set())}>
+                Tout décocher
+              </button>
+            </div>
           </div>
 
           <ul className="max-h-72 space-y-1.5 overflow-y-auto pr-1">
@@ -277,7 +289,12 @@ export function SyllabusImport({ existingCourses, existingSkills, onAddCourses, 
 
           <div className="border-t border-slate-100 pt-4">
             <p className="text-sm font-medium text-slate-900">2. Compétences démontrées par ces cours</p>
-            {proposedSkills.length === 0 ? (
+            {titlesOnly ? (
+              <p className="mt-1 text-sm text-slate-600">
+                Ce document ne donne que les intitulés des cours : AcadMatch n&apos;en déduit aucune compétence (il ne
+                les invente pas), mais chaque cours coché rejoint vos matières, ce qui renforce déjà votre profil.
+              </p>
+            ) : proposedSkills.length === 0 ? (
               <p className="mt-1 text-sm text-slate-500">Cochez au moins un cours suivi dont le descriptif est lisible.</p>
             ) : (
               <ul className="mt-2 flex flex-wrap gap-2">

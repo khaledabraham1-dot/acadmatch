@@ -40,7 +40,7 @@ export const SYLLABUS_OUTPUT_SCHEMA = {
     is_syllabus: {
       type: "boolean",
       description:
-        "true si le document décrit le contenu de cours (programme, syllabus, descriptif des enseignements, maquette détaillée, supplément au diplôme).",
+        "true si le document décrit ou liste les cours d'un cursus (programme, syllabus, descriptif des enseignements, maquette même réduite aux seuls intitulés, supplément au diplôme).",
     },
     modules: {
       type: "array",
@@ -87,7 +87,8 @@ export function buildSyllabusSystemPrompt(courseVocabulary: string[], skillVocab
     `- « skills » : au plus ${MAX_SKILLS_PER_MODULE} compétences ou connaissances que le DESCRIPTIF du cours mentionne explicitement (contenu, objectifs, acquis d'apprentissage, outils utilisés). Ne déduis jamais une compétence du seul intitulé : un cours sans descriptif a « skills » vide. Si une compétence est la même qu'un intitulé de la liste de référence des compétences ou des matières, reprends cet intitulé exact (ex : « programmation en langage C » → « C » si « C » est dans la liste) ; sinon, un libellé court et fidèle en français. Reste au niveau d'un thème, d'un outil ou d'un langage — pas chaque notion du cours : « Méthodes numériques » plutôt que « Interpolation polynomiale », « Réseaux informatiques » plutôt que « Adressage IPv4 ». Libellés de 1 à 4 mots, sans parenthèses. Pas de qualités vagues (« rigueur », « autonomie ») sauf si le descriptif en fait un objectif explicite.`,
     "- « matched_course » : si ce cours est le même qu'une matière de la liste fournie par l'étudiant (même sujet, malgré une abréviation, une traduction ou une formulation différente), recopie cette matière EXACTEMENT comme elle est écrite dans la liste ; sinon null. Ne rapproche jamais deux cours différents : en cas de doute, null.",
     "- « evidence » : une phrase courte, fidèle au descriptif, qui montre d'où viennent les compétences (vide si « skills » est vide).",
-    "- Si le document ne décrit pas le contenu de cours (ex : simple relevé de notes, attestation, lettre), mets « is_syllabus » à false et laisse « modules » vide.",
+    "- Une maquette qui ne donne QUE les intitulés des cours (sans descriptif), même sur plusieurs années, est un programme valide : mets « is_syllabus » à true, extrais chaque cours, et laisse « skills » vide pour tous (aucune compétence ne se déduit d'un intitulé).",
+    "- Si le document ne liste aucun cours d'un cursus (ex : attestation, lettre, CV), mets « is_syllabus » à false et laisse « modules » vide.",
     "",
     "Liste de référence des matières (intitulés reconnus par AcadMatch) :",
     courseVocabulary.join(" ; "),

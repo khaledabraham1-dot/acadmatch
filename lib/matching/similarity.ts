@@ -1,5 +1,5 @@
 import type { MatchStrength } from "@/types";
-import { normalize } from "@/lib/utils";
+import { canonicalTitle } from "@/lib/matching/titleVariants";
 import { areSynonyms } from "@/lib/matching/synonyms";
 
 /**
@@ -13,16 +13,26 @@ const STOPWORDS = new Set([
   "au", "a", "une", "un", "ou", "sur", "avec",
 ]);
 
+/** Singulier et pluriel confondus (« réseau » / « réseaux », « politique » / « politiques »). */
+function singular(token: string): string {
+  return token.length > 3 && /[sx]$/.test(token) ? token.slice(0, -1) : token;
+}
+
 function tokenize(value: string): string[] {
-  return normalize(value)
+  return canonicalTitle(value)
     .split(/[^a-z0-9]+/)
-    .filter((token) => token.length > 1 && !STOPWORDS.has(token));
+    // Un chiffre isolé compte (« Web 2.0 » ≠ « Web 3.0 ») ; une lettre seule non
+    // (« R » ne doit pas matcher par hasard, voir similarity ci-dessous).
+    .filter((token) => (token.length > 1 || /\d/.test(token)) && !STOPWORDS.has(token))
+    .map(singular);
 }
 
 /** Similarité entre deux libellés, de 0 (aucun rapport) à 1 (équivalents). */
 export function similarity(a: string, b: string): number {
-  const na = normalize(a);
-  const nb = normalize(b);
+  // Formes canoniques : numérotation, abréviations et intitulés anglais ramenés
+  // à l'intitulé français (lib/matching/titleVariants.ts).
+  const na = canonicalTitle(a);
+  const nb = canonicalTitle(b);
   if (!na || !nb) return 0;
   if (na === nb) return 1;
   if (areSynonyms(na, nb)) return 0.9;

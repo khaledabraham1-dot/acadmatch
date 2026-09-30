@@ -120,3 +120,24 @@ describe("prompt", () => {
     expect(buildSyllabusUserInstruction([])).toContain("aucune matière renseignée");
   });
 });
+
+describe("maquette réduite aux intitulés (2026-09-30)", () => {
+  it("est acceptée comme programme, sans compétence inventée", () => {
+    const prompt = buildSyllabusSystemPrompt(["Algorithmique"], ["Python"]);
+    expect(prompt).toContain("QUE les intitulés des cours");
+    expect(prompt).toContain("laisse « skills » vide pour tous");
+  });
+
+  it("garde des modules sans compétence", () => {
+    const raw = JSON.stringify({
+      is_syllabus: true,
+      modules: [
+        { name: "Analyse 1", original_name: "Analyse 1", matched_course: null, skills: [], evidence: "" },
+        { name: "Algèbre 1", original_name: "Algèbre 1", matched_course: null, skills: [], evidence: "" },
+      ],
+      warnings: [],
+    });
+    const extraction = parseSyllabusExtraction(raw, []);
+    expect(extraction?.modules.map((m) => m.skills.length)).toEqual([0, 0]);
+  });
+});
