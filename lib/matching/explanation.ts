@@ -6,6 +6,7 @@ import type {
   StudyProgram,
 } from "@/types";
 import { ENGINE_WEIGHTS, EVIDENCE_FULL_ITEMS, profileEvidenceCount } from "@/lib/matching/engine";
+import { admissionRate, selectivityOf, selectivityTier, TIER_LABEL } from "@/lib/selectivity";
 import { getCompatibilityLabel } from "@/lib/matching/labels";
 import { normalize } from "@/lib/utils";
 
@@ -158,6 +159,22 @@ export function buildDecisionAid(
   if (result.domainCapped) {
     paragraphs.push(
       `Votre domaine d'études (${profile.fieldOfStudy}) n'est pas celui attendu (${formation.field}) et votre profil ne montre pas encore les matières de base de cette formation : le score est volontairement limité. Une réorientation reste possible, à condition de prouver ces bases (cours, certification, projet).`,
+    );
+  }
+
+  if (result.selectivityAdjustment) {
+    const data = selectivityOf(formation.id);
+    const tier = selectivityTier(data);
+    const rate = admissionRate(data);
+    const figure =
+      rate === null
+        ? ""
+        : data?.kind === "parcoursup"
+          ? ` (taux d'accès Parcoursup : ${Math.round(rate * 100)} %)`
+          : ` (${Math.round(rate * 100)} % des candidatures reçoivent une proposition, chiffres officiels)`;
+    const points = Math.abs(result.selectivityAdjustment);
+    paragraphs.push(
+      `${tier ? TIER_LABEL[tier] : "Sélectivité connue"} pour cette formation${figure} : vos résultats (« ${profile.academicStanding} ») ${result.selectivityAdjustment > 0 ? "ajoutent" : "retirent"} ${points} point${points > 1 ? "s" : ""} au score. Ce sont des résultats déclarés : le jury, lui, regardera vos notes réelles.`,
     );
   }
 

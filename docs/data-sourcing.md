@@ -138,3 +138,29 @@ La liste des pays « Études en France » est copiée de la page **française**
 de Campus France (la version anglaise omettait le Pakistan) ; un test
 vérifie qu'elle compte toujours 73 pays. À revérifier à chaque mise à jour
 de cette page, et le seuil de ressources (indexé sur le SMIC) chaque année.
+
+## Sélectivité (data/selectivity.ts) — ajoutée le 2026-09-30
+
+Chaque formation réelle a une entrée (test : `lib/selectivity.test.ts`).
+
+- **Masters français** : jeu officiel Mon Master (`fr-esr-mon_master`). Une fiche
+  qui couvre une mention additionne ses parcours (`recordIds`). Taux affiché =
+  propositions / candidatures confirmées en phase principale ; « venant de
+  l'étranger » = candidats non inscrits dans le supérieur français l'année
+  précédente, affiché seulement à partir de 10 candidats.
+- **Licences françaises** : jeu officiel Parcoursup (`fr-esr-parcoursup`),
+  taux d'accès de la ligne principale (plus grande capacité). Toujours rappeler
+  que les candidats hors UE passent le plus souvent par Études en France / DAP.
+- **Belgique** : accès ouvert (sans quota) ; exceptions reprises des fiches
+  (examen d'entrée ULiège, admission sur dossier des masters UCLouvain).
+- **Sinon « non publié »** (MSc et Mastères spécialisés de grandes écoles,
+  Sciences Po, entrées directes en M2, admissions parallèles…). Jamais de
+  chiffre estimé. Une ligne manifestement fausse (ex. 0 proposition pour 767
+  candidatures) est écartée et signalée comme inexploitable.
+
+**Chaque été** (nouvelle session publiée, souvent en décembre pour Mon Master) :
+mettre à jour `SESSION` dans `scripts/selectivity/generate.py`, lancer le
+script, remplacer les lignes « mon-master » et « parcoursup », relire les
+écarts. Toute nouvelle fiche du catalogue doit recevoir son entrée (le test
+échoue sinon) : chercher sa ligne dans les deux jeux, vérifier contre la page
+officielle de la fiche avant de l'ajouter.

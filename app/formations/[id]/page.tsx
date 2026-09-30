@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { EligibilitySection } from "@/components/result/EligibilitySection";
 import { OfficialSourceCard } from "@/components/result/OfficialSourceCard";
+import { SelectivityCard } from "@/components/result/SelectivityCard";
 import { FORMATIONS } from "@/data/formations";
 import { TUITION_FEES, type OfficialAmount } from "@/data/budget";
 import { formatEuros } from "@/lib/budget";
@@ -178,6 +179,7 @@ export default async function FormationPage({ params }: PageProps<"/formations/[
           </Card>
         )}
 
+        <SelectivityCard formationId={formation.id} />
         <EligibilitySection formation={formation} standalone />
         <OfficialSourceCard formation={formation} />
 

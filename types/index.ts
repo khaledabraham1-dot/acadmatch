@@ -268,6 +268,12 @@ export interface CompatibilityResult {
    * lib/matching/engine.ts). Absent sinon.
    */
   evidenceCapped?: boolean;
+  /**
+   * Points ajoutés ou retirés au score global selon les résultats déclarés
+   * et la sélectivité officielle de la formation (voir
+   * SELECTIVITY_STANDING_ADJUSTMENT dans lib/matching/engine.ts). Absent si nul.
+   */
+  selectivityAdjustment?: number;
 }
 
 /**

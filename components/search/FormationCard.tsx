@@ -11,6 +11,7 @@ import { getCompatibilityLabel } from "@/lib/matching/labels";
 import { MAX_COMPARE_FORMATIONS } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 import { formationPath } from "@/lib/site";
+import { SelectivityBadge } from "@/components/result/SelectivityCard";
 
 interface FormationCardProps {
   formation: StudyProgram;
@@ -67,6 +68,7 @@ export function FormationCard({
               <Badge tone="neutral">{formation.level}</Badge>
               <Badge tone="neutral">{formation.field}</Badge>
               {formation.language !== "Français" && <Badge tone="neutral">{formation.language}</Badge>}
+              <SelectivityBadge formationId={formation.id} />
             </div>
             <h3 className="text-lg font-semibold text-slate-900">
               {formation.demo ? (

@@ -15,6 +15,7 @@ import { DemoDataBadge } from "@/components/ui/DemoDataBadge";
 import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
 import { ScoreHeadline } from "@/components/result/ScoreHeadline";
 import { RadarChart } from "@/components/result/RadarChart";
+import { SelectivityCard } from "@/components/result/SelectivityCard";
 import { StrengthsGaps } from "@/components/result/StrengthsGaps";
 import { MatchTable } from "@/components/result/MatchTable";
 import { ComparisonSummary } from "@/components/result/ComparisonSummary";
@@ -164,6 +165,7 @@ export function ResultView() {
       </Card>
 
       <CompatibilityExplanation aid={aid} />
+      <SelectivityCard formationId={formation.id} />
       <ActionPlan actions={aid.actions} />
       <StrengthsGaps strengths={result.strengths} gaps={result.gaps} />
 

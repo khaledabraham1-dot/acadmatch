@@ -13,6 +13,7 @@ import {
   type SubjectMatch,
 } from "@/types";
 import { RECOMMENDED_COURSES, RECOMMENDED_SKILLS } from "@/lib/profile/validation";
+import { selectivityOf, selectivityTier, type SelectivityTier } from "@/lib/selectivity";
 import { normalize } from "@/lib/utils";
 import { areSynonyms } from "@/lib/matching/synonyms";
 import { domainEquivalents } from "@/data/subjects";
@@ -181,6 +182,30 @@ const ACADEMIC_STANDING_ADJUSTMENT: Record<AcademicStanding, number> = {
  * parallèle a un niveau d'entrée "Licence 3" mais un objectif "École
  * spécialisée", pas "Licence".
  */
+/**
+ * Résultats académiques × sélectivité officielle (2026-09-30). Quand la
+ * sélectivité d'une formation est publiée (Mon Master, Parcoursup, accès
+ * ouvert belge — lib/selectivity.ts), le niveau de résultats pèse sur le
+ * score GLOBAL, d'autant plus que la formation est sélective : des résultats
+ * modestes ne ferment pas une formation accessible, mais pèsent lourd face à
+ * une formation qui ne retient qu'une candidature sur huit. Sans sélectivité
+ * publiée, on garde l'ancien ajustement modeste et identique partout
+ * (ACADEMIC_STANDING_ADJUSTMENT), faute de connaître la barre réelle.
+ * Un profil qui n'a pas renseigné ses résultats n'est ni pénalisé ni avantagé.
+ */
+const SELECTIVITY_STANDING_ADJUSTMENT: Record<SelectivityTier, Record<AcademicStanding, number>> = {
+  "très sélective": { "Résultats modestes": -20, "Résultats dans la moyenne": -8, "Bons résultats": 0, "Excellents résultats": 3 },
+  sélective: { "Résultats modestes": -10, "Résultats dans la moyenne": -3, "Bons résultats": 2, "Excellents résultats": 4 },
+  accessible: { "Résultats modestes": -3, "Résultats dans la moyenne": 0, "Bons résultats": 1, "Excellents résultats": 2 },
+};
+
+/** Ajustement global (points) selon résultats et sélectivité ; 0 si l'un des deux est inconnu. */
+export function selectivityStandingAdjustment(profile: StudentProfile, formation: StudyProgram): number {
+  const tier = selectivityTier(selectivityOf(formation.id));
+  if (!tier || !profile.academicStanding) return 0;
+  return SELECTIVITY_STANDING_ADJUSTMENT[tier][profile.academicStanding];
+}
+
 function computeLevelDegreeScore(profile: StudentProfile, formation: StudyProgram): number {
   const diff = levelRank(profile.currentLevel) - levelRank(formation.requiredLevel);
   let base: number;
@@ -193,7 +218,9 @@ function computeLevelDegreeScore(profile: StudentProfile, formation: StudyProgra
   const matchesGoal = formation.goal === profile.goal;
   const afterGoal = matchesGoal ? base : Math.max(0, base - 25);
 
-  const standing = profile.academicStanding ?? NEUTRAL_ACADEMIC_STANDING;
+  // Sélectivité publiée : les résultats pèsent sur le score global (plus bas), pas ici.
+  const selectivityKnown = selectivityTier(selectivityOf(formation.id)) !== null;
+  const standing = selectivityKnown ? NEUTRAL_ACADEMIC_STANDING : (profile.academicStanding ?? NEUTRAL_ACADEMIC_STANDING);
   const afterStanding = afterGoal + ACADEMIC_STANDING_ADJUSTMENT[standing];
   return Math.min(100, Math.max(0, afterStanding));
 }
@@ -440,11 +467,18 @@ export function computeCompatibility(profile: StudentProfile, formation: StudyPr
     levelDegree,
   };
 
-  const weightedScore = Math.round(
-    breakdown.prerequisites * ENGINE_WEIGHTS.prerequisites +
-      breakdown.academicContent * ENGINE_WEIGHTS.academicContent +
-      breakdown.skills * ENGINE_WEIGHTS.skills +
-      breakdown.levelDegree * ENGINE_WEIGHTS.levelDegree,
+  const selectivityAdjustment = selectivityStandingAdjustment(profile, formation);
+  const weightedScore = Math.max(
+    0,
+    Math.min(
+      100,
+      Math.round(
+        breakdown.prerequisites * ENGINE_WEIGHTS.prerequisites +
+          breakdown.academicContent * ENGINE_WEIGHTS.academicContent +
+          breakdown.skills * ENGINE_WEIGHTS.skills +
+          breakdown.levelDegree * ENGINE_WEIGHTS.levelDegree,
+      ) + selectivityAdjustment,
+    ),
   );
 
   const outsideDomain = isOutsideRequiredDomain(profile, formation);
@@ -487,5 +521,6 @@ export function computeCompatibility(profile: StudentProfile, formation: StudyPr
     matches,
     ...(domainCapped ? { domainCapped: true } : {}),
     ...(evidenceCapped ? { evidenceCapped: true } : {}),
+    ...(selectivityAdjustment !== 0 ? { selectivityAdjustment } : {}),
   };
 }
