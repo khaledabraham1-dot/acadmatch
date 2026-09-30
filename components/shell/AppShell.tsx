@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Link from "next/link";
-import { Menu, X, ShieldCheck } from "lucide-react";
+import { Menu, ShieldCheck } from "lucide-react";
 import { Logo } from "@/components/shell/Logo";
 import { SidebarNav } from "@/components/shell/SidebarNav";
+import { MobileMenu } from "@/components/shell/MobileMenu";
 import { FORMATIONS } from "@/data/formations";
 import { coveredDomains, formatList } from "@/lib/search/filters";
 
@@ -48,6 +49,8 @@ function SidebarContent() {
 /** Ossature commune des pages applicatives : sidebar (desktop) + drawer (mobile) + contenu. */
 export function AppShell({ title, description, children }: AppShellProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  // Stable : MobileMenu s'en sert dans un effet (verrou du défilement, touche Échap).
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
 
   return (
     <div className="flex min-h-screen w-full bg-slate-50">
@@ -62,32 +65,8 @@ export function AppShell({ title, description, children }: AppShellProps) {
         </div>
       </aside>
 
-      {/* Drawer mobile */}
-      {drawerOpen && (
-        <div className="fixed inset-0 z-40 md:hidden" role="dialog" aria-modal="true" aria-label="Menu de navigation">
-          <button
-            type="button"
-            className="absolute inset-0 bg-slate-950/50"
-            aria-label="Fermer le menu"
-            onClick={() => setDrawerOpen(false)}
-          />
-          <div className="absolute inset-y-0 left-0 w-72 shadow-xl">
-            <div className="flex justify-end px-4 pt-4">
-              <button
-                type="button"
-                onClick={() => setDrawerOpen(false)}
-                aria-label="Fermer le menu"
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-white/10 hover:text-white"
-              >
-                <X className="size-5" />
-              </button>
-            </div>
-            <div className="-mt-14">
-              <SidebarContent />
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Menu mobile en tuiles */}
+      {drawerOpen && <MobileMenu onClose={closeDrawer} />}
 
       <div className="flex min-w-0 flex-1 flex-col md:pl-64">
         {/* Barre mobile */}

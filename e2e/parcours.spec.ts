@@ -26,6 +26,8 @@ test("parcours principal : exemple → recherche → résultat", async ({ page }
 
 test("une page formation est indexable et mène au calcul de compatibilité", async ({ page }) => {
   await page.goto("/formations");
+  // Attendre l'hydratation : un clic trop tôt pouvait être perdu (échec intermittent constaté).
+  await page.waitForLoadState("networkidle");
   await page.getByRole("link", { name: /Master 2 Data Science/ }).click();
   await expect(page).toHaveURL(/\/formations\/f-m2ds-ip-paris$/);
 
@@ -68,4 +70,25 @@ test("en-têtes de sécurité présents", async ({ request }) => {
 
 test("une formation inconnue renvoie 404", async ({ request }) => {
   expect((await request.get("/formations/nexiste-pas")).status()).toBe(404);
+});
+
+test("menu mobile en tuiles : il défile seul et la page derrière reste immobile", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "menu réservé au mobile");
+  await page.goto("/recherche");
+  await page.getByRole("button", { name: "Ouvrir le menu" }).click();
+  const menu = page.getByRole("dialog", { name: "Menu de navigation" });
+  await expect(menu).toBeVisible();
+  expect(await page.evaluate(() => document.body.style.overflow)).toBe("hidden");
+
+  // Le geste fait défiler le menu, pas la page.
+  const pageScrollBefore = await page.evaluate(() => window.scrollY);
+  await menu.hover();
+  await page.mouse.wheel(0, 600);
+  await expect.poll(() => menu.evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
+  expect(await page.evaluate(() => window.scrollY)).toBe(pageScrollBefore);
+
+  await menu.getByRole("link", { name: "Budget" }).click();
+  await expect(page).toHaveURL(/\/budget$/);
+  await expect(menu).toBeHidden();
+  expect(await page.evaluate(() => document.body.style.overflow)).toBe("");
 });
