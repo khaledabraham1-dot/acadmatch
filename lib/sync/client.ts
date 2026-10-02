@@ -1,7 +1,7 @@
 "use client";
 
 import { readSyncMeta, STORAGE_CHANGED_EVENT } from "@/lib/storage";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { hasSessionCookie, isSupabaseConfigured } from "@/lib/supabase/config";
 import {
   applyToLocal,
   clearLocalWorkspace,
@@ -62,10 +62,6 @@ let running: Promise<void> | null = null;
 let rerun = false;
 let debounce: ReturnType<typeof setTimeout> | null = null;
 let lastFocusSync = 0;
-
-function hasSessionCookie(): boolean {
-  return typeof document !== "undefined" && /sb-[^=]+-auth-token/.test(document.cookie);
-}
 
 async function getClient(): Promise<SupabaseClient> {
   if (!client) {

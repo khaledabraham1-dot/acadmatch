@@ -9,3 +9,12 @@
 export function isSupabaseConfigured(): boolean {
   return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
 }
+
+/**
+ * Une session Supabase existe-t-elle dans ce navigateur ? (cookie posé par
+ * @supabase/ssr, lisible côté client). Sans elle, inutile de télécharger le
+ * client Supabase (~65 Ko compressés) : un visiteur sans compte ne le paie jamais.
+ */
+export function hasSessionCookie(): boolean {
+  return typeof document !== "undefined" && /sb-[^=]+-auth-token/.test(document.cookie);
+}

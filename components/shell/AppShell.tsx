@@ -1,11 +1,8 @@
-"use client";
-
-import { useCallback, useState } from "react";
 import Link from "next/link";
-import { Menu, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { Logo } from "@/components/shell/Logo";
 import { SidebarNav } from "@/components/shell/SidebarNav";
-import { MobileMenu } from "@/components/shell/MobileMenu";
+import { MobileBar } from "@/components/shell/MobileBar";
 import { SyncBadge } from "@/components/account/SyncStatus";
 import { FORMATIONS } from "@/data/formations";
 import { coveredDomains, formatList } from "@/lib/search/filters";
@@ -54,12 +51,12 @@ function SidebarContent() {
   );
 }
 
-/** Ossature commune des pages applicatives : sidebar (desktop) + drawer (mobile) + contenu. */
+/**
+ * Ossature commune des pages applicatives : sidebar (desktop) + menu (mobile) + contenu.
+ * Composant serveur : la sidebar (et le catalogue qu'elle résume) n'envoie aucun
+ * JavaScript au navigateur ; seul le bouton du menu mobile est interactif (MobileBar).
+ */
 export function AppShell({ title, description, children }: AppShellProps) {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  // Stable : MobileMenu s'en sert dans un effet (verrou du défilement, touche Échap).
-  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
-
   return (
     <div className="flex min-h-screen w-full bg-slate-50">
       <a href="#contenu-principal" className="skip-link">
@@ -73,23 +70,8 @@ export function AppShell({ title, description, children }: AppShellProps) {
         </div>
       </aside>
 
-      {/* Menu mobile en tuiles */}
-      {drawerOpen && <MobileMenu onClose={closeDrawer} />}
-
       <div className="flex min-w-0 flex-1 flex-col md:pl-64">
-        {/* Barre mobile */}
-        <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 md:hidden">
-          <Logo />
-          <button
-            type="button"
-            onClick={() => setDrawerOpen(true)}
-            aria-label="Ouvrir le menu"
-            aria-expanded={drawerOpen}
-            className="rounded-lg p-2 text-slate-600 hover:bg-slate-100"
-          >
-            <Menu className="size-5" />
-          </button>
-        </div>
+        <MobileBar />
 
         <main id="contenu-principal" className="flex-1 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
           <div className="mx-auto w-full max-w-5xl">

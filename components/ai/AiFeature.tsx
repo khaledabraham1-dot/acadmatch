@@ -5,8 +5,7 @@ import Link from "next/link";
 import type { User } from "@supabase/supabase-js";
 import { AlertCircle, ShieldAlert } from "lucide-react";
 import type { Application } from "@/types";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { createClient } from "@/lib/supabase/client";
+import { hasSessionCookie, isSupabaseConfigured } from "@/lib/supabase/config";
 import { USER_DAILY_LIMITS } from "@/lib/ai/config";
 import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
@@ -61,15 +60,32 @@ export function useAiAccess() {
 
   useEffect(() => {
     if (!configured) return;
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
+    // Pas de session : visiteur non connecté, sans charger le client Supabase.
+    // La connexion passe toujours par /compte et un rechargement de page.
+    if (!hasSessionCookie()) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- document.cookie n'existe qu'après le montage
       setAuthLoading(false);
+      return;
+    }
+    let unsubscribe: (() => void) | undefined;
+    let cancelled = false;
+    import("@/lib/supabase/client").then(({ createClient }) => {
+      if (cancelled) return;
+      const supabase = createClient();
+      supabase.auth.getUser().then(({ data }) => {
+        if (cancelled) return;
+        setUser(data.user);
+        setAuthLoading(false);
+      });
+      const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
+        setUser(session?.user ?? null);
+      });
+      unsubscribe = () => subscription.subscription.unsubscribe();
     });
-    const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-    return () => subscription.subscription.unsubscribe();
+    return () => {
+      cancelled = true;
+      unsubscribe?.();
+    };
   }, [configured]);
 
   return { configured, user, authLoading };
