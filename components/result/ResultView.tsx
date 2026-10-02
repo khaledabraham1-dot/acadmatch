@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import type { StudentProfile } from "@/types";
@@ -9,20 +8,21 @@ import { getFormationById } from "@/data/formations";
 import { loadProfile, saveSelectedFormationId } from "@/lib/storage";
 import { computeCompatibility } from "@/lib/matching/engine";
 import { buildDecisionAid } from "@/lib/matching/explanation";
+import { buildNextSteps, buildVerdict } from "@/lib/matching/nextSteps";
 import { validateStoredProfile } from "@/lib/profile/validation";
 import { validTranscriptAverage } from "@/lib/profile/grades";
 import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { DemoDataBadge } from "@/components/ui/DemoDataBadge";
 import { ProfileReliabilityNotice } from "@/components/profile/ProfileReliabilityNotice";
-import { ScoreHeadline } from "@/components/result/ScoreHeadline";
 import { RadarChart } from "@/components/result/RadarChart";
 import { SelectivityCard } from "@/components/result/SelectivityCard";
 import { StrengthsGaps } from "@/components/result/StrengthsGaps";
 import { MatchTable } from "@/components/result/MatchTable";
-import { ComparisonSummary } from "@/components/result/ComparisonSummary";
 import { CompatibilityExplanation } from "@/components/result/CompatibilityExplanation";
-import { ActionPlan } from "@/components/result/ActionPlan";
+import { VerdictCard } from "@/components/result/VerdictCard";
+import { NextSteps } from "@/components/result/NextSteps";
+import { DetailSection } from "@/components/result/DetailSection";
 import { EligibilitySection } from "@/components/result/EligibilitySection";
 import { OfficialSourceCard } from "@/components/result/OfficialSourceCard";
 import { FormationCompareTable } from "@/components/result/FormationCompareTable";
@@ -99,7 +99,7 @@ export function ResultView() {
         {formations.some((f) => f.demo) && <DemoDataBadge />}
         <ProfileReliabilityNotice
           validation={profileValidation}
-          editHref={`/profil?next=${encodeURIComponent(`/resultat?compare=${compareIds.join(",")}`)}`}
+          editHref={`/profil?etape=2&next=${encodeURIComponent(`/resultat?compare=${compareIds.join(",")}`)}`}
         />
         <div>
           <h2 className="text-base font-semibold text-slate-900">
@@ -145,57 +145,40 @@ export function ResultView() {
   const result = computeCompatibility(profile, formation);
   const aid = buildDecisionAid(profile, formation, result);
   const profileValidation = validateStoredProfile(profile);
-  const editProfileHref = `/profil?next=${encodeURIComponent(`/resultat?formationId=${formation.id}`)}`;
+  const editProfileHref = `/profil?etape=2&next=${encodeURIComponent(`/resultat?formationId=${formation.id}`)}`;
 
+  // Hiérarchie (2026-10-02) : verdict → prochaines actions → analyse détaillée repliée.
   return (
     <div className="space-y-6">
       {formation.demo && <DemoDataBadge />}
-      <ProfileReliabilityNotice validation={profileValidation} editHref={editProfileHref} />
-      <ComparisonSummary profile={profile} formation={formation} />
+      <VerdictCard profile={profile} formation={formation} result={result} verdict={buildVerdict(profile, formation, result)} />
+      <NextSteps steps={buildNextSteps(profile, formation, result, aid)} />
 
-      <Card>
-        <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-base font-bold text-slate-900">Résultats de compatibilité</h2>
-          <Link href="/methode" className="text-sm font-bold text-blue-700 underline underline-offset-2">
-            Comment ce score est-il calculé ?
-          </Link>
-        </div>
-        {/*
-          Identité Radar : le score en grand, puis son détail en radar à quatre
-          axes. minmax(0,1fr) : la colonne du radar doit pouvoir rétrécir sans
-          faire déborder la carte (même piège que l'ancienne grille à barres).
-        */}
-        <div className="grid items-center gap-6 sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-10">
-          <ScoreHeadline
-            score={result.overallScore}
-            note={
-              result.noContentMatch
-                ? "profil non évaluable pour cette formation"
-                : result.evidenceCapped
-                  ? "estimation, profil incomplet"
-                  : undefined
-            }
-          />
-          <RadarChart breakdown={result.breakdown} className="mx-auto max-w-[340px]" />
-        </div>
-      </Card>
+      <section aria-labelledby="details-title" className="space-y-3">
+        <h2 id="details-title" className="text-sm font-bold uppercase tracking-wide text-slate-600">
+          Analyse détaillée
+        </h2>
+        <DetailSection title="Pourquoi ce score" hint="Les 4 critères, vos points forts et vos lacunes">
+          <ProfileReliabilityNotice validation={profileValidation} editHref={editProfileHref} />
+          <Card>
+            <RadarChart breakdown={result.breakdown} className="mx-auto max-w-[340px]" />
+          </Card>
+          <CompatibilityExplanation aid={aid} />
+          <StrengthsGaps strengths={result.strengths} gaps={result.gaps} />
+        </DetailSection>
 
-      <CompatibilityExplanation aid={aid} />
-      <SelectivityCard formationId={formation.id} />
-      <ActionPlan actions={aid.actions} />
-      <StrengthsGaps strengths={result.strengths} gaps={result.gaps} />
+        <DetailSection title="Correspondance des matières" hint="Chaque exigence de la formation face à votre profil">
+          <Card>
+            <MatchTable matches={result.matches} />
+          </Card>
+        </DetailSection>
 
-      <Card>
-        <h2 className="mb-1 text-base font-semibold text-slate-900">Correspondance des matières</h2>
-        <p className="mb-5 text-sm text-slate-500">
-          Comparaison entre vos matières/compétences et les exigences de la formation.
-        </p>
-        <MatchTable matches={result.matches} />
-      </Card>
-
-      <EligibilitySection formation={formation} />
-
-      <OfficialSourceCard formation={formation} />
+        <DetailSection title="Admission" hint="Sélectivité, conditions administratives, source officielle">
+          <SelectivityCard formationId={formation.id} />
+          <EligibilitySection formation={formation} />
+          <OfficialSourceCard formation={formation} />
+        </DetailSection>
+      </section>
 
       <ResultFeedback
         formationId={formation.id}

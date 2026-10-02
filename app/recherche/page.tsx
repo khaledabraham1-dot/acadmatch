@@ -160,7 +160,7 @@ export default function RecherchePage() {
         <ProfileReliabilityNotice
           className="mb-6"
           validation={validateStoredProfile(profile)}
-          editHref="/profil?next=/recherche"
+          editHref="/profil?etape=2&next=/recherche"
         />
       )}
 

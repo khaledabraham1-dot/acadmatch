@@ -127,7 +127,7 @@ export function EspaceView() {
                 Modifier
               </Link>
             </Card>
-            <ProfileReliabilityNotice validation={validateStoredProfile(profile)} editHref="/profil?next=/espace" />
+            <ProfileReliabilityNotice validation={validateStoredProfile(profile)} editHref="/profil?etape=2&next=/espace" />
           </div>
         ) : (
           <Card className="flex flex-wrap items-center justify-between gap-3 border-blue-100 bg-blue-50/60">

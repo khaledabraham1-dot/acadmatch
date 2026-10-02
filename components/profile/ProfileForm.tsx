@@ -130,6 +130,12 @@ export function ProfileForm() {
     setExperiences(existing.experiences ?? "");
     setTranscriptAverage(validTranscriptAverage(existing));
     setHasExistingProfile(true);
+    // « Compléter mon profil » (page résultat) : ouvrir directement l'étape demandée,
+    // si le parcours enregistré permet d'y accéder (domaine toujours valide).
+    const requested = Number(searchParams.get("etape"));
+    if ((requested === 2 || requested === 3) && isCurrentDomain(existing.fieldOfStudy)) setStep(requested);
+    // Lecture unique au montage : l'étape suit ensuite la navigation de l'étudiant.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const courseSuggestions = useMemo(

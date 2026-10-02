@@ -24,7 +24,12 @@ test("parcours principal : exemple → recherche → résultat", async ({ page }
   await page.getByRole("link", { name: /Voir la compatibilité/ }).first().click();
   // Navigation client : jusqu'à 15 s sur une machine chargée (échecs intermittents à 5 s).
   await expect(page).toHaveURL(/\/resultat\?formationId=/, { timeout: 15_000 });
-  await expect(page.getByRole("heading", { name: "Correspondance des matières" })).toBeVisible();
+  // Verdict et actions d'abord ; l'analyse détaillée est repliée.
+  await expect(page.getByRole("heading", { name: "Vos prochaines actions" })).toBeVisible();
+  const details = page.locator("details", { hasText: "Correspondance des matières" });
+  await expect(details).toHaveJSProperty("open", false);
+  await details.getByText("Correspondance des matières", { exact: true }).click();
+  await expect(details).toHaveJSProperty("open", true);
   await expect(page.getByText(/ne garantit pas l.admission/)).toBeVisible();
   await expectNoHorizontalScroll(page);
 });
