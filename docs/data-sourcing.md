@@ -164,3 +164,10 @@ script, remplacer les lignes « mon-master » et « parcoursup », relire les
 écarts. Toute nouvelle fiche du catalogue doit recevoir son entrée (le test
 échoue sinon) : chercher sa ligne dans les deux jeux, vérifier contre la page
 officielle de la fiche avant de l'ajouter.
+
+## Calendriers officiels de candidature (`data/campaigns.ts`)
+
+- **Sources admises uniquement** : arrêté au Journal officiel (Légifrance) pour Parcoursup et Mon Master, page de l'Espace Campus France du pays pour Études en France. Jamais un site d'orientation tiers : le 2026-10-02, certains publiaient déjà des dates « Études en France 2027 » pour l'Algérie alors que la page officielle disait « information à venir ».
+- `intake` = rentrée concernée. Si ce n'est pas la rentrée visée (`targetIntake`), l'interface affiche les dates comme **indicatives** et ne permet pas d'en faire des rappels.
+- **À revérifier** : Parcoursup dès l'arrêté de la session (fin d'année), Mon Master dès le sien (début d'année), chaque calendrier Études en France au 1er octobre. Pour ajouter un pays : une entrée dans `OFFICIAL_CAMPAIGNS` et dans `EEF_CAMPAIGN_BY_COUNTRY`.
+- Le test de bout en bout « calendrier : un résident du Bénin… » échoue après la clôture de la campagne : c'est le signal de relever le calendrier suivant.

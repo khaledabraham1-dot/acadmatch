@@ -139,3 +139,33 @@ test("profil en trois étapes : un premier résultat dès l'étape 2", async ({ 
   await page.getByRole("button", { name: "Voir mes résultats" }).click();
   await expect(page).toHaveURL(/\/recherche/, { timeout: 15_000 });
 });
+
+// Échouera après la clôture de la campagne (31 mai 2027) : c'est le signal de relever le calendrier suivant (data/campaigns.ts).
+test("calendrier : un résident du Bénin voit le calendrier Campus France officiel et l'ajoute à ses rappels", async ({ page }) => {
+  await page.addInitScript(() => {
+    if (window.sessionStorage.getItem("seeded")) return;
+    window.sessionStorage.setItem("seeded", "1");
+    const application = (formationId: string) => ({ formationId, status: "à préparer", documents: [], nextActions: [], notes: "" });
+    window.localStorage.setItem(
+      "acadmatch:applications",
+      JSON.stringify([application("f-master-bioinformatique-bordeaux"), application("f-mosig-grenoble-inp")]),
+    );
+    window.localStorage.setItem("acadmatch:visa", JSON.stringify({ citizenship: "hors-ue", residenceCountry: "Bénin" }));
+  });
+  await page.goto("/calendrier");
+  await page.waitForLoadState("networkidle");
+
+  // Master national + résident du Bénin : Campus France, pas Mon Master.
+  await expect(page.getByRole("heading", { name: "Études en France — Bénin" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Mon Master" })).toHaveCount(0);
+  await expect(page.getByText(/Officiel · rentrée \d{4}/)).toBeVisible();
+  // L'école garde son propre calendrier.
+  await expect(page.getByRole("heading", { name: "Calendrier propre à l'établissement" })).toBeVisible();
+  await expectNoHorizontalScroll(page);
+
+  await page.getByRole("button", { name: /Ajouter les \d+ échéances à mes rappels/ }).click();
+  await expect(page.getByText("Ajoutées à vos rappels")).toBeVisible();
+  await expect(page.getByText(/Études en France — Bénin — Dépôt définitif après corrections/)).toBeVisible();
+  await page.reload();
+  await expect(page.getByText(/Études en France — Bénin — Dépôt définitif après corrections/)).toBeVisible();
+});

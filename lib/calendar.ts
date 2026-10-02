@@ -4,18 +4,12 @@ import type { Application, ChecklistItem, StudyProgram } from "@/types";
  * Calendrier personnalisé (Phase 14) — logique pure, testable indépendamment
  * de l'UI.
  *
- * Choix de portée assumé : la phase demande un calendrier "basé sur
- * formations, candidatures et deadlines" qui "utilise uniquement des dates
- * vérifiées et signale les dates non vérifiées". Or `StudyProgram` ne
- * stocke volontairement AUCUNE date de candidature exacte
- * (`applicationProcedure` documente la plateforme/période, jamais un
- * jour précis — une date de campagne se périme en quelques mois, voir
- * types/index.ts) : il n'existe donc aucune date "vérifiée" à afficher.
- * Toutes les entrées de ce calendrier sont donc des rappels personnels que
- * l'étudiant se fixe lui-même (`Application.deadline`,
- * `ChecklistItem.dueDate`) — jamais une date officielle affirmée par
- * AcadMatch. C'est signalé une fois, clairement, plutôt que de simuler une
- * distinction vérifié/non-vérifié qui n'existe pas dans les données.
+ * Ce module ne gère que les RAPPELS PERSONNELS (`Application.deadline`,
+ * `ChecklistItem.dueDate`) : `StudyProgram` ne stocke aucune date de
+ * campagne. Les calendriers officiels sourcés (Parcoursup, Mon Master,
+ * Études en France) vivent à part, dans data/campaigns.ts et
+ * lib/campaigns.ts (2026-10-02) ; une échéance officielle n'entre ici que si
+ * l'étudiant l'ajoute à ses rappels.
  *
  * Discipline dates/fuseaux horaires (consigne explicite de la phase) :
  * toutes les dates sont des chaînes ISO "YYYY-MM-DD" comparées et groupées

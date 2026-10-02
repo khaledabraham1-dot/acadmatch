@@ -12,7 +12,7 @@ export default function CalendrierPage() {
   return (
     <AppShell
       title="Calendrier personnalisé"
-      description="Vos rappels d'échéances, documents et actions — jamais une date officielle affirmée par AcadMatch."
+      description="Les calendriers officiels de vos candidatures (Parcoursup, Mon Master, Études en France), sourcés, puis vos propres rappels."
     >
       <CalendarView />
     </AppShell>
