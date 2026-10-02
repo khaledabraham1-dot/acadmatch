@@ -75,6 +75,28 @@ const VERIFIED_AT = "2026-09-17";
  */
 const ENTRY_SKILLS_VERIFIED_AT = "2026-09-28";
 
+/**
+ * Masters dont la page de l'établissement est muette : compétences d'entrée
+ * relevées sur leur fiche Mon Master (2026-10-03), rubrique « Attendus pour
+ * être admis dans cette formation » — texte officiel déposé par
+ * l'établissement sur la plateforme nationale.
+ */
+const MON_MASTER_ATTENDUS_AT = "2026-10-03";
+
+/**
+ * Licences et BUT dont la page de l'établissement est muette : compétences
+ * d'entrée relevées sur leur fiche Parcoursup (2026-10-03), dans la « grille
+ * d'analyse des candidatures » de la commission (matières du lycée et degré
+ * d'importance : Essentiel → essentielle, Très important / Important →
+ * importante, Complémentaire → utile) et les spécialités conseillées. Une
+ * spécialité que la fiche ne compte que « si elle a été suivie » reste utile :
+ * ne pas l'avoir suivie ne doit pas pénaliser.
+ */
+const PARCOURSUP_GRILLE_AT = "2026-10-03";
+
+/** Pages d'établissement relues le 2026-10-03 : elles énoncent bien un profil d'entrée (formation et langue attendues). */
+const ENTRY_PAGE_RECHECKED_AT = "2026-10-03";
+
 export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-m2ds-ip-paris",
@@ -102,11 +124,13 @@ export const FORMATIONS: StudyProgram[] = [
       course("Mathématiques appliquées", "importante"),
       course("Big Data", "utile"),
     ],
+    // Page officielle : « Completion of the first year of a Master in mathematics […] or equivalent » ;
+    // « Proficiency in English and French is required ». Python et Machine Learning ne sont pas
+    // exigés à l'entrée (enseignés dans le M2).
     skills: [
-      skill("Python", "essentielle"),
-      skill("Machine Learning", "essentielle"),
-      skill("Statistiques", "importante"),
-      skill("Anglais courant", "importante"),
+      skill("Mathématiques", "essentielle", ["Mathématiques appliquées", "Analyse", "Algèbre linéaire"]),
+      skill("Statistiques", "essentielle", ["Probabilités", "Statistique inférentielle"]),
+      skill("Anglais courant", "essentielle"),
     ],
     source: "https://www.ip-paris.fr/en/education/masters/applied-mathematics-and-statistics-program/master-year-2-data-science",
     verifiedAt: VERIFIED_AT,
@@ -137,11 +161,11 @@ export const FORMATIONS: StudyProgram[] = [
       course("Mathématiques appliquées", "importante"),
       course("Traitement du langage naturel", "utile"),
     ],
+    // Page officielle, entrée en M1 : « L3 in science or Bachelor of Science (3 or 4 years) » (ou école
+    // de commerce, BUT, LAS) ; « Minimum B2 level in English ». Le Machine Learning s'apprend dans le MSc.
     skills: [
-      skill("Python", "essentielle"),
-      skill("Machine Learning", "essentielle"),
+      skill("Matières scientifiques", "importante", ["Mathématiques", "Informatique", "Physique", "Statistiques", "Algorithmique"]),
       skill("Anglais courant", "essentielle"),
-      skill("Statistiques", "importante"),
     ],
     source: "https://www.centralesupelec.fr/programmes/master-science-artificial-intelligence",
     verifiedAt: VERIFIED_AT,
@@ -210,11 +234,11 @@ export const FORMATIONS: StudyProgram[] = [
       course("Statistiques", "importante"),
       course("Programmation Python", "importante"),
     ],
+    // Page officielle : « Ouvert aux étudiants ayant un profil quantitatif (économie, statistiques,
+    // MIASHS, ingénierie…) ».
     skills: [
-      skill("Python", "essentielle"),
-      skill("Économétrie", "essentielle"),
-      skill("Statistiques", "importante"),
-      skill("Excel", "utile"),
+      skill("Statistiques", "essentielle", ["Économétrie", "Probabilités", "Statistique inférentielle", "Analyse de données"]),
+      skill("Mathématiques", "importante", ["Mathématiques appliquées", "Analyse", "Algèbre linéaire"]),
     ],
     source: "https://mosefparis1.com/",
     verifiedAt: VERIFIED_AT,
@@ -278,10 +302,14 @@ export const FORMATIONS: StudyProgram[] = [
       course("Mathématiques appliquées", "importante"),
       course("Structures de données", "importante"),
     ],
+    // Parcoursup (https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=47331), portail Mathématiques-Informatique : notes de mathématiques et des
+    // matières scientifiques « Essentiel » ; français et LV1 « Important » ; accueille surtout des élèves
+    // ayant suivi « les spécialités Mathématiques et NSI » ou « uniquement la spécialité Mathématiques ».
     skills: [
-      skill("Algorithmique", "essentielle"),
-      skill("Rigueur mathématique", "importante"),
-      skill("Python", "utile"),
+      skill("Mathématiques", "essentielle", ["Spécialité mathématiques", "Mathématiques expertes", "Rigueur mathématique"]),
+      skill("Matières scientifiques", "essentielle", ["Physique-chimie", "Numérique et sciences informatiques (NSI)", "NSI", "Sciences de l'ingénieur", "SVT"]),
+      skill("Numérique et sciences informatiques (NSI)", "utile", ["NSI", "Informatique", "Algorithmique", "Programmation"]),
+      skill("Anglais courant", "importante"),
     ],
     source: "https://sciences.sorbonne-universite.fr/parcoursup",
     verifiedAt: VERIFIED_AT,
@@ -311,10 +339,14 @@ export const FORMATIONS: StudyProgram[] = [
       course("Bases de données", "importante"),
       course("Réseaux informatiques", "utile"),
     ],
+    // Parcoursup (https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=27930), portail Mathématiques-Informatique d'Orsay : spécialité mathématiques
+    // et maths expertes « Essentiel » ; autres spécialités scientifiques « Important » ; expression
+    // écrite et langues « Complémentaire ».
     skills: [
-      skill("Algorithmique", "essentielle"),
-      skill("Python", "importante"),
-      skill("Travail en équipe", "utile"),
+      skill("Mathématiques", "essentielle", ["Spécialité mathématiques", "Rigueur mathématique"]),
+      skill("Mathématiques expertes", "importante"),
+      skill("Matières scientifiques", "importante", ["Physique-chimie", "Numérique et sciences informatiques (NSI)", "NSI", "Sciences de l'ingénieur", "SVT"]),
+      skill("Anglais courant", "utile"),
     ],
     source: "https://www.universite-paris-saclay.fr/en/education/licence-undergraduate-programme/informatique",
     verifiedAt: VERIFIED_AT,
@@ -344,10 +376,12 @@ export const FORMATIONS: StudyProgram[] = [
       course("Algorithmique", "importante"),
       course("Réseaux informatiques", "importante"),
     ],
+    // Parcoursup (https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=5482) : « notes en mathématiques et/ou NSI » « Très important » ; niveau en
+    // anglais, moyenne générale, français « Important » ; la page de l'IUT accueille « des profils variés,
+    // quels que soient les enseignements de spécialité ».
     skills: [
-      skill("Algorithmique", "essentielle"),
-      skill("SQL", "importante"),
-      skill("Travail en équipe", "utile"),
+      skill("Mathématiques", "importante", ["Spécialité mathématiques", "Numérique et sciences informatiques (NSI)", "NSI"]),
+      skill("Anglais courant", "importante"),
     ],
     source: "https://iutnantes.univ-nantes.fr/fr/formations/but-info",
     verifiedAt: VERIFIED_AT,
@@ -552,9 +586,16 @@ export const FORMATIONS: StudyProgram[] = [
       course("Programmation", "essentielle"),
       course("Mathématiques appliquées", "importante"),
     ],
-    skills: [skill("Algorithmique", "essentielle"), skill("Rigueur mathématique", "importante")],
+    // Parcoursup (https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=4188) : notes de mathématiques « Essentiel », de physique « Très important »,
+    // de sciences de l'ingénieur et de NSI « Important » (pour qui a suivi ces spécialités) ; une
+    // expérience en programmation « est un plus […] mais n'est pas indispensable ».
+    skills: [
+      skill("Mathématiques", "essentielle", ["Spécialité mathématiques", "Mathématiques expertes", "Rigueur mathématique"]),
+      skill("Physique-chimie", "importante", ["Physique", "Physique générale"]),
+      skill("Numérique et sciences informatiques (NSI)", "utile", ["NSI", "Informatique", "Algorithmique", "Programmation", "Sciences de l'ingénieur"]),
+    ],
     source: "https://www.utoulouse.fr/licence-mention-informatique",
-    verifiedAt: "2026-09-21",
+    verifiedAt: PARCOURSUP_GRILLE_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -670,9 +711,18 @@ export const FORMATIONS: StudyProgram[] = [
       course("Comptabilité", "utile"),
       course("Marketing", "utile"),
     ],
-    skills: [skill("Analyse de données", "utile"), skill("Rigueur mathématique", "utile")],
+    // Parcoursup (https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=12528), attendus nationaux : « compétences mathématiques et statistiques
+    // indispensables », « compétences en langue anglaise […] essentielles » ; conseil de la fiche : garder
+    // des mathématiques en terminale est « essentiel » ; grille : notes scientifiques, de SES, de gestion,
+    // d'histoire-géographie, de langues et de philosophie « Essentiel ».
+    skills: [
+      skill("Mathématiques", "essentielle", ["Mathématiques complémentaires", "Mathématiques expertes", "Statistiques", "Rigueur mathématique"]),
+      skill("Sciences économiques et sociales (SES)", "importante", ["SES", "Économie", "Sciences de gestion"]),
+      skill("Anglais courant", "importante"),
+      skill("Histoire-géographie", "utile", ["Histoire", "Géographie"]),
+    ],
     source: "https://feg.univ-amu.fr/en/study-programs/bachelors/l1-economics-management-common-portal",
-    verifiedAt: "2026-09-27",
+    verifiedAt: PARCOURSUP_GRILLE_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -707,9 +757,15 @@ export const FORMATIONS: StudyProgram[] = [
       course("Programmation R", "importante"),
       course("Économie publique", "utile"),
     ],
-    skills: [skill("Économétrie", "essentielle"), skill("Anglais courant", "essentielle"), skill("R", "importante")],
+    // Page officielle : « BA or BSc in Economics or applied mathematics » ; programme « aimed at non French
+    // speaking international students » (enseigné en anglais).
+    skills: [
+      skill("Économie", "essentielle", ["Microéconomie", "Macroéconomie", "Sciences économiques"]),
+      skill("Mathématiques", "importante", ["Mathématiques appliquées", "Statistiques", "Économétrie"]),
+      skill("Anglais courant", "essentielle"),
+    ],
     source: "https://www.ut-capitole.fr/home/course-offer/english-taught-courses/masters-degree-1st-year-economics",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_PAGE_RECHECKED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -844,9 +900,16 @@ export const FORMATIONS: StudyProgram[] = [
       course("Thermodynamique", "utile"),
       course("Électrotechnique", "utile"),
     ],
-    skills: [skill("Rigueur scientifique", "importante"), skill("Gestion de projet", "utile")],
+    // Parcoursup (https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=8059), portail Physique - Sciences pour l'ingénieur : notes en mathématiques et
+    // « résultats dans les matières scientifiques » « Essentiel » ; options conseillées : mathématiques,
+    // physique-chimie, sciences de l'ingénieur.
+    skills: [
+      skill("Mathématiques", "essentielle", ["Spécialité mathématiques", "Mathématiques expertes"]),
+      skill("Physique-chimie", "essentielle", ["Physique", "Physique générale", "Matières scientifiques"]),
+      skill("Sciences de l'ingénieur", "utile", ["Technologie"]),
+    ],
     source: "https://physique-ingenierie.unistra.fr/formations/licences/licence-sciences-pour-lingenieur/",
-    verifiedAt: "2026-09-27",
+    verifiedAt: PARCOURSUP_GRILLE_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -925,9 +988,20 @@ export const FORMATIONS: StudyProgram[] = [
       course("Thermodynamique", "utile", ["Énergétique"]),
       course("Acoustique", "utile"),
     ],
-    skills: [skill("Modélisation numérique", "importante", ["Simulation numérique"]), skill("Python", "utile")],
+    // Mon Master (https://monmaster.gouv.fr/formation/0755890V/1900308KICBS/detail), attendus des M1 :
+    // enseignements « d'ingénierie et de mathématiques » validés ; « modéliser un problème physique ou
+    // mécanique » ; « résoudre numériquement des équations […] techniques de programmation et
+    // d'algorithmique » ; « caractériser expérimentalement un phénomène » ; « au moins une langue
+    // vivante étrangère ».
+    skills: [
+      skill("Mécanique", "essentielle", ["Mécanique des milieux continus", "Mécanique des fluides", "Mécanique du solide", "Physique générale"]),
+      skill("Mathématiques", "essentielle", ["Analyse", "Algèbre linéaire", "Mathématiques appliquées", "Équations différentielles"]),
+      skill("Programmation numérique", "importante", ["Programmation scientifique", "Programmation", "Algorithmique", "Python", "Méthodes numériques"]),
+      skill("Méthodologie expérimentale", "importante", ["Physique expérimentale", "Mesures physiques"]),
+      skill("Anglais courant", "utile"),
+    ],
     source: "https://masters-sdi.sorbonne-universite.fr/la-mention-mecanique",
-    verifiedAt: "2026-09-27",
+    verifiedAt: MON_MASTER_ATTENDUS_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -961,9 +1035,15 @@ export const FORMATIONS: StudyProgram[] = [
       course("Modélisation des systèmes", "importante"),
       course("Anglais", "utile"),
     ],
-    skills: [skill("Systèmes embarqués", "utile"), skill("Gestion de projet", "utile")],
+    // Mon Master (https://monmaster.gouv.fr/formation/0597239Y/1504658PD4AX/detail), attendus : « avoir
+    // suivi la licence Électronique, énergie électrique et automatique ou un parcours équivalent ».
+    skills: [
+      skill("Électronique", "essentielle", ["Électronique analogique", "Électronique numérique"]),
+      skill("Automatique", "essentielle", ["Asservissements", "Systèmes asservis"]),
+      skill("Énergie électrique", "importante", ["Électrotechnique", "Électronique de puissance"]),
+    ],
     source: "https://formation.univ-lille.fr/fr/offre-de-formation/master-lmd-XB/master-automatique-et-systemes-electriques-MG001978.html",
-    verifiedAt: "2026-09-27",
+    verifiedAt: MON_MASTER_ATTENDUS_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -998,9 +1078,14 @@ export const FORMATIONS: StudyProgram[] = [
       course("Mécanique des fluides", "importante"),
       course("Science des matériaux", "utile", ["Matériaux"]),
     ],
-    skills: [skill("CAO", "essentielle"), skill("Anglais courant", "essentielle"), skill("Modélisation numérique", "utile")],
+    // Page officielle : « bachelor's degree or equivalent, in a field related to Science and Technology »,
+    // « Fully taught in English ». La CAO s'apprend dans le MSc.
+    skills: [
+      skill("Matières scientifiques", "importante", ["Mécanique", "Génie mécanique", "Mathématiques", "Physique", "Sciences de l'ingénieur"]),
+      skill("Anglais courant", "essentielle"),
+    ],
     source: "https://www.ec-nantes.fr/study/masters/advanced-manufacturing",
-    verifiedAt: "2026-09-27",
+    verifiedAt: ENTRY_PAGE_RECHECKED_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1040,9 +1125,21 @@ export const FORMATIONS: StudyProgram[] = [
       course("Droit de l'Union européenne", "utile", ["Droit européen"]),
       course("Droit international", "utile"),
     ],
-    skills: [skill("Rédaction juridique", "importante"), skill("Argumentation", "importante")],
+    // Parcoursup (https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=26330) : français et histoire-géographie, SES, mathématiques (« logique et
+    // raisonnement conceptuel ») « Essentiel » ; philosophie, droit et grands enjeux du monde contemporain
+    // « Très important » ; langues vivantes « Complémentaire ». Attendus nationaux : qualités
+    // rédactionnelles et oratoires.
+    skills: [
+      skill("Histoire-géographie", "essentielle", ["Histoire", "Géographie"]),
+      skill("Sciences économiques et sociales (SES)", "essentielle", ["SES", "Économie"]),
+      skill("Mathématiques", "essentielle", ["Spécialité mathématiques", "Mathématiques complémentaires"]),
+      skill("Philosophie", "importante"),
+      skill("Argumentation", "importante", ["Expression écrite", "Dissertation"]),
+      skill("Droit et grands enjeux du monde contemporain", "utile", ["DGEMC", "Droit"]),
+      skill("Anglais courant", "utile"),
+    ],
     source: "https://droit.u-bordeaux.fr/formations/offre-de-formation/licences/licence-en-droit",
-    verifiedAt: "2026-09-27",
+    verifiedAt: PARCOURSUP_GRILLE_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1113,9 +1210,19 @@ export const FORMATIONS: StudyProgram[] = [
       course("Droit de la concurrence", "utile"),
       course("Droit international", "utile"),
     ],
-    skills: [skill("Anglais courant", "essentielle"), skill("Rédaction juridique", "importante")],
+    // Mon Master (https://monmaster.gouv.fr/formation/0673021V/1800678NJBN3/detail), attendus : « très bon
+    // niveau en droit de l'Union », « bon niveau en droit administratif », « bon niveau en droit des
+    // obligations », « bonnes connaissances en droit international et/ou droit des affaires », anglais
+    // B2 conseillé (français C1 exigé : géré par les langues du profil).
+    skills: [
+      skill("Droit de l'Union européenne", "essentielle", ["Droit institutionnel de l'Union européenne", "Contentieux de l'Union européenne", "Droit européen"]),
+      skill("Droit administratif", "importante", ["Droit public", "Responsabilité administrative"]),
+      skill("Droit des obligations", "importante", ["Droit civil", "Droit des contrats", "Responsabilité civile"]),
+      skill("Droit international public", "utile", ["Droit international", "Droit des affaires", "Droit des sociétés"]),
+      skill("Anglais courant", "importante"),
+    ],
     source: "https://formations.unistra.fr/fr/formations/master-MAS/master-droit-europeen-ME76.html",
-    verifiedAt: "2026-09-27",
+    verifiedAt: MON_MASTER_ATTENDUS_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1149,9 +1256,16 @@ export const FORMATIONS: StudyProgram[] = [
       course("Droit de la consommation", "importante"),
       course("Droit des entreprises en difficulté", "utile", ["Restructurations d'entreprises"]),
     ],
-    skills: [skill("Rédaction juridique", "essentielle"), skill("Anglais juridique", "utile")],
+    // Mon Master (https://monmaster.gouv.fr/formation/0134009M/1800873Z1QCE/detail), attendus : licence en
+    // droit, « capacités d'analyse et de rédaction avec maîtrise de la langue française » ; critères :
+    // « notes (matières juridiques fondamentales) » sur tout le cursus post-bac.
+    skills: [
+      skill("Droit civil", "essentielle", ["Droit des obligations", "Droit des contrats", "Droit privé"]),
+      skill("Droit public", "importante", ["Droit constitutionnel", "Droit administratif"]),
+      skill("Rédaction juridique", "essentielle", ["Raisonnement juridique", "Analyse juridique", "Commentaire d'arrêt"]),
+    ],
     source: "https://formations.univ-amu.fr/fr/master/5DAF",
-    verifiedAt: "2026-09-27",
+    verifiedAt: MON_MASTER_ATTENDUS_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1402,9 +1516,16 @@ export const FORMATIONS: StudyProgram[] = [
       course("Algorithmes stochastiques", "utile"),
       course("Bases de données", "utile"),
     ],
-    skills: [skill("R", "importante"), skill("Python", "importante"), skill("Analyse de données", "utile")],
+    // Mon Master (https://monmaster.gouv.fr/formation/0597239Y/1520545GXK78/detail), attendus : « maîtriser à
+    // un très bon niveau les contenus en mathématiques […] de la Licence de mathématiques » ; parcours
+    // MIASHS : « maîtrise des outils statistiques et informatiques pour le traitement et l'analyse de données ».
+    skills: [
+      skill("Mathématiques", "essentielle", ["Analyse", "Algèbre linéaire", "Rigueur mathématique", "Mathématiques appliquées"]),
+      skill("Statistiques", "importante", ["Analyse de données", "Statistique inférentielle", "Probabilités"]),
+      skill("Programmation", "importante", ["Programmation R", "Programmation Python", "R", "Python"]),
+    ],
     source: "https://formation.univ-lille.fr/fr/offre-de-formation/master-lmd-XB/master-mathematiques-appliquees-statistiques-MG191719.html",
-    verifiedAt: "2026-09-27",
+    verifiedAt: MON_MASTER_ATTENDUS_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1576,9 +1697,20 @@ export const FORMATIONS: StudyProgram[] = [
       course("Physique de la matière condensée", "utile"),
       course("Méthodes numériques", "utile", ["Programmation scientifique"]),
     ],
-    skills: [skill("Rigueur scientifique", "essentielle"), skill("Python", "utile")],
+    // Mon Master (https://monmaster.gouv.fr/formation/0691774D/2200135X8YJI/detail), attendus des trois M1 :
+    // licence de physique (ou physique-chimie), « bases solides en physique générale (mécanique analytique,
+    // mécanique quantique, électromagnétisme, physique statistique, …) », « bases solides en physique
+    // expérimentale » ; critère : « maîtrise de l'anglais scientifique ».
+    skills: [
+      skill("Physique générale", "essentielle", ["Physique fondamentale", "Mécanique analytique", "Physique"]),
+      skill("Physique quantique", "importante", ["Mécanique quantique"]),
+      skill("Électromagnétisme", "importante"),
+      skill("Physique statistique", "importante", ["Thermodynamique statistique"]),
+      skill("Méthodologie expérimentale", "importante", ["Physique expérimentale", "Travaux pratiques de physique"]),
+      skill("Anglais courant", "utile"),
+    ],
     source: "https://master-physique.univ-lyon1.fr/m1/",
-    verifiedAt: "2026-09-27",
+    verifiedAt: MON_MASTER_ATTENDUS_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1784,14 +1916,16 @@ export const FORMATIONS: StudyProgram[] = [
       course("Bases de données", "utile"),
       course("Biologie moléculaire", "utile"),
     ],
-    // Master pensé pour des biologistes, « aucun prérequis en informatique » : Python ou R n'y sont pas
-    // des compétences d'entrée (ils s'apprennent en M1) — on attend une base en biologie.
+    // Master pensé pour des biologistes, « aucun prérequis en informatique » (page de l'université).
+    // Mon Master (https://monmaster.gouv.fr/formation/0333298F/1603185TQNBY/detail), attendus : « posséder
+    // de solides acquis en biologie », raisonnement à partir d'exemples de la biologie, « capacités de
+    // recherche d'informations, d'analyse et de synthèse ».
     skills: [
-      skill("Biologie", "importante", ["Biologie cellulaire", "Biologie moléculaire", "Génétique", "Biochimie"]),
-      skill("Anglais courant", "utile"),
+      skill("Biologie", "essentielle", ["Biologie cellulaire", "Biologie moléculaire", "Génétique", "Biochimie", "Sciences du vivant"]),
+      skill("Analyse et synthèse", "utile", ["Recherche documentaire", "Esprit de synthèse"]),
     ],
     source: "https://biologie.u-bordeaux.fr/formation/master/master-bio-informatique",
-    verifiedAt: "2026-09-27",
+    verifiedAt: MON_MASTER_ATTENDUS_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
@@ -1869,9 +2003,18 @@ export const FORMATIONS: StudyProgram[] = [
       course("Sociologie politique", "utile", ["Sociologie"]),
       course("Droit constitutionnel", "utile"),
     ],
-    skills: [skill("Argumentation", "essentielle"), skill("Rédaction académique", "importante")],
+    // Parcoursup (https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=20949) : français, « disciplines rédactionnelles » (histoire-géographie, SES,
+    // philosophie) et langues « Essentiel » ; expression écrite et argumentation « Important ». Attendus
+    // nationaux : argumenter un raisonnement, analyser des documents.
+    skills: [
+      skill("Histoire-géographie", "essentielle", ["Histoire", "Géographie"]),
+      skill("Sciences économiques et sociales (SES)", "essentielle", ["SES", "Économie", "Sociologie"]),
+      skill("Philosophie", "essentielle"),
+      skill("Anglais courant", "essentielle"),
+      skill("Argumentation", "importante", ["Expression écrite", "Dissertation", "Rédaction académique"]),
+    ],
     source: "https://formation.univ-lille.fr/fr/offre-de-formation/licence-lmd-XA/licence-science-politique-MG002441.html",
-    verifiedAt: "2026-09-27",
+    verifiedAt: PARCOURSUP_GRILLE_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },

@@ -53,10 +53,25 @@ maîtriser le Machine Learning qu'un master va justement lui apprendre.
   programme de l'examen d'entrée (ULiège), spécialités de lycée
   recommandées (licences françaises).
 - **Citer** la phrase officielle en commentaire au-dessus de `skills`.
-- **Page muette** : garder les compétences tirées du programme, sans
-  inventer. Au 2026-09-28, 19 fiches sur 48 ont des compétences d'entrée
-  sourcées ; Mon Master (application JavaScript) n'est pas lisible
-  automatiquement et reste la prochaine source à exploiter.
+- **Page muette** : chercher ensuite la fiche de la plateforme nationale,
+  texte officiel déposé par l'établissement :
+  - **Mon Master** (masters) : rubrique « Attendus pour être admis dans
+    cette formation ». L'application est en JavaScript, mais son API
+    publique se lit depuis un navigateur : `POST /api/candidat/mm1/formations`
+    avec `{"rechercheBrut": "…"}` pour trouver la mention, puis
+    `GET /api/candidat/mm1/etablissements/{uai}/mentions/{inm}` (champs
+    `attendus`, `criteres`, `diplomesConseilles` de chaque parcours de M1).
+  - **Parcoursup** (licences, BUT) : la « grille d'analyse des candidatures »
+    de la fiche publique (`afficherFicheFormation?g_ta_cod=…`, HTML lisible
+    sans navigateur) donne les matières du lycée et leur degré d'importance
+    (Essentiel → essentielle, Très important / Important → importante,
+    Complémentaire → utile). Les codes `g_ta_cod` se trouvent dans le jeu
+    de données ouvert `fr-esr-parcoursup` (champ `cod_aff_form`).
+  - Rien nulle part : garder les compétences tirées du programme, sans
+    inventer. Au 2026-10-03, 39 fiches sur 48 ont des compétences d'entrée
+    sourcées ; restent muettes : Télécom Paris (MS IA), INSA Lyon, ENSEIRB,
+    UCLouvain gestion (conditions dans un PDF), ULB droit, UNamur
+    mathématiques, EHESP, ULiège science politique, Sciences Po PSIA.
 - **Ne pas confondre avec les langues** : l'étudiant déclare ses langues
   dans son profil, et le moteur les compte comme preuve (« Anglais » satisfait
   « Anglais courant »).
