@@ -102,8 +102,35 @@ test("profil : aucun domaine imposé, et un mot absurde est signalé tout de sui
   await page.goto("/profil");
   await page.waitForLoadState("networkidle");
   await expect(page.locator("#fieldOfStudy")).toHaveValue("");
+  // Étape 1 : impossible d'avancer sans domaine.
+  await page.getByRole("button", { name: "Continuer" }).click();
+  await expect(page.getByText("Choisissez votre domaine d'études pour continuer.")).toBeVisible();
+  await page.locator("#fieldOfStudy").selectOption("Droit");
+  await page.getByRole("button", { name: "Continuer" }).click();
+
+  // Étape 2 : un mot absurde est signalé tout de suite.
   const courses = page.getByRole("combobox", { name: "Vos matières" });
   await courses.fill("Girafe");
   await courses.press("Enter");
   await expect(page.getByText(/Non reconnu comme matière ou compétence : « Girafe »/)).toBeVisible();
+});
+
+test("profil en trois étapes : un premier résultat dès l'étape 2", async ({ page }) => {
+  await page.goto("/profil");
+  await page.waitForLoadState("networkidle");
+  await page.locator("#fieldOfStudy").selectOption("Informatique");
+  await page.getByRole("button", { name: "Continuer" }).click();
+
+  const preview = page.getByRole("region", { name: "Aperçu provisoire de vos résultats" });
+  await expect(preview).toContainText("Ajoutez une première matière");
+  const courses = page.getByRole("combobox", { name: "Vos matières" });
+  await courses.fill("Bases de données");
+  await courses.press("Enter");
+  await expect(preview.getByRole("listitem")).toHaveCount(3);
+  await expect(preview.getByText(/\d+%/).first()).toBeVisible();
+  await expectNoHorizontalScroll(page);
+
+  // L'étape 3 est optionnelle : on voit ses résultats directement.
+  await page.getByRole("button", { name: "Voir mes résultats" }).click();
+  await expect(page).toHaveURL(/\/recherche/, { timeout: 15_000 });
 });

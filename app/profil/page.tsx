@@ -13,7 +13,7 @@ export default function ProfilPage() {
   return (
     <AppShell
       title="Mon profil académique"
-      description="Renseignez votre parcours : plus il est précis, plus l'analyse de compatibilité sera fiable."
+      description="Trois étapes, un premier résultat dès la deuxième. Plus votre profil est précis, plus l'analyse sera fiable."
     >
       <Suspense>
         <ProfileForm />

@@ -42,25 +42,25 @@ export function DocumentQuickStart({
       {user ? (
         <div className="mt-5 space-y-4">
           <div>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-blue-700">Étape 1 — Relevé de notes</p>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-blue-700">Relevé de notes</p>
             {transcriptImport}
           </div>
           <div>
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-violet-700">
-              Étape 2 — Programme des cours (optionnel)
+              Programme des cours (optionnel)
             </p>
             {syllabusImport}
           </div>
           <p className="text-xs text-slate-500">
-            Ensuite, vérifiez plus bas votre domaine d&apos;études, votre objectif et vos langues — les documents ne
-            les indiquent pas toujours.
+            Ensuite, vérifiez ci-dessous les matières et compétences retenues : vous pouvez en ajouter ou en
+            retirer.
           </p>
         </div>
       ) : (
         <div className="mt-4 flex flex-col gap-3 rounded-xl bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-slate-600">
             L&apos;import demande un compte gratuit (connexion par lien e-mail, sans mot de passe) — vos documents ne
-            sont jamais conservés. Sinon, remplissez le formulaire ci-dessous, sans compte.
+            sont jamais conservés. Sinon, ajoutez vos matières ci-dessous, sans compte.
           </p>
           <LinkButton href="/compte?next=/profil" size="sm" className="shrink-0">
             <LogIn className="size-4" aria-hidden />

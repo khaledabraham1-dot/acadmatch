@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   NEUTRAL_ACADEMIC_STANDING,
@@ -48,7 +48,10 @@ import { HEALTH_DOMAIN, HealthStudiesNotice } from "@/components/ui/HealthStudie
 import { FORMATIONS } from "@/data/formations";
 import { isGoalCoveredByCatalogue } from "@/lib/search/filters";
 import { EXAMPLE_PROFILE_LABEL, EXAMPLE_STUDENT_PROFILE } from "@/data/example-profile";
-import { ArrowRight, FlaskConical } from "lucide-react";
+import { ProfileStepper } from "@/components/profile/ProfileStepper";
+import { ProvisionalPreview } from "@/components/profile/ProvisionalPreview";
+import { canOpenStep, firstBlockingStep, isPathStepComplete, type ProfileStep } from "@/lib/profile/steps";
+import { ArrowLeft, ArrowRight, FlaskConical } from "lucide-react";
 
 const COURSE_VOCABULARY = catalogueVocabulary(FORMATIONS, "matiere");
 const SKILL_VOCABULARY = catalogueVocabulary(FORMATIONS, "competence");
@@ -92,6 +95,11 @@ export function ProfileForm() {
   // doivent pas changer de place (et perdre leur état) pendant l'import.
   const [startWithDocuments, setStartWithDocuments] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [step, setStep] = useState<ProfileStep>(1);
+  const [pathStepMissing, setPathStepMissing] = useState(false);
+  const stepHeadingRef = useRef<HTMLHeadingElement>(null);
+  // Pas de focus au premier affichage : seulement après un changement d'étape.
+  const stepChanged = useRef(false);
 
   // Pré-remplit le formulaire si un profil existe déjà (édition, retour en arrière).
   useEffect(() => {
@@ -148,16 +156,14 @@ export function ProfileForm() {
     [currentLevel, fieldOfStudy, currentDegree, courses, skills, goal, languages, academicStanding],
   );
 
-  function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    setSubmitAttempted(true);
-    if (!validation.isSubmittable) return;
+  const stepDraft = { fieldOfStudy, languages, courses, skills };
 
-    const profile: StudentProfile = {
+  function buildProfile(courseId: (index: number) => string): StudentProfile {
+    return {
       currentLevel,
       fieldOfStudy,
       currentDegree: currentDegree.trim() || `${currentLevel} — ${fieldOfStudy}`,
-      courses: courses.map((name) => ({ id: generateId("course"), name })),
+      courses: courses.map((name, index) => ({ id: courseId(index), name })),
       skills,
       goal,
       languages,
@@ -165,6 +171,41 @@ export function ProfileForm() {
       ...(experiences.trim() ? { experiences: experiences.trim() } : {}),
       ...(transcriptAverage ? { transcriptAverage } : {}),
     };
+  }
+
+  // Brouillon pour l'aperçu provisoire (identifiants stables : pas de recalcul à chaque rendu).
+  const draftProfile = useMemo(
+    () => (validation.isSubmittable ? buildProfile((index) => `draft-${index}`) : null),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- buildProfile ne lit que ces valeurs
+    [validation.isSubmittable, currentLevel, fieldOfStudy, currentDegree, courses, skills, goal, languages, academicStanding, transcriptAverage],
+  );
+
+  useEffect(() => {
+    if (!stepChanged.current) return;
+    stepHeadingRef.current?.focus();
+    stepHeadingRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
+  }, [step]);
+
+  function goToStep(next: ProfileStep) {
+    if (!canOpenStep(next, stepDraft)) return;
+    stepChanged.current = true;
+    setStep(next);
+  }
+
+  function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    setSubmitAttempted(true);
+    if (!validation.isSubmittable) {
+      // Ramène l'étudiant là où il peut corriger, sans perdre ce qu'il a saisi.
+      const blocking = firstBlockingStep(stepDraft);
+      if (blocking && blocking !== step) {
+        stepChanged.current = true;
+        setStep(blocking);
+      }
+      return;
+    }
+
+    const profile = buildProfile(() => generateId("course"));
 
     saveProfile(profile);
     setHasExistingProfile(true);
@@ -206,6 +247,7 @@ export function ProfileForm() {
     setTranscriptAverage(null);
     setHasExistingProfile(false);
     setSubmitAttempted(false);
+    setStep(1);
   }
 
   function handleLoadExample() {
@@ -254,8 +296,6 @@ export function ProfileForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-      {startWithDocuments && <DocumentQuickStart transcriptImport={transcriptImport} syllabusImport={syllabusImport} />}
-
       {isExampleProfile && (
         <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4">
           <p className="text-sm text-amber-900">
@@ -277,10 +317,18 @@ export function ProfileForm() {
         </Button>
       </div>
 
-      <ProfileReliabilityNotice validation={validation} />
+      <ProfileStepper
+        current={step}
+        canOpen={(target) => canOpenStep(target, stepDraft)}
+        isDone={(target) => (target === 1 ? isPathStepComplete(stepDraft) : target === 2 ? firstBlockingStep(stepDraft) === null : false)}
+        onSelect={goToStep}
+      />
 
+      <div hidden={step !== 1} className="space-y-6">
       <Card>
-        <h2 className="mb-5 text-base font-semibold text-slate-900">Votre parcours actuel</h2>
+        <h2 ref={step === 1 ? stepHeadingRef : undefined} tabIndex={-1} className="mb-5 text-base font-semibold text-slate-900 focus:outline-none">
+          Étape 1 — Votre parcours actuel
+        </h2>
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
             <Label htmlFor="currentLevel">Niveau actuel</Label>
@@ -354,25 +402,102 @@ export function ProfileForm() {
           )}
 
           <div className="sm:col-span-2">
-            <Label htmlFor="currentDegree">Diplôme actuel / en cours</Label>
-            <Input
-              id="currentDegree"
-              value={currentDegree}
-              onChange={(e) => setCurrentDegree(e.target.value)}
-              placeholder="ex : Licence en Informatique"
-              list="degree-suggestions"
-            />
-            <datalist id="degree-suggestions">
-              {CURRENT_DEGREE_SUGGESTIONS.map((suggestion) => (
-                <option key={suggestion} value={suggestion} />
+            <Label htmlFor="goal">Objectif de formation</Label>
+            <Select id="goal" value={goal} onChange={(e) => setGoal(e.target.value as StudyGoal)}>
+              {STUDY_GOALS.map((g) => (
+                <option key={g} value={g}>
+                  {g}
+                </option>
               ))}
-            </datalist>
-            <p className="mt-1.5 text-xs text-slate-500">
-              Si vous laissez ce champ vide, AcadMatch utilisera « {currentLevel} — {fieldOfStudy} ».
-            </p>
+            </Select>
+            {!isGoalCoveredByCatalogue(FORMATIONS, goal) && (
+              <CatalogueScopeNotice goal={goal} className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs leading-relaxed text-slate-600" />
+            )}
           </div>
 
-          <div className="sm:col-span-2">
+          <fieldset className="sm:col-span-2">
+            <legend className="mb-1.5 block text-sm font-medium text-slate-700">
+              Langues dans lesquelles vous êtes à l&apos;aise pour suivre des cours
+            </legend>
+            <p className="mb-2.5 text-xs text-slate-500">
+              Certaines formations sont enseignées entièrement en anglais — utilisé pour évaluer la
+              compatibilité.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              {TEACHING_LANGUAGES.map((lang) => (
+                <label key={lang} className="inline-flex items-center gap-2 text-sm text-slate-700">
+                  <input
+                    type="checkbox"
+                    checked={languages.includes(lang)}
+                    onChange={(e) => toggleLanguage(lang, e.target.checked)}
+                    className="size-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20"
+                  />
+                  {lang}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        </div>
+      </Card>
+
+      </div>
+
+      <div hidden={step !== 2} className="space-y-6">
+      <h2 ref={step === 2 ? stepHeadingRef : undefined} tabIndex={-1} className="text-base font-semibold text-slate-900 focus:outline-none">
+        Étape 2 — Ce que vous avez étudié
+      </h2>
+      {startWithDocuments && <DocumentQuickStart transcriptImport={transcriptImport} syllabusImport={syllabusImport} />}
+
+      <Card>
+        <h3 className="mb-1 text-base font-semibold text-slate-900">Matières et modules étudiés</h3>
+        <p className="mb-5 text-sm text-slate-500">
+          Ajoutez les matières marquantes de votre parcours (recommandé : au moins{" "}
+          {RECOMMENDED_COURSES}). Elles seront comparées au contenu des formations.
+        </p>
+        {!startWithDocuments && <div className="mb-6">{transcriptImport}</div>}
+        <CourseSkillEditor
+          label="Vos matières"
+          items={courses}
+          suggestions={courseSuggestions}
+          vocabulary={COURSE_VOCABULARY}
+          placeholder="ex : Bases de données"
+          onChange={setCourses}
+        />
+      </Card>
+
+      {/* Juste sous les matières : l'aperçu réagit sous les yeux de l'étudiant, même sur mobile. */}
+      <ProfileReliabilityNotice validation={validation} />
+      <ProvisionalPreview profile={step === 2 ? draftProfile : null} />
+
+      <Card>
+        <h3 className="mb-1 text-base font-semibold text-slate-900">Compétences</h3>
+        <p className="mb-5 text-sm text-slate-500">
+          Vos compétences techniques ou transversales (recommandé : au moins {RECOMMENDED_SKILLS}).
+        </p>
+        {!startWithDocuments && <div className="mb-6">{syllabusImport}</div>}
+        <CourseSkillEditor
+          label="Vos compétences"
+          items={skills}
+          suggestions={skillSuggestions}
+          vocabulary={SKILL_VOCABULARY}
+          placeholder="ex : Python"
+          onChange={setSkills}
+        />
+      </Card>
+
+      </div>
+
+      <div hidden={step !== 3} className="space-y-6">
+      <Card>
+        <h2 ref={step === 3 ? stepHeadingRef : undefined} tabIndex={-1} className="mb-1 text-base font-semibold text-slate-900 focus:outline-none">
+          Étape 3 — Affiner <span className="font-normal text-slate-500">(optionnel)</span>
+        </h2>
+        <p className="mb-5 text-sm text-slate-500">
+          Vos résultats comptent dans le score, surtout face aux formations sélectives. Le reste sert aux
+          assistants de candidature.
+        </p>
+        <div className="grid gap-5">
+          <div>
             <Label htmlFor="academicStanding">Vos résultats académiques</Label>
             {transcriptAverage ? (
               <div className="rounded-[14px] border border-blue-200 bg-blue-50 px-3.5 py-3 text-sm text-slate-800">
@@ -413,82 +538,32 @@ export function ProfileForm() {
             )}
           </div>
 
-          <div className="sm:col-span-2">
-            <Label htmlFor="goal">Objectif de formation</Label>
-            <Select id="goal" value={goal} onChange={(e) => setGoal(e.target.value as StudyGoal)}>
-              {STUDY_GOALS.map((g) => (
-                <option key={g} value={g}>
-                  {g}
-                </option>
+          <div>
+            <Label htmlFor="currentDegree">Diplôme actuel / en cours</Label>
+            <Input
+              id="currentDegree"
+              value={currentDegree}
+              onChange={(e) => setCurrentDegree(e.target.value)}
+              placeholder="ex : Licence en Informatique"
+              list="degree-suggestions"
+            />
+            <datalist id="degree-suggestions">
+              {CURRENT_DEGREE_SUGGESTIONS.map((suggestion) => (
+                <option key={suggestion} value={suggestion} />
               ))}
-            </Select>
-            {!isGoalCoveredByCatalogue(FORMATIONS, goal) && (
-              <CatalogueScopeNotice goal={goal} className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs leading-relaxed text-slate-600" />
-            )}
+            </datalist>
+            <p className="mt-1.5 text-xs text-slate-500">
+              Si vous laissez ce champ vide, AcadMatch utilisera « {currentLevel} — {fieldOfStudy} ».
+            </p>
           </div>
 
-          <fieldset className="sm:col-span-2">
-            <legend className="mb-1.5 block text-sm font-medium text-slate-700">
-              Langues dans lesquelles vous êtes à l&apos;aise pour suivre des cours
-            </legend>
-            <p className="mb-2.5 text-xs text-slate-500">
-              Certaines formations sont enseignées entièrement en anglais — utilisé pour évaluer la
-              compatibilité.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              {TEACHING_LANGUAGES.map((lang) => (
-                <label key={lang} className="inline-flex items-center gap-2 text-sm text-slate-700">
-                  <input
-                    type="checkbox"
-                    checked={languages.includes(lang)}
-                    onChange={(e) => toggleLanguage(lang, e.target.checked)}
-                    className="size-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20"
-                  />
-                  {lang}
-                </label>
-              ))}
-            </div>
-          </fieldset>
         </div>
       </Card>
 
       <Card>
-        <h2 className="mb-1 text-base font-semibold text-slate-900">Matières et modules étudiés</h2>
-        <p className="mb-5 text-sm text-slate-500">
-          Ajoutez les matières marquantes de votre parcours (recommandé : au moins{" "}
-          {RECOMMENDED_COURSES}). Elles seront comparées au contenu des formations.
-        </p>
-        {!startWithDocuments && <div className="mb-6">{transcriptImport}</div>}
-        <CourseSkillEditor
-          label="Vos matières"
-          items={courses}
-          suggestions={courseSuggestions}
-          vocabulary={COURSE_VOCABULARY}
-          placeholder="ex : Bases de données"
-          onChange={setCourses}
-        />
-      </Card>
-
-      <Card>
-        <h2 className="mb-1 text-base font-semibold text-slate-900">Compétences</h2>
-        <p className="mb-5 text-sm text-slate-500">
-          Vos compétences techniques ou transversales (recommandé : au moins {RECOMMENDED_SKILLS}).
-        </p>
-        {!startWithDocuments && <div className="mb-6">{syllabusImport}</div>}
-        <CourseSkillEditor
-          label="Vos compétences"
-          items={skills}
-          suggestions={skillSuggestions}
-          vocabulary={SKILL_VOCABULARY}
-          placeholder="ex : Python"
-          onChange={setSkills}
-        />
-      </Card>
-
-      <Card>
-        <h2 className="mb-1 text-base font-semibold text-slate-900">
+        <h3 className="mb-1 text-base font-semibold text-slate-900">
           Expériences et projets <span className="font-normal text-slate-500">(optionnel)</span>
-        </h2>
+        </h3>
         <p className="mb-4 text-sm text-slate-500">
           Stages, projets, jobs, engagements associatifs… Non utilisés pour la compatibilité : ce sont les
           seules expériences que les assistants IA (lettre de motivation, entretiens) ont le droit de
@@ -505,6 +580,9 @@ export function ProfileForm() {
         />
       </Card>
 
+      <ProvisionalPreview profile={step === 3 ? draftProfile : null} />
+      </div>
+
       {submitAttempted && validation.errors.length > 0 && (
         <div
           role="alert"
@@ -519,22 +597,55 @@ export function ProfileForm() {
         </div>
       )}
 
+      {pathStepMissing && step === 1 && !isPathStepComplete(stepDraft) && (
+        <p role="alert" className="rounded-2xl border border-red-100 bg-red-50 px-5 py-4 text-sm font-semibold text-red-900">
+          Choisissez votre domaine d&apos;études pour continuer.
+        </p>
+      )}
+
       <div className="flex flex-wrap items-center justify-between gap-3">
-        {hasExistingProfile ? (
-          <button
-            type="button"
-            onClick={handleClear}
-            className="text-sm font-medium text-slate-500 hover:text-slate-700"
-          >
-            Effacer mon profil
-          </button>
-        ) : (
-          <span />
-        )}
-        <Button type="submit" size="lg">
-          Enregistrer et rechercher
-          <ArrowRight className="size-4" />
-        </Button>
+        <div className="flex flex-wrap items-center gap-4">
+          {step > 1 && (
+            <Button type="button" variant="ghost" onClick={() => goToStep((step - 1) as ProfileStep)}>
+              <ArrowLeft className="size-4" aria-hidden />
+              Retour
+            </Button>
+          )}
+          {hasExistingProfile && (
+            <button
+              type="button"
+              onClick={handleClear}
+              className="text-sm font-medium text-slate-500 hover:text-slate-700"
+            >
+              Effacer mon profil
+            </button>
+          )}
+        </div>
+        <div className="flex flex-wrap items-center gap-3">
+          {step < 3 && (
+            <Button
+              type="button"
+              size="lg"
+              variant={step === 1 && !validation.isSubmittable ? "primary" : "outline"}
+              onClick={() => {
+                if (step === 1 && !isPathStepComplete(stepDraft)) {
+                  setPathStepMissing(true);
+                  return;
+                }
+                goToStep((step + 1) as ProfileStep);
+              }}
+            >
+              {step === 1 ? "Continuer" : "Affiner (optionnel)"}
+              <ArrowRight className="size-4" aria-hidden />
+            </Button>
+          )}
+          {(step > 1 || validation.isSubmittable) && (
+            <Button type="submit" size="lg">
+              Voir mes résultats
+              <ArrowRight className="size-4" aria-hidden />
+            </Button>
+          )}
+        </div>
       </div>
     </form>
   );
