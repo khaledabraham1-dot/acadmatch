@@ -14,6 +14,10 @@ import { TUITION_FEES, type OfficialAmount } from "@/data/budget";
 import { formatEuros } from "@/lib/budget";
 import { formationDescription, formationPath, formationTitle, publicFormations, siteUrl } from "@/lib/site";
 import { breadcrumbJsonLd, formationJsonLd, serializeJsonLd } from "@/lib/structuredData";
+import { domainPath } from "@/lib/seo/domains";
+import { guidePath } from "@/lib/seo/guides";
+import { eurosAndCfa } from "@/lib/seo/money";
+import { Faq, type FaqItem } from "@/components/seo/PageParts";
 import type { StudyProgram } from "@/types";
 
 // Une page par formation vérifiée, générée au build ; tout autre id → 404.
@@ -45,6 +49,52 @@ function relatedFormations(formation: StudyProgram): StudyProgram[] {
     .filter((other) => other.id !== formation.id && other.field === formation.field)
     .sort((a, b) => Number(b.goal === formation.goal) - Number(a.goal === formation.goal))
     .slice(0, 4);
+}
+
+/** Guides utiles pour candidater à cette formation (maillage interne vers le contenu éditorial). */
+function relevantGuides(formation: StudyProgram): { label: string; slug: string }[] {
+  if (formation.institution.country === "Belgique") {
+    return [
+      { label: "Étudier en Belgique : équivalence, inscription, frais, visa", slug: "etudier-en-belgique" },
+      { label: "Équivalence d'un diplôme étranger", slug: "equivalence-diplome-etranger" },
+    ];
+  }
+  return [
+    formation.requiredLevel === "Baccalauréat"
+      ? { label: "Entrer en licence en France après un bac étranger", slug: "licence-en-france-apres-un-bac-etranger" }
+      : { label: "Faire un master en France quand on est étudiant étranger", slug: "master-en-france-etudiant-etranger" },
+    { label: "La procédure Études en France (Campus France)", slug: "etudes-en-france" },
+    { label: "Combien coûtent des études en France", slug: "cout-des-etudes-en-france" },
+  ];
+}
+
+/** Questions fréquentes tirées de la fiche vérifiée : aucune réponse ne dit plus que la fiche. */
+function formationFaq(formation: StudyProgram): FaqItem[] {
+  const fee = TUITION_FEES[formation.id];
+  const faq: FaqItem[] = [
+    {
+      question: `Quel diplôme faut-il pour entrer en ${formation.name} ?`,
+      answer: `Un niveau ${formation.requiredLevel} validé. Prérequis publiés : ${formation.prerequisites.map((r) => r.label).join(" ; ")}.`,
+    },
+    {
+      question: `Comment candidater à ${formation.name} ?`,
+      answer: formation.applicationProcedure,
+    },
+    {
+      question: `Quelles compétences le jury attend-il à l'entrée ?`,
+      answer: `${formation.skills.map((skill) => skill.name).join(", ")}. La formation est enseignée en ${formation.language.toLocaleLowerCase("fr")}.`,
+    },
+  ];
+  if (fee && !fee.eu.indicative) {
+    faq.push({
+      question: `Combien coûte ${formation.name} ?`,
+      answer:
+        `${fee.scope === "annuel" ? "Par an" : "Pour tout le programme"} (${fee.eu.academicYear}) : ${eurosAndCfa(fee.eu.cents)} pour un étudiant de l'UE` +
+        (fee.nonEu ? `, ${eurosAndCfa(fee.nonEu.cents)} hors UE` : ", tarif hors UE non publié par l'établissement") +
+        `.${fee.nonEuNote ? ` ${fee.nonEuNote}` : ""}`,
+    });
+  }
+  return faq;
 }
 
 function FeeLine({ label, amount }: { label: string; amount: OfficialAmount }) {
@@ -91,6 +141,7 @@ export default async function FormationPage({ params }: PageProps<"/formations/[
       [
         { name: "Accueil", path: "/" },
         { name: "Formations", path: "/formations" },
+        { name: formation.field, path: domainPath(formation.field) },
         { name: formation.name, path: formationPath(formation) },
       ],
       baseUrl,
@@ -109,6 +160,8 @@ export default async function FormationPage({ params }: PageProps<"/formations/[
         <ChevronRight className="size-3.5" aria-hidden />
         <Link href="/formations" className="hover:text-slate-800">Formations</Link>
         <ChevronRight className="size-3.5" aria-hidden />
+        <Link href={domainPath(formation.field)} className="hover:text-slate-800">{formation.field}</Link>
+        <ChevronRight className="size-3.5" aria-hidden />
         <span className="text-slate-700" aria-current="page">{formation.name}</span>
       </nav>
 
@@ -116,7 +169,9 @@ export default async function FormationPage({ params }: PageProps<"/formations/[
         <div className="flex flex-wrap items-center gap-2">
           <Badge tone="info">{formation.goal}</Badge>
           <Badge tone="neutral">Entrée en {formation.level}</Badge>
-          <Badge tone="neutral">{formation.field}</Badge>
+          <Link href={domainPath(formation.field)} className="rounded-full hover:opacity-80">
+            <Badge tone="neutral">{formation.field}</Badge>
+          </Link>
           <span className="inline-flex items-center gap-1 text-sm text-slate-500">
             <Languages className="size-4" aria-hidden /> Enseigné en {formation.language.toLowerCase()}
           </span>
@@ -204,8 +259,28 @@ export default async function FormationPage({ params }: PageProps<"/formations/[
                 </li>
               ))}
             </ul>
+            <Link href={domainPath(formation.field)} className="mt-3 inline-block text-sm font-bold text-blue-700 hover:text-blue-800">
+              Toutes les formations en {formation.field} et leurs prérequis →
+            </Link>
           </section>
         )}
+
+        <Faq items={formationFaq(formation)} />
+
+        <nav aria-labelledby="guides-candidature" className="space-y-2">
+          <h2 id="guides-candidature" className="text-base font-semibold text-slate-900">
+            Pour préparer votre candidature
+          </h2>
+          <ul className="space-y-1.5 text-sm">
+            {relevantGuides(formation).map((guide) => (
+              <li key={guide.slug}>
+                <Link href={guidePath(guide.slug)} className="font-semibold text-blue-700 hover:text-blue-800">
+                  {guide.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
     </AppShell>
   );

@@ -90,3 +90,68 @@ export function websiteJsonLd(baseUrl: string): JsonLd {
 export function serializeJsonLd(data: JsonLd | JsonLd[]): string {
   return JSON.stringify(data).replace(/</g, "\\u003c");
 }
+
+export function organizationJsonLd(baseUrl: string): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: baseUrl,
+    logo: `${baseUrl}/logo.png`,
+    description:
+      "Aide à la décision indépendante pour les étudiants qui visent une licence ou un master en France ou en Belgique.",
+  };
+}
+
+/** Liste ordonnée de formations (page domaine, catalogue) : aide Google à relier la page à chaque fiche. */
+export function itemListJsonLd(name: string, items: { name: string; path: string }[], baseUrl: string): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name,
+    numberOfItems: items.length,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      url: `${baseUrl}${item.path}`,
+    })),
+  };
+}
+
+/**
+ * Questions fréquentes d'une page. Google n'affiche plus ce résultat enrichi
+ * que pour quelques sites institutionnels, mais le balisage reste lu par les
+ * moteurs et les assistants IA : chaque réponse doit être visible sur la page.
+ */
+export function faqJsonLd(faq: { question: string; answer: string }[]): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.map(({ question, answer }) => ({
+      "@type": "Question",
+      name: question,
+      acceptedAnswer: { "@type": "Answer", text: answer },
+    })),
+  };
+}
+
+/** Guide éditorial : date de mise à jour visible et éditeur identifié (signaux de fiabilité). */
+export function articleJsonLd(
+  article: { title: string; description: string; path: string; updatedAt: string },
+  baseUrl: string,
+): JsonLd {
+  const url = `${baseUrl}${article.path}`;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": url,
+    headline: article.title,
+    description: article.description,
+    url,
+    inLanguage: "fr",
+    dateModified: article.updatedAt,
+    author: { "@type": "Organization", name: SITE_NAME, url: baseUrl },
+    publisher: { "@type": "Organization", name: SITE_NAME, url: baseUrl },
+  };
+}

@@ -119,6 +119,11 @@ const UNAMUR_FEE: TuitionFee = {
   note: "Droits d'inscription complets 2026-2027, sous réserve de la publication du décret sur le minerval progressif.",
 };
 
+/** Grilles nationales et universitaires, réutilisées par les guides (lib/seo, app/guides). */
+export const FRENCH_NATIONAL_FEES = { licence: FRENCH_LICENCE, master: FRENCH_MASTER, ingenieur: FRENCH_ENGINEER } as const;
+export const FRENCH_EXEMPTION_CAP_NOTE = FRENCH_EXEMPTION_NOTE;
+export const BELGIAN_UNIVERSITY_FEES = { UCLouvain: UCLOUVAIN_FEE, ULiège: ULIEGE_FEE, ULB: ULB_FEE, UNamur: UNAMUR_FEE } as const;
+
 export const TUITION_FEES: Record<string, TuitionFee> = {
   "f-m2ds-ip-paris": {
     eu: {

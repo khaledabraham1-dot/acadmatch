@@ -8,6 +8,7 @@ import { FORMATIONS } from "@/data/formations";
 import { coveredDomains } from "@/lib/search/filters";
 import { breadcrumbJsonLd, serializeJsonLd } from "@/lib/structuredData";
 import { formationPath, publicFormations, siteUrl } from "@/lib/site";
+import { domainPath, domainSlug } from "@/lib/seo/domains";
 
 const formations = publicFormations(FORMATIONS);
 
@@ -57,10 +58,15 @@ export default function FormationsPage() {
 
       <div className="space-y-10">
         {byDomain.map(({ domain, formations: list }) => (
-          <section key={domain} aria-labelledby={`domaine-${domain}`}>
-            <h2 id={`domaine-${domain}`} className="mb-3 text-lg font-semibold text-slate-900">
-              {domain} <span className="text-sm font-normal text-slate-500">· {list.length}</span>
-            </h2>
+          <section key={domain} aria-labelledby={`domaine-${domainSlug(domain)}`}>
+            <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+              <h2 id={`domaine-${domainSlug(domain)}`} className="text-lg font-semibold text-slate-900">
+                {domain} <span className="text-sm font-normal text-slate-500">· {list.length}</span>
+              </h2>
+              <Link href={domainPath(domain)} className="text-sm font-bold text-blue-700 hover:text-blue-800">
+                Prérequis du domaine →
+              </Link>
+            </div>
             <ul className="grid gap-3 sm:grid-cols-2">
               {list.map((formation) => (
                 <li key={formation.id}>

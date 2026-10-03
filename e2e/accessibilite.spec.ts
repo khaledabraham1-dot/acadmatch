@@ -46,6 +46,10 @@ test.describe("accessibilité WCAG AA", () => {
     "/compte",
     "/confidentialite",
     "/methode",
+    "/guides",
+    "/guides/cout-des-etudes-en-france",
+    "/guides/etudes-en-france/benin",
+    "/domaines/informatique",
   ]) {
     test(path, async ({ page }) => {
       await audit(page, path);

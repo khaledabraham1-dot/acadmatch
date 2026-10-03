@@ -11,7 +11,8 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <nav className="flex flex-1 flex-col gap-1 px-3">
       {NAV_ITEMS.map((item) => {
-        const isActive = pathname === item.href;
+        // Une page de guide (/guides/…) garde « Guides » actif.
+        const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(`${item.href}/`));
         const Icon = item.icon;
         return (
           <Link

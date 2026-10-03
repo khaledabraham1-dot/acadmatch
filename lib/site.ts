@@ -55,7 +55,8 @@ export function formationTitle(formation: Pick<StudyProgram, "name" | "instituti
     `${name} (${institution.city}) : prérequis`,
     `${name} (${institution.city})`,
   ];
-  return candidates.find((candidate) => candidate.length <= MAX_TITLE_LENGTH) ?? name;
+  // Nom trop long même seul : coupé proprement sur un mot plutôt que tronqué par Google au hasard.
+  return candidates.find((candidate) => candidate.length <= MAX_TITLE_LENGTH) ?? truncateForMeta(name, MAX_TITLE_LENGTH);
 }
 
 export function formationDescription(formation: StudyProgram): string {

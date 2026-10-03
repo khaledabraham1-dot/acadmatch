@@ -17,6 +17,9 @@ export function LandingNav() {
           <Link href="/formations" className="hover:text-slate-900">
             Formations
           </Link>
+          <Link href="/guides" className="hover:text-slate-900">
+            Guides
+          </Link>
         </nav>
         {/*
           Vérifié au navigateur à 320px : "Analyser mon profil" ne tenait pas

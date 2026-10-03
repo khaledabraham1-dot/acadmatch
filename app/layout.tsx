@@ -24,7 +24,8 @@ const DEFAULT_DESCRIPTION =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   title: {
-    default: "AcadMatch — Quelles formations en France et en Belgique correspondent à votre parcours ?",
+    // ~60 caractères : au-delà, Google coupe le titre dans ses résultats.
+    default: "AcadMatch — Votre licence ou master en France et en Belgique",
     template: "%s — AcadMatch",
   },
   description: DEFAULT_DESCRIPTION,
