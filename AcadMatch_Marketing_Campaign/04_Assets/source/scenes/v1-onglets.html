@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>V1 — Trop d'onglets</title>
+<link rel="stylesheet" href="campaign.css">
+<style>
+  #bg { background: radial-gradient(110% 60% at 50% 40%, #1a2a24 0%, var(--ink) 60%, var(--ink-deep) 100%); }
+  .q {
+    position: absolute; left: 50%; top: 50%;
+    width: 880px; margin-left: -440px; margin-top: -62px;
+    display: flex; align-items: center; gap: 26px;
+    padding: 34px 40px; border-radius: 999px;
+    background: #fff; color: var(--ink);
+    font-size: 40px; font-weight: 600;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+  }
+  .q svg { flex: none; }
+  #overlay { z-index: 8; padding: 0 72px; }
+  #overlay .display { text-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+  #blackout { background: rgba(7,16,12,0.72); z-index: 7; }
+  #sweep1 { z-index: 9; }
+  #s2 { z-index: 10; background: var(--ink); padding: 0 72px; }
+  #s3 { z-index: 11; }
+  #phone { left: 180px; top: 470px; }
+  #apercu { width: 900px; left: 90px; top: 980px; }
+  #verdict { width: 860px; left: 110px; top: 480px; }
+  #actions { width: 860px; left: 110px; top: 470px; }
+  .cap { position: absolute; left: 72px; right: 72px; top: 230px; text-align: center; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="layer" id="bg"></div>
+  <div class="layer" id="pile"></div>
+  <div class="layer" id="blackout"></div>
+  <div class="layer center" id="overlay">
+    <div class="display lg" id="o1">Tu cherches ta formation <span class="green">en France</span>&nbsp;?</div>
+    <div class="display lg" id="o2" style="position:absolute;left:72px;right:72px">Trop d'onglets. <span class="green">Aucune réponse claire.</span></div>
+  </div>
+  <div class="sweep" id="sweep1"></div>
+
+  <div class="layer center" id="s2">
+    <div class="body muted" id="s2a" style="margin-bottom:36px">Une seule question compte&nbsp;:</div>
+    <div class="display lg" id="s2b">Ton parcours <span class="green" style="white-space:nowrap">correspond-il&nbsp;?</span></div>
+  </div>
+
+  <div class="layer" id="s3">
+    <div class="layer" style="background:radial-gradient(120% 70% at 50% 30%, #133a2b 0%, var(--ink) 60%)"></div>
+    <div class="display sm cap" id="c1">Tu décris ton parcours…</div>
+    <div class="display sm cap" id="c2">…AcadMatch le compare aux <span class="green">vrais prérequis.</span></div>
+    <div class="display sm cap" id="c3">Tes forces. Tes lacunes. <span class="green">Quoi faire ensuite.</span></div>
+    <div class="phone" id="phone"><div class="notch"></div><div class="screen"><img id="shot1" src="../../ui/profil-etape1.png"></div></div>
+    <img class="card-shot" id="apercu" src="../../ui/profil-apercu.png">
+    <img class="card-shot" id="verdict" src="../../ui/resultat-verdict.png">
+    <img class="card-shot" id="actions" src="../../ui/resultat-actions.png">
+  </div>
+</div>
+<script src="runtime.js"></script>
+<script>
+const { p, win, ease, $, $$, style, words, clamp } = Studio;
+
+// Questions réellement tapées par les étudiants (autocomplétion Google, recherche de mots-clés du 2026-10-02).
+const QUESTIONS = [
+  "master en france pour étranger",
+  "ma licence suffit pour un master ?",
+  "mon master ou campus france ?",
+  "campus france bénin date limite",
+  "prérequis master informatique",
+  "coût études france en fcfa",
+  "équivalence diplôme bénin",
+  "procédure dap c'est quoi",
+  "étudier en belgique procédure",
+  "frais de scolarité étudiant étranger",
+  "visa étudiant france ressources",
+  "comment choisir son master",
+];
+const ICON = '<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#5b6a63" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>';
+const pile = $("#pile");
+// Positions pseudo-aléatoires mais fixes : l'export est identique à chaque rendu.
+let seed = 11;
+const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+const cards = QUESTIONS.map((text, i) => {
+  const el = document.createElement("div");
+  el.className = "q";
+  el.innerHTML = ICON + `<span>${text}</span>`;
+  pile.appendChild(el);
+  // Apparitions de plus en plus rapprochées : la surcharge s'accélère.
+  const at = 0.15 + 3.1 * Math.pow(i / QUESTIONS.length, 1.35);
+  return { el, at, x: (rnd() - 0.5) * 90, y: -640 + i * 118 + (rnd() - 0.5) * 60, r: (rnd() - 0.5) * 14 };
+});
+
+// Recentre la pile : les décalages aléatoires ne doivent pas pencher d'un côté.
+const meanX = cards.reduce((sum, c) => sum + c.x, 0) / cards.length;
+cards.forEach((c) => (c.x -= meanX));
+
+const end = Studio.endCard({ at: 16.6, title: "Vois où tu en es,<br><span class='green'>avant de candidater.</span>" });
+
+Studio.scene({
+  duration: 20.5,
+  render(t) {
+    // 1. Le chaos (0 → 3,9 s).
+    const shake = t > 2.7 && t < 3.6 ? Math.sin(t * 90) * 10 * (1 - p(t, 2.7, 3.6)) : 0;
+    pile.style.transform = `translateX(${shake}px) scale(${1 + p(t, 0, 3.8, ease.linear) * 0.08})`;
+    cards.forEach((c) => {
+      const k = p(t, c.at, c.at + 0.32, ease.outBack);
+      style(c.el, {
+        transform: `translate(${c.x}px, ${c.y + (1 - k) * 90}px) rotate(${c.r * k}deg) scale(${0.7 + 0.3 * k})`,
+        opacity: String(clamp(k * 1.5)),
+      });
+    });
+    $("#blackout").style.opacity = String(p(t, 1.0, 1.4) * 0.9);
+    words($("#o1"), t, { at: 1.05, stagger: 0.09, dur: 0.4, out: 2.45, outDur: 0.2 });
+    words($("#o2"), t, { at: 2.65, stagger: 0.09, dur: 0.35, rise: 50 });
+    $("#o2").style.transform = `translateX(${shake * 1.4}px)`;
+
+    // 2. Balayage radar : le bruit disparaît (3,7 → 4,3 s).
+    $("#sweep1").style.setProperty("--a", `${p(t, 3.7, 4.25, ease.inOutCubic) * 360}deg`);
+    $("#sweep1").style.opacity = String(1 - p(t, 4.25, 4.6));
+    $("#s2").style.opacity = String(p(t, 4.2, 4.35));
+    words($("#s2a"), t, { at: 4.4, stagger: 0.05, dur: 0.4, out: 6.4 });
+    words($("#s2b"), t, { at: 4.8, stagger: 0.11, dur: 0.5, out: 6.4, rise: 90 });
+
+    // 3. Le produit, en vrai (6,5 → 16,6 s).
+    $("#s3").style.opacity = String(p(t, 6.45, 6.75));
+    words($("#c1"), t, { at: 6.8, stagger: 0.07, dur: 0.4, out: 9.0 });
+    words($("#c2"), t, { at: 9.2, stagger: 0.07, dur: 0.4, out: 12.3 });
+    words($("#c3"), t, { at: 12.6, stagger: 0.08, dur: 0.4, out: 16.3 });
+    const ph = p(t, 6.6, 7.5, ease.outQuint), phOut = p(t, 12.2, 12.6, ease.inCubic);
+    style($("#phone"), {
+      transform: `translateY(${(1 - ph) * 1300 - phOut * 260}px) scale(${1 - phOut * 0.1}) rotate(${(1 - ph) * 6}deg)`,
+      opacity: String(1 - phOut),
+    });
+    $("#shot1").style.transform = `translateY(${-p(t, 7.6, 8.8, ease.inOutCubic) * 240}px)`;
+    const ap = p(t, 9.4, 10.0, ease.outBack), apOut = p(t, 12.2, 12.5, ease.inCubic);
+    style($("#apercu"), { transform: `translateY(${(1 - ap) * 200}px) scale(${0.9 + ap * 0.1})`, opacity: String(clamp(ap * 1.4) * (1 - apOut)) });
+    // Verdict puis actions, l'un après l'autre : chaque carte reste lisible en entier.
+    const v = p(t, 12.5, 13.1, ease.outBack), vOut = p(t, 14.3, 14.7, ease.inCubic);
+    const a = p(t, 14.5, 15.1, ease.outBack), out3 = p(t, 16.1, 16.5, ease.inCubic);
+    style($("#verdict"), { transform: `translateY(${(1 - v) * 160 - vOut * 380}px) scale(${(0.88 + 0.12 * v) * (1 - vOut * 0.25)}) rotate(${(1 - v) * -2}deg)`, opacity: String(clamp(v * 1.4) * (1 - vOut)) });
+    style($("#actions"), { transform: `translateY(${(1 - a) * 260}px) scale(${0.88 + 0.12 * a})`, opacity: String(clamp(a * 1.4) * (1 - out3)) });
+
+    end(t);
+  },
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+/*
+ * Direction artistique de la campagne — reprise de l'identité « Radar » du site
+ * (app/globals.css) : neutres gris-vert, un seul vert d'action, Unbounded pour
+ * les grands titres et les scores, Figtree pour le texte.
+ * Format : 1080 × 1920 (9:16). Zone sûre réseaux sociaux : le texte important
+ * reste entre y = 200 et y = 1500, et à au moins 72 px des bords (icônes TikTok
+ * / Reels à droite, légende en bas).
+ */
+@font-face {
+  font-family: "Figtree";
+  src: url("../../fonts/Figtree-Variable.woff2") format("woff2");
+  font-weight: 300 900;
+}
+@font-face {
+  font-family: "Unbounded";
+  src: url("../../fonts/Unbounded-Variable.woff2") format("woff2");
+  font-weight: 200 900;
+}
+
+:root {
+  --ink: #0d1b16;
+  --ink-deep: #07100c;
+  --paper: #f3f5f4;
+  --mist: #dce3df;
+  --muted: #5b6a63;
+  --green: #0a7d55;
+  --green-bright: #3fa478;
+  --green-soft: #e2f1e9;
+  --danger: #c4183c;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; }
+body {
+  font-family: "Figtree", sans-serif;
+  background: var(--ink);
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+.layer { position: absolute; inset: 0; will-change: transform, opacity; }
+.center { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+
+.display {
+  font-family: "Unbounded", sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+}
+.display.xl { font-size: 132px; }
+.display.lg { font-size: 104px; }
+.display.md { font-size: 78px; }
+.display.sm { font-size: 58px; }
+.body { font-size: 46px; line-height: 1.3; font-weight: 500; }
+.small { font-size: 32px; line-height: 1.35; font-weight: 500; }
+.green { color: var(--green-bright); }
+.on-paper .green { color: var(--green); }
+.muted { color: #9fb0a8; }
+.on-paper { color: var(--ink); }
+.on-paper .muted { color: var(--muted); }
+
+/* Ligne de mots animés (chaque mot est un .w qui entre séparément). */
+.line { display: block; overflow: hidden; padding: 0.06em 0 0.1em; }
+.w { display: inline-block; will-change: transform, opacity; }
+
+/* Téléphone : cadre sobre, capture réelle à l'intérieur. */
+.phone {
+  position: absolute;
+  width: 720px;
+  height: 1558px;
+  border-radius: 92px;
+  background: #050a08;
+  padding: 22px;
+  box-shadow: 0 60px 140px rgba(0, 0, 0, 0.45), 0 0 0 2px rgba(255, 255, 255, 0.08) inset;
+  will-change: transform, opacity;
+}
+.phone .screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 72px;
+  overflow: hidden;
+  background: var(--paper);
+}
+.phone .screen img { position: absolute; left: 0; top: 0; width: 100%; will-change: transform; }
+.phone .notch {
+  position: absolute;
+  top: 40px; left: 50%;
+  width: 190px; height: 50px;
+  margin-left: -95px;
+  border-radius: 30px;
+  background: #050a08;
+  z-index: 3;
+}
+
+/* Carte d'interface flottante (capture d'un composant réel). */
+.card-shot {
+  position: absolute;
+  border-radius: 36px;
+  box-shadow: 0 40px 100px rgba(7, 16, 12, 0.35);
+  will-change: transform, opacity;
+}
+
+/* Pastille / étiquette */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 30px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 34px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+.chip.green { background: var(--green); color: #fff; }
+
+/* Marque « Radar » : carré à remplissage conique (components/shell/Logo.tsx). */
+.mark {
+  width: 120px; height: 120px;
+  border-radius: 34px;
+  background: conic-gradient(var(--green-bright) 0 87%, #22322b 0);
+}
+.on-paper .mark, .mark.light { background: conic-gradient(var(--green) 0 87%, var(--mist) 0); }
+.wordmark { font-family: "Unbounded", sans-serif; font-weight: 600; letter-spacing: -0.04em; font-size: 84px; }
+
+/* Balayage radar : signature de transition de la campagne. */
+.sweep {
+  position: absolute; inset: -400px;
+  background: conic-gradient(from 0deg, var(--green) 0deg, var(--green) var(--a, 0deg), transparent var(--a, 0deg));
+  will-change: background;
+}
+
+/* Grain filmique très léger, animé image par image (évite l'aspect « template plat »). */
+#grain {
+  position: absolute; inset: -50%;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  z-index: 50;
+}
+
+/* Barre de progression fine en haut : rythme et rétention (format stories). */
+#progress {
+  position: absolute; left: 72px; right: 72px; top: 96px; height: 6px;
+  border-radius: 6px; background: rgba(255, 255, 255, 0.14); z-index: 40; overflow: hidden;
+}
+#progress i { position: absolute; inset: 0; background: var(--green-bright); transform-origin: left; }
+.on-paper #progress { background: rgba(13, 27, 22, 0.1); }
+.on-paper #progress i { background: var(--green); }
+
+.disclaimer { position: absolute; left: 72px; right: 72px; bottom: 420px; text-align: center; font-size: 26px; color: #8fa199; }
+
+/* La carte de fin reste sombre même dans une vidéo sur fond clair. */
+#endcard { color: #fff; }
+#endcard .green { color: var(--green-bright); }
+#endcard .muted { color: #9fb0a8; }
+
+/* Anneau de mise en évidence d'un élément réel de l'interface. */
+.ring {
+  position: absolute;
+  border: 6px solid var(--green);
+  border-radius: 28px;
+  box-shadow: 0 0 0 14px rgba(10, 125, 85, 0.16);
+  will-change: transform, opacity;
+}
+.callout {
+  position: absolute;
+  max-width: 760px;
+  padding: 26px 34px;
+  border-radius: 28px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 38px;
+  font-weight: 600;
+  line-height: 1.3;
+  box-shadow: 0 30px 70px rgba(7, 16, 12, 0.35);
+  will-change: transform, opacity;
+}
+.callout b { color: var(--green-bright); }
+.numeral {
+  position: absolute;
+  font-family: "Unbounded", sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+  will-change: transform, opacity;
+}

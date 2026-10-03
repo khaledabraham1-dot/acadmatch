@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>V2 — 3 étapes (démo produit)</title>
+<link rel="stylesheet" href="campaign.css">
+<style>
+  body { background: var(--paper); }
+  #bg { background: radial-gradient(120% 60% at 50% 15%, #ffffff 0%, var(--paper) 55%, #e6ece9 100%); }
+  .step-label { position: absolute; left: 72px; top: 210px; right: 72px; }
+  .step-label .k { font-size: 34px; font-weight: 700; color: var(--green); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; }
+  #n1, #n2, #n3 { right: 40px; top: 150px; font-size: 360px; color: var(--green); opacity: 0.12; }
+  #phone { left: 180px; top: 420px; }
+  #ring1 { width: 640px; height: 66px; }
+  #call1 { left: 72px; top: 1520px; }
+  #matieres { width: 860px; left: 110px; top: 470px; }
+  .cover { position: absolute; background: #fff; border-radius: 60px; will-change: opacity, transform; }
+  #apercu { width: 900px; left: 90px; top: 950px; }
+  #verdict { width: 860px; left: 110px; top: 470px; }
+  #radarCard { width: 900px; left: 90px; top: 560px; background: #fff; border-radius: 44px; padding: 60px 40px; box-shadow: 0 40px 100px rgba(7,16,12,0.18); }
+  #radarCard img { width: 100%; display: block; }
+  #actions { width: 860px; left: 110px; top: 470px; }
+  .sub { position: absolute; left: 72px; right: 72px; text-align: center; top: 1560px; }
+</style>
+</head>
+<body>
+<div id="stage" class="on-paper">
+  <div class="layer" id="bg"></div>
+
+  <div class="layer center" id="hook" style="padding:0 72px">
+    <div class="chip" id="eyebrow" style="background:var(--green-soft);color:var(--green);margin-bottom:46px">Démo réelle · AcadMatch</div>
+    <div class="display lg" id="h1">3 étapes pour savoir si ton parcours <span class="green">correspond.</span></div>
+  </div>
+
+  <!-- Étape 1 -->
+  <div class="numeral" id="n1">1</div>
+  <div class="step-label" id="l1"><div class="k">Étape 1</div><div class="display md" id="l1t">Ton parcours</div></div>
+  <div class="phone" id="phone"><div class="notch"></div><div class="screen"><img id="shot1" src="../../ui/profil-etape1.png"><div class="ring" id="ring1"></div></div></div>
+  <div class="callout" id="call1">Diplôme obtenu hors de France&nbsp;? <b>On t'aide à situer ton niveau.</b></div>
+
+  <!-- Étape 2 -->
+  <div class="numeral" id="n2">2</div>
+  <div class="step-label" id="l2"><div class="k">Étape 2</div><div class="display md" id="l2t">Ce que tu as étudié</div></div>
+  <div id="matWrap" class="layer">
+    <img class="card-shot" id="matieres" src="../../ui/profil-matieres-card.png">
+  </div>
+  <img class="card-shot" id="apercu" src="../../ui/profil-apercu.png">
+  <div class="display sm sub" id="s2" style="top:1700px">Un premier résultat <span class="green">dès cette étape.</span></div>
+
+  <!-- Étape 3 -->
+  <div class="numeral" id="n3">3</div>
+  <div class="step-label" id="l3"><div class="k">Étape 3</div><div class="display md" id="l3t">Ton résultat</div></div>
+  <img class="card-shot" id="verdict" src="../../ui/resultat-verdict.png">
+  <div class="card-shot" id="radarCard"><img src="../../ui/resultat-radar.png"></div>
+  <img class="card-shot" id="actions" src="../../ui/resultat-actions.png">
+  <div class="display sm sub" id="s3a">Un verdict <span class="green">clair.</span></div>
+  <div class="display sm sub" id="s3b">Le score expliqué, <span class="green">critère par critère.</span></div>
+  <div class="display sm sub" id="s3c" style="top:1700px">Et 3 actions <span class="green">concrètes.</span></div>
+</div>
+<script src="runtime.js"></script>
+<script>
+const { p, win, ease, $, $$, style, words, clamp } = Studio;
+
+// Étape 2 : les matières apparaissent une à une sur la vraie carte (caches blancs
+// posés sur chaque pastille de la capture, retirés tour à tour).
+const MAT_SCALE = 860 / 1074; // largeur affichée / largeur de la capture
+const CHIPS = [[58, 460, 433, 125], [505, 460, 505, 125], [58, 598, 729, 124], [58, 736, 390, 124]];
+const covers = CHIPS.map(([x, y, w, h]) => {
+  const c = document.createElement("div");
+  c.className = "cover";
+  Object.assign(c.style, { left: `${110 + x * MAT_SCALE}px`, top: `${470 + y * MAT_SCALE}px`, width: `${w * MAT_SCALE}px`, height: `${h * MAT_SCALE}px` });
+  $("#matWrap").appendChild(c);
+  return c;
+});
+
+// Anneau sur le lien « Diplôme obtenu hors de France ? Estimer mon niveau » (coordonnées de la capture).
+const SHOT_SCALE = 676 / 1170;
+Object.assign($("#ring1").style, { left: `${(100 - 14) * SHOT_SCALE}px`, top: `${(1128 - 18) * SHOT_SCALE}px`, width: `${(950) * SHOT_SCALE}px`, height: `${60}px` });
+
+const end = Studio.endCard({ at: 21.9, title: "Teste avec<br><span class='green'>ton vrai parcours.</span>", sub: "Gratuit · Sans compte pour commencer · Sources officielles" });
+
+Studio.scene({
+  duration: 26,
+  render(t) {
+    // Accroche (0 → 2,5 s)
+    style($("#eyebrow"), { opacity: String(win(t, 0.05, 2.5, 0.3, 0.25)), transform: `translateY(${(1 - p(t, 0.05, 0.5)) * 30}px)` });
+    words($("#h1"), t, { at: 0.25, stagger: 0.07, dur: 0.45, out: 2.3, outDur: 0.25, rise: 80 });
+
+    const label = (n, a, b) => {
+      const k = win(t, a, b, 0.5, 0.35);
+      style($(`#n${n}`), { opacity: String(k * 0.12), transform: `translateY(${(1 - p(t, a, a + 0.7, ease.outQuint)) * 120}px)` });
+      style($(`#l${n}`), { opacity: String(k), transform: `translateX(${(1 - p(t, a, a + 0.55, ease.outQuint)) * -80}px)` });
+    };
+
+    // Étape 1 (2,5 → 8,6 s)
+    label(1, 2.5, 8.6);
+    const ph = p(t, 2.6, 3.5, ease.outQuint), phOut = p(t, 8.3, 8.7, ease.inCubic);
+    style($("#phone"), { transform: `translateY(${(1 - ph) * 1300}px) translateX(${-phOut * 1200}px) rotate(${(1 - ph) * 6 - phOut * 6}deg)`, opacity: String((t < 2.6 ? 0 : 1) * (1 - phOut * 0.6)) });
+    const r = p(t, 4.6, 5.1, ease.outBack);
+    style($("#ring1"), { opacity: String(clamp(r * 1.5) * (1 - phOut)), transform: `scale(${1.3 - 0.3 * r})` });
+    const c1 = p(t, 5.0, 5.5, ease.outBack), c1o = p(t, 8.1, 8.4, ease.inCubic);
+    style($("#call1"), { opacity: String(clamp(c1 * 1.4) * (1 - c1o)), transform: `translateY(${(1 - c1) * 60}px)` });
+
+    // Étape 2 (8,6 → 15,4 s)
+    label(2, 8.6, 15.4);
+    const m = p(t, 8.75, 9.5, ease.outQuint), mOut = p(t, 15.1, 15.45, ease.inCubic);
+    // Quand l'aperçu arrive, la carte des matières recule (mise au point sur le résultat).
+    const dim = p(t, 12.7, 13.3);
+    style($("#matWrap"), { transform: `translateX(${(1 - m) * 1200 - mOut * 1200}px) translateY(${-dim * 120}px) scale(${1 - dim * 0.08})`, opacity: String((1 - dim * 0.82) * (1 - mOut * 0.5)) });
+    covers.forEach((c, i) => {
+      const k = p(t, 9.9 + i * 0.7, 10.2 + i * 0.7, ease.outCubic);
+      style(c, { opacity: String(1 - k), transform: `scale(${1 + k * 0.05})` });
+    });
+    const ap = p(t, 12.9, 13.5, ease.outBack), apOut = p(t, 15.1, 15.4, ease.inCubic);
+    style($("#apercu"), { opacity: String(clamp(ap * 1.4) * (1 - apOut)), transform: `translateY(${(1 - ap) * 220}px) scale(${0.9 + 0.1 * ap})` });
+    words($("#s2"), t, { at: 13.6, stagger: 0.07, dur: 0.4, out: 15.1, outDur: 0.25 });
+
+    // Étape 3 (15,4 → 21,8 s) : verdict, radar, actions — un élément à la fois.
+    label(3, 15.4, 21.7);
+    const seq = (id, a, b) => {
+      const k = p(t, a, a + 0.55, ease.outBack), o = p(t, b - 0.35, b, ease.inCubic);
+      style($(id), { opacity: String(clamp(k * 1.4) * (1 - o)), transform: `translateY(${(1 - k) * 200 - o * 160}px) scale(${0.9 + 0.1 * k})` });
+    };
+    seq("#verdict", 15.6, 17.7);
+    seq("#radarCard", 17.75, 19.8);
+    seq("#actions", 19.85, 21.7);
+    words($("#s3a"), t, { at: 16.0, stagger: 0.08, dur: 0.4, out: 17.4, outDur: 0.25 });
+    words($("#s3b"), t, { at: 18.1, stagger: 0.07, dur: 0.4, out: 19.5, outDur: 0.25 });
+    words($("#s3c"), t, { at: 20.2, stagger: 0.08, dur: 0.4, out: 21.5, outDur: 0.25 });
+
+    end(t);
+  },
+});
+</script>
+</body>
+</html>

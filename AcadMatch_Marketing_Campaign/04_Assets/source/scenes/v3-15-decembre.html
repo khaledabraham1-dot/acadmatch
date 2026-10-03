@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>V3 — 15 décembre (storytelling)</title>
+<link rel="stylesheet" href="campaign.css">
+<style>
+  #bg { background: radial-gradient(90% 55% at 50% 100%, #12392a 0%, #0a1a14 45%, #050c09 100%); }
+  .bokeh { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(255,214,140,0.55), rgba(255,214,140,0) 70%); will-change: transform, opacity; }
+  .story { position: absolute; left: 72px; right: 72px; text-align: center; }
+  #place { top: 330px; font-size: 34px; letter-spacing: 0.32em; text-transform: uppercase; color: #c8d6cf; font-weight: 700; }
+  #cal { position: absolute; left: 160px; top: 640px; width: 760px; height: 860px; perspective: 2600px; }
+  .page {
+    position: absolute; inset: 0; border-radius: 40px; background: #fbfcfb; color: var(--ink);
+    transform-origin: 50% 0; backface-visibility: hidden; overflow: hidden;
+    box-shadow: 0 50px 120px rgba(0,0,0,0.5);
+  }
+  .page header { height: 210px; background: var(--ink); color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+  .page header .m { font-family: "Unbounded", sans-serif; font-weight: 600; font-size: 82px; letter-spacing: -0.04em; }
+  .page header .y { font-size: 34px; color: #9fb0a8; font-weight: 600; margin-top: 6px; }
+  .page .dow, .page .grid { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0 36px; }
+  .page .dow { padding-top: 34px; padding-bottom: 12px; font-size: 26px; font-weight: 700; color: #8f9d96; text-align: center; }
+  .page .grid div { height: 84px; display: grid; place-items: center; font-size: 36px; font-weight: 600; position: relative; }
+  .page .grid div.off { color: transparent; }
+  .mark-day { position: absolute; left: 50%; top: 50%; width: 112px; height: 112px; margin: -56px 0 0 -56px; }
+  .mark-day circle { fill: none; stroke-width: 7; stroke-linecap: round; }
+  .tag { position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; padding: 14px 26px; border-radius: 999px; font-size: 30px; font-weight: 700; }
+  #calendrier { width: 760px; left: 160px; top: 430px; }
+  .ring { border-radius: 22px; }
+  #disc { top: 128px; bottom: auto; font-size: 24px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="layer" id="bg"></div>
+  <div class="layer" id="lights"></div>
+
+  <div class="story" id="place">Cotonou · octobre 2026</div>
+  <div class="story display lg" id="a1" style="top:470px">Aïcha vise un master <span class="green">en France.</span></div>
+
+  <div class="story display sm" id="b1" style="top:330px">Elle se cale sur les plateformes françaises…</div>
+  <div class="story display sm" id="b2" style="top:1600px">…qui ferment <span class="green">mi-mars.</span></div>
+  <div class="story display sm" id="c1" style="top:330px">Mais elle réside <span style="color:#ff8a8a">au Bénin.</span></div>
+  <div class="story display sm" id="c2" style="top:1600px">Sa date limite Campus France&nbsp;: <span style="color:#ff8a8a">15 décembre.</span></div>
+
+  <div id="cal"></div>
+
+  <img class="card-shot" id="calendrier" src="../../ui/calendrier-benin.png">
+  <div class="ring" id="ringA"></div>
+  <div class="ring" id="ringB"></div>
+  <div class="story display sm" id="d1" style="top:200px">AcadMatch lui affiche le calendrier <span class="green">officiel de son pays…</span></div>
+  <div class="story display sm" id="d2" style="top:200px">…et ajoute les échéances <span class="green">à ses rappels.</span></div>
+
+  <div class="layer center" id="e" style="padding:0 72px">
+    <div class="display lg" id="e1">Ne te cale pas sur <span class="green">la mauvaise date.</span></div>
+  </div>
+
+  <div class="disclaimer" id="disc">Histoire illustrative · Dates : calendrier officiel Campus France Bénin, rentrée 2027</div>
+</div>
+<script src="runtime.js"></script>
+<script>
+const { p, win, ease, $, $$, style, words, clamp, lerp } = Studio;
+
+// Lumières de ville floues (bokeh), positions fixes.
+let seed = 5;
+const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+const lights = Array.from({ length: 16 }, () => {
+  const el = document.createElement("div");
+  el.className = "bokeh";
+  const size = 80 + rnd() * 220;
+  Object.assign(el.style, { width: `${size}px`, height: `${size}px`, left: `${rnd() * 1080 - size / 2}px`, top: `${1150 + rnd() * 800}px` });
+  $("#lights").appendChild(el);
+  return { el, phase: rnd() * 6.28, speed: 0.3 + rnd() * 0.6 };
+});
+
+// Pages de calendrier (jours de la semaine vérifiés : 1er oct. 2026 = jeudi, 15 déc. 2026 = mardi).
+const MONTHS = [
+  { m: "Octobre", y: 2026, start: 3, days: 31 },
+  { m: "Novembre", y: 2026, start: 6, days: 30 },
+  { m: "Décembre", y: 2026, start: 1, days: 31, mark: 15, color: "#e0445f", tag: "Dépôt définitif Campus France Bénin" },
+  { m: "Janvier", y: 2027, start: 4, days: 31 },
+  { m: "Février", y: 2027, start: 0, days: 28 },
+  { m: "Mars", y: 2027, start: 0, days: 31, mark: 15, color: "#0a7d55", tag: "Plateformes françaises : mi-mars" },
+];
+const cal = $("#cal");
+const pages = MONTHS.map((mo, k) => {
+  const el = document.createElement("div");
+  el.className = "page";
+  el.style.zIndex = String(100 - k);
+  const cells = [];
+  for (let i = 0; i < mo.start; i++) cells.push('<div class="off">0</div>');
+  for (let d = 1; d <= mo.days; d++) {
+    const mark = d === mo.mark ? `<svg class="mark-day" viewBox="0 0 112 112"><circle cx="56" cy="56" r="48" stroke="${mo.color}" stroke-dasharray="302" stroke-dashoffset="302"/></svg>` : "";
+    cells.push(`<div>${d}${mark}</div>`);
+  }
+  el.innerHTML = `<header><div class="m">${mo.m}</div><div class="y">${mo.y}</div></header>
+    <div class="dow"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+    <div class="grid">${cells.join("")}</div>
+    ${mo.tag ? `<div class="tag" style="bottom:28px;background:${mo.color};color:#fff;opacity:0">${mo.tag}</div>` : ""}`;
+  cal.appendChild(el);
+  return el;
+});
+
+// Index du mois affiché : avance d'octobre à mars, puis retour brutal à décembre.
+function monthIndex(t) {
+  if (t < 3.9) return 0;
+  if (t < 7.0) return 5 * ease.inOutCubic(clamp((t - 3.9) / 3.1));
+  if (t < 8.4) return 5;
+  if (t < 9.0) return lerp(5, 2, ease.outCubic(clamp((t - 8.4) / 0.6)));
+  return 2;
+}
+
+// Anneaux sur la vraie carte : « Dépôt définitif » et « Ajouter les 5 échéances ».
+const CARD = { left: 160, top: 430, scale: 760 / 1074 };
+const box = (el, x, y, w, h) => Object.assign(el.style, {
+  left: `${CARD.left + x * CARD.scale}px`, top: `${CARD.top + y * CARD.scale}px`,
+  width: `${w * CARD.scale}px`, height: `${h * CARD.scale}px`,
+});
+box($("#ringA"), 40, 1000, 995, 140);
+box($("#ringB"), 48, 1680, 925, 150);
+
+const end = Studio.endCard({ at: 22.2, title: "Vérifie ton<br><span class='green'>calendrier officiel.</span>", sub: "Calendriers Campus France par pays · Sources officielles · Gratuit" });
+
+Studio.scene({
+  duration: 26.5,
+  render(t) {
+    lights.forEach((l) => style(l.el, { opacity: String(0.35 + 0.25 * Math.sin(t * l.speed + l.phase)), transform: `translateY(${Math.sin(t * 0.2 + l.phase) * 20}px)` }));
+
+    // A. Le décor (0 → 3,6 s)
+    style($("#place"), { opacity: String(win(t, 0.2, 3.6, 0.6, 0.4)), letterSpacing: `${0.32 + p(t, 0, 3.6, ease.linear) * 0.06}em` });
+    words($("#a1"), t, { at: 0.9, stagger: 0.12, dur: 0.6, out: 3.4, outDur: 0.35 });
+
+    // B / C. Le calendrier : mars… puis retour à décembre (3,6 → 13 s).
+    const calIn = p(t, 3.5, 4.1, ease.outQuint), calOut = p(t, 12.7, 13.1, ease.inCubic);
+    style(cal, { opacity: String(calIn * (1 - calOut)), transform: `translateY(${(1 - calIn) * 200 - calOut * 120}px) scale(${0.94 + 0.06 * calIn})` });
+    const idx = monthIndex(t);
+    pages.forEach((page, k) => {
+      const f = clamp(idx - k);
+      page.style.transform = `rotateX(${-f * 110}deg)`;
+      page.style.opacity = f > 0.98 ? "0" : "1";
+    });
+    // Mars entouré en vert, puis décembre entouré en rouge.
+    const marchCircle = $$("circle", pages[5])[0], decCircle = $$("circle", pages[2])[0];
+    marchCircle.style.strokeDashoffset = String(302 * (1 - p(t, 7.1, 7.7)));
+    pages[5].querySelector(".tag").style.opacity = String(p(t, 7.5, 7.9) * (1 - p(t, 8.3, 8.5)));
+    decCircle.style.strokeDashoffset = String(302 * (1 - p(t, 9.3, 9.9)));
+    const pulse = t > 9.9 ? 1 + Math.sin((t - 9.9) * 6) * 0.06 : 1;
+    decCircle.parentNode.style.transform = `scale(${pulse})`;
+    pages[2].querySelector(".tag").style.opacity = String(p(t, 9.8, 10.2));
+    words($("#b1"), t, { at: 4.0, stagger: 0.07, dur: 0.45, out: 8.2, outDur: 0.25 });
+    words($("#b2"), t, { at: 6.9, stagger: 0.09, dur: 0.45, out: 8.2, outDur: 0.25 });
+    // Le « rewind » : petite secousse quand le calendrier revient en arrière.
+    cal.style.marginLeft = t > 8.4 && t < 9.2 ? `${Math.sin(t * 80) * 8 * (1 - p(t, 8.4, 9.2))}px` : "0px";
+    words($("#c1"), t, { at: 8.9, stagger: 0.09, dur: 0.45, out: 12.6, outDur: 0.3 });
+    words($("#c2"), t, { at: 10.1, stagger: 0.08, dur: 0.45, out: 12.6, outDur: 0.3 });
+
+    // D. Le vrai calendrier AcadMatch (13 → 20,4 s)
+    const cIn = p(t, 13.0, 13.8, ease.outQuint), cOut = p(t, 20.1, 20.5, ease.inCubic);
+    style($("#calendrier"), { opacity: String(cIn * (1 - cOut)), transform: `translateY(${(1 - cIn) * 300}px) scale(${0.92 + 0.08 * cIn})` });
+    const rA = p(t, 14.6, 15.1, ease.outBack), rAo = p(t, 16.7, 17.0);
+    style($("#ringA"), { opacity: String(clamp(rA * 1.5) * (1 - rAo)), transform: `scale(${1.15 - 0.15 * rA})` });
+    const rB = p(t, 17.6, 18.1, ease.outBack);
+    style($("#ringB"), { opacity: String(clamp(rB * 1.5) * (1 - cOut)), transform: `scale(${1.15 - 0.15 * rB})` });
+    words($("#d1"), t, { at: 13.4, stagger: 0.07, dur: 0.45, out: 16.8, outDur: 0.3 });
+    words($("#d2"), t, { at: 17.1, stagger: 0.08, dur: 0.45, out: 20.1, outDur: 0.3 });
+    $("#disc").style.opacity = String(win(t, 9.0, 20.2, 0.5, 0.4));
+
+    // E. Le message (20,5 → 22,2 s)
+    words($("#e1"), t, { at: 20.5, stagger: 0.09, dur: 0.45, out: 21.9, outDur: 0.25, rise: 90 });
+
+    end(t);
+  },
+});
+</script>
+</body>
+</html>

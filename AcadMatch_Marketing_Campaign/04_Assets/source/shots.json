@@ -1,0 +1,71 @@
+{
+  "01_AcadMatch_Trop-d-onglets": {
+    "title": "01 — Trop d'onglets",
+    "angle": "Problème → solution",
+    "shots": [
+      { "t": 1.0, "name": "Le chaos", "desc": "Les vraies recherches des étudiants s'empilent et accélèrent (un clic sonore par recherche)." },
+      { "t": 2.2, "name": "L'accroche", "desc": "« Tu cherches ta formation en France ? » par-dessus le bruit." },
+      { "t": 3.3, "name": "Le constat", "desc": "« Trop d'onglets. Aucune réponse claire. » — secousse, glitch." },
+      { "t": 4.0, "name": "Balayage radar", "desc": "Le balayage vert, signature de la campagne, efface le chaos." },
+      { "t": 5.8, "name": "La question", "desc": "« Une seule question compte : ton parcours correspond-il ? »" },
+      { "t": 8.4, "name": "Le parcours", "desc": "Vraie interface : étape 1 du profil AcadMatch." },
+      { "t": 10.8, "name": "La comparaison", "desc": "Aperçu provisoire réel : les formations les plus compatibles." },
+      { "t": 13.6, "name": "Le verdict", "desc": "Vrai résultat : 87/100, « Très compatible », verdict en une phrase." },
+      { "t": 15.6, "name": "Les actions", "desc": "Les 3 prochaines actions réelles proposées par AcadMatch." },
+      { "t": 18.5, "name": "Carte de fin", "desc": "« Vois où tu en es, avant de candidater. » — Lien en bio." }
+    ]
+  },
+  "02_AcadMatch_3-etapes": {
+    "title": "02 — 3 étapes",
+    "angle": "Démo produit",
+    "shots": [
+      { "t": 1.6, "name": "L'accroche", "desc": "« 3 étapes pour savoir si ton parcours correspond. » — étiquette « Démo réelle »." },
+      { "t": 4.0, "name": "Étape 1", "desc": "Le téléphone monte avec la vraie étape 1 (niveau, domaine, objectif, langues)." },
+      { "t": 5.8, "name": "Diplôme étranger", "desc": "Mise en évidence du lien réel « Diplôme obtenu hors de France ? Estimer mon niveau »." },
+      { "t": 10.6, "name": "Étape 2", "desc": "Les matières apparaissent une à une sur la vraie carte (bruit de frappe)." },
+      { "t": 14.2, "name": "Premier résultat", "desc": "L'aperçu provisoire réel arrive, la carte des matières recule." },
+      { "t": 16.8, "name": "Étape 3 — verdict", "desc": "« Un verdict clair. » — vrai score 87/100." },
+      { "t": 18.8, "name": "Le radar", "desc": "« Le score expliqué, critère par critère. » — vrai radar." },
+      { "t": 20.8, "name": "Les actions", "desc": "« Et 3 actions concrètes. »" },
+      { "t": 23.5, "name": "Carte de fin", "desc": "« Teste avec ton vrai parcours. » — gratuit, sans compte pour commencer." }
+    ]
+  },
+  "03_AcadMatch_15-decembre": {
+    "title": "03 — 15 décembre",
+    "angle": "Storytelling émotionnel",
+    "shots": [
+      { "t": 2.2, "name": "Le décor", "desc": "Nuit, lumières de ville. « Cotonou · octobre 2026 — Aïcha vise un master en France. »" },
+      { "t": 5.5, "name": "Le défilement", "desc": "Les mois tournent, l'horloge accélère : « Elle se cale sur les plateformes françaises… »" },
+      { "t": 7.9, "name": "Mi-mars", "desc": "Mars entouré en vert : « …qui ferment mi-mars. »" },
+      { "t": 11.0, "name": "Le retour", "desc": "Rewind brutal vers décembre : « Mais elle réside au Bénin. » — 15 entouré en rouge." },
+      { "t": 15.5, "name": "Le bon calendrier", "desc": "Vrai calendrier officiel Campus France Bénin dans AcadMatch, dépôt définitif mis en évidence." },
+      { "t": 18.6, "name": "Les rappels", "desc": "« …et ajoute les échéances à ses rappels. » — vrai bouton mis en évidence." },
+      { "t": 21.2, "name": "Le message", "desc": "« Ne te cale pas sur la mauvaise date. »" },
+      { "t": 24.0, "name": "Carte de fin", "desc": "« Vérifie ton calendrier officiel. » — mention « Histoire illustrative » et source." }
+    ]
+  },
+  "04_AcadMatch_Lu-comme-un-jury": {
+    "title": "04 — Lu comme un jury",
+    "angle": "Publicité créative / disruptive",
+    "shots": [
+      { "t": 1.6, "name": "La question", "desc": "« Comment un jury lit-il ton relevé ? » — typographie géante sur fond noir." },
+      { "t": 4.6, "name": "Le scan", "desc": "Un relevé (matières du profil exemple) balayé ligne à ligne par le trait radar." },
+      { "t": 7.2, "name": "L'envol", "desc": "Les matières se détachent en points lumineux qui convergent." },
+      { "t": 9.8, "name": "Le radar", "desc": "Les points forment le radar réel d'AcadMatch : prérequis, contenu, compétences, niveau." },
+      { "t": 12.6, "name": "La preuve", "desc": "Vrai radar + « Ce que tu couvres » / « À prouver : … » — « AcadMatch te le montre avant. »" },
+      { "t": 15.2, "name": "La promesse", "desc": "« Pas une promesse d'admission. Une lecture honnête. » — silence rythmique." },
+      { "t": 18.0, "name": "Carte de fin", "desc": "« Lis ton dossier comme un jury. »" }
+    ]
+  },
+  "05_AcadMatch_Ta-licence-suffit": {
+    "title": "05 — Ta licence suffit ?",
+    "angle": "Conversion",
+    "shots": [
+      { "t": 1.6, "name": "L'accroche", "desc": "« Ta licence suffit-elle pour ce master ? » — question directe, dès la 1re seconde." },
+      { "t": 3.4, "name": "La réponse", "desc": "Le téléphone monte avec un vrai résultat AcadMatch." },
+      { "t": 5.2, "name": "Le score", "desc": "Le verdict réel se détache : « Une réponse claire. Et expliquée. »" },
+      { "t": 8.8, "name": "Les bénéfices", "desc": "4 bénéfices réels : prérequis vérifiés, forces/lacunes, 3 actions, coûts en FCFA." },
+      { "t": 11.5, "name": "Carte de fin", "desc": "« Teste ton parcours. C'est gratuit. » — Lien en bio." }
+    ]
+  }
+}

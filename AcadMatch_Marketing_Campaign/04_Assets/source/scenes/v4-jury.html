@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>V4 — Lu comme un jury</title>
+<link rel="stylesheet" href="campaign.css">
+<style>
+  #bg { background: #050b08; }
+  #glow { background: radial-gradient(60% 40% at 50% 52%, rgba(10,125,85,0.35), transparent 70%); }
+  #doc {
+    position: absolute; left: 150px; top: 560px; width: 780px; padding: 56px 60px 64px;
+    border-radius: 36px; background: #f6f8f7; color: var(--ink);
+    box-shadow: 0 60px 140px rgba(0,0,0,0.6); will-change: transform, opacity;
+  }
+  #doc .h { font-size: 30px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+  #doc .t { font-family: "Unbounded", sans-serif; font-weight: 600; font-size: 44px; letter-spacing: -0.03em; margin: 14px 0 34px; }
+  .row { position: relative; display: flex; justify-content: space-between; font-size: 40px; font-weight: 600; padding: 20px 0; border-top: 2px solid #e1e7e4; }
+  .row .bar { position: absolute; left: 0; bottom: -2px; height: 6px; background: var(--green); width: 100%; transform-origin: left; transform: scaleX(0); }
+  #scan { position: absolute; left: 120px; width: 840px; height: 10px; border-radius: 10px; background: var(--green-bright); box-shadow: 0 0 40px 10px rgba(63,164,120,0.6); will-change: transform, opacity; }
+  .dot { position: absolute; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: var(--green-bright); box-shadow: 0 0 24px 6px rgba(63,164,120,0.55); will-change: transform, opacity; }
+  #radar { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  .axis-label { position: absolute; font-size: 38px; font-weight: 700; color: #cfe0d8; white-space: nowrap; will-change: opacity; }
+  .axis-label b { color: #fff; font-family: "Unbounded", sans-serif; }
+  #realCard { position: absolute; left: 90px; top: 520px; width: 900px; padding: 50px 40px; border-radius: 44px; background: #fff; box-shadow: 0 50px 120px rgba(0,0,0,0.55); will-change: transform, opacity; }
+  #realCard img { width: 100%; display: block; }
+  .pill { position: absolute; padding: 20px 32px; border-radius: 999px; font-size: 36px; font-weight: 700; will-change: transform, opacity; }
+  .story { position: absolute; left: 72px; right: 72px; text-align: center; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="layer" id="bg"></div>
+  <div class="layer" id="glow"></div>
+
+  <div class="layer center" id="hook" style="padding:0 72px">
+    <div class="display xl" id="h1">Comment un jury lit-il <span class="green">ton relevé&nbsp;?</span></div>
+  </div>
+
+  <div id="doc">
+    <div class="h">Relevé de notes</div>
+    <div class="t">Licence 3 Informatique</div>
+    <div class="row">Algorithmique<span class="bar"></span></div>
+    <div class="row">Bases de données<span class="bar"></span></div>
+    <div class="row">Programmation orientée objet<span class="bar"></span></div>
+    <div class="row">Statistiques<span class="bar"></span></div>
+    <div class="row">Réseaux informatiques<span class="bar"></span></div>
+  </div>
+  <div id="scan"></div>
+  <div class="story display sm" id="s1" style="top:300px">Pas matière <span class="green">par matière.</span></div>
+
+  <svg id="radar" viewBox="0 0 1080 1920"></svg>
+  <div class="axis-label" id="ax0">Prérequis <b>100</b></div>
+  <div class="axis-label" id="ax1">Contenu <b>73</b></div>
+  <div class="axis-label" id="ax2">Compétences <b>71</b></div>
+  <div class="axis-label" id="ax3">Niveau <b>100</b></div>
+  <div class="layer" id="dots"></div>
+  <div class="story display sm" id="s2" style="top:300px">Il cherche ce qui compte <span class="green">pour SA formation.</span></div>
+
+  <div id="realCard"><img src="../../ui/resultat-radar.png"></div>
+  <div class="pill" id="p1" style="left:110px;top:1290px;background:var(--green);color:#fff">✓ Ce que tu couvres</div>
+  <div class="pill" id="p2" style="left:110px;top:1400px;background:#2a1c1f;color:#ffb3bf">À prouver : Génie logiciel</div>
+  <div class="pill" id="p3" style="left:110px;top:1510px;background:#2a1c1f;color:#ffb3bf">À prouver : Architecture des ordinateurs</div>
+  <div class="story display sm" id="s3" style="top:300px">AcadMatch te le montre <span class="green">avant.</span></div>
+
+  <div class="layer center" id="punch" style="padding:0 72px">
+    <div class="body muted" id="k1" style="margin-bottom:28px">Pas une promesse d'admission.</div>
+    <div class="display lg" id="k2">Une lecture <span class="green">honnête.</span></div>
+  </div>
+</div>
+<script src="runtime.js"></script>
+<script>
+const { p, win, ease, $, $$, style, words, clamp, lerp } = Studio;
+const NS = "http://www.w3.org/2000/svg";
+const svg = $("#radar");
+const C = { x: 540, y: 1000 }, R = 330;
+// Axes du vrai radar AcadMatch : haut, droite, bas, gauche ; valeurs du résultat MoSIG.
+const AXES = [[0, -1], [1, 0], [0, 1], [-1, 0]];
+const VALUES = [100, 73, 71, 100];
+const el = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); svg.appendChild(e); return e; };
+const rings = [0.25, 0.5, 0.75, 1].map((k) => el("polygon", { fill: "none", stroke: "rgba(207,224,216,0.18)", "stroke-width": 3 }));
+const axes = AXES.map(() => el("line", { stroke: "rgba(207,224,216,0.3)", "stroke-width": 3 }));
+const shape = el("polygon", { fill: "rgba(63,164,120,0.28)", stroke: "#3fa478", "stroke-width": 8, "stroke-linejoin": "round" });
+const vertices = AXES.map(() => el("circle", { r: 16, fill: "#3fa478" }));
+// Étiquettes latérales au-dessus de leur sommet : jamais coupées par le bord de l'écran.
+const LABELS = [[540, 610, "center"], [870, 925, "center"], [540, 1390, "center"], [210, 925, "center"]];
+LABELS.forEach(([x, y, align], i) => {
+  const lab = $(`#ax${i}`);
+  lab.style.left = `${x}px`; lab.style.top = `${y}px`;
+  lab.style.transform = align === "center" ? "translate(-50%, -50%)" : align === "left" ? "translate(0, -50%)" : "translate(-100%, -50%)";
+});
+const pt = (i, k) => [C.x + AXES[i][0] * R * k, C.y + AXES[i][1] * R * k];
+
+// Points lumineux : chaque matière se détache en 6 points qui rejoignent un sommet du radar.
+let seed = 3;
+const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+const dots = [];
+$$(".row").forEach((row, r) => {
+  for (let j = 0; j < 6; j++) {
+    const d = document.createElement("div");
+    d.className = "dot";
+    $("#dots").appendChild(d);
+    dots.push({ d, row: r, x0: 230 + j * 110 + rnd() * 40, target: (r + j) % 4, delay: rnd() * 0.6, bend: (rnd() - 0.5) * 500 });
+  }
+});
+
+const end = Studio.endCard({ at: 16.2, title: "Lis ton dossier<br><span class='green'>comme un jury.</span>" });
+
+Studio.scene({
+  duration: 19.8,
+  render(t) {
+    // 1. Accroche (0 → 2,4 s)
+    words($("#h1"), t, { at: 0.15, stagger: 0.11, dur: 0.5, out: 2.2, outDur: 0.25, rise: 110 });
+    $("#glow").style.opacity = String(0.5 + 0.5 * p(t, 6, 9));
+
+    // 2. Le relevé, balayé par le radar (2,3 → 6,4 s)
+    const dIn = p(t, 2.3, 3.0, ease.outQuint), dOut = p(t, 6.2, 6.7, ease.inCubic);
+    style($("#doc"), { opacity: String(dIn * (1 - dOut)), transform: `translateY(${(1 - dIn) * 160}px) rotate(${(1 - dIn) * -4}deg) scale(${1 - dOut * 0.12})` });
+    const rows = $$(".row");
+    const docTop = 560 + 56 + 30 + 14 + 60 + 34; // haut de la première ligne
+    const scanY = lerp(docTop - 20, docTop + rows.length * 86 + 10, p(t, 3.4, 5.6, ease.inOutCubic));
+    style($("#scan"), { top: `${scanY}px`, opacity: String(win(t, 3.3, 5.8, 0.2, 0.2) * (1 - dOut)) });
+    rows.forEach((row, i) => {
+      const k = p(t, 3.5 + i * 0.42, 3.8 + i * 0.42);
+      row.querySelector(".bar").style.transform = `scaleX(${k})`;
+      row.style.color = k > 0.5 ? "#0a7d55" : "";
+    });
+    words($("#s1"), t, { at: 3.4, stagger: 0.08, dur: 0.45, out: 6.1, outDur: 0.25 });
+
+    // 3. Les matières deviennent le radar (6,3 → 10,6 s)
+    const g = p(t, 6.5, 7.4, ease.outQuint), gOut = p(t, 10.4, 10.8, ease.inCubic);
+    rings.forEach((ring, i) => ring.setAttribute("points", AXES.map((_, a) => pt(a, [0.25, 0.5, 0.75, 1][i] * g).join(",")).join(" ")));
+    axes.forEach((line, i) => { const [x, y] = pt(i, g); line.setAttribute("x1", C.x); line.setAttribute("y1", C.y); line.setAttribute("x2", x); line.setAttribute("y2", y); });
+    const grow = p(t, 8.2, 9.4, ease.outBack);
+    shape.setAttribute("points", VALUES.map((v, i) => pt(i, (v / 100) * grow).join(",")).join(" "));
+    vertices.forEach((c, i) => { const [x, y] = pt(i, (VALUES[i] / 100) * grow); c.setAttribute("cx", x); c.setAttribute("cy", y); });
+    svg.style.opacity = String(g * (1 - gOut));
+    [0, 1, 2, 3].forEach((i) => ($(`#ax${i}`).style.opacity = String(p(t, 8.6 + i * 0.12, 9.0 + i * 0.12) * (1 - gOut))));
+    dots.forEach((o) => {
+      const startY = docTop + o.row * 86 + 40;
+      const k = p(t, 6.3 + o.delay, 7.9 + o.delay, ease.inOutCubic);
+      const [tx, ty] = pt(o.target, VALUES[o.target] / 100);
+      const x = lerp(o.x0, tx, k) + Math.sin(k * Math.PI) * o.bend;
+      const y = lerp(startY, ty, k) - Math.sin(k * Math.PI) * 220;
+      const vis = p(t, 6.2 + o.delay * 0.5, 6.5 + o.delay * 0.5) * (1 - p(t, 8.0 + o.delay, 8.4 + o.delay));
+      style(o.d, { transform: `translate(${x}px, ${y}px) scale(${1 + Math.sin(k * Math.PI) * 0.6})`, opacity: String(vis) });
+    });
+    words($("#s2"), t, { at: 7.2, stagger: 0.08, dur: 0.45, out: 10.3, outDur: 0.25 });
+
+    // 4. Le vrai résultat AcadMatch (10,6 → 14,3 s)
+    const rc = p(t, 10.6, 11.3, ease.outQuint), rcOut = p(t, 14.0, 14.4, ease.inCubic);
+    style($("#realCard"), { opacity: String(rc * (1 - rcOut)), transform: `translateY(${(1 - rc) * 120}px) scale(${0.94 + 0.06 * rc})` });
+    ["#p1", "#p2", "#p3"].forEach((id, i) => {
+      const k = p(t, 11.6 + i * 0.35, 12.1 + i * 0.35, ease.outBack);
+      style($(id), { opacity: String(clamp(k * 1.4) * (1 - rcOut)), transform: `translateX(${(1 - k) * -120}px)` });
+    });
+    words($("#s3"), t, { at: 11.0, stagger: 0.08, dur: 0.45, out: 14.0, outDur: 0.25 });
+
+    // 5. La promesse honnête (14,4 → 16,2 s)
+    // Message clé de la marque : tenu assez longtemps pour être lu (≈ 1,6 s).
+    words($("#k1"), t, { at: 14.35, stagger: 0.05, dur: 0.35, out: 16.0, outDur: 0.2 });
+    words($("#k2"), t, { at: 14.6, stagger: 0.08, dur: 0.35, out: 16.0, outDur: 0.2, rise: 80 });
+
+    end(t);
+  },
+});
+</script>
+</body>
+</html>

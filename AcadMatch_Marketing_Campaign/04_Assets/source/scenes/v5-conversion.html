@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>V5 — Ta licence suffit ?</title>
+<link rel="stylesheet" href="campaign.css">
+<style>
+  #bg { background: radial-gradient(120% 70% at 50% 18%, #133a2b 0%, var(--ink) 55%, var(--ink-deep) 100%); }
+  #hook { padding: 0 72px; }
+  #hook .eyebrow { margin-bottom: 48px; }
+  #phone { left: 180px; top: 560px; }
+  #verdict { width: 860px; left: 110px; top: 610px; }
+  #claim { top: 300px; left: 72px; right: 72px; }
+  .tick { display: flex; align-items: center; gap: 28px; font-size: 52px; font-weight: 700; padding: 34px 44px; border-radius: 34px; background: rgba(255,255,255,0.06); margin-bottom: 26px; width: 936px; }
+  .tick i { width: 64px; height: 64px; border-radius: 50%; background: var(--green); display: grid; place-items: center; font-style: normal; font-size: 38px; flex: none; }
+  #ticks { left: 72px; top: 860px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="layer" id="bg"></div>
+
+  <div class="layer center" id="hook">
+    <div class="chip eyebrow">Étudier en France</div>
+    <div class="display xl" id="h1">Ta licence suffit-elle pour <span class="green">ce master</span>&nbsp;?</div>
+  </div>
+
+  <div class="phone" id="phone"><div class="notch"></div><div class="screen"><img id="shot" src="../../ui/resultat-top.png"></div></div>
+  <img class="card-shot" id="verdict" src="../../ui/resultat-verdict.png">
+  <div class="layer" id="claimWrap"><div class="display md" id="claim" style="position:absolute;text-align:center">Une réponse claire. <span class="green">Et expliquée.</span></div></div>
+
+  <div class="layer" id="ticksWrap">
+    <div class="display md" style="position:absolute;top:560px;left:72px;right:72px;text-align:center" id="t2">Comme un jury, <span class="green">avant le jury.</span></div>
+    <div id="ticks" style="position:absolute">
+      <div class="tick"><i>✓</i>Prérequis officiels vérifiés</div>
+      <div class="tick"><i>✓</i>Tes forces, tes lacunes</div>
+      <div class="tick"><i>✓</i>3 actions concrètes</div>
+      <div class="tick"><i>✓</i>Coûts en euros et FCFA</div>
+    </div>
+  </div>
+</div>
+<script src="runtime.js"></script>
+<script>
+const { p, win, ease, $, $$, style, words } = Studio;
+const end = Studio.endCard({ at: 9.6, title: "Teste ton parcours.<br><span class='green'>C'est gratuit.</span>" });
+Studio.scene({
+  duration: 13.5,
+  render(t) {
+    // 1. Accroche (0 → 2,7 s) : la question que se pose tout candidat.
+    const hookOut = p(t, 2.5, 2.9, ease.inCubic);
+    style($("#hook"), { opacity: String(1 - hookOut), transform: `scale(${1 + hookOut * 0.08})` });
+    style($(".eyebrow"), { opacity: String(p(t, 0.05, 0.4)), transform: `translateY(${(1 - p(t, 0.05, 0.5)) * 30}px)` });
+    words($("#h1"), t, { at: 0.2, stagger: 0.12, dur: 0.55, rise: 110 });
+
+    // 2. Le produit répond (2,6 → 6,3 s) : vrai résultat AcadMatch, score 87/100.
+    const ph = p(t, 2.6, 3.5, ease.outQuint), phOut = p(t, 6.0, 6.4, ease.inCubic);
+    style($("#phone"), {
+      transform: `translateY(${(1 - ph) * 1400 + phOut * 200}px) rotate(${(1 - ph) * 8 - 2}deg) scale(${0.92 + ph * 0.04})`,
+      opacity: String(1 - phOut),
+    });
+    $("#shot").style.transform = `translateY(${-p(t, 3.3, 4.2, ease.inOutCubic) * 120}px)`;
+    const v = p(t, 3.9, 4.5, ease.outBack), vOut = p(t, 6.0, 6.35, ease.inCubic);
+    style($("#verdict"), {
+      transform: `translateY(${(1 - v) * 120 - vOut * 80}px) scale(${0.86 + v * 0.14}) rotate(${(1 - v) * -3}deg)`,
+      opacity: String(Math.min(1, v * 1.4) * (1 - vOut)),
+    });
+    words($("#claim"), t, { at: 4.5, stagger: 0.09, dur: 0.45, out: 6.0 });
+
+    // 3. Ce que l'étudiant obtient (6,3 → 9,6 s) : uniquement des fonctions réelles.
+    words($("#t2"), t, { at: 6.35, stagger: 0.08, dur: 0.45, out: 9.2 });
+    $$(".tick").forEach((el, i) => {
+      const k = p(t, 6.9 + i * 0.32, 7.4 + i * 0.32, ease.outBack), o = 1 - p(t, 9.2, 9.5, ease.inCubic);
+      style(el, { transform: `translateX(${(1 - k) * -160}px)`, opacity: String(Math.min(1, k * 1.3) * o) });
+    });
+
+    // 4. Carte de fin.
+    end(t);
+  },
+});
+</script>
+</body>
+</html>

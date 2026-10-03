@@ -49,3 +49,10 @@ next-env.d.ts
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Campagne vidéo : médias lourds hors du dépôt (régénérables, voir
+# AcadMatch_Marketing_Campaign/04_Assets/source/README.md) ; dossier sauvegardé par OneDrive.
+AcadMatch_Marketing_Campaign/01_Videos_Finales/*.mp4
+AcadMatch_Marketing_Campaign/06_Publication/versions-legeres-whatsapp/*.mp4
+AcadMatch_Marketing_Campaign/04_Assets/audio/*.wav
+AcadMatch_Marketing_Campaign/04_Assets/renders/
