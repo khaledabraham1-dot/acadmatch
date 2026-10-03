@@ -69,25 +69,11 @@ irréprochable, à écrire avec un vrai retour d'expérience.
   100, accessibilité 100, performance 92-94 en mesure simulée ; pages
   statiques (HTML ≈ 14 Ko et CSS ≈ 10 Ko compressés).
 
-## Jour de la mise en ligne (≈ 15 minutes)
+## Jour de la mise en ligne
 
-1. Acheter le domaine, le brancher sur Vercel.
-2. Vercel → Settings → Environment Variables : `NEXT_PUBLIC_SITE_URL` =
-   `https://votre-domaine` (Production), puis redéployer. Canoniques, plan
-   du site, robots et images de partage suivent automatiquement.
-3. Vérifier : `https://votre-domaine/sitemap.xml` et `/robots.txt`
-   affichent bien le nouveau domaine.
-4. **Google Search Console** : ajouter la propriété « Domaine » (validation
-   par enregistrement DNS chez le registraire), puis Sitemaps → soumettre
-   `sitemap.xml`. Inspection d'URL → demander l'indexation de l'accueil, de
-   `/guides` et de `/guides/etudes-en-france/benin`.
-5. **Bing Webmaster Tools** : « Importer depuis Google Search Console »
-   (un clic) ; Bing alimente aussi DuckDuckGo et des assistants IA.
-6. Supabase → Authentication → URL Configuration : mettre le nouveau
-   domaine en Site URL et dans les Redirect URLs (`/**`).
-7. Après 4 à 6 semaines : Search Console → « Signaux Web essentiels » pour
-   les vraies mesures de vitesse sur mobile, et « Performances » pour voir
-   les requêtes qui amènent du trafic (à comparer au tableau ci-dessus).
+Tout est dans **`docs/mise-en-ligne.md`**, la checklist complète du
+lancement : adresse du site (étape 2), Google Search Console et Bing
+(étape 8), suivi de la vitesse réelle et des requêtes (étape 10).
 
 ## Entretien
 
