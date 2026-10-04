@@ -1,0 +1,21 @@
+{
+ "frames": 128,
+ "marks": {
+  "verdict": 12,
+  "actions": 38,
+  "ouvert": 82,
+  "radar": 108
+ },
+ "taps": [
+  {
+   "label": "pourquoi",
+   "frame": 82,
+   "x": 195,
+   "y": 170
+  }
+ ],
+ "viewport": {
+  "width": 390,
+  "height": 844
+ }
+}

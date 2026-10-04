@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>P3 — Tout AcadMatch en 30 secondes</title>
+<link rel="stylesheet" href="studio2.css">
+<style>
+  #rig { position: absolute; inset: 0; }
+  #timer { position: absolute; right: 70px; top: 190px; width: 150px; height: 150px; z-index: 41; }
+  #timer .ring { position: absolute; inset: 0; border-radius: 50%; }
+  #timer .in { position: absolute; inset: 12px; border-radius: 50%; background: #07120d; display: grid; place-items: center; font-family: "Unbounded"; font-weight: 600; font-size: 52px; letter-spacing: -0.04em; }
+  /* Bandeau en verre sombre : le libellé reste lisible même quand le téléphone passe dessous. */
+  #feat { position: absolute; left: 40px; right: 40px; top: 170px; min-height: 190px; padding: 28px 230px 28px 36px; z-index: 40; border-radius: 34px; background: rgba(5,11,8,0.9); border: 2px solid rgba(95,211,159,0.22); backdrop-filter: blur(16px); box-shadow: 0 30px 70px rgba(0,0,0,0.45); }
+  #feat .num { font-family: "Unbounded"; font-size: 28px; color: var(--green-glow); font-weight: 600; margin-bottom: 8px; }
+  #feat .txt { font-family: "Unbounded"; font-weight: 600; font-size: 50px; letter-spacing: -0.045em; line-height: 1.02; }
+  #hook { z-index: 45; padding: 0 72px; }
+  #flash { position: absolute; inset: 0; background: #fff; z-index: 50; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="rig"></div>
+  <div id="feat"><div class="num" id="fnum"></div><div class="txt" id="ftxt"></div></div>
+  <div id="timer"><div class="ring" id="ring"></div><div class="in" id="tnum">30</div></div>
+  <div class="layer center" id="hook"><div class="eyebrow" id="hk0" style="margin-bottom:30px">Démo réelle · aucun montage d'interface</div><div class="display xl" id="hk1">Tout AcadMatch en <span class="g">30 secondes.</span></div></div>
+  <div id="flash"></div>
+</div>
+<script src="clips.js"></script>
+<script src="studio2.js"></script>
+<script>
+const { p, win, ease, $, style, words, clamp, lerp, cam, tap, Clip } = Studio;
+const bg = Studio.livingBg($("#stage"), { colors: ["#0a7d55", "#062a1f", "#0f3a2a", "#03140e"] });
+const ph = Studio.phone($("#rig"), "accueil-exemple", { x: 160, y: 330 });
+const C = (n) => new Clip(ph.clip.img, n);
+// Point (px CSS de l'écran 390) → coordonnées de la scène (pour viser la caméra).
+const S = 720 / 390, OX = 180, OY = 350 + 104;
+const pt = (x, y) => ({ x: OX + x * S, y: OY + y * S });
+
+// Séquences : clip, images jouées, fenêtre (s), libellé, cible de zoom (px CSS) et zoom.
+const SEQ = [
+  { clip: C("accueil-exemple"), from: 1, to: 52, a: 1.9, b: 5.6, n: "01", label: "Essaie avec un exemple, sans compte", tapL: "essayer", zoom: [195, 640, 1.1] },
+  { clip: C("recherche-scores"), from: 22, to: 104, a: 5.6, b: 9.4, n: "02", label: "Formations classées selon ton profil", zoom: [195, 520, 1.15] },
+  { clip: C("resultat-radar"), from: 1, to: 50, a: 9.4, b: 13.4, n: "03", label: "Un verdict et 3 actions", zoom: [195, 420, 1.15] },
+  { clip: C("resultat-radar"), from: 76, to: 128, a: 13.4, b: 16.9, n: "04", label: "Le score expliqué, critère par critère", tapL: "pourquoi", zoom: [195, 460, 1.15] },
+  { clip: C("fiche-formation"), from: 20, to: 62, a: 16.9, b: 20.2, n: "05", label: "Prérequis vérifiés aux sources officielles", zoom: [195, 420, 1.15] },
+  { clip: C("calendrier-rappels"), from: 30, to: 72, a: 20.2, b: 23.4, n: "06", label: "Le calendrier officiel de ton pays", tapL: "ajouter", zoom: [195, 600, 1.15] },
+  { clip: C("guide-fcfa"), from: 26, to: 62, a: 23.4, b: 26.3, n: "07", label: "Les coûts en euros et en FCFA", zoom: [195, 480, 1.2] },
+];
+
+const end = Studio.endCard($("#stage"), { at: 26.3, title: "Ton tour. <span class='g'>Teste avec ton parcours.</span>" });
+
+Studio.scene({
+  duration: 30,
+  render(t) {
+    bg(t);
+    // Accroche (0 → 1,9 s)
+    words($("#hk0"), t, { at: 0.1, stagger: 0.04, dur: 0.35, out: 1.6, outDur: 0.2 });
+    words($("#hk1"), t, { at: 0.25, stagger: 0.09, dur: 0.4, out: 1.65, outDur: 0.2, rise: 100 });
+
+    // Minuteur honnête : il compte la durée de la vidéo.
+    const left = Math.max(0, 30 - t);
+    $("#tnum").textContent = String(Math.ceil(left));
+    $("#ring").style.background = `conic-gradient(var(--green-glow) 0 ${(left / 30) * 100}%, rgba(255,255,255,0.12) 0)`;
+    $("#timer").style.opacity = String(p(t, 1.5, 1.9) * (1 - p(t, 26.0, 26.3)));
+
+    // Séquence courante
+    const i = SEQ.findIndex((s) => t >= s.a && t < s.b);
+    const seq = SEQ[Math.max(0, i === -1 ? (t < SEQ[0].a ? 0 : SEQ.length - 1) : i)];
+    seq.clip.play(t, seq.a, seq.b, seq.from, seq.to, ease.inOutCubic);
+    if (seq.tapL) {
+      const ti = seq.clip.tapInfo(seq.tapL);
+      const when = seq.a + ((ti.frame - seq.from) / (seq.to - seq.from)) * (seq.b - seq.a);
+      tap(ph.screen, t, when, ti.x, ti.y);
+    }
+    $("#fnum").textContent = seq.n;
+    $("#ftxt").textContent = seq.label;
+    const fk = p(t, seq.a + 0.05, seq.a + 0.4, ease.outQuint), fo = 1 - p(t, seq.b - 0.18, seq.b);
+    style($("#feat"), { opacity: String(fk * fo * (t > 1.8 ? 1 : 0)), transform: `translateY(${(1 - fk) * 30}px)`, filter: `blur(${(1 - fk) * 8}px)` });
+
+    // Caméra : entrée du téléphone, puis zoom sur l'élément clé de chaque séquence.
+    const [zx, zy, zs] = seq.zoom;
+    const target = pt(zx, zy);
+    const intro = p(t, 1.5, 2.3, ease.outQuint);
+    const z = win(t, seq.a + 0.4, seq.b - 0.1, 0.9, 0.5);
+    const rx = lerp(540, target.x, z), ry = lerp(1150, target.y, z), rs = lerp(0.9, zs, z);
+    $("#rig").style.transformOrigin = "0 0";
+    $("#rig").style.transform = `translate(${540 - rx * rs}px, ${960 - ry * rs + (1 - intro) * 1400}px) scale(${rs})`;
+    ph.glass.style.backgroundPosition = `${lerp(160, -60, ((t - seq.a) / (seq.b - seq.a)))}% 0`;
+
+    // Transition « whip » à chaque changement : flou de vitesse + éclair très bref.
+    const nearCut = SEQ.slice(1).map((s) => Math.abs(t - s.a)).reduce((m, x) => Math.min(m, x), 9);
+    const wk = clamp(1 - nearCut / 0.14);
+    $("#rig").style.filter = `blur(${wk * 18}px)`;
+    $("#flash").style.opacity = String(wk * 0.12);
+    end(t);
+  },
+});
+</script>
+</body>
+</html>

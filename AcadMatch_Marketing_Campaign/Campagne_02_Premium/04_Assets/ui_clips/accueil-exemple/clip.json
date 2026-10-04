@@ -1,0 +1,18 @@
+{
+ "frames": 66,
+ "marks": {
+  "recherche": 16
+ },
+ "taps": [
+  {
+   "label": "essayer",
+   "frame": 16,
+   "x": 195,
+   "y": 675
+  }
+ ],
+ "viewport": {
+  "width": 390,
+  "height": 844
+ }
+}

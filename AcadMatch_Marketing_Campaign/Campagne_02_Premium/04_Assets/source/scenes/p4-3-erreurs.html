@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>P4 — 3 erreurs qui coûtent une candidature</title>
+<link rel="stylesheet" href="studio2.css">
+<style>
+  #rig { position: absolute; inset: 0; }
+  #hook { padding: 0 72px; z-index: 30; }
+  #hook .three { font-family: "Unbounded"; font-weight: 600; font-size: 420px; line-height: 0.8; letter-spacing: -0.08em; color: var(--red); }
+  .err { position: absolute; left: 0; right: 0; top: 180px; padding: 0 260px 0 72px; z-index: 30; }
+  .err .tag { display: inline-block; padding: 12px 24px; border-radius: 999px; background: rgba(255,107,129,0.16); color: var(--red); font-weight: 800; font-size: 28px; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 22px; }
+  .err .t { font-family: "Unbounded"; font-weight: 600; font-size: 60px; letter-spacing: -0.045em; line-height: 1; position: relative; display: inline-block; }
+  .err .strike { position: absolute; left: -10px; right: -10px; top: 52%; height: 10px; border-radius: 10px; background: var(--red); transform-origin: left; }
+  .fix { position: absolute; left: 72px; right: 72px; top: 490px; z-index: 30; display: flex; align-items: center; gap: 18px; font-size: 40px; font-weight: 800; }
+  .fix i { font-style: normal; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--green); flex: none; }
+  .stamp { position: absolute; right: 80px; top: 190px; width: 150px; height: 150px; border-radius: 50%; border: 10px solid var(--red); color: var(--red); display: grid; place-items: center; font-size: 96px; font-weight: 900; z-index: 31; }
+  .callout { position: absolute; z-index: 32; }
+  #recap { padding: 0 72px; z-index: 30; }
+  .rc { display: flex; align-items: center; gap: 28px; font-family: "Unbounded"; font-weight: 600; font-size: 64px; letter-spacing: -0.04em; margin: 22px 0; }
+  .rc i { font-style: normal; display: grid; place-items: center; width: 92px; height: 92px; border-radius: 50%; background: var(--green); font-family: "Figtree"; font-size: 54px; flex: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="rig"></div>
+
+  <div class="layer center" id="hook"><div class="three" id="h3">3</div><div class="display lg" id="h1">erreurs qui coûtent <span class="r">une candidature.</span></div></div>
+
+  <div class="err" id="e1"><div class="tag">Erreur 1/3</div><br><div class="t">Viser un master sans ses prérequis<div class="strike"></div></div></div>
+  <div class="err" id="e2"><div class="tag">Erreur 2/3</div><br><div class="t">Se caler sur la mauvaise date<div class="strike"></div></div></div>
+  <div class="err" id="e3"><div class="tag">Erreur 3/3</div><br><div class="t">Découvrir le coût trop tard<div class="strike"></div></div></div>
+  <div class="stamp" id="x1">✕</div><div class="stamp" id="x2">✕</div><div class="stamp" id="x3">✕</div>
+
+  <div class="fix" id="f1"><i>✓</i>Tes lacunes et quoi faire, avant de candidater</div>
+  <div class="fix" id="f2"><i>✓</i>Le calendrier officiel de ton pays</div>
+  <div class="fix" id="f3"><i>✓</i>Les coûts réels, en euros et en FCFA</div>
+
+  <div class="label callout" id="c2" style="left:72px;top:1470px">Bénin, rentrée 2027 : <b>dépôt définitif le 15 décembre 2026</b></div>
+  <div class="label callout" id="c3" style="left:72px;top:1470px">Master public, hors UE : <b>3 950 € = 2 591 030 FCFA</b> par an</div>
+
+  <div class="layer center" id="recap"><div class="rc" id="r1"><i>✓</i>Les prérequis</div><div class="rc" id="r2"><i>✓</i>La bonne date</div><div class="rc" id="r3"><i>✓</i>Le vrai coût</div></div>
+</div>
+<script src="clips.js"></script>
+<script src="studio2.js"></script>
+<script>
+const { p, win, ease, $, $$, style, words, clamp, lerp, tap, Clip } = Studio;
+const bg = Studio.livingBg($("#stage"), { colors: ["#0a7d55", "#2a0f16", "#0f3a2a", "#03140e"] });
+const ph = Studio.phone($("#rig"), "resultat-radar", { x: 160, y: 600 });
+const clips = { res: ph.clip, cal: new Clip(ph.clip.img, "calendrier-rappels"), fcfa: new Clip(ph.clip.img, "guide-fcfa") };
+const T_ADD = clips.cal.tapInfo("ajouter");
+const ERR = [[2.3, 9.7], [9.7, 17.1], [17.1, 24.5]];
+const end = Studio.endCard($("#stage"), { at: 26.3, title: "Évite-les. <span class='g'>C'est gratuit.</span>" });
+
+Studio.scene({
+  duration: 30,
+  render(t) {
+    bg(t);
+    // Accroche : un « 3 » rouge géant.
+    const h = p(t, 0.05, 0.45, ease.outBack);
+    style($("#h3"), { transform: `scale(${h})`, opacity: String(clamp(h * 2) * (1 - p(t, 1.9, 2.2))) });
+    words($("#h1"), t, { at: 0.35, stagger: 0.08, dur: 0.4, out: 1.9, outDur: 0.25 });
+
+    ERR.forEach(([a, b], i) => {
+      const n = i + 1;
+      // L'erreur s'affiche, le tampon ✕ tombe, puis elle est barrée : place à la parade.
+      const e = win(t, a, b, 0.4, 0.3);
+      style($(`#e${n}`), { opacity: String(e), transform: `translateY(${(1 - p(t, a, a + 0.5, ease.outQuint)) * 40}px)` });
+      $(`#e${n} .strike`).style.transform = `scaleX(${p(t, a + 1.5, a + 1.9, ease.inOutCubic)})`;
+      const x = p(t, a + 1.0, a + 1.3, ease.outBack);
+      style($(`#x${n}`), { opacity: String(clamp(x * 2) * (1 - p(t, b - 0.3, b))), transform: `scale(${t < a + 1.0 ? 0 : 2 - x}) rotate(${(1 - x) * -25}deg)` });
+      const f = p(t, a + 2.0, a + 2.5, ease.outBack);
+      style($(`#f${n}`), { opacity: String(clamp(f * 1.4) * (1 - p(t, b - 0.3, b))), transform: `translateX(${(1 - f) * -100}px)` });
+    });
+
+    // Le téléphone : la vraie parade pour chaque erreur.
+    const phIn = p(t, 4.1, 4.9, ease.outQuint), phOut = p(t, 24.2, 24.6, ease.inCubic);
+    let y = (1 - phIn) * 1400 + phOut * 1400;
+    if (t < 9.7) clips.res.play(t, 4.4, 9.4, 12, 48, ease.inOutCubic);
+    else if (t < 17.1) { clips.cal.play(t, 11.4, 16.8, 18, 60, ease.inOutCubic); tap(ph.screen, t, 11.4 + ((T_ADD.frame - 18) / 42) * 5.4, T_ADD.x, T_ADD.y); }
+    else clips.fcfa.play(t, 18.8, 24.2, 20, 60, ease.inOutCubic);
+    // Changement d'erreur : le téléphone plonge puis remonte.
+    for (const c of [9.7, 17.1]) y += Math.sin(clamp((t - c + 0.6) / 1.7) * Math.PI) * 1300;
+    style(ph.el, { transform: `translateY(${y}px)` });
+    ph.glass.style.backgroundPosition = `${lerp(160, -60, ((t - 2.3) % 7.4) / 7.4)}% 0`;
+    [["#c2", 13.5, 16.8], ["#c3", 20.8, 24.2]].forEach(([id, a, b]) => {
+      const k = p(t, a, a + 0.5, ease.outBack);
+      style($(id), { opacity: String(clamp(k * 1.4) * (1 - p(t, b - 0.3, b))), transform: `translateY(${(1 - k) * 40}px) scale(${0.92 + 0.08 * k})` });
+    });
+
+    // Récapitulatif.
+    $("#recap").style.opacity = String(win(t, 24.5, 26.2, 0.2, 0.2));
+    ["#r1", "#r2", "#r3"].forEach((id, i) => { const k = p(t, 24.6 + i * 0.25, 25.0 + i * 0.25, ease.outBack); style($(id), { opacity: String(clamp(k * 1.4)), transform: `translateX(${(1 - k) * -120}px)` }); });
+    end(t);
+  },
+});
+</script>
+</body>
+</html>

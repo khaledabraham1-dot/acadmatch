@@ -1,0 +1,20 @@
+{
+ "frames": 110,
+ "marks": {
+  "bouton": 36,
+  "ajoute": 46,
+  "rappels": 86
+ },
+ "taps": [
+  {
+   "label": "ajouter",
+   "frame": 46,
+   "x": 186,
+   "y": 580
+  }
+ ],
+ "viewport": {
+  "width": 390,
+  "height": 844
+ }
+}

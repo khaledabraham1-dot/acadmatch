@@ -1,0 +1,53 @@
+{
+  "01_AcadMatch_Aicha_voix": { "title": "01 — Aïcha (voix Vivienne)", "angle": "Storytelling · voix synchronisée", "shots": [
+    { "t": 1.0, "name": "Aïcha", "desc": "Prénom géant ; sous-titre synchronisé." },
+    { "t": 2.0, "name": "Cotonou", "desc": "Lieu et coordonnées réelles." },
+    { "t": 3.6, "name": "Le rêve", "desc": "Arc de vol Cotonou → France." },
+    { "t": 5.4, "name": "Mars", "desc": "Le ruban des mois s'arrête sur mars." },
+    { "t": 6.9, "name": "Le retour", "desc": "Rewind vers décembre, en rouge." },
+    { "t": 9.9, "name": "15", "desc": "Le 15 s'abat sur « quinze »." },
+    { "t": 11.8, "name": "Le bon calendrier", "desc": "Vraie carte officielle Campus France Bénin dans AcadMatch." },
+    { "t": 14.2, "name": "Les rappels", "desc": "Vrai clic « Ajouter » → rappels datés." },
+    { "t": 17.0, "name": "Fin", "desc": "« Le bon calendrier, pour ton pays. »" } ] },
+  "02_AcadMatch_Avant-Apres": { "title": "02 — Avant / Après", "angle": "Comparaison · écran partagé", "shots": [
+    { "t": 1.3, "name": "L'accroche", "desc": "« Choisir sa formation en France… avant et après AcadMatch »." },
+    { "t": 5.8, "name": "Trouver", "desc": "Onglets à l'infini / un profil en 3 étapes (vrai clic Exemple)." },
+    { "t": 11.0, "name": "Comprendre", "desc": "« Ma licence suffit ? » / verdict réel 87/100." },
+    { "t": 16.5, "name": "Se préparer", "desc": "Des doutes / 3 actions concrètes réelles." },
+    { "t": 22.0, "name": "La date", "desc": "« mars ? » au hasard / calendrier officiel + Ajouter." },
+    { "t": 25.4, "name": "La bascule", "desc": "Le côté « après » prend tout l'écran." },
+    { "t": 28.0, "name": "Fin", "desc": "« Choisis avec des preuves. »" } ] },
+  "03_AcadMatch_Demo-30-secondes": { "title": "03 — Tout AcadMatch en 30 secondes", "angle": "Démo produit spectaculaire", "shots": [
+    { "t": 1.0, "name": "L'accroche", "desc": "« Tout AcadMatch en 30 secondes » — démo réelle." },
+    { "t": 3.6, "name": "01 Exemple", "desc": "Vrai clic « Essayer un exemple »." },
+    { "t": 7.8, "name": "02 Recherche", "desc": "Formations classées selon le profil." },
+    { "t": 11.6, "name": "03 Verdict", "desc": "Verdict et 3 actions." },
+    { "t": 15.4, "name": "04 Radar", "desc": "Vrai clic « Pourquoi ce score » → radar." },
+    { "t": 18.8, "name": "05 Prérequis", "desc": "Fiche vérifiée aux sources officielles." },
+    { "t": 22.0, "name": "06 Calendrier", "desc": "Calendrier officiel + vrai clic « Ajouter »." },
+    { "t": 25.0, "name": "07 FCFA", "desc": "Coûts en euros et en FCFA." },
+    { "t": 28.0, "name": "Fin", "desc": "« Ton tour. Teste avec ton parcours. »" } ] },
+  "04_AcadMatch_3-erreurs": { "title": "04 — 3 erreurs qui coûtent une candidature", "angle": "Problème → solution", "shots": [
+    { "t": 1.0, "name": "L'accroche", "desc": "Un « 3 » rouge géant." },
+    { "t": 7.5, "name": "Erreur 1", "desc": "Sans les prérequis → vraies actions." },
+    { "t": 14.5, "name": "Erreur 2", "desc": "Mauvaise date → calendrier officiel (15 décembre 2026)." },
+    { "t": 22.5, "name": "Erreur 3", "desc": "Coût découvert trop tard → 3 950 € = 2 591 030 FCFA." },
+    { "t": 25.5, "name": "Récapitulatif", "desc": "Prérequis · bonne date · vrai coût." },
+    { "t": 28.0, "name": "Fin", "desc": "« Évite-les. C'est gratuit. »" } ] },
+  "05_AcadMatch_POV-matieres": { "title": "05 — POV : tu tapes tes matières", "angle": "Format social nerveux", "shots": [
+    { "t": 0.8, "name": "POV", "desc": "« POV : tu tapes tes matières… »" },
+    { "t": 2.6, "name": "Algorithmique", "desc": "Vraie saisie ; le mot s'abat à l'« Entrée »." },
+    { "t": 6.3, "name": "4 matières", "desc": "Pastilles réelles, avertissement de fiabilité qui change." },
+    { "t": 9.6, "name": "L'aperçu", "desc": "Vrai aperçu provisoire des formations." },
+    { "t": 12.6, "name": "Le score", "desc": "Zoom sur le vrai score 87/100." },
+    { "t": 16.5, "name": "Fin", "desc": "« Ton tour. Tape tes matières. »" } ] },
+  "06_AcadMatch_Manifeste": { "title": "06 — Manifeste", "angle": "Film de marque · voix off", "shots": [
+    { "t": 2.8, "name": "Le pari", "desc": "Roulette de vraies formations." },
+    { "t": 6.3, "name": "Prérequis réels", "desc": "Vraie fiche, écran incliné en 3D." },
+    { "t": 9.4, "name": "Parcours unique", "desc": "Constellation de matières." },
+    { "t": 12.6, "name": "La comparaison", "desc": "Formation et parcours se superposent ; sources officielles." },
+    { "t": 14.6, "name": "Le score", "desc": "Vrai radar." },
+    { "t": 16.4, "name": "Les actions", "desc": "Vraies actions." },
+    { "t": 19.4, "name": "La clarté", "desc": "Le verdict devient net sur « clarté »." },
+    { "t": 23.5, "name": "Fin", "desc": "« Choisis avec des preuves. »" } ] }
+}

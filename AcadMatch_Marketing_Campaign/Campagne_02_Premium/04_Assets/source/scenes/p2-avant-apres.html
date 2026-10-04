@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>P2 — Avant / Après</title>
+<link rel="stylesheet" href="studio2.css">
+<style>
+  #top, #bot { position: absolute; left: 0; right: 0; overflow: hidden; }
+  #top { top: 0; height: 960px; background: #15181a; }
+  #bot { top: 960px; height: 960px; }
+  #top .noise { position: absolute; inset: 0; background: radial-gradient(80% 70% at 50% 50%, #23282a, #101213); }
+  .side-label { position: absolute; left: 72px; padding: 14px 26px; border-radius: 999px; font-size: 28px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; z-index: 5; }
+  #lt { top: 230px; background: rgba(255,255,255,0.08); color: #9aa3a0; }
+  #lb { top: 60px; background: var(--green); color: #fff; }
+  #divider { position: absolute; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, transparent, var(--green-glow), transparent); box-shadow: 0 0 30px 8px rgba(95,211,159,0.55); z-index: 20; }
+  .beat-title { position: absolute; left: 72px; right: 72px; text-align: center; z-index: 6; }
+  .grey { color: #b9c1be; }
+  /* Avant : onglets, questions, post-it, calendrier flou */
+  .tabbar { position: absolute; left: 60px; right: 60px; top: 430px; height: 90px; display: flex; gap: 6px; }
+  .tab { flex: 1; min-width: 0; height: 90px; border-radius: 18px 18px 0 0; background: #2b3133; color: #9aa3a0; font-size: 22px; font-weight: 700; padding: 0 14px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; }
+  .q { position: absolute; font-family: "Unbounded"; font-weight: 600; color: #6b7471; }
+  .note { position: absolute; width: 330px; padding: 30px; border-radius: 10px; background: #e8e2c8; color: #3a3a30; font-size: 32px; font-weight: 700; transform-origin: 50% 0; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+  .note s { text-decoration-color: #c44; text-decoration-thickness: 5px; }
+  .fuzzy { position: absolute; left: 290px; top: 420px; width: 500px; padding: 34px; border-radius: 26px; background: #22282a; text-align: center; }
+  .fuzzy .m { font-family: "Unbounded"; font-size: 84px; color: #a8b0ad; }
+  .fuzzy .s { font-size: 34px; color: #7d8784; margin-top: 10px; font-weight: 700; }
+  #phoneWrap { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; }
+  #full { position: absolute; inset: 0; z-index: 30; pointer-events: none; background: radial-gradient(90% 60% at 50% 45%, #0f3a2a, #050b08 75%); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="top">
+    <div class="noise"></div>
+    <div class="side-label" id="lt">Avant</div>
+    <div class="beat-title display md grey" id="h1" style="top:430px">Choisir sa formation <span style="color:#fff">en France…</span></div>
+    <div class="layer" id="a1">
+      <div class="tabbar" id="tabs"></div>
+      <div class="beat-title display sm grey" id="a1t" style="top:600px">Onglets à l'infini.</div>
+    </div>
+    <div class="layer" id="a2">
+      <div class="q" style="left:120px;top:400px;font-size:150px">?</div>
+      <div class="q" style="left:820px;top:360px;font-size:110px">?</div>
+      <div class="q" style="left:470px;top:700px;font-size:90px">?</div>
+      <div class="beat-title display sm grey" id="a2t" style="top:470px">« Ma licence suffit&nbsp;? »</div>
+    </div>
+    <div class="layer" id="a3">
+      <div class="note" id="n1" style="left:110px;top:400px;transform:rotate(-6deg)">Prérequis : <s>à vérifier</s></div>
+      <div class="note" id="n2" style="left:620px;top:440px;transform:rotate(5deg)">Je verrai <s>plus tard</s></div>
+      <div class="beat-title display sm grey" id="a3t" style="top:700px">Des doutes, pas un plan.</div>
+    </div>
+    <div class="layer" id="a4">
+      <div class="fuzzy" id="fz"><div class="m">mars&nbsp;?</div><div class="s">« Je crois que j'ai le temps »</div></div>
+      <div class="beat-title display sm grey" id="a4t" style="top:740px">La date ? <span style="color:#ff8a8a">Au hasard.</span></div>
+    </div>
+  </div>
+
+  <div id="bot">
+    <div class="side-label" id="lb">Avec AcadMatch</div>
+    <div id="phoneWrap"></div>
+    <div class="beat-title display md" id="h2" style="top:380px">…avant et après <span class="g">AcadMatch.</span></div>
+    <div class="label abs" id="b1" style="left:72px;top:330px;max-width:430px">Un profil. <b>3 étapes.</b></div>
+    <div class="label abs" id="b2" style="left:72px;top:330px;max-width:430px">Un verdict <b>clair et expliqué.</b></div>
+    <div class="label abs" id="b3" style="left:72px;top:330px;max-width:430px"><b>3 actions</b> concrètes à mener.</div>
+    <div class="label abs" id="b4" style="left:72px;top:330px;max-width:430px">Le calendrier <b>officiel de ton pays.</b></div>
+  </div>
+
+  <div id="divider"></div>
+  <div id="full" class="layer center"><div class="display lg" id="fullT" style="padding:0 72px">Choisis le côté <span class="g">clair.</span></div></div>
+</div>
+<script src="clips.js"></script>
+<script src="studio2.js"></script>
+<script>
+const { p, win, ease, $, $$, style, words, clamp, lerp, cam, tap, Clip } = Studio;
+const bg = Studio.livingBg($("#bot"), { colors: ["#0a7d55", "#062a1f", "#0f3a2a", "#03140e"], grid: false });
+
+// Avant : des onglets qui se multiplient (recherches réelles des étudiants).
+const TABS = ["master france étranger", "campus france bénin", "prérequis master", "mon master ?", "équivalence diplôme", "procédure dap", "coût études fcfa", "visa ressources", "ecandidat", "parcoursup étranger", "master belgique", "forum étudiants"];
+$("#tabs").innerHTML = TABS.map((x) => `<div class="tab">${x}</div>`).join("");
+const tabEls = $$(".tab");
+
+// Avec AcadMatch : un téléphone (la vraie interface) qui change de clip à chaque temps fort.
+const ph = Studio.phone($("#phoneWrap"), "profil-exemple", { x: 592, y: 60 });
+ph.el.style.transformOrigin = "0 0";
+ph.el.style.transform = "scale(0.55)";
+const clips = { exemple: ph.clip, resultat: new Clip(ph.clip.img, "resultat-radar"), cal: new Clip(ph.clip.img, "calendrier-rappels") };
+const T_EX = clips.exemple.tapInfo("exemple"), T_ADD = clips.cal.tapInfo("ajouter");
+
+const end = Studio.endCard($("#stage"), { at: 26.0, title: "Choisis avec <span class='g'>des preuves.</span>" });
+const BEATS = [[2.4, 8.0], [8.0, 13.5], [13.5, 19.0], [19.0, 24.6]];
+
+Studio.scene({
+  duration: 30,
+  render(t) {
+    bg(t);
+    // Ouverture : la ligne de partage s'ouvre depuis le centre.
+    const open = p(t, 0.2, 1.0, ease.outExpo);
+    const up = p(t, 24.6, 25.4, ease.inOutExpo); // le côté « après » prend tout l'écran
+    const split = lerp(960, 0, up);
+    $("#top").style.height = `${split}px`;
+    $("#bot").style.top = `${split}px`;
+    $("#bot").style.height = `${1920 - split}px`;
+    style($("#divider"), { top: `${split - 3}px`, transform: `scaleX(${open})`, opacity: String(1 - up) });
+    $("#lt").style.opacity = $("#lb").style.opacity = String(p(t, 0.6, 1.0));
+
+    // Avant (en haut) : 4 temps forts, gris, légèrement instables.
+    const jitter = (k) => `translate(${Math.sin(t * 13 + k) * 3}px, ${Math.cos(t * 11 + k) * 3}px)`;
+    ["#a1", "#a2", "#a3", "#a4"].forEach((id, i) => {
+      const [a, b] = BEATS[i];
+      style($(id), { opacity: String(win(t, a, b, 0.4, 0.35)), transform: jitter(i) });
+    });
+    tabEls.forEach((el, i) => { const k = p(t, 2.5 + i * 0.22, 2.8 + i * 0.22, ease.outBack); el.style.display = k > 0 ? "flex" : "none"; el.style.transform = `translateY(${(1 - k) * 40}px)`; });
+    words($("#a1t"), t, { at: 3.2, stagger: 0.08, dur: 0.4, out: 7.6 });
+    words($("#a2t"), t, { at: 8.4, stagger: 0.1, dur: 0.4, out: 13.1 });
+    ["#n1", "#n2"].forEach((id, i) => { const k = p(t, 13.8 + i * 0.4, 14.3 + i * 0.4, ease.outBack); $(id).style.opacity = String(clamp(k * 1.3)); $(id).style.marginTop = `${(1 - k) * -60}px`; });
+    words($("#a3t"), t, { at: 14.6, stagger: 0.08, dur: 0.4, out: 18.6 });
+    $("#fz").style.filter = `blur(${2 + Math.sin(t * 4) * 2}px)`;
+    words($("#a4t"), t, { at: 19.6, stagger: 0.09, dur: 0.4, out: 24.2 });
+
+    // Avec AcadMatch (en bas) : vraie interface, une étape par temps fort.
+    if (t < 8.0) {
+      clips.exemple.play(t, 2.6, 7.6, 1, clips.exemple.frames, ease.inOutCubic);
+      tap(ph.screen, t, 2.6 + (T_EX.frame / clips.exemple.frames) * 5.0, T_EX.x, T_EX.y);
+    } else if (t < 13.5) clips.resultat.play(t, 8.1, 13.2, 1, 24, ease.inOutCubic);
+    else if (t < 19.0) clips.resultat.play(t, 13.6, 18.6, 24, 60, ease.inOutCubic);
+    else {
+      clips.cal.play(t, 19.1, 24.4, 20, 90, ease.inOutCubic);
+      tap(ph.screen, t, 19.1 + ((T_ADD.frame - 20) / 70) * 5.3, T_ADD.x, T_ADD.y);
+    }
+    const pin = p(t, 2.0, 2.9, ease.outQuint);
+    words($("#h1"), t, { at: 0.3, stagger: 0.07, dur: 0.4, out: 2.2, outDur: 0.2 });
+    words($("#h2"), t, { at: 0.9, stagger: 0.08, dur: 0.4, out: 2.2, outDur: 0.2 });
+    ph.el.style.transform = `translate(${(1 - pin) * 600}px, 0) scale(0.55)`;
+    ph.el.style.opacity = String(1 - p(t, 24.5, 24.9));
+    ph.glass.style.backgroundPosition = `${lerp(160, -60, (t % 5.5) / 5.5)}% 0`;
+    ["#b1", "#b2", "#b3", "#b4"].forEach((id, i) => {
+      const [a, b] = BEATS[i];
+      const k = p(t, a + 0.3, a + 0.8, ease.outBack), o = 1 - p(t, b - 0.35, b);
+      style($(id), { opacity: String(clamp(k * 1.4) * o), transform: `translateX(${(1 - k) * -80}px)` });
+    });
+
+    // Bascule finale.
+    $("#full").style.opacity = String(win(t, 25.0, 26.0, 0.3, 0.2));
+    words($("#fullT"), t, { at: 25.05, stagger: 0.07, dur: 0.35, out: 25.8, outDur: 0.15 });
+    end(t);
+  },
+});
+</script>
+</body>
+</html>

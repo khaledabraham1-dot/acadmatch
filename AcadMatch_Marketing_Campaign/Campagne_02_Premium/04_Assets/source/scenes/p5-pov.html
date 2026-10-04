@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>P5 — POV : tu tapes tes matières</title>
+<link rel="stylesheet" href="studio2.css">
+<style>
+  #rig { position: absolute; inset: 0; z-index: 10; }
+  /* Le mot saisi s'abat devant le téléphone, dans le tiers inférieur (zone sûre). */
+  .slam { position: absolute; left: 0; right: 0; text-align: center; font-family: "Unbounded"; font-weight: 600; letter-spacing: -0.06em; text-transform: uppercase; line-height: 0.88; z-index: 25; color: #fff; text-shadow: 0 0 0 transparent, 0 18px 50px rgba(0,0,0,0.75), 0 0 60px rgba(95,211,159,0.6); white-space: nowrap; }
+  #pov { left: 72px; right: 72px; top: 210px; z-index: 30; }
+  #pov .k { display: inline-block; padding: 10px 22px; border-radius: 14px; background: #fff; color: #050b08; font-family: "Unbounded"; font-weight: 600; font-size: 44px; margin-right: 14px; }
+  #flash { position: absolute; inset: 0; background: var(--green-glow); mix-blend-mode: screen; z-index: 40; pointer-events: none; }
+  #big { position: absolute; left: 0; right: 0; top: 1240px; text-align: center; z-index: 30; }
+  #big .n { font-family: "Unbounded"; font-weight: 600; font-size: 240px; letter-spacing: -0.07em; line-height: 0.85; text-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+  #big .s { font-size: 40px; font-weight: 800; color: var(--green-glow); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="slam" id="w0" style="top:1220px;font-size:96px">Algorithmique</div>
+  <div class="slam" id="w1" style="top:1220px;font-size:104px">Bases de<br>données</div>
+  <div class="slam" id="w2" style="top:1220px;font-size:110px">Statistiques</div>
+  <div class="slam" id="w3" style="top:1220px;font-size:96px">Programmation<br>orientée objet</div>
+  <div id="rig"></div>
+  <div class="abs" id="pov"><span class="k">POV</span><span class="display sm" id="povT">tu tapes tes matières…</span></div>
+  <div id="flash"></div>
+</div>
+<script src="clips.js"></script>
+<script src="studio2.js"></script>
+<script>
+const { p, win, ease, $, style, words, clamp, lerp, count, Clip } = Studio;
+const bg = Studio.livingBg($("#stage"), { colors: ["#0a7d55", "#062a1f", "#14553d", "#03140e"] });
+const ph = Studio.phone($("#rig"), "profil-saisie", { x: 160, y: 380 });
+const res = new Clip(ph.clip.img, "resultat-radar");
+// Les 4 « Entrée » réelles de la saisie (images du clip) → instants dans la vidéo.
+const A = 1.3, B = 8.0, F = ph.clip.frames;
+const ENTER = ["Algorithmique", "Bases de données", "Statistiques", "Programmation orientée objet"].map((k) => A + ((ph.clip.mark(k) - 1) / (107 - 1)) * (B - A));
+window.__ENTER = ENTER;
+const end = Studio.endCard($("#stage"), { at: 14.6, title: "Ton tour. <span class='g'>Tape tes matières.</span>" });
+
+Studio.scene({
+  duration: 18.5,
+  render(t) {
+    bg(t);
+    words($("#povT"), t, { at: 0.15, stagger: 0.06, dur: 0.3, out: 10.6 });
+    $("#pov").style.opacity = String(p(t, 0.05, 0.25) * (1 - p(t, 10.6, 10.9)));
+
+    // Saisie réelle, puis aperçu, puis vrai résultat.
+    if (t < B) ph.clip.play(t, A, B, 1, 107);
+    else if (t < 11.0) ph.clip.play(t, B, 10.6, 107, F, ease.inOutCubic);
+    else res.play(t, 11.0, 14.3, 1, 14, ease.outCubic);
+
+    // À chaque « Entrée » : le mot s'abat en géant derrière le téléphone, éclair, coup de zoom.
+    let punch = 0;
+    ENTER.forEach((at, i) => {
+      const k = p(t, at - 0.02, at + 0.18, ease.outBack), o = 1 - p(t, at + 0.9, at + 1.3);
+      style($(`#w${i}`), { opacity: String(clamp(k * 1.5) * o), transform: `scale(${1.25 - 0.25 * k}) translateY(${(1 - o) * -60}px)` });
+      punch = Math.max(punch, 1 - clamp((t - at) / 0.22) - (t < at ? 1 : 0));
+    });
+    const cut = Math.max(punch, 1 - clamp(Math.abs(t - 11.0) / 0.18));
+    $("#flash").style.opacity = String(Math.max(0, cut) * 0.25);
+
+    // Caméra nerveuse : zooms courts sur chaque matière, puis sur l'aperçu, puis sur le score.
+    const intro = p(t, 0.3, 1.2, ease.outQuint);
+    let s = 0.86 + Math.max(0, punch) * 0.07, ty = (1 - intro) * 1300;
+    if (t >= B) s = lerp(0.86, 1.05, p(t, B, 9.5, ease.inOutCubic));
+    if (t >= 11.0) s = lerp(1.05, 1.35, p(t, 11.0, 12.2, ease.outCubic));
+    const shake = Math.max(0, punch) * 10;
+    // La secousse et le zoom restent modérés : le mot doit rester entier à l'écran.
+    $("#rig").style.transformOrigin = "540px 1000px";
+    // Sur le résultat, la caméra vise le vrai score (87/100) au lieu de le recopier.
+    const scoreFocus = t >= 11.0 ? p(t, 11.0, 12.2, ease.outCubic) : 0;
+    $("#rig").style.transform = `translate(${Math.sin(t * 70) * shake}px, ${ty - scoreFocus * 60}px) scale(${s}) rotate(${Math.sin(t * 2) * 1.2 * (1 - scoreFocus)}deg)`;
+    $("#rig").style.filter = `blur(${Math.max(0, cut) * 10}px)`;
+    $("#rig").style.opacity = String(1 - p(t, 14.0, 14.4));
+
+    end(t);
+  },
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+ "frames": 48,
+ "marks": {
+  "rempli": 10
+ },
+ "taps": [
+  {
+   "label": "exemple",
+   "frame": 10,
+   "x": 180,
+   "y": 326
+  }
+ ],
+ "viewport": {
+  "width": 390,
+  "height": 844
+ }
+}
