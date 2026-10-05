@@ -73,7 +73,12 @@ maîtriser le Machine Learning qu'un master va justement lui apprendre.
     UCLouvain gestion (conditions dans un PDF), ULB droit, UNamur
     mathématiques, EHESP, ULiège science politique, Sciences Po PSIA.
   Le 2026-10-05, la deuxième vague (6 masters) a toutes ses compétences
-  d'entrée sourcées sur Mon Master : 45 fiches sur 54.
+  d'entrée sourcées sur Mon Master : 45 fiches sur 54 ; la troisième (4
+  masters, 2 licences via la grille Parcoursup) aussi : 51 fiches sur 60.
+- **Pas de nouveau domaine pour une seule fiche** : un domaine ajouté à
+  `DOMAINS` plafonne ses étudiants sur toutes les fiches des autres domaines.
+  Le master de plantes tropicales (Montpellier) reste en « Biologie & Santé »
+  tant que le catalogue n'a pas 3 ou 4 fiches d'agronomie.
 - **Domaine exclu** : quand une formation refuse explicitement un domaine
   (ex. « toutes licences hors gestion / management »), le déclarer dans
   `excludes` de l'exigence « domaine » — ne pas se contenter du libellé :

@@ -37,12 +37,18 @@ MM = {
  "f-master-sante-publique-bordeaux": ["1602011SNX7E"],
  "f-m1-genie-civil-grenoble": ["1603437S284P"],
  "f-master-securite-informatique-amu": ["1800865R846R"],
+ # Troisième vague (2026-10-05) — Paris 8 : la ligne en présentiel (formation initiale), pas celle de l'IED.
+ "f-master-droit-public-paris8": ["1501643W54PM"],
+ "f-master-droit-developpement-paris-cite": ["1900232C4THI"],
+ "f-master-droit-affaires-lorraine": ["1800137ZXEIA"],
+ "f-master-plantes-tropicales-montpellier": ["1501396CJQK5"],
 }
 PS = {
  "f-but-info-nantes": "5482", "f-licence-droit-bordeaux": "26330", "f-licence-eco-gestion-amu": "12528",
  "f-licence-eco-gestion-tse": "4138", "f-licence-info-paris-saclay": "27930", "f-licence-info-sorbonne": "47331",
  "f-licence-info-toulouse": "4188", "f-licence-maths-rennes": "19305", "f-licence-physique-montpellier": "31260",
  "f-licence-science-politique-lille": "20949", "f-licence-sciences-vie-lorraine": "42987", "f-licence-spi-strasbourg": "8059",
+ "f-licence-aes-lille": "20946", "f-licence-gestion-iaelyon": "39677",
 }
 out=[]
 for fid, ids in MM.items():

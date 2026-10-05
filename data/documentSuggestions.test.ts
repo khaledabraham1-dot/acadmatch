@@ -57,6 +57,10 @@ describe("documentSuggestionFor", () => {
       "f-master-sante-publique-bordeaux",
       "f-m1-genie-civil-grenoble",
       "f-master-securite-informatique-amu",
+      "f-master-droit-public-paris8",
+      "f-master-droit-developpement-paris-cite",
+      "f-master-droit-affaires-lorraine",
+      "f-master-plantes-tropicales-montpellier",
     ]);
   });
 });

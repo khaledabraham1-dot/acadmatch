@@ -54,6 +54,12 @@ export type SelectivityData =
 const NOT_ON_PLATFORMS = "Recrutement hors Mon Master et Parcoursup : l'établissement ne publie pas de taux d'admission officiel.";
 
 export const SELECTIVITY: Record<string, SelectivityData> = {
+  "f-master-droit-public-paris8": { kind: "mon-master", session: "2025", recordIds: ["1501643W54PM"], capacity: 20, candidates: 329, offers: 127, fromAbroadCandidates: 35, fromAbroadOffers: 4 },
+  "f-master-droit-developpement-paris-cite": { kind: "mon-master", session: "2025", recordIds: ["1900232C4THI"], capacity: 15, candidates: 597, offers: 60, fromAbroadCandidates: 92, fromAbroadOffers: 2 },
+  "f-master-droit-affaires-lorraine": { kind: "mon-master", session: "2025", recordIds: ["1800137ZXEIA"], capacity: 83, candidates: 854, offers: 205, fromAbroadCandidates: 80, fromAbroadOffers: 11 },
+  "f-master-plantes-tropicales-montpellier": { kind: "mon-master", session: "2025", recordIds: ["1501396CJQK5"], capacity: 9, candidates: 162, offers: 20, fromAbroadCandidates: 26, fromAbroadOffers: 1 },
+  "f-licence-aes-lille": { kind: "parcoursup", session: "2025", recordId: "20946", selective: false, capacity: 390, applications: 2875, accessRate: 95, platformUrl: "https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=20946&typeBac=0&originePc=0" },
+  "f-licence-gestion-iaelyon": { kind: "parcoursup", session: "2025", recordId: "39677", selective: false, capacity: 710, applications: 6523, accessRate: 41, platformUrl: "https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=39677&typeBac=0&originePc=0" },
   "f-master-economie-developpement-uca": { kind: "mon-master", session: "2025", recordIds: ["1702186C6ZN4", "1702186C871J", "1702186CFN6R", "1702186CGLJN", "1702186CMT16", "1702186CUGVW"], capacity: 109, candidates: 628, offers: 276, fromAbroadCandidates: 89, fromAbroadOffers: 8 },
   "f-master-mbfa-risques-financiers-rouen": { kind: "mon-master", session: "2025", recordIds: ["1701081BFJK7"], capacity: 70, candidates: 849, offers: 143, fromAbroadCandidates: 120, fromAbroadOffers: 6 },
   "f-master-mae-double-competence-tours": { kind: "mon-master", session: "2025", recordIds: ["1801077WXH4R"], capacity: 20, candidates: 137, offers: 31, fromAbroadCandidates: 25, fromAbroadOffers: 9 },

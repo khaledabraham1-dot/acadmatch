@@ -35,7 +35,8 @@ import type { AcademicItem, Importance, StudyProgram } from "@/types";
  * Biologie & Santé (Nancy, ULB, Sorbonne, Bordeaux, EHESP), puis
  * Sciences politiques (Lille, ULiège, Paris 1, UCLouvain, Sciences Po). Deuxième vague
  * (2026-10-05) : Clermont Auvergne, Rouen, Tours, Bordeaux ISPED, Grenoble
- * Alpes, Aix-Marseille (voir CATALOGUE_WAVE2_AT). Chaque fiche ajoutée
+ * Alpes, Aix-Marseille (voir CATALOGUE_WAVE2_AT). Troisième vague : Paris 8,
+ * Paris Cité, Lorraine, Lille, iaelyon, Montpellier (CATALOGUE_WAVE3_AT). Chaque fiche ajoutée
  * a aussi ses frais sourcés dans data/budget.ts (un test l'impose).
  *
  * Pour toute formation FICTIVE de démonstration ajoutée plus tard (tests,
@@ -107,6 +108,15 @@ const ENTRY_PAGE_RECHECKED_AT = "2026-10-03";
  * compétences d'entrée citent les attendus en commentaire.
  */
 const CATALOGUE_WAVE2_AT = "2026-10-05";
+
+/**
+ * Troisième vague (2026-10-05) : droit public et international (Paris 8, Paris
+ * Cité — droit et politique du développement), droit des affaires (Lorraine),
+ * licences AES (Lille) et gestion (iaelyon), plantes tropicales (Montpellier).
+ * Masters : attendus Mon Master ; licences : grille Parcoursup et attendus
+ * nationaux, relus le même jour.
+ */
+const CATALOGUE_WAVE3_AT = "2026-10-05";
 
 export const FORMATIONS: StudyProgram[] = [
   {
@@ -2466,6 +2476,287 @@ export const FORMATIONS: StudyProgram[] = [
     ],
     source: "https://sciences.univ-amu.fr/fr/formation/masters/master-informatique/parcours-fiabilite-securite-informatique-fsi",
     verifiedAt: CATALOGUE_WAVE2_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-droit-public-paris8",
+    name: "Master Droit public — parcours Droit public interne ou Droit international et européen",
+    institution: { name: "Université Paris 8 Vincennes-Saint-Denis — UFR Droit", city: "Saint-Denis", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Droit",
+    description:
+      "Master de 2 ans formant des juristes de droit public de haut niveau, avec deux parcours : Droit public interne (collectivités territoriales, administrations centrales, autorités indépendantes, commande publique) ou Droit international et européen. Tronc commun : droit public fondamental (dont droit et contentieux européens, théorie du droit), puis droit public spécial mêlant droit interne, européen et international (droit de l'environnement…) ; en M1 du parcours interne, droit constitutionnel et administratif approfondis, avec des TD en partie assurés par des praticiens. Simulation de négociations internationales ou concours de plaidoirie René Cassin ; stage obligatoire de 2 mois en M2, alternance possible en M2.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier (notes de droit public, lettre de motivation dactylographiée, CV) ; les candidats résidant dans un pays à procédure « Études en France » passent par cette procédure. Le même master existe à distance (IED), avec une candidature distincte.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence de droit surtout ; autre licence (AES, science politique) possible avec des connaissances juridiques fondamentales" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Droit",
+        label: "Connaissances et raisonnement juridiques de droit public (concepts, analyse de textes, argumentation, bases de données juridiques)",
+        aliases: ["Sciences politiques"],
+      },
+    ],
+    coreCourses: [
+      course("Droit administratif", "essentielle", ["Droit public", "Contentieux administratif"]),
+      course("Droit constitutionnel", "essentielle", ["Droit public"]),
+      course("Droit européen", "importante", ["Droit de l'Union européenne", "Contentieux européen"]),
+      course("Droit international public", "importante", ["Droit international"]),
+      course("Théorie du droit", "utile", ["Philosophie du droit"]),
+      course("Droit de l'environnement", "utile"),
+    ],
+    // Page officielle (Conditions d'accès) : « connaissances et compétences juridiques générales nécessaires à
+    // un diplôme d'études approfondies en droit public (maîtrise des concepts et notions fondamentales, maîtrise
+    // du raisonnement juridique, capacité d'analyse de textes juridiques, capacité à développer une argumentation
+    // critique…) » ; « maîtriser les différents registres d'expression écrite et orale de la langue française » ;
+    // « compétences élémentaires en langue anglaise ». Mêmes attendus sur Mon Master
+    // (https://monmaster.gouv.fr/formation/0931827F/1501643W54PM/detail).
+    skills: [
+      skill("Droit public", "essentielle", ["Droit administratif", "Droit constitutionnel"]),
+      skill("Raisonnement juridique", "essentielle", ["Analyse juridique", "Commentaire d'arrêt", "Cas pratique"]),
+      skill("Expression écrite et orale", "importante", ["Rédaction", "Expression écrite", "Argumentation"]),
+      skill("Anglais", "utile"),
+    ],
+    source: "https://www.univ-paris8.fr/-Master-Droit-public-interne-M1-M2-",
+    verifiedAt: CATALOGUE_WAVE3_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-droit-developpement-paris-cite",
+    name: "Master Droit international — parcours Droit et politique du développement",
+    institution: { name: "Université Paris Cité — Faculté de Droit, d'Économie et de Gestion", city: "Malakoff", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Droit",
+    description:
+      "Master de 2 ans (120 crédits ECTS) qui applique le droit international aux politiques de développement : normes internationales des rapports entre États de développement inégal, politiques publiques des pays en développement, aide au développement et coopération internationale. M1 de consolidation en droit international (environ 500 heures ; options : droit de l'environnement, droit des étrangers, introduction à la common law, pensée politique contemporaine, politiques de l'Union européenne) ; M2 bi-disciplinaire droit et science politique avec mémoire de recherche. Stage optionnel de 2 mois, possible à l'étranger ou dans une organisation internationale. Débouchés : organisations internationales, ONG, agences d'aide au développement, concours de la fonction publique, doctorat.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier (surtout les notes de licence en droit, notamment de L3) ; les candidats résidant dans un pays à procédure « Études en France » passent par cette procédure. Français niveau C1 exigé.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence de droit ou de science politique ; autre licence de sciences sociales possible avec un bon niveau en droit" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Droit",
+        label: "Bon niveau en droit (public et international), ouverture sur les questions politiques et économiques",
+        aliases: ["Sciences politiques"],
+      },
+    ],
+    coreCourses: [
+      course("Droit international public", "essentielle", ["Droit international"]),
+      course("Droit du développement", "importante", ["Politiques de développement", "Aide au développement"]),
+      course("Science politique", "importante", ["Pensée politique contemporaine", "Relations internationales"]),
+      course("Droit de l'environnement", "utile"),
+      course("Droit des étrangers", "utile"),
+      course("Droit de l'Union européenne", "utile", ["Droit européen"]),
+    ],
+    // Mon Master (https://monmaster.gouv.fr/formation/0755976N/1900232C4THI/detail), attendus : « bon niveau en
+    // droit international et en droit public, ouverture pluridisciplinaire notamment sur la science économique et la
+    // science politique ». Page officielle (Pré-requis) : « un bon niveau en droit », « un niveau convenable en
+    // anglais », « des notes au moins assez bonnes dans les matières d'ouverture » ; français C1.
+    skills: [
+      skill("Droit international", "essentielle", ["Droit international public"]),
+      skill("Droit public", "essentielle", ["Droit administratif", "Droit constitutionnel"]),
+      skill("Science politique", "importante", ["Sciences politiques", "Relations internationales"]),
+      skill("Économie", "utile", ["Sciences économiques", "Économie du développement"]),
+      skill("Anglais", "utile"),
+    ],
+    source:
+      "https://odf.u-paris.fr/fr/offre-de-formation/master-XB/droit-economie-gestion-DEG/droit-international-K5CM44AI/master-droit-international-parcours-droit-et-politique-du-developpement-JT8I9QIT.html",
+    verifiedAt: CATALOGUE_WAVE3_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-droit-affaires-lorraine",
+    name: "Master Droit des affaires",
+    institution: { name: "Université de Lorraine — Faculté de Droit, Sciences économiques et Gestion de Nancy", city: "Nancy", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Droit",
+    description:
+      "Master de 2 ans à fort tronc commun en droit interne, international et européen des affaires. M1 : droit fiscal, droit international privé, droit des sûretés, droit des marchés financiers, propriété industrielle, droit des assurances, puis procédures collectives, droit bancaire, droit de la distribution, droit d'auteur ; ouverture sur la comptabilité et le droit pénal des affaires ; deux matières d'approfondissement par semestre. M2 au choix : droit de l'entreprise et des affaires (DJCE), juriste d'affaires international et européen, ou propriété intellectuelle et technologies de l'information. Nombreux diplômés en poste à l'étranger, notamment au Luxembourg.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : 85 places pour les étudiants de France, de l'UE et assimilés, sur Mon Master (L3 de droit validée en France) ; seulement 4 places pour les autres étudiants étrangers, candidature par la procédure « Études en France », mêmes critères. Test complémentaire ou entretien possible.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence de droit (L3) ; français B2 pour les non-francophones" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Droit",
+        label: "Formation juridique adaptée, avec des connaissances affirmées en droit des affaires, des obligations et fiscal",
+      },
+    ],
+    coreCourses: [
+      course("Droit fiscal", "essentielle", ["Fiscalité", "Droit fiscal des affaires"]),
+      course("Droit international privé", "essentielle"),
+      course("Droit des sûretés", "importante"),
+      course("Droit bancaire", "importante", ["Droit des marchés financiers", "Droit financier"]),
+      course("Droit des procédures collectives", "importante", ["Entreprises en difficulté"]),
+      course("Propriété intellectuelle", "utile", ["Propriété industrielle", "Droit d'auteur"]),
+    ],
+    // Mon Master (https://monmaster.gouv.fr/formation/0542493S/1800137ZXEIA/detail) et brochure officielle,
+    // attendus : « un niveau de compétences et de connaissances affirmés en droit des affaires, droit des
+    // obligations, droit fiscal » ; formation initiale adaptée ; « un niveau de français B2 pour les non
+    // francophones ».
+    skills: [
+      skill("Droit des affaires", "essentielle", ["Droit commercial", "Droit des sociétés"]),
+      skill("Droit des obligations", "essentielle", ["Droit des contrats", "Droit civil"]),
+      skill("Droit fiscal", "importante", ["Fiscalité"]),
+    ],
+    source: "https://fac-droit.univ-lorraine.fr/wp-content/uploads/2026/02/master-droit-affaires-110226.pdf",
+    verifiedAt: CATALOGUE_WAVE3_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-licence-aes-lille",
+    name: "Licence Administration économique et sociale (AES)",
+    institution: { name: "Université de Lille — Faculté des sciences juridiques, politiques et sociales", city: "Lille", country: "France" },
+    level: "Licence 1",
+    goal: "Licence",
+    field: "Économie & Gestion",
+    description:
+      "Licence pluridisciplinaire de 3 ans bâtie sur deux socles, le droit et l'économie, avec des sciences sociales et des unités de découverte en 1re année. L1 généraliste, L2 de consolidation, L3 de spécialisation : administration et gestion des entreprises et ressources humaines, ou administration et économie publique. Stage obligatoire, aide à la réussite, certifications en langues et en informatique ; option journalisme avec l'ESJ Lille. Débouchés dans le privé (banque, assurance, commerce…) comme dans le public (collectivités, secteur sanitaire et social), et poursuite en master.",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    applicationProcedure:
+      "Parcoursup pour les bacheliers (vœux de janvier à mars) ; procédure DAP (« Études en France » dans les pays concernés) pour les candidats hors Union européenne.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Baccalauréat ou titre étranger équivalent" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Économie & Gestion",
+        label: "Intérêt pour les questions économiques, juridiques et sociales",
+        aliases: ["Droit", "Sciences politiques"],
+      },
+    ],
+    coreCourses: [
+      course("Droit", "essentielle", ["Introduction au droit", "Droit constitutionnel", "Droit civil"]),
+      course("Économie", "essentielle", ["Microéconomie", "Macroéconomie", "Introduction à l'économie"]),
+      course("Gestion", "importante", ["Gestion des entreprises", "Comptabilité", "Marketing"]),
+      course("Sciences sociales", "importante", ["Sociologie"]),
+      course("Statistiques", "utile", ["Mathématiques appliquées"]),
+    ],
+    // Parcoursup (https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=20946),
+    // grille : résultats en économie, mathématiques, histoire-géographie et philosophie « Essentiel » ; résultats en
+    // français « Essentiel ». Attendus nationaux AES : expression orale et écrite pour argumenter ; « compétences
+    // mathématiques indispensables à la gestion et à l'économie » ; travail autonome ; intérêt pour les questions
+    // sociétales et une langue étrangère, en particulier l'anglais.
+    skills: [
+      skill("Expression écrite et orale", "essentielle", ["Expression écrite", "Argumentation", "Rédaction"]),
+      skill("Mathématiques", "essentielle", ["Statistiques"]),
+      skill("Sciences économiques et sociales (SES)", "essentielle", ["SES", "Économie"]),
+      skill("Histoire-géographie", "importante", ["Histoire", "Géographie"]),
+      skill("Philosophie", "importante"),
+      skill("Anglais", "utile"),
+    ],
+    source: "https://formation.univ-lille.fr/fr/offre-de-formation/licence-lmd-XA/licence-administration-economique-et-sociale-MG002435.html",
+    verifiedAt: CATALOGUE_WAVE3_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-licence-gestion-iaelyon",
+    name: "Licence Gestion et Management",
+    institution: { name: "Université Jean Moulin Lyon 3 — iaelyon School of Management", city: "Lyon", country: "France" },
+    level: "Licence 1",
+    goal: "Licence",
+    field: "Économie & Gestion",
+    description:
+      "Licence généraliste et exigeante de 3 ans en gestion, à l'iaelyon : fondamentaux du management, de la comptabilité, de la finance, du marketing, de l'économie et du droit, avec une spécialisation progressive et des mineures. Stages obligatoires, échanges internationaux optionnels, tutorat en L1 et L2, accompagnement du Career Center. Elle prépare à la poursuite en master dans toutes les spécialités du management.",
+    requiredLevel: "Baccalauréat",
+    language: "Français",
+    applicationProcedure:
+      "Parcoursup pour les bacheliers (vœux de janvier à mars) ; procédure DAP (« Études en France » dans les pays concernés) pour les candidats hors Union européenne.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Baccalauréat", label: "Baccalauréat ou titre étranger équivalent, avec des résultats très convenables en mathématiques et en culture générale" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Économie & Gestion",
+        label: "Intérêt pour le monde de l'entreprise et les domaines socio-économiques et managériaux",
+        aliases: ["Mathématiques", "Droit", "Sciences politiques"],
+      },
+    ],
+    coreCourses: [
+      course("Management", "essentielle", ["Gestion des organisations"]),
+      course("Comptabilité", "essentielle", ["Comptabilité générale"]),
+      course("Finance", "importante", ["Finance d'entreprise"]),
+      course("Marketing", "importante"),
+      course("Économie", "importante", ["Microéconomie", "Macroéconomie"]),
+      course("Droit", "utile", ["Droit des affaires"]),
+    ],
+    // Parcoursup (https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=39677),
+    // grille : notes de mathématiques de 1re et terminale « Essentiel » ; expression en français, culture générale
+    // (français, histoire-géographie, philosophie) et anglais « Très important ». Conseil de la commission : « des
+    // résultats très convenables, notamment en mathématiques et en culture générale ».
+    skills: [
+      skill("Mathématiques", "essentielle", ["Mathématiques complémentaires", "Mathématiques expertes", "Statistiques"]),
+      skill("Expression écrite et orale", "importante", ["Expression écrite", "Argumentation", "Rédaction"]),
+      skill("Culture générale", "importante", ["Histoire-géographie", "Philosophie", "Histoire"]),
+      skill("Anglais", "importante"),
+    ],
+    source: "https://iae.univ-lyon3.fr/licence-gestion-et-management",
+    verifiedAt: CATALOGUE_WAVE3_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-plantes-tropicales-montpellier",
+    name: "Master Biologie, agrosciences — parcours Biotechnologie et amélioration des plantes tropicales (BAPT)",
+    institution: { name: "Université de Montpellier — Faculté des Sciences (co-accrédité avec l'Institut Agro Montpellier)", city: "Montpellier", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Biologie & Santé",
+    description:
+      "Master de 2 ans (120 crédits ECTS) consacré aux biotechnologies et à l'amélioration des principales plantes vivrières et de rente des milieux tropicaux et méditerranéens, avec un enjeu affiché : soutenir la production agricole des pays du Sud face au réchauffement climatique. M1 : génétique moléculaire végétale, développement des plantes, écophysiologie, nutrition des plantes, interactions plantes-microorganismes, ingénierie métabolique, outils pour l'amélioration des plantes, biostatistiques avec R, bioinformatique, gestion de projet ; stage de 5 mois. M2 en projets de recherche et stage de 6 mois, dans l'environnement scientifique montpelliérain de l'amélioration des plantes tropicales. Promotion d'une dizaine d'étudiants, orientée vers le doctorat et la recherche.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier (résultats en biologie et physiologie végétale, génétique, biologie moléculaire, biotechnologie) ; les candidats résidant dans un pays à procédure « Études en France » passent par cette procédure.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence de sciences de la vie (bac+3) avec biologie et physiologie végétale, génétique, biologie moléculaire et/ou biotechnologie" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Biologie & Santé",
+        label: "Formation en sciences de la vie ou en agronomie, orientée biologie végétale",
+      },
+    ],
+    coreCourses: [
+      course("Génétique moléculaire végétale", "essentielle", ["Génétique", "Génomique", "Amélioration des plantes"]),
+      course("Physiologie végétale", "essentielle", ["Écophysiologie", "Nutrition des plantes", "Biologie végétale", "Développement des plantes"]),
+      course("Biologie moléculaire", "importante", ["Ingénierie métabolique", "Biotechnologie"]),
+      course("Interactions plantes-microorganismes", "importante", ["Microbiologie"]),
+      course("Biostatistiques", "utile", ["Statistiques", "R"]),
+      course("Bioinformatique", "utile"),
+    ],
+    // Mon Master (https://monmaster.gouv.fr/formation/0342490X/1501396CJQK5/detail), attendus : licence en sciences
+    // de la vie « comportant des enseignements en biologie/physiologie végétale, génétique, biologie moléculaire et/ou
+    // biotechnologie », bio-informatique et biostatistique étant des atouts ; anglais (lecture, écriture) ;
+    // communication scientifique et travail en équipe ; « expérience de stage en laboratoire ».
+    skills: [
+      skill("Biologie végétale", "essentielle", ["Physiologie végétale", "Botanique", "Biologie des plantes"]),
+      skill("Génétique", "essentielle", ["Génétique moléculaire", "Génomique"]),
+      skill("Biologie moléculaire", "importante", ["Biotechnologie", "Biochimie"]),
+      skill("Stage en laboratoire", "utile", ["Travaux pratiques", "Expérimentation"]),
+      skill("Bioinformatique", "utile", ["Biostatistiques", "Statistiques"]),
+      skill("Anglais", "utile"),
+    ],
+    source: "https://formations.umontpellier.fr/fr/formations/master-XB/master-biologie-agrosciences-ME147/biotechnologie-et-amelioration-des-plantes-tropicales-bapt-PR445.html",
+    verifiedAt: CATALOGUE_WAVE3_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },
