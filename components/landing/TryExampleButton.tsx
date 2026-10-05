@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { EXAMPLE_STUDENT_PROFILE } from "@/data/example-profile";
 import { saveProfile } from "@/lib/storage";
+import { trackStep } from "@/lib/journey";
 import { Button } from "@/components/ui/Button";
 import { FlaskConical } from "lucide-react";
 
@@ -29,6 +30,7 @@ export function TryExampleButton({
 
   function handleClick() {
     saveProfile(EXAMPLE_STUDENT_PROFILE);
+    trackStep("exemple-essaye");
     router.push(nextHref);
   }
 

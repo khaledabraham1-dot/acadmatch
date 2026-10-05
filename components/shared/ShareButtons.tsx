@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Check, Link2, MessageCircle, Share2 } from "lucide-react";
 import { buildShareUrl, whatsappShareHref } from "@/lib/share";
+import { trackStep } from "@/lib/journey";
 import { cn } from "@/lib/utils";
 
 interface ShareButtonsProps {
@@ -39,6 +40,7 @@ export function ShareButtons({ path, text, className }: ShareButtonsProps) {
   const url = (channel: string) => buildShareUrl(origin, path, channel);
 
   async function handleNativeShare() {
+    trackStep("partage", "partage-natif");
     try {
       await navigator.share({ text, url: url("partage-natif") });
     } catch {
@@ -49,6 +51,7 @@ export function ShareButtons({ path, text, className }: ShareButtonsProps) {
   async function handleCopy() {
     try {
       await navigator.clipboard.writeText(url("lien"));
+      trackStep("partage", "lien");
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     } catch {
@@ -62,6 +65,7 @@ export function ShareButtons({ path, text, className }: ShareButtonsProps) {
         href={whatsappShareHref(text, url("whatsapp"))}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackStep("partage", "whatsapp")}
         className={whatsappClass}
       >
         <MessageCircle className="size-4" aria-hidden />

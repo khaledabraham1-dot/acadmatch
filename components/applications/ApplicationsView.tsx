@@ -1,5 +1,6 @@
 "use client";
 
+import { trackStep } from "@/lib/journey";
 import { useEffect, useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import type { Application } from "@/types";
@@ -35,6 +36,7 @@ export function ApplicationsView() {
   function handleAdd() {
     if (!pickedFormationId) return;
     setApplications(upsertApplication(createApplication(pickedFormationId)));
+    trackStep("candidature-ajoutee");
     setPickedFormationId("");
   }
 

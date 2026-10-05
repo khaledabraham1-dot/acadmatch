@@ -79,6 +79,13 @@ export default function ConfidentialitePage() {
           zéro chaque jour. Nous ne voyons que des chiffres agrégés (pages vues, pays, type d&apos;appareil,
           site d&apos;origine), jamais qui vous êtes ni le contenu de votre profil.
         </p>
+        <p>
+          Nous comptons aussi, de façon anonyme, quelques étapes du parcours (profil enregistré, résultat affiché,
+          relevé importé, candidature ajoutée, outil d&apos;IA utilisé, lien partagé), dans notre base Supabase.
+          Chaque comptage ne contient que le nom de l&apos;étape et le type d&apos;appareil (mobile ou ordinateur) :
+          aucun identifiant, aucun contenu de votre profil, rien n&apos;est écrit sur votre appareil, et deux
+          comptages ne peuvent pas être reliés entre eux.
+        </p>
       </Section>
 
       <Section title="4. Vos avis et vos demandes de formation">

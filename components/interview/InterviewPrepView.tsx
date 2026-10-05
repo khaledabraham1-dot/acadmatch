@@ -1,5 +1,6 @@
 "use client";
 
+import { trackStep } from "@/lib/journey";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -101,6 +102,7 @@ export function InterviewPrepView() {
       setErrorReason(result.reason);
       return;
     }
+    trackStep("ia-utilisee", "entretien");
     savePrep(() => ({
       questions: result.questions,
       language: interviewLanguage(formation),

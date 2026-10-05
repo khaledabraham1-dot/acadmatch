@@ -1,5 +1,6 @@
 "use client";
 
+import { trackStep } from "@/lib/journey";
 import { useId, useState } from "react";
 import Link from "next/link";
 import { FileUp, Loader2, ScanText, ShieldCheck } from "lucide-react";
@@ -75,6 +76,7 @@ export function TranscriptImport({
       }
       const result = data.extraction as TranscriptExtraction;
       setExtraction(result);
+      trackStep("releve-importe");
       // La moyenne est un fait lu sur le document : appliquée d'office (le
       // score se fonde sur les vraies notes), et affichée ci-dessous.
       const average = transcriptAverageFrom(result);

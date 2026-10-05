@@ -18,6 +18,27 @@ function storage(): Storage | null {
   }
 }
 
+/**
+ * Un seul essai d'envoi, sans file d'attente. `keepalive` laisse partir la
+ * requête même si l'étudiant quitte la page juste après.
+ */
+export async function postAnonymousRow(table: string, row: object): Promise<boolean> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !key) return false;
+  try {
+    const response = await fetch(`${url.replace(/\/+$/, "")}/rest/v1/${table}`, {
+      method: "POST",
+      headers: { apikey: key, "Content-Type": "application/json", Prefer: "return=minimal" },
+      body: JSON.stringify(row),
+      keepalive: true,
+    });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
 export function createAnonymousQueue<Row extends object>(table: string, pendingKey: string) {
   function readPending(): Row[] {
     try {
@@ -37,26 +58,10 @@ export function createAnonymousQueue<Row extends object>(table: string, pendingK
     }
   }
 
-  async function postRow(row: Row): Promise<boolean> {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-    if (!url || !key) return false;
-    try {
-      const response = await fetch(`${url.replace(/\/+$/, "")}/rest/v1/${table}`, {
-        method: "POST",
-        headers: { apikey: key, "Content-Type": "application/json", Prefer: "return=minimal" },
-        body: JSON.stringify(row),
-      });
-      return response.ok;
-    } catch {
-      return false;
-    }
-  }
-
   return {
     /** Envoie la ligne ; en cas d'échec, la garde pour un nouvel essai. */
     async send(row: Row): Promise<"sent" | "queued"> {
-      if (await postRow(row)) return "sent";
+      if (await postAnonymousRow(table, row)) return "sent";
       writePending([...readPending(), row]);
       return "queued";
     },
@@ -66,7 +71,7 @@ export function createAnonymousQueue<Row extends object>(table: string, pendingK
       if (pending.length === 0) return;
       const failed: Row[] = [];
       for (const row of pending) {
-        if (!(await postRow(row))) failed.push(row);
+        if (!(await postAnonymousRow(table, row))) failed.push(row);
       }
       writePending(failed);
     },

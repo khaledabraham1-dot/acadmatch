@@ -6,6 +6,8 @@ import { ArrowRight } from "lucide-react";
 import type { StudentProfile } from "@/types";
 import { getFormationById } from "@/data/formations";
 import { loadProfile, saveSelectedFormationId } from "@/lib/storage";
+import { trackStep } from "@/lib/journey";
+import { isExampleProfile } from "@/data/example-profile";
 import { computeCompatibility } from "@/lib/matching/engine";
 import { buildDecisionAid } from "@/lib/matching/explanation";
 import { buildNextSteps, buildVerdict } from "@/lib/matching/nextSteps";
@@ -47,17 +49,23 @@ function parseCompareIds(raw: string | null): string[] {
 export function ResultView() {
   const searchParams = useSearchParams();
   const formationId = searchParams.get("formationId");
-  const compareIds = parseCompareIds(searchParams.get("compare"));
+  const compareParam = searchParams.get("compare");
+  const compareIds = parseCompareIds(compareParam);
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     // localStorage n'existe pas côté serveur : la lecture doit se faire après le montage.
+    const stored = loadProfile();
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setProfile(loadProfile());
+    setProfile(stored);
     setReady(true);
     if (formationId) saveSelectedFormationId(formationId);
-  }, [formationId]);
+    // Le détail distingue un vrai profil du profil exemple, et une analyse d'une comparaison.
+    if (stored && (formationId || parseCompareIds(compareParam).length >= 2)) {
+      trackStep("resultat-vu", `${formationId ? "analyse" : "comparaison"}${isExampleProfile(stored) ? "-exemple" : ""}`);
+    }
+  }, [formationId, compareParam]);
 
   if (!ready) return null;
 

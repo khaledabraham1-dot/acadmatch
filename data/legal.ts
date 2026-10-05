@@ -52,7 +52,7 @@ export const SUBPROCESSORS: Subprocessor[] = [
   },
   {
     name: "Supabase",
-    role: "Comptes et envoi des liens de connexion, projets synchronisés et compteur d'usage de l'IA",
+    role: "Comptes et envoi des liens de connexion, projets synchronisés, compteur d'usage de l'IA, avis et demandes de formation anonymes, comptage anonyme des étapes du parcours",
     location: "Union européenne",
     privacyUrl: "https://supabase.com/privacy",
   },

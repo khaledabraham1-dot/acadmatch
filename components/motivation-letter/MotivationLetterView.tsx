@@ -1,5 +1,6 @@
 "use client";
 
+import { trackStep } from "@/lib/journey";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Loader2, Save, Sparkles } from "lucide-react";
@@ -80,6 +81,7 @@ export function MotivationLetterView() {
     }
     setDraft(result.text);
     setGeneration("idle");
+    trackStep("ia-utilisee", "lettre");
   }
 
   if (!configured) return <AiNotConfiguredNotice featureName="L'assistant de lettre de motivation" />;

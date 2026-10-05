@@ -25,3 +25,12 @@ export const EXAMPLE_STUDENT_PROFILE: StudentProfile = {
   languages: ["Français", "Anglais"],
   academicStanding: "Bons résultats",
 };
+
+/** Vrai si ce profil est encore le profil exemple (mêmes domaine, matières et compétences). */
+export function isExampleProfile(profile: Pick<StudentProfile, "fieldOfStudy" | "courses" | "skills">): boolean {
+  return (
+    profile.fieldOfStudy === EXAMPLE_STUDENT_PROFILE.fieldOfStudy &&
+    profile.courses.map((c) => c.name).join("|") === EXAMPLE_STUDENT_PROFILE.courses.map((c) => c.name).join("|") &&
+    profile.skills.join("|") === EXAMPLE_STUDENT_PROFILE.skills.join("|")
+  );
+}

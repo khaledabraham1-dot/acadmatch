@@ -25,6 +25,7 @@ import {
   type Domain,
 } from "@/data/subjects";
 import { clearProfile, loadProfile, saveProfile } from "@/lib/storage";
+import { trackStep } from "@/lib/journey";
 import {
   RECOMMENDED_COURSES,
   RECOMMENDED_SKILLS,
@@ -194,6 +195,7 @@ export function ProfileForm() {
 
   function goToStep(next: ProfileStep) {
     if (!canOpenStep(next, stepDraft)) return;
+    if (step === 1 && next > 1) trackStep("profil-parcours");
     stepChanged.current = true;
     setStep(next);
   }
@@ -214,6 +216,7 @@ export function ProfileForm() {
     const profile = buildProfile(() => generateId("course"));
 
     saveProfile(profile);
+    trackStep("profil-enregistre", isExampleProfile ? "exemple" : null);
     setHasExistingProfile(true);
 
     const next = safeInternalPath(searchParams.get("next"));
