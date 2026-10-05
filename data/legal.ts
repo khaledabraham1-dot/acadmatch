@@ -10,7 +10,7 @@
  */
 
 /** Date de dernière mise à jour affichée en tête des trois pages (AAAA-MM-JJ). */
-export const LEGAL_UPDATED_AT = "2026-09-30";
+export const LEGAL_UPDATED_AT = "2026-10-05";
 
 export const EDITOR = {
   /** Nom complet de l'éditeur, personne physique (obligatoire avant mise en ligne). */
@@ -78,6 +78,7 @@ export const LOCAL_STORAGE_ITEMS: { key: string; content: string }[] = [
   { key: "acadmatch:budgets", content: "Vos budgets prévisionnels" },
   { key: "acadmatch:visa", content: "Vos réponses au parcours visa (nationalité, pays de résidence)" },
   { key: "acadmatch:feedback", content: "Vos avis sur les résultats en attente d'envoi (réseau coupé), effacés une fois envoyés" },
+  { key: "acadmatch:formation-requests", content: "Vos demandes de formation manquante en attente d'envoi (réseau coupé), effacées une fois envoyées" },
   { key: "acadmatch:sync", content: "La date de vos dernières modifications et le compte auquel elles appartiennent, pour la synchronisation" },
 ];
 

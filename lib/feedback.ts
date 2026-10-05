@@ -13,6 +13,8 @@
  * niveau du profil) accompagne les réponses.
  */
 
+import { createAnonymousQueue } from "@/lib/anonymousInsert";
+
 export type FeedbackHelpfulness = "oui" | "partiellement" | "non";
 export type ScoreFairness = "trop-haut" | "juste" | "trop-bas";
 
@@ -40,8 +42,6 @@ export const FAIRNESS_LABELS: Record<ScoreFairness, string> = {
   "trop-bas": "Trop bas",
 };
 
-const PENDING_KEY = "acadmatch:feedback";
-const MAX_PENDING = 20;
 export const MAX_COMMENT_LENGTH = 1000;
 
 const clip = (value: string | null, max: number) => (value === null ? null : value.trim().slice(0, max) || null);
@@ -63,63 +63,14 @@ export function toFeedbackRow(payload: FeedbackPayload) {
 
 type FeedbackRow = ReturnType<typeof toFeedbackRow>;
 
-function storage(): Storage | null {
-  try {
-    return typeof window === "undefined" ? null : window.localStorage;
-  } catch {
-    return null;
-  }
-}
-
-function readPending(): FeedbackRow[] {
-  try {
-    const parsed = JSON.parse(storage()?.getItem(PENDING_KEY) ?? "[]") as unknown;
-    return Array.isArray(parsed) ? (parsed as FeedbackRow[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-function writePending(rows: FeedbackRow[]) {
-  try {
-    if (rows.length === 0) storage()?.removeItem(PENDING_KEY);
-    else storage()?.setItem(PENDING_KEY, JSON.stringify(rows.slice(-MAX_PENDING)));
-  } catch {
-    // Stockage bloqué : l'avis est perdu, sans gêner l'étudiant.
-  }
-}
-
-async function postRow(row: FeedbackRow): Promise<boolean> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key) return false;
-  try {
-    const response = await fetch(`${url.replace(/\/+$/, "")}/rest/v1/feedback`, {
-      method: "POST",
-      headers: { apikey: key, "Content-Type": "application/json", Prefer: "return=minimal" },
-      body: JSON.stringify(row),
-    });
-    return response.ok;
-  } catch {
-    return false;
-  }
-}
+const queue = createAnonymousQueue<FeedbackRow>("feedback", "acadmatch:feedback");
 
 /** Envoie l'avis ; en cas d'échec, le garde pour un nouvel essai. */
-export async function sendFeedback(payload: FeedbackPayload): Promise<"sent" | "queued"> {
-  const row = toFeedbackRow(payload);
-  if (await postRow(row)) return "sent";
-  writePending([...readPending(), row]);
-  return "queued";
+export function sendFeedback(payload: FeedbackPayload): Promise<"sent" | "queued"> {
+  return queue.send(toFeedbackRow(payload));
 }
 
 /** Renvoie les avis restés en attente (appelé à l'affichage d'un résultat). */
-export async function flushPendingFeedback(): Promise<void> {
-  const pending = readPending();
-  if (pending.length === 0) return;
-  const failed: FeedbackRow[] = [];
-  for (const row of pending) {
-    if (!(await postRow(row))) failed.push(row);
-  }
-  writePending(failed);
+export function flushPendingFeedback(): Promise<void> {
+  return queue.flush();
 }

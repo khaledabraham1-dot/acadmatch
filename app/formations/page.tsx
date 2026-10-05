@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, GraduationCap, MapPin } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
+import { MissingFormationRequest } from "@/components/search/MissingFormationRequest";
 import { Badge } from "@/components/ui/Badge";
 import { LinkButton } from "@/components/ui/Button";
 import { FORMATIONS } from "@/data/formations";
@@ -91,6 +92,8 @@ export default function FormationsPage() {
           </section>
         ))}
       </div>
+
+      <MissingFormationRequest source="catalogue" className="mt-10" />
     </AppShell>
   );
 }

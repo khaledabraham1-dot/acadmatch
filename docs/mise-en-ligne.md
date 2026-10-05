@@ -51,9 +51,9 @@ tes accès à Vercel, Supabase, la console Anthropic et GitHub.
       signaler : le texte de `/confidentialite` doit être corrigé (on ne
       peut pas changer la région d'un projet existant).
 - [ ] Supabase → **Table Editor** : vérifier que les tables `profiles`,
-      `ai_usage`, `workspaces` et `feedback` existent. Sinon, exécuter dans
-      **SQL Editor**, dans l'ordre, les fichiers manquants de
-      `supabase/migrations/` (0001 à 0005).
+      `ai_usage`, `workspaces`, `feedback` et `formation_requests` existent.
+      Sinon, exécuter dans **SQL Editor**, dans l'ordre, les fichiers
+      manquants de `supabase/migrations/` (0001 à 0006).
 - [ ] Table `feedback` : supprimer les lignes de test envoyées pendant le
       développement (les plus anciennes, datées du 1er octobre 2026 dans la
       colonne `created_at`) : la table doit être vide au lancement.

@@ -81,7 +81,7 @@ export default function ConfidentialitePage() {
         </p>
       </Section>
 
-      <Section title="4. Vos avis sur les résultats">
+      <Section title="4. Vos avis et vos demandes de formation">
         <p>
           Si vous répondez à la question « Votre avis » sous un résultat, votre réponse est envoyée de façon{" "}
           <strong>anonyme</strong> : ni nom, ni e-mail, ni compte. Elle est accompagnée seulement de la formation,
@@ -89,6 +89,12 @@ export default function ConfidentialitePage() {
           estimation ou s&apos;appuyait sur votre relevé. Elle sert uniquement à rendre les scores plus justes.
           N&apos;écrivez pas d&apos;information personnelle dans le commentaire : un avis anonyme ne peut pas être
           retrouvé ensuite pour être modifié ou supprimé.
+        </p>
+        <p>
+          De même, si vous signalez une <strong>formation manquante</strong>, votre demande (la formation, et si vous
+          les indiquez l&apos;établissement et le pays) est envoyée de façon anonyme, accompagnée seulement de votre
+          recherche en cours et du domaine, du niveau et du diplôme visé de votre profil. Elle sert uniquement à
+          choisir les prochaines formations ajoutées au catalogue.
         </p>
       </Section>
 
@@ -155,7 +161,7 @@ export default function ConfidentialitePage() {
           </li>
           <li>
             <strong>Intérêt légitime</strong> : sécurité du site, limites d&apos;usage, prévention des abus, mesure
-            d&apos;audience anonyme, amélioration des scores grâce aux avis anonymes.
+            d&apos;audience anonyme, amélioration des scores et du catalogue grâce aux avis et demandes anonymes.
           </li>
           <li>
             <strong>Votre consentement</strong> : transmission d&apos;un document à l&apos;IA, que vous donnez en
@@ -185,7 +191,7 @@ export default function ConfidentialitePage() {
         <ul>
           <li>Documents importés : non conservés par AcadMatch (30 jours au plus chez Anthropic, voir ci-dessus).</li>
           <li>Compte, projet synchronisé et compteur d&apos;usage : jusqu&apos;à la suppression de votre compte.</li>
-          <li>Avis anonymes : conservés tant qu&apos;ils servent à améliorer les scores ; ils ne sont rattachés à personne.</li>
+          <li>Avis et demandes de formation anonymes : conservés tant qu&apos;ils servent à améliorer les scores et le catalogue ; ils ne sont rattachés à personne.</li>
           <li>Données locales : jusqu&apos;à ce que vous les effaciez de votre navigateur.</li>
           <li>Journaux techniques de l&apos;hébergeur (adresse IP, page demandée) : durée courte fixée par Vercel, pour la sécurité.</li>
         </ul>

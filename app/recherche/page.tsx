@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Search as SearchIcon, ArrowRight, Columns2, X } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 import { FormationCard } from "@/components/search/FormationCard";
+import { MissingFormationRequest } from "@/components/search/MissingFormationRequest";
 import { DemoDataBadge } from "@/components/ui/DemoDataBadge";
 import { Input, Select } from "@/components/ui/Field";
 import { Button, LinkButton } from "@/components/ui/Button";
@@ -353,6 +354,14 @@ export default function RecherchePage() {
             </button>
           </div>
         )}
+        {/* key : une recherche sans résultat déplie le formulaire, pré-rempli avec elle. */}
+        <MissingFormationRequest
+          key={filtered.length === 0 ? "vide" : "liste"}
+          source={filtered.length === 0 ? "recherche-vide" : "recherche-liste"}
+          searchQuery={query}
+          defaultOpen={filtered.length === 0}
+          className="mt-2"
+        />
       </div>
 
       {compareIds.length > 0 && (
