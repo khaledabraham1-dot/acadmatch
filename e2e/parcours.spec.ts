@@ -170,3 +170,10 @@ test("calendrier : un résident du Bénin voit le calendrier Campus France offic
   await page.reload();
   await expect(page.getByText("Études en France (Bénin) : Dépôt définitif après corrections")).toBeVisible();
 });
+
+test("l'espace admin renvoie un visiteur non connecté vers la connexion, sans aucune donnée", async ({ page }) => {
+  const response = await page.goto("/admin");
+  await expect(page).toHaveURL(/\/compte\?next=%2Fadmin|\/compte\?next=\/admin/);
+  expect(response?.status()).toBeLessThan(500);
+  await expect(page.getByText("Parcours des visiteurs")).toHaveCount(0);
+});
