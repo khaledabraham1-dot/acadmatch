@@ -27,7 +27,8 @@ describe("calendriers officiels", () => {
     const master = byId("f-master-bioinformatique-bordeaux");
     expect(campaignKeyFor(master, null)).toBe("monmaster");
     expect(campaignKeyFor(master, benin)).toBe("eef-benin");
-    expect(campaignKeyFor(master, senegal)).toBe("eef-generic"); // calendrier du pays non relevé
+    expect(campaignKeyFor(master, senegal)).toBe("eef-senegal");
+    expect(campaignKeyFor(master, { ...senegal, residenceCountry: "Guinée" })).toBe("eef-generic"); // calendrier du pays non relevé
     expect(campaignKeyFor(master, european)).toBe("monmaster"); // citoyen UE : pas de visa ni d'EEF
     expect(campaignKeyFor(byId("f-mosig-grenoble-inp"), benin)).toBe("institution");
   });
@@ -55,6 +56,12 @@ describe("calendriers officiels", () => {
     );
     expect(groups.map((g) => g.key)).toEqual(["monmaster", "institution"]);
     expect(groups[0].formations).toHaveLength(2);
+  });
+
+  it("chaque calendrier Études en France a une date limite principale, et une seule", () => {
+    for (const campaign of Object.values(OFFICIAL_CAMPAIGNS).filter((c) => c.id.startsWith("eef-"))) {
+      expect(campaign.phases.filter((phase) => phase.key)).toHaveLength(1);
+    }
   });
 
   it("chaque calendrier a une source officielle, des dates ISO ordonnées", () => {

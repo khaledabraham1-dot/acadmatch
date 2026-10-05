@@ -27,7 +27,7 @@ Principes :
 
 | Intention | Requêtes observées | Page qui répond |
 |---|---|---|
-| Calendrier Campus France par pays | campus france bénin 2027, campus france bénin calendrier 2026, campus france sénégal date limite, campus france cameroun calendrier | `/guides/etudes-en-france/[pays]` (Bénin aujourd'hui) |
+| Calendrier Campus France par pays | campus france bénin 2027, campus france bénin calendrier 2026, campus france sénégal date limite, campus france cameroun calendrier | `/guides/etudes-en-france/[pays]` (Bénin, Cameroun, Mali, Maroc, Sénégal, Togo) |
 | Procédure Études en France | etudes en france, etudes en france bénin, etudier en france campus france, eef campus france | `/guides/etudes-en-france` |
 | Master pour étranger | master en france pour les étrangers, master en france prix, mon master campus france, admission master | `/guides/master-en-france-etudiant-etranger` |
 | Licence après le bac | étudier en france après le bac, parcoursup étranger, procédure dap, procédure dap campus france | `/guides/licence-en-france-apres-un-bac-etranger` |

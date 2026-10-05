@@ -3,11 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GuideShell, guideMetadata } from "@/components/seo/GuideShell";
 import { Section } from "@/components/seo/PageParts";
-import { OFFICIAL_CAMPAIGNS } from "@/data/campaigns";
+import { CFA_COUNTRIES, OFFICIAL_CAMPAIGNS, type OfficialCampaign } from "@/data/campaigns";
 import { COUNTRY_BUDGET_RULES, FRENCH_NATIONAL_FEES } from "@/data/budget";
 import { formatCalendarDate } from "@/lib/calendar";
 import { eefCountryPages, eefCountryPath, eefCountryTitle, guideBySlug, guidePath, inCountry } from "@/lib/seo/guides";
 import { eurosAndCfa } from "@/lib/seo/money";
+import { formatEuros } from "@/lib/budget";
 import { truncateForMeta } from "@/lib/site";
 
 const guide = guideBySlug("etudes-en-france")!;
@@ -24,16 +25,21 @@ function load(slug: string) {
   return page ? { ...page, campaign: OFFICIAL_CAMPAIGNS[page.campaignId] } : undefined;
 }
 
+/** Date limite principale de dépôt (marquée `key` dans data/campaigns.ts). */
+function mainDeadline(campaign: OfficialCampaign) {
+  return campaign.phases.find((p) => p.key) ?? campaign.phases.find((p) => /définitif/i.test(p.label));
+}
+
 function describe(country: string, intake: number, deadline: string): string {
   return truncateForMeta(
-    `Calendrier officiel Études en France ${country} pour la rentrée ${intake} : ouverture, paiement, dépôt du dossier (${deadline}), entretiens et clôture. Frais et ressources en FCFA.`,
+    `Calendrier officiel Études en France ${country} pour la rentrée ${intake} : dates de dépôt du dossier (${deadline}), paiement, entretiens et réponses.${CFA_COUNTRIES.has(country) ? " Frais et ressources en FCFA." : ""}`,
   );
 }
 
 export async function generateMetadata({ params }: PageProps<"/guides/etudes-en-france/[pays]">): Promise<Metadata> {
   const data = load((await params).pays);
   if (!data) return {};
-  const deadline = data.campaign.phases.find((p) => /définitif/i.test(p.label)) ?? data.campaign.phases.at(-1)!;
+  const deadline = mainDeadline(data.campaign) ?? data.campaign.phases.at(-1)!;
   return guideMetadata(
     guide,
     eefCountryPath(data.country),
@@ -47,7 +53,9 @@ export default async function EefCountryPage({ params }: PageProps<"/guides/etud
   if (!data) notFound();
   const { country, campaign } = data;
   const france = COUNTRY_BUDGET_RULES.France;
-  const finalDeposit = campaign.phases.find((p) => /définitif/i.test(p.label));
+  const finalDeposit = mainDeadline(campaign);
+  // Montants : en euros, et aussi en FCFA dans la zone franc (parité fixe).
+  const money = CFA_COUNTRIES.has(country) ? eurosAndCfa : formatEuros;
 
   return (
     <GuideShell
@@ -61,7 +69,7 @@ export default async function EefCountryPage({ params }: PageProps<"/guides/etud
         <p>
           Si vous résidez {inCountry(country)}, vos candidatures dans l&apos;enseignement supérieur français passent par la
           procédure <strong>Études en France</strong> de Campus France {country}. Voici son calendrier officiel pour la
-          rentrée {campaign.intake} ({campaign.audience.toLocaleLowerCase("fr")}), relevé sur le site de Campus France{" "}
+          rentrée {campaign.intake} ({campaign.audience.charAt(0).toLocaleLowerCase("fr") + campaign.audience.slice(1)}), relevé sur le site de Campus France{" "}
           {country}.
         </p>
       }
@@ -70,7 +78,7 @@ export default async function EefCountryPage({ params }: PageProps<"/guides/etud
           ? [
               {
                 question: `Quelle est la date limite Campus France ${country} pour la rentrée ${campaign.intake} ?`,
-                answer: `Le dépôt définitif du dossier, après corrections, est fixé au ${formatCalendarDate(finalDeposit.end)}. Le premier dépôt est attendu plus tôt : voir le calendrier complet ci-dessus.`,
+                answer: `La date limite principale est le ${formatCalendarDate(finalDeposit.end)} (${finalDeposit.label.charAt(0).toLocaleLowerCase("fr") + finalDeposit.label.slice(1)}). D'autres échéances la précèdent ou la suivent : voir le calendrier complet ci-dessus.`,
               },
             ]
           : []),
@@ -80,7 +88,7 @@ export default async function EefCountryPage({ params }: PageProps<"/guides/etud
         },
         {
           question: "Combien faut-il prévoir pour étudier en France ?",
-          answer: `Hors UE, les droits d'inscription 2026-2027 sont de ${eurosAndCfa(FRENCH_NATIONAL_FEES.licence.nonEu!.cents)} en licence et ${eurosAndCfa(FRENCH_NATIONAL_FEES.master.nonEu!.cents)} en master à l'université (exonération possible, jamais garantie), et le visa exige au moins ${eurosAndCfa(france.visaMonthlyMinimum!.cents)} de ressources par mois.`,
+          answer: `Hors UE, les droits d'inscription 2026-2027 sont de ${money(FRENCH_NATIONAL_FEES.licence.nonEu!.cents)} en licence et ${money(FRENCH_NATIONAL_FEES.master.nonEu!.cents)} en master à l'université (exonération possible, jamais garantie), et le visa exige au moins ${money(france.visaMonthlyMinimum!.cents)} de ressources par mois.`,
         },
       ]}
       sources={[
@@ -111,13 +119,13 @@ export default async function EefCountryPage({ params }: PageProps<"/guides/etud
 
       <Section id="preparer" title="Préparer son dossier à temps">
         <p>
-          Le dépôt se joue en fin d&apos;année civile, bien avant les plateformes françaises (Parcoursup et Mon Master
-          ferment mi-mars). Choisissez vos formations dès l&apos;ouverture : AcadMatch compare votre relevé de notes aux
+          Le dépôt se joue bien avant les plateformes françaises (Parcoursup et Mon Master ferment mi-mars)
+          {finalDeposit ? <> : ici, la date limite principale est le {formatCalendarDate(finalDeposit.end)}</> : null}. Choisissez vos formations dès l&apos;ouverture : AcadMatch compare votre relevé de notes aux
           prérequis de chaque formation et vous dit quoi renforcer. Le déroulé complet de la procédure est dans{" "}
           <Link href={guidePath("etudes-en-france")} className="font-semibold text-blue-700 hover:text-blue-800">
             le guide Études en France
           </Link>
-          , et le budget en francs CFA dans{" "}
+          , et le budget{CFA_COUNTRIES.has(country) ? " en francs CFA" : ""} dans{" "}
           <Link href={guidePath("cout-des-etudes-en-france")} className="font-semibold text-blue-700 hover:text-blue-800">
             coût des études en France
           </Link>
