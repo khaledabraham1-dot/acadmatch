@@ -52,6 +52,9 @@ export function Footer() {
             <Link href="/methode" className="text-slate-600 hover:text-slate-900">
               Méthode du score
             </Link>
+            <Link href="/a-propos" className="text-slate-600 hover:text-slate-900">
+              À propos et contact
+            </Link>
             <Link href="/mentions-legales" className="text-slate-600 hover:text-slate-900">
               Mentions légales
             </Link>

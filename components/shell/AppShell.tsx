@@ -37,6 +37,9 @@ function SidebarContent() {
         <Link href="/methode" className="hover:text-white">
           Méthode du score
         </Link>
+        <Link href="/a-propos" className="hover:text-white">
+          À propos et contact
+        </Link>
         <Link href="/mentions-legales" className="hover:text-white">
           Mentions légales
         </Link>

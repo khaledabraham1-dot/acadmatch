@@ -46,6 +46,7 @@ test.describe("accessibilité WCAG AA", () => {
     "/compte",
     "/confidentialite",
     "/methode",
+    "/a-propos",
     "/guides",
     "/guides/cout-des-etudes-en-france",
     "/guides/etudes-en-france/benin",

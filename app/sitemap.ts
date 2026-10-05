@@ -48,6 +48,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/profil`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${base}/visa`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/methode`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${base}/a-propos`, changeFrequency: "yearly", priority: 0.5 },
     ...["/mentions-legales", "/confidentialite", "/conditions"].map((path) => ({
       url: `${base}${path}`,
       lastModified: LEGAL_UPDATED_AT,

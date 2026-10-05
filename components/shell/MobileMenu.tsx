@@ -90,6 +90,7 @@ export function MobileMenu({ onClose }: { onClose: () => void }) {
         ))}
         <p className="flex flex-wrap gap-x-4 gap-y-1 pt-2 text-xs text-slate-500">
           <Link href="/methode" onClick={onClose}>Méthode du score</Link>
+          <Link href="/a-propos" onClick={onClose}>À propos et contact</Link>
           <Link href="/mentions-legales" onClick={onClose}>Mentions légales</Link>
           <Link href="/confidentialite" onClick={onClose}>Confidentialité</Link>
           <Link href="/conditions" onClick={onClose}>Conditions</Link>
