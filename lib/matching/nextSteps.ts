@@ -32,6 +32,9 @@ export function buildVerdict(profile: StudentProfile, formation: StudyProgram, r
   if (result.noContentMatch) {
     return "Votre profil ne permet pas encore d'évaluer cette formation : aucune de vos matières ne correspond à son programme.";
   }
+  if (result.domainExcluded) {
+    return `Formation qui n'admet pas les diplômés de votre domaine (${profile.fieldOfStudy}) : vérifiez les conditions officielles avant tout.`;
+  }
   if (result.domainCapped) {
     return `Formation d'un autre domaine (${formation.field}) : envisageable seulement si vous prouvez ses matières de base.`;
   }

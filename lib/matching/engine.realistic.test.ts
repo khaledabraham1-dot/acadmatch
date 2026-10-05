@@ -371,9 +371,11 @@ describe("niveau de preuve (audit du 2026-09-30)", () => {
 describe("domaine de l'étudiant dans la recherche (2026-09-30)", () => {
   const catalogue = FORMATIONS.filter((f) => !f.demo);
 
-  it("chaque formation relève au moins de son propre domaine", () => {
+  it("chaque formation relève au moins de son propre domaine, sauf exclusion explicite", () => {
     for (const formation of catalogue) {
-      expect(acceptsStudentDomain({ fieldOfStudy: formation.field }, formation)).toBe(true);
+      // Un master « double compétence » en gestion exclut justement les diplômés de gestion (Requirement.excludes).
+      const excludesOwnField = formation.prerequisites.some((r) => r.excludes?.includes(formation.field));
+      expect(acceptsStudentDomain({ fieldOfStudy: formation.field }, formation)).toBe(!excludesOwnField);
     }
   });
 

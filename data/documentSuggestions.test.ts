@@ -51,6 +51,12 @@ describe("documentSuggestionFor", () => {
       "f-master-physique-lyon1",
       "f-master-bmc-sorbonne",
       "f-master-bioinformatique-bordeaux",
+      "f-master-economie-developpement-uca",
+      "f-master-mbfa-risques-financiers-rouen",
+      "f-master-mae-double-competence-tours",
+      "f-master-sante-publique-bordeaux",
+      "f-m1-genie-civil-grenoble",
+      "f-master-securite-informatique-amu",
     ]);
   });
 });

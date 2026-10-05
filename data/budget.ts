@@ -74,6 +74,22 @@ const FRENCH_ENGINEER = frenchPublicFee(
   "Droits nationaux du diplôme d'ingénieur des écoles relevant du ministère de l'Enseignement supérieur.",
 );
 
+/**
+ * Université Grenoble Alpes, 2026-2027 (communiqué du 29 mai 2026, mis à jour le
+ * 11 septembre 2026) : année de transition après le décret du 19 mai 2026. Jusqu'ici
+ * tout étudiant qui le demandait était exonéré ; désormais l'exonération se demande en
+ * déclarant ses ressources et est examinée au cas par cas, « largement » selon l'UGA,
+ * dans la limite des plafonds du décret. Le tarif affiché est donc celui sans exonération.
+ */
+const UGA_DECREE_NOTICE =
+  "https://www.univ-grenoble-alpes.fr/actualites/a-la-une/actualites-universite/etudiants-internationaux-ce-que-change-le-nouveau-decret-sur-les-droits-d-inscription-a-l-uga-1775870.kjsp";
+const UGA_MASTER: TuitionFee = {
+  ...FRENCH_MASTER,
+  nonEu: { cents: 395_000, academicYear: "2026-2027", source: UGA_DECREE_NOTICE },
+  nonEuNote:
+    "Exonération des droits différenciés sur demande, en déclarant ses ressources : en 2026-2027, l'UGA examine chaque situation et entend l'accorder largement, dans la limite des plafonds du décret du 19 mai 2026 (seuls les droits nationaux restent alors dus). Exonération automatique pour les boursiers du gouvernement français.",
+};
+
 /** Grille UCLouvain 2026-2027 : mêmes droits pour tous les programmes de bachelier et de master. */
 const UCLOUVAIN_FEE: TuitionFee = {
     eu: {
@@ -236,16 +252,13 @@ export const TUITION_FEES: Record<string, TuitionFee> = {
     nonEuNote:
       "Paris-Saclay accorde aux étudiants hors UE une exonération partielle qui ramène les droits différenciés au niveau des droits nationaux (délibération CA-2026-013 du 3 février 2026), sous conditions à vérifier auprès de l'université.",
   },
-  "f-m1-applied-maths-grenoble": {
-    ...FRENCH_MASTER,
-    nonEu: {
-      cents: 25_500,
-      academicYear: "2026-2027",
-      source: "https://applied-math-master.imag.fr/admission/",
-    },
-    nonEuNote:
-      "Les établissements grenoblois accueillent les étudiants internationaux aux mêmes tarifs que les étudiants français et européens : tout étudiant qui en exprime le besoin est exonéré des droits différenciés.",
-  },
+  "f-m1-applied-maths-grenoble": UGA_MASTER,
+  "f-m1-genie-civil-grenoble": UGA_MASTER,
+  "f-master-economie-developpement-uca": FRENCH_MASTER,
+  "f-master-mbfa-risques-financiers-rouen": FRENCH_MASTER,
+  "f-master-mae-double-competence-tours": FRENCH_MASTER,
+  "f-master-sante-publique-bordeaux": FRENCH_MASTER,
+  "f-master-securite-informatique-amu": FRENCH_MASTER,
   "f-bachelier-maths-unamur": UNAMUR_FEE,
   "f-bachelier-chimie-unamur": UNAMUR_FEE,
   "f-licence-physique-montpellier": FRENCH_LICENCE,

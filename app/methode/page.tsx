@@ -170,6 +170,11 @@ export default function MethodePage() {
             part d&apos;un plafond de {DOMAIN_MISMATCH_BASE_CAP} et ne remonte qu&apos;à mesure que votre profil prouve les matières de
             base de cette formation : une vraie réorientation reste possible, un simple changement de case non.
           </p>
+          <p>
+            <strong>Domaine exclu.</strong> Quelques formations n&apos;admettent pas un domaine précis (par exemple un master de
+            management « double compétence », réservé aux diplômés hors gestion). Pour ces étudiants, le score part du plafond de{" "}
+            {DOMAIN_MISMATCH_BASE_CAP} sans aucun crédit pour les matières communes : c&apos;est justement leur formation qui les exclut.
+          </p>
           <p className="text-sm text-slate-600">
             Au-dessus d&apos;un plafond, l&apos;écart n&apos;est pas effacé mais fortement réduit : l&apos;ordre entre les formations reste
             juste.

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { computeCompatibility } from "@/lib/matching/engine";
+import { acceptsStudentDomain, computeCompatibility } from "@/lib/matching/engine";
+import { getFormationById } from "@/data/formations";
 import type { AcademicItem, Importance, Requirement, StudentProfile, StudyProgram } from "@/types";
 
 /**
@@ -345,5 +346,34 @@ describe("langues déclarées comme preuve de compétence", () => {
 
     const withoutEnglish = computeCompatibility(base, formation);
     expect(withoutEnglish.gaps).toContain("Anglais courant");
+  });
+});
+
+describe("domaine explicitement exclu (master « double compétence »)", () => {
+  const formation = getFormationById("f-master-mae-double-competence-tours")!;
+  const profile = (fieldOfStudy: string, courses: string[]): StudentProfile => ({
+    currentLevel: "Licence 3",
+    fieldOfStudy,
+    currentDegree: "",
+    courses: courses.map((name, i) => ({ id: String(i), name })),
+    skills: ["Travail en équipe", "Communication"],
+    goal: "Master",
+    languages: ["Français"],
+    academicStanding: "Bons résultats",
+  });
+
+  it("plafonne strictement un diplômé de gestion, même avec des matières de gestion", () => {
+    const result = computeCompatibility(profile("Économie & Gestion", ["Comptabilité", "Marketing", "Stratégie d'entreprise", "GRH"]), formation);
+    expect(result.domainCapped).toBe(true);
+    expect(result.domainExcluded).toBe(true);
+    expect(result.overallScore).toBeLessThan(45);
+    expect(acceptsStudentDomain({ fieldOfStudy: "Économie & Gestion" }, formation)).toBe(false);
+  });
+
+  it("garde bien classé un ingénieur, public visé", () => {
+    const result = computeCompatibility(profile("Sciences de l'ingénieur", ["Mathématiques", "Statistiques", "Gestion de projet"]), formation);
+    expect(result.domainCapped).toBeUndefined();
+    expect(result.overallScore).toBeGreaterThan(60);
+    expect(acceptsStudentDomain({ fieldOfStudy: "Sciences de l'ingénieur" }, formation)).toBe(true);
   });
 });

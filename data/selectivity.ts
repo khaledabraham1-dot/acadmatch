@@ -54,6 +54,12 @@ export type SelectivityData =
 const NOT_ON_PLATFORMS = "Recrutement hors Mon Master et Parcoursup : l'établissement ne publie pas de taux d'admission officiel.";
 
 export const SELECTIVITY: Record<string, SelectivityData> = {
+  "f-master-economie-developpement-uca": { kind: "mon-master", session: "2025", recordIds: ["1702186C6ZN4", "1702186C871J", "1702186CFN6R", "1702186CGLJN", "1702186CMT16", "1702186CUGVW"], capacity: 109, candidates: 628, offers: 276, fromAbroadCandidates: 89, fromAbroadOffers: 8 },
+  "f-master-mbfa-risques-financiers-rouen": { kind: "mon-master", session: "2025", recordIds: ["1701081BFJK7"], capacity: 70, candidates: 849, offers: 143, fromAbroadCandidates: 120, fromAbroadOffers: 6 },
+  "f-master-mae-double-competence-tours": { kind: "mon-master", session: "2025", recordIds: ["1801077WXH4R"], capacity: 20, candidates: 137, offers: 31, fromAbroadCandidates: 25, fromAbroadOffers: 9 },
+  "f-master-sante-publique-bordeaux": { kind: "mon-master", session: "2025", recordIds: ["1602011SNX7E"], capacity: 50, candidates: 970, offers: 196, fromAbroadCandidates: 224, fromAbroadOffers: 35 },
+  "f-m1-genie-civil-grenoble": { kind: "mon-master", session: "2025", recordIds: ["1603437S284P"], capacity: 44, candidates: 652, offers: 74, fromAbroadCandidates: 121, fromAbroadOffers: 3 },
+  "f-master-securite-informatique-amu": { kind: "mon-master", session: "2025", recordIds: ["1800865R846R"], capacity: 22, candidates: 572, offers: 69, fromAbroadCandidates: 96, fromAbroadOffers: 3 },
   "f-llm-international-economic-law-toulouse": { kind: "mon-master", session: "2025", recordIds: ["1801140QA24D"], capacity: 15, candidates: 220, offers: 55, fromAbroadCandidates: 36, fromAbroadOffers: 10 },
   "f-m1-applied-maths-grenoble": { kind: "mon-master", session: "2025", recordIds: ["1602282LGJWS", "1602282LT1W7"], capacity: 35, candidates: 198, offers: 47, fromAbroadCandidates: 27, fromAbroadOffers: 4 },
   "f-m1-maths-fondamentales-paris-saclay": { kind: "mon-master", session: "2025", recordIds: ["1501354GA2P8"], capacity: 35, candidates: 504, offers: 68, fromAbroadCandidates: 43, fromAbroadOffers: 3 },

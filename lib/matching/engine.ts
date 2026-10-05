@@ -217,6 +217,7 @@ function domainRequirementStrength(requirement: Requirement, fieldOfStudy: strin
  */
 export function acceptsStudentDomain(profile: Pick<StudentProfile, "fieldOfStudy">, formation: StudyProgram): boolean {
   const fields = domainEquivalents(profile.fieldOfStudy).map(normalize);
+  if (isExcludedDomain(profile.fieldOfStudy, formation)) return false;
   if (fields.includes(normalize(formation.field))) return true;
   return formation.prerequisites.some(
     (requirement) => requirement.type === "domaine" && domainRequirementStrength(requirement, profile.fieldOfStudy) === "forte",
@@ -397,6 +398,14 @@ export function evidenceCap(evidenceCount: number): number | null {
   return evidenceCount >= EVIDENCE_FULL_ITEMS ? null : EVIDENCE_CAP_BASE + EVIDENCE_CAP_PER_ITEM * evidenceCount;
 }
 
+/** Le domaine d'études du profil est-il explicitement exclu par la formation (`Requirement.excludes`) ? */
+function isExcludedDomain(fieldOfStudy: string, formation: StudyProgram): boolean {
+  const fields = domainEquivalents(fieldOfStudy).map(normalize);
+  return formation.prerequisites.some(
+    (requirement) => requirement.type === "domaine" && (requirement.excludes ?? []).some((domain) => fields.includes(normalize(domain))),
+  );
+}
+
 /** Le domaine d'études du profil est-il absent de TOUS les domaines exigés ? false si la formation n'en exige aucun. */
 function isOutsideRequiredDomain(profile: StudentProfile, formation: StudyProgram): boolean {
   const domainRequirements = formation.prerequisites.filter((requirement) => requirement.type === "domaine");
@@ -445,8 +454,10 @@ export function computeCompatibility(profile: StudentProfile, formation: StudyPr
     ),
   );
 
-  const outsideDomain = isOutsideRequiredDomain(profile, formation);
-  const domainCap = DOMAIN_MISMATCH_BASE_CAP + outsideDomainEvidence(formation, content.rows);
+  // Domaine exclu : plafond strict, sans crédit pour les matières communes (c'est ce qui exclut l'étudiant).
+  const excludedDomain = isExcludedDomain(profile.fieldOfStudy, formation);
+  const outsideDomain = excludedDomain || isOutsideRequiredDomain(profile, formation);
+  const domainCap = DOMAIN_MISMATCH_BASE_CAP + (excludedDomain ? 0 : outsideDomainEvidence(formation, content.rows));
   const domainCapped = outsideDomain && weightedScore > domainCap;
   const afterDomain = domainCapped
     ? Math.round(domainCap + (weightedScore - domainCap) * DOMAIN_MISMATCH_COMPRESSION)
@@ -488,6 +499,7 @@ export function computeCompatibility(profile: StudentProfile, formation: StudyPr
     gaps,
     matches,
     ...(domainCapped ? { domainCapped: true } : {}),
+    ...(excludedDomain ? { domainExcluded: true } : {}),
     ...(evidenceCapped ? { evidenceCapped: true } : {}),
     ...(noContentMatch ? { noContentMatch: true } : {}),
     ...(selectivityAdjustment !== 0 ? { selectivityAdjustment } : {}),

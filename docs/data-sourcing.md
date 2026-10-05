@@ -72,6 +72,13 @@ maîtriser le Machine Learning qu'un master va justement lui apprendre.
     sourcées ; restent muettes : Télécom Paris (MS IA), INSA Lyon, ENSEIRB,
     UCLouvain gestion (conditions dans un PDF), ULB droit, UNamur
     mathématiques, EHESP, ULiège science politique, Sciences Po PSIA.
+  Le 2026-10-05, la deuxième vague (6 masters) a toutes ses compétences
+  d'entrée sourcées sur Mon Master : 45 fiches sur 54.
+- **Domaine exclu** : quand une formation refuse explicitement un domaine
+  (ex. « toutes licences hors gestion / management »), le déclarer dans
+  `excludes` de l'exigence « domaine » — ne pas se contenter du libellé :
+  sinon un diplômé du domaine exclu, qui a justement les matières communes,
+  obtient un bon score pour une formation qui le refusera.
 - **Ne pas confondre avec les langues** : l'étudiant déclare ses langues
   dans son profil, et le moteur les compte comme preuve (« Anglais » satisfait
   « Anglais courant »).

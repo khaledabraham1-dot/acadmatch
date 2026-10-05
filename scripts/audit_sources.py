@@ -14,7 +14,7 @@ environnements Python — un échec SSL ici n'est pas forcément un lien mort
 ctx = ssl.create_default_context()
 
 text = Path("data/formations.ts").read_text(encoding="utf-8")
-urls = re.findall(r'source: "(https://[^"]+)"', text)
+urls = re.findall(r'source:\s*"(https://[^"]+)"', text)
 print("count", len(urls))
 for u in urls:
     ok = False

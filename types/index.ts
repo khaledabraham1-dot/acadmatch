@@ -129,6 +129,13 @@ export interface Requirement {
   aliases?: string[];
   /** Poids de ce prérequis dans le score des prérequis ; par défaut dérivé de `type`. */
   importance?: Importance;
+  /**
+   * Exigence « domaine » seulement : domaines explicitement NON admis par la
+   * formation (ex. un master « double compétence » réservé aux diplômés hors
+   * gestion). Un étudiant de ces domaines est plafonné strictement, sans
+   * crédit pour les matières communes — c'est justement ce qui l'exclut.
+   */
+  excludes?: string[];
 }
 
 /**
@@ -277,6 +284,8 @@ export interface CompatibilityResult {
    * DOMAIN_MISMATCH_BASE_CAP dans lib/matching/engine.ts). Absent sinon.
    */
   domainCapped?: boolean;
+  /** true quand le domaine de l'étudiant est explicitement NON admis par la formation (`Requirement.excludes`). */
+  domainExcluded?: boolean;
   /**
    * true quand le score a été plafonné faute de preuves (trop peu de
    * matières et compétences renseignées — voir EVIDENCE_FULL_ITEMS dans

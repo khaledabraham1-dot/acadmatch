@@ -33,7 +33,9 @@ import type { AcademicItem, Importance, StudyProgram } from "@/types";
  * Mathématiques (Rennes, UNamur, Paris-Saclay, Grenoble, Lille), puis
  * Physique et Chimie (Montpellier, UNamur, Strasbourg, Lyon 1, ENS-PSL), puis
  * Biologie & Santé (Nancy, ULB, Sorbonne, Bordeaux, EHESP), puis
- * Sciences politiques (Lille, ULiège, Paris 1, UCLouvain, Sciences Po). Chaque fiche ajoutée
+ * Sciences politiques (Lille, ULiège, Paris 1, UCLouvain, Sciences Po). Deuxième vague
+ * (2026-10-05) : Clermont Auvergne, Rouen, Tours, Bordeaux ISPED, Grenoble
+ * Alpes, Aix-Marseille (voir CATALOGUE_WAVE2_AT). Chaque fiche ajoutée
  * a aussi ses frais sourcés dans data/budget.ts (un test l'impose).
  *
  * Pour toute formation FICTIVE de démonstration ajoutée plus tard (tests,
@@ -96,6 +98,15 @@ const PARCOURSUP_GRILLE_AT = "2026-10-03";
 
 /** Pages d'établissement relues le 2026-10-03 : elles énoncent bien un profil d'entrée (formation et langue attendues). */
 const ENTRY_PAGE_RECHECKED_AT = "2026-10-03";
+
+/**
+ * Deuxième vague du catalogue (2026-10-05) : masters très demandés par les
+ * étudiants d'Afrique francophone — économie du développement, finance,
+ * management double compétence, santé publique, génie civil, cybersécurité.
+ * Page de l'établissement + attendus Mon Master relus le même jour ; les
+ * compétences d'entrée citent les attendus en commentaire.
+ */
+const CATALOGUE_WAVE2_AT = "2026-10-05";
 
 export const FORMATIONS: StudyProgram[] = [
   {
@@ -2177,6 +2188,284 @@ export const FORMATIONS: StudyProgram[] = [
     skills: [skill("Anglais courant", "essentielle"), skill("Rédaction académique", "importante")],
     source: "https://www.sciencespo.fr/psia/academics/masters/master-international-security/",
     verifiedAt: "2026-09-27",
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-economie-developpement-uca",
+    name: "Master Économie du développement (CERDI)",
+    institution: { name: "Université Clermont Auvergne — École d'Économie (CERDI)", city: "Clermont-Ferrand", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Économie & Gestion",
+    description:
+      "Master de 2 ans adossé au CERDI (CNRS, IRD), laboratoire reconnu en économie du développement international. M1 largement commun : politique économique du développement, capital humain, politique commerciale et de change, techniques quantitatives (statistiques, économétrie), analyse financière, financement du développement, économie agricole. Spécialisation progressive vers l'analyse économique, l'analyse de projets, le développement durable, les finances publiques, l'économie de la santé, l'économie territoriale, ou le parcours Development Economics enseigné en anglais. Stage obligatoire en M1 (6 semaines) et en M2 (3 à 6 mois) ; partenariats avec l'AFD, la FERDI, le FMI et la CNUCED.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier, avec un entretien selon le parcours (entretien de motivation et de connaissances en économie du développement et économétrie pour les parcours Analyse économique et Analyse de projets) ; les candidats résidant dans un pays à procédure « Études en France » passent par cette procédure. Parcours Development Economics : niveau d'anglais exigé (IELTS 7, TOEFL iBT 85 ou TOEIC 850).",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence d'économie, d'économie-gestion ou de MIASHS (avec un bon niveau en économie) ; français B2 exigé" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Économie & Gestion",
+        label: "Licence d'économie surtout ; relations internationales ou AES possibles avec un niveau suffisant en économie et techniques quantitatives",
+        aliases: ["Mathématiques", "Sciences politiques"],
+      },
+    ],
+    coreCourses: [
+      course("Politique économique", "essentielle", ["Macroéconomie", "Politique économique de développement"]),
+      course("Économétrie", "essentielle", ["Techniques quantitatives", "Statistiques"]),
+      course("Économie du développement", "essentielle", ["Perspectives de développement", "Financement du développement"]),
+      course("Économie internationale", "importante", ["Politique commerciale et de change", "Commerce international"]),
+      course("Économie du capital humain", "importante", ["Microéconomie"]),
+      course("Analyse financière", "utile"),
+    ],
+    // Page officielle (Pré-requis) : « un bon niveau en microéconomie, macroéconomie et techniques
+    // quantitatives » ; anglais B1 souhaitable, français B2 exigé. Mon Master
+    // (https://monmaster.gouv.fr/formation/0632084Y/1702186CMT16/detail), attendus : « Maîtriser les
+    // connaissances et compétences du cycle de licence en macroéconomie, microéconomie et techniques
+    // quantitatives » ; communiquer clairement à l'écrit et à l'oral ; travailler en groupe.
+    skills: [
+      skill("Microéconomie", "essentielle", ["Économie", "Sciences économiques"]),
+      skill("Macroéconomie", "essentielle", ["Économie", "Sciences économiques"]),
+      skill("Techniques quantitatives", "essentielle", ["Statistiques", "Économétrie", "Mathématiques appliquées"]),
+      skill("Communication écrite et orale", "utile", ["Rédaction", "Expression écrite"]),
+      skill("Travail en équipe", "utile", ["Travail en groupe"]),
+    ],
+    source: "https://www.uca.fr/odf/master-economie-du-developpement",
+    verifiedAt: CATALOGUE_WAVE2_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-mbfa-risques-financiers-rouen",
+    name: "Master Monnaie, banque, finance, assurance — parcours Économie et gestion des risques financiers",
+    institution: { name: "Université de Rouen Normandie — UFR Droit, Économie, Science politique", city: "Rouen", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Économie & Gestion",
+    description:
+      "Master de 2 ans (120 crédits ECTS) sur les marchés et instruments financiers (classiques, hybrides, cryptoactifs), les institutions financières nationales et internationales, et la mesure et la gestion des risques financiers : micro et macroéconomie, économétrie, finance internationale, économie monétaire, bancaire et des assurances, analyse financière, gestion des risques. Débouchés : services de gestion des risques des établissements financiers, des entreprises et des collectivités ; poursuite en doctorat possible.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier et entretien ; les candidats résidant dans un pays à procédure « Études en France » passent par cette procédure.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Bac+3 ; licences conseillées : économie, économie-gestion, AES" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Économie & Gestion",
+        label: "Formation en économie, avec un bon niveau en économie monétaire et financière",
+        aliases: ["Mathématiques"],
+      },
+    ],
+    coreCourses: [
+      course("Économie monétaire et bancaire", "essentielle", ["Économie monétaire et financière", "Économie bancaire", "Monnaie et banque"]),
+      course("Marchés financiers", "essentielle", ["Produits et marchés financiers", "Finance de marché"]),
+      course("Économétrie", "importante"),
+      course("Gestion des risques financiers", "importante", ["Gestion des risques"]),
+      course("Finance internationale", "utile"),
+      course("Analyse financière", "utile"),
+    ],
+    // Mon Master (https://monmaster.gouv.fr/formation/0761904G/1701081BFJK7/detail), attendus : « avoir un bon
+    // niveau académique en général et notamment dans les matières relatives à l'économie monétaire et
+    // financière » (Essentiel) ; « connaissances en analyse économique, produits et marchés financiers,
+    // économétrie » (Très important).
+    skills: [
+      skill("Économie monétaire et financière", "essentielle", ["Économie monétaire et bancaire", "Monnaie et banque", "Économie bancaire"]),
+      skill("Analyse économique", "importante", ["Microéconomie", "Macroéconomie", "Économie"]),
+      skill("Produits et marchés financiers", "importante", ["Marchés financiers", "Finance de marché", "Finance"]),
+      skill("Économétrie", "importante", ["Statistiques"]),
+    ],
+    source:
+      "https://formation.univ-rouen.fr/fr/catalogue-de-l-offre-de-formation/master-lmd-XB/master-monnaie-banque-finance-assurance-L4QS64MF/master-monnaie-banque-finance-assurance-economie-et-gestion-des-risques-financiers-L4QS652H.html",
+    verifiedAt: CATALOGUE_WAVE2_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-mae-double-competence-tours",
+    name: "Master Management et administration des entreprises — parcours Management double compétence",
+    institution: { name: "Université de Tours — IAE Tours Val de Loire", city: "Tours", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Économie & Gestion",
+    description:
+      "Master de 2 ans réservé aux diplômés d'une première formation complète HORS gestion et management (sciences, ingénierie, droit, lettres…), pour accéder à des fonctions d'encadrement avec une double compétence. M1 : stratégie d'entreprise, politique économique, marketing, gestion des ressources humaines, comptabilité financière, système d'information, environnement juridique, méthodes qualitatives et quantitatives, simulation de gestion, entrepreneuriat et gestion de projets. M2 : contrôle de gestion, finance, droit des affaires et du travail, management d'équipe, mémoire, stage de 3 à 6 mois (apprentissage possible en M2). Promotion de 20 étudiants.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier puis entretien selon l'appréciation du jury ; score au test IAE Message pris en compte. Les candidats résidant dans un pays à procédure « Études en France » passent par cette procédure.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Toute licence (diplôme national) HORS gestion et management" },
+      {
+        id: "r2",
+        type: "domaine",
+        // Le parcours vise une PREMIÈRE formation hors gestion : le domaine « Économie & Gestion » n'est donc
+        // pas accepté (le moteur ne distingue pas économie et gestion ; prudence pour un économiste).
+        value: "Sciences de l'ingénieur",
+        label: "Première formation complète hors gestion et management : sciences, ingénierie, informatique, droit, sciences politiques… Une licence de gestion n'est pas admise ; un diplômé d'économie doit vérifier sa recevabilité auprès de l'IAE",
+        aliases: ["Informatique", "Data Science & IA", "Droit", "Mathématiques", "Physique", "Chimie", "Biologie & Santé", "Sciences politiques"],
+        excludes: ["Économie & Gestion"],
+      },
+    ],
+    coreCourses: [
+      course("Stratégie d'entreprise", "essentielle", ["Stratégie"]),
+      course("Comptabilité financière", "essentielle", ["Comptabilité"]),
+      course("Marketing", "importante"),
+      course("Gestion des ressources humaines", "importante", ["GRH"]),
+      course("Système d'information", "utile", ["Systèmes d'information"]),
+      course("Gestion de projets", "utile", ["Entrepreneuriat"]),
+    ],
+    // Page officielle et Mon Master (https://monmaster.gouv.fr/formation/0370800U/1801077WXH4R/detail),
+    // attendus : « capacités d'analyse et de raisonnement logique » ; « appétences pour les données chiffrées
+    // comme pour la lecture de textes complexes » ; « esprit de synthèse » ; communiquer de manière adaptée ;
+    // participer à un collectif de travail ; curiosité pour l'environnement socio-économique.
+    skills: [
+      skill("Analyse et raisonnement logique", "importante", ["Esprit d'analyse", "Raisonnement logique"]),
+      skill("Aisance avec les données chiffrées", "importante", ["Statistiques", "Mathématiques"]),
+      skill("Esprit de synthèse", "utile", ["Analyse et synthèse", "Rédaction"]),
+      skill("Communication", "utile", ["Communication écrite et orale"]),
+      skill("Travail en équipe", "utile", ["Travail en groupe"]),
+    ],
+    source:
+      "https://www.univ-tours.fr/formations/master-droit-economie-gestion-mention-management-et-administration-des-entreprises-parcours-management-double-competence",
+    verifiedAt: CATALOGUE_WAVE2_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-sante-publique-bordeaux",
+    name: "Master Santé publique (ISPED)",
+    institution: { name: "Université de Bordeaux — ISPED (Institut de santé publique, d'épidémiologie et de développement)", city: "Bordeaux", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Biologie & Santé",
+    description:
+      "Master de 2 ans de l'ISPED, ouvert aux étudiants de filières variées et aux professionnels. M1 pluridisciplinaire : épidémiologie, biostatistique, informatique, économie de la santé, management, démographie, sciences sociales et du comportement, santé environnementale et professionnelle ; projets encadrés et stage d'au moins 8 semaines, possible à l'étranger. M2 spécialisé (épidémiologie, biostatistique, santé globale dans les Suds, promotion de la santé, management des organisations, systèmes d'information pour la santé, santé-travail-environnement). Le M1 existe aussi en enseignement à distance.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier (notes de licence, cohérence du parcours, CV et lettre de motivation ; une expérience ou un projet en santé publique est un plus) ; les candidats résidant dans un pays à procédure « Études en France » passent par cette procédure.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence classique ou professionnelle, quelle que soit la filière, ou bac+3 (niveau 6 du RNCP)" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Biologie & Santé",
+        label: "Licence scientifique (parcours méthodologiques) ou de sciences humaines, sociales et politiques (promotion de la santé, management)",
+        aliases: ["Mathématiques", "Informatique", "Data Science & IA", "Économie & Gestion", "Sciences politiques", "Droit", "Physique", "Chimie"],
+      },
+    ],
+    coreCourses: [
+      course("Épidémiologie", "essentielle"),
+      course("Biostatistiques", "essentielle", ["Biostatistique", "Statistiques"]),
+      course("Économie de la santé", "importante"),
+      course("Sciences sociales en santé publique", "importante", ["Sociologie", "Démographie", "Sciences du comportement"]),
+      course("Management des organisations de santé", "utile", ["Management"]),
+      course("Santé environnementale", "utile", ["Santé au travail"]),
+    ],
+    // Mon Master (https://monmaster.gouv.fr/formation/0333298F/1602011SNX7E/detail), attendus : connaissances
+    // fondamentales d'une licence scientifique ou de sciences humaines, sociales, politiques ; « une bonne
+    // capacité rédactionnelle et de synthèse » ; travail en équipe et en autonomie ; « maîtriser les bases de
+    // la communication à l'oral et à l'écrit en anglais scientifique ».
+    skills: [
+      skill("Rédaction et synthèse", "importante", ["Esprit de synthèse", "Rédaction", "Expression écrite"]),
+      skill("Anglais scientifique", "importante", ["Anglais"]),
+      skill("Travail en équipe", "utile", ["Travail en groupe", "Autonomie"]),
+    ],
+    source: "https://www.isped.u-bordeaux.fr/FORMATION/Formations-propos%C3%A9es/Les-Masters/Master-1-Sant%C3%A9-Publique-en-Pr%C3%A9sentiel",
+    verifiedAt: CATALOGUE_WAVE2_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-m1-genie-civil-grenoble",
+    name: "Master Génie civil — 1re année, parcours Génie civil",
+    institution: { name: "Université Grenoble Alpes — UFR PhITEM", city: "Grenoble", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Sciences de l'ingénieur",
+    description:
+      "Première année de master (60 crédits ECTS), entièrement en français, pour acquérir les compétences scientifiques, techniques et professionnelles du génie civil : calcul et dimensionnement des structures sous chargement statique, mécanique des géomatériaux (sols, roches, bétons), gestion de projets pluridisciplinaires. Elle ouvre sur quatre parcours de 2e année : construction durable et environnement ; construction, risques et montagne ; génie civil et architecture ; ingénierie urbaine.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier (diplôme, relevés de notes dans les domaines de la formation, cursus, lettre de motivation, CV, projet de M2) ; les candidats résidant dans un pays à procédure « Études en France » passent par cette procédure.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence de génie civil, ou licence de mécanique avec un nombre significatif d'UE de génie civil" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences de l'ingénieur",
+        label: "Formation en génie civil ou en mécanique",
+        aliases: ["Physique"],
+      },
+    ],
+    coreCourses: [
+      course("Calcul des structures", "essentielle", ["Résistance des matériaux", "Dimensionnement des structures", "RDM"]),
+      course("Mécanique des sols", "essentielle", ["Géotechnique", "Mécanique des géomatériaux", "Mécanique des roches"]),
+      course("Matériaux de construction", "importante", ["Béton", "Béton armé"]),
+      course("Gestion de projet", "utile", ["Gestion de projets"]),
+    ],
+    // Page officielle (Conditions d'admission) : « Licence de génie civil ou licence de mécanique avec un nombre
+    // significatif d'UEs relatives au génie civil ». Mon Master
+    // (https://monmaster.gouv.fr/formation/0383546Y/1603437S284P/detail), attendus : « savoir mobiliser les
+    // connaissances dans les domaines associés à la formation » ; capacité d'analyse et de raisonnement ;
+    // communication écrite et orale en français.
+    skills: [
+      skill("Génie civil", "essentielle", ["Construction", "Bâtiment", "Travaux publics"]),
+      skill("Mécanique", "importante", ["Mécanique des milieux continus", "Mécanique du solide", "Résistance des matériaux"]),
+      skill("Analyse et raisonnement", "utile", ["Raisonnement logique"]),
+    ],
+    source: "https://formations.univ-grenoble-alpes.fr/fr/catalogue-2021/master-XB/master-genie-civil-IAQK5RJO/parcours-genie-civil-1re-annee-KVQS1PK6.html",
+    verifiedAt: CATALOGUE_WAVE2_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-securite-informatique-amu",
+    name: "Master Informatique — parcours Fiabilité et sécurité informatique (FSI)",
+    institution: { name: "Aix-Marseille Université — Faculté des sciences (Luminy)", city: "Marseille", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Informatique",
+    description:
+      "Master de 2 ans labellisé SecNumEdu par l'ANSSI, pour concevoir, réaliser et exploiter des systèmes et applications sûrs : sécurité et fiabilité des applications (web, mobiles, embarquées), sécurité des réseaux, sécurité organisationnelle, hacking éthique, protocoles et architectures cryptographiques, méthodes formelles. Projets concrets sur des équipements dédiés (salle « root », « hacklab ») avec de nombreux intervenants professionnels ; stage ou projet tutoré en M1, stage de 5 à 6 mois en M2. Adossé au Laboratoire d'Informatique et Systèmes (LIS).",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier (notes post-bac, CV, lettre de motivation) ; les candidats résidant dans un pays à procédure « Études en France » passent par cette procédure. Entrée directe en M2 exceptionnelle.",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence d'informatique généraliste (ou informatique-mathématiques)" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Informatique",
+        label: "Savoirs fondamentaux d'une licence d'informatique généraliste",
+        aliases: ["Data Science & IA"],
+      },
+    ],
+    coreCourses: [
+      course("Sécurité des réseaux", "essentielle", ["Réseaux"]),
+      course("Sécurité des applications", "essentielle", ["Sécurité web", "Sécurité logicielle"]),
+      course("Cryptographie", "importante", ["Protocoles cryptographiques", "Cryptologie"]),
+      course("Méthodes formelles", "importante", ["Vérification", "Logique"]),
+      course("Systèmes d'exploitation", "utile", ["Administration système"]),
+    ],
+    // Mon Master (https://monmaster.gouv.fr/formation/0134009M/1800865R846R/detail), attendus : « maîtriser les
+    // savoirs fondamentaux d'une licence informatique généraliste » ; « des compétences et un attrait
+    // particulier pour les systèmes/réseaux/logiciel et/ou les aspects formels de l'informatique ».
+    skills: [
+      skill("Programmation", "essentielle", ["Développement logiciel", "Algorithmique"]),
+      skill("Systèmes et réseaux", "importante", ["Réseaux", "Systèmes d'exploitation", "Administration système"]),
+      skill("Informatique théorique", "utile", ["Logique", "Méthodes formelles", "Langages formels"]),
+    ],
+    source: "https://sciences.univ-amu.fr/fr/formation/masters/master-informatique/parcours-fiabilite-securite-informatique-fsi",
+    verifiedAt: CATALOGUE_WAVE2_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },

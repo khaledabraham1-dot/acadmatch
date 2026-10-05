@@ -157,7 +157,11 @@ export function buildDecisionAid(
     `Le point le plus fragile de votre dossier pour cette formation est ${CRITERION_LABELS[weakestCriterion]} (${weakestScore}/100).`,
   );
 
-  if (result.domainCapped) {
+  if (result.domainExcluded) {
+    paragraphs.push(
+      `Cette formation n'admet pas les diplômés de votre domaine (${profile.fieldOfStudy}) : elle s'adresse à des profils venus d'autres disciplines. Le score est donc fortement limité ; lisez les conditions d'admission sur la page officielle avant d'envisager une candidature.`,
+    );
+  } else if (result.domainCapped) {
     paragraphs.push(
       `Votre domaine d'études (${profile.fieldOfStudy}) n'est pas celui attendu (${formation.field}) et votre profil ne montre pas encore les matières de base de cette formation : le score est volontairement limité. Une réorientation reste possible, à condition de prouver ces bases (cours, certification, projet).`,
     );

@@ -30,6 +30,13 @@ MM = {
  "f-master-science-politique-paris1": ["1604337QUV61","1604337QT4IF","1604337QE2R5","1604337QG7CW","1604337Q8AT1","1604337Q5MY8","1604337QSRXB","1604337QG64S","1604337QWYTK"],
  "f-mosig-grenoble-inp": ["1602521W4U67","1602521WTX5W"],
  "f-scdi-sorbonne": ["1900282G8KFQ"],
+ # Deuxième vague (2026-10-05)
+ "f-master-economie-developpement-uca": ["1702186C6ZN4","1702186CFN6R","1702186C871J","1702186CMT16","1702186CGLJN","1702186CUGVW"],
+ "f-master-mbfa-risques-financiers-rouen": ["1701081BFJK7"],
+ "f-master-mae-double-competence-tours": ["1801077WXH4R"],
+ "f-master-sante-publique-bordeaux": ["1602011SNX7E"],
+ "f-m1-genie-civil-grenoble": ["1603437S284P"],
+ "f-master-securite-informatique-amu": ["1800865R846R"],
 }
 PS = {
  "f-but-info-nantes": "5482", "f-licence-droit-bordeaux": "26330", "f-licence-eco-gestion-amu": "12528",
