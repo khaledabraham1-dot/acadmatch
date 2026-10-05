@@ -27,6 +27,9 @@ import { EligibilitySection } from "@/components/result/EligibilitySection";
 import { OfficialSourceCard } from "@/components/result/OfficialSourceCard";
 import { FormationCompareTable } from "@/components/result/FormationCompareTable";
 import { ResultFeedback } from "@/components/result/ResultFeedback";
+import { ShareButtons } from "@/components/shared/ShareButtons";
+import { formationPath } from "@/lib/site";
+import { resultShareText } from "@/lib/share";
 
 /** Parse `?compare=id1,id2,id3` en liste d'ids valides (2–3). */
 function parseCompareIds(raw: string | null): string[] {
@@ -179,6 +182,20 @@ export function ResultView() {
           <OfficialSourceCard formation={formation} />
         </DetailSection>
       </section>
+
+      {!formation.demo && (
+        <Card>
+          <h2 className="text-base font-bold text-slate-900">Partager avec un ami ou votre famille</h2>
+          <p className="mb-3 mt-1 text-sm text-slate-600">
+            Le message cite votre score, et le lien mène à la fiche publique de la formation où chacun calcule le sien. Votre profil n&apos;est
+            jamais partagé.
+          </p>
+          <ShareButtons
+            path={formationPath(formation)}
+            text={resultShareText(result.overallScore, formation.name, formation.institution.name)}
+          />
+        </Card>
+      )}
 
       <ResultFeedback
         formationId={formation.id}

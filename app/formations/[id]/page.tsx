@@ -8,6 +8,8 @@ import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { EligibilitySection } from "@/components/result/EligibilitySection";
 import { OfficialSourceCard } from "@/components/result/OfficialSourceCard";
+import { ShareButtons } from "@/components/shared/ShareButtons";
+import { formationShareText } from "@/lib/share";
 import { SelectivityCard } from "@/components/result/SelectivityCard";
 import { FORMATIONS } from "@/data/formations";
 import { TUITION_FEES, type OfficialAmount } from "@/data/budget";
@@ -237,6 +239,11 @@ export default async function FormationPage({ params }: PageProps<"/formations/[
         <SelectivityCard formationId={formation.id} />
         <EligibilitySection formation={formation} standalone />
         <OfficialSourceCard formation={formation} />
+
+        <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm font-bold text-slate-900">Partager cette formation</p>
+          <ShareButtons path={formationPath(formation)} text={formationShareText(formation.name, formation.institution.name)} />
+        </div>
 
         {related.length > 0 && (
           <section aria-labelledby="formations-proches">
