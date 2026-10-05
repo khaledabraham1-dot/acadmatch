@@ -47,7 +47,8 @@ test("une page formation est indexable et mène au calcul de compatibilité", as
   expect(JSON.parse(jsonLd ?? "[]")[0]["@type"]).toBe("EducationalOccupationalProgram");
   await expectNoHorizontalScroll(page);
 
-  await page.getByRole("link", { name: /Calculer ma compatibilité/ }).click();
+  // Sur mobile, un raccourci reprend ce lien sous le titre : les deux mènent au même calcul.
+  await page.getByRole("link", { name: /Calculer ma compatibilité/ }).first().click();
   await expect(page).toHaveURL(/\/resultat\?formationId=f-m2ds-ip-paris/, { timeout: 15_000 });
 });
 
@@ -156,7 +157,7 @@ test("calendrier : un résident du Bénin voit le calendrier Campus France offic
   await page.waitForLoadState("networkidle");
 
   // Master national + résident du Bénin : Campus France, pas Mon Master.
-  await expect(page.getByRole("heading", { name: "Études en France — Bénin" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Études en France (Bénin)" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Mon Master" })).toHaveCount(0);
   await expect(page.getByText(/Officiel · rentrée \d{4}/)).toBeVisible();
   // L'école garde son propre calendrier.
@@ -165,7 +166,7 @@ test("calendrier : un résident du Bénin voit le calendrier Campus France offic
 
   await page.getByRole("button", { name: /Ajouter les \d+ échéances à mes rappels/ }).click();
   await expect(page.getByText("Ajoutées à vos rappels")).toBeVisible();
-  await expect(page.getByText(/Études en France — Bénin — Dépôt définitif après corrections/)).toBeVisible();
+  await expect(page.getByText("Études en France (Bénin) : Dépôt définitif après corrections")).toBeVisible();
   await page.reload();
-  await expect(page.getByText(/Études en France — Bénin — Dépôt définitif après corrections/)).toBeVisible();
+  await expect(page.getByText("Études en France (Bénin) : Dépôt définitif après corrections")).toBeVisible();
 });

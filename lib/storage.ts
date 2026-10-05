@@ -1,6 +1,7 @@
 import type { Application, BudgetPlan, InterviewPrep, InterviewQuestionCategory, StudentProfile } from "@/types";
 import { INTERVIEW_QUESTION_CATEGORIES } from "@/types";
 import type { VisaAnswers } from "@/lib/visa";
+import { sanitizeProfile } from "@/lib/profile/sanitize";
 
 /**
  * Persistance locale : tout fonctionne sans compte, dans le navigateur. Avec
@@ -116,14 +117,11 @@ export function loadProfile(): StudentProfile | null {
   try {
     const raw = storage.getItem(PROFILE_KEY);
     if (!raw) return null;
-    // Migration douce : un profil enregistré avant l'ajout de `languages`
-    // (voir types/index.ts) n'a pas ce champ — on le complète plutôt que de
-    // laisser le moteur de matching recevoir `languages: undefined`. Un
-    // tableau vide est traité comme absent : sans langue déclarée, le
-    // prérequis implicite de langue échouerait pour toute formation
-    // (voir computeLanguageStrength dans lib/matching/engine.ts).
-    const profile = JSON.parse(raw) as Omit<StudentProfile, "languages"> & { languages?: string[] };
-    return { ...profile, languages: profile.languages?.length ? profile.languages : ["Français"] };
+    // Données non fiables (ancienne version, stockage abîmé) : relues et
+    // nettoyées par sanitizeProfile, qui complète aussi `languages` pour un
+    // profil antérieur à ce champ (sans langue déclarée, le prérequis
+    // implicite de langue échouerait pour toute formation).
+    return sanitizeProfile(JSON.parse(raw));
   } catch {
     return null;
   }

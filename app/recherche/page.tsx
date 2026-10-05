@@ -47,6 +47,8 @@ const AVAILABLE_CITIES = uniqueSorted(FORMATIONS, (f) => f.institution.city);
 const AVAILABLE_LANGUAGES = uniqueSorted(FORMATIONS, (f) => f.language);
 const AVAILABLE_GOALS = uniqueSorted(FORMATIONS, (f) => f.goal);
 
+const PAGE_SIZE = 15;
+
 export default function RecherchePage() {
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [compareIds, setCompareIds] = useState<string[]>([]);
@@ -58,6 +60,9 @@ export default function RecherchePage() {
   const [language, setLanguage] = useState(ALL_LANGUAGES);
   const [goal, setGoal] = useState(ALL_GOALS);
   const [showOtherDomains, setShowOtherDomains] = useState(false);
+  // Liste affichée par tranches : 60 cartes d'un coup pèsent sur un téléphone
+  // d'entrée de gamme. Le compteur est lié aux filtres : en changer repart de 15.
+  const [pagination, setPagination] = useState({ key: "", count: PAGE_SIZE });
 
   useEffect(() => {
     // localStorage n'existe pas côté serveur : la lecture doit se faire après le montage.
@@ -121,6 +126,10 @@ export default function RecherchePage() {
     if (!profile) return [];
     return getRecommendations(profile, FORMATIONS);
   }, [profile]);
+
+  const filtersKey = [query, level, domain, city, language, goal].join("|");
+  const visibleCount = pagination.key === filtersKey ? pagination.count : PAGE_SIZE;
+  const showMore = () => setPagination({ key: filtersKey, count: visibleCount + PAGE_SIZE });
 
   const hasActiveFilters =
     query !== "" ||
@@ -298,7 +307,8 @@ export default function RecherchePage() {
       </div>
 
       <div className={compareIds.length > 0 ? "space-y-4 pb-24" : "space-y-4"}>
-        {inDomain.map((formation) => (
+        <h2 className="sr-only">Formations correspondant à votre recherche</h2>
+        {inDomain.slice(0, visibleCount).map((formation) => (
           <FormationCard
             key={formation.id}
             formation={formation}
@@ -311,6 +321,13 @@ export default function RecherchePage() {
             onToggleSave={handleToggleSave}
           />
         ))}
+        {inDomain.length > visibleCount && (
+          <div className="flex justify-center">
+            <Button type="button" variant="outline" onClick={showMore}>
+              Afficher plus de formations ({inDomain.length - visibleCount} restantes)
+            </Button>
+          </div>
+        )}
         {otherDomains.length > 0 && (
           <section aria-labelledby="autres-domaines" className="space-y-4 pt-4">
             <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-6">

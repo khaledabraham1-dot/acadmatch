@@ -35,5 +35,5 @@ export function stepsForRoute(guide: VisaGuide, route: VisaRoute): VisaStep[] {
 
 /** Libellé d'action ajouté au suivi de candidature (repris dans le calendrier). */
 export function visaActionLabel(step: VisaStep): string {
-  return `Visa — ${step.title}`;
+  return `Visa : ${step.title}`;
 }

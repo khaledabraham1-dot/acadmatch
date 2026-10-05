@@ -23,10 +23,10 @@ const ERROR_MESSAGES: Record<string, string> = {
   not_configured: "Cette fonctionnalité IA n'est pas encore configurée. Réessayez plus tard.",
   quota_exceeded: `Vous avez atteint votre limite d'IA pour aujourd'hui (${USER_DAILY_LIMITS.import} imports de documents et ${USER_DAILY_LIMITS.texte} générations de texte par jour). Réessayez demain.`,
   budget_exhausted:
-    "L'analyse par IA est très demandée aujourd'hui et sa capacité quotidienne est atteinte. Réessayez demain — le reste d'AcadMatch reste disponible.",
+    "L'analyse par IA est très demandée aujourd'hui et sa capacité quotidienne est atteinte. Réessayez demain. Le reste d'AcadMatch reste disponible.",
   document_too_long:
     "Document trop long : ne gardez que les pages utiles (votre dernière année, par exemple) ou collez seulement le texte concerné.",
-  invalid_request: "Requête invalide — rechargez la page et réessayez.",
+  invalid_request: "Requête invalide : rechargez la page et réessayez.",
   error: "Une erreur est survenue pendant la génération. Réessayez dans un instant.",
 };
 
@@ -109,7 +109,7 @@ export function AiLoginRequired() {
   return (
     <Card className="flex flex-wrap items-center justify-between gap-3 border-blue-100 bg-blue-50/60">
       <p className="text-sm text-blue-800">
-        Les fonctionnalités IA demandent un compte (gratuit) — le reste d&apos;AcadMatch reste utilisable sans
+        Les fonctionnalités IA demandent un compte (gratuit) ; le reste d&apos;AcadMatch reste utilisable sans
         connexion.
       </p>
       <LinkButton href="/compte" size="sm">

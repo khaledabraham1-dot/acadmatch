@@ -83,7 +83,7 @@ export const OFFICIAL_CAMPAIGNS: Record<CampaignId, OfficialCampaign> = {
   },
   "eef-benin": {
     id: "eef-benin",
-    name: "Études en France — Bénin",
+    name: "Études en France (Bénin)",
     audience: "Candidats résidant au Bénin (procédure de candidature classique)",
     intake: 2027,
     phases: [
@@ -101,7 +101,7 @@ export const OFFICIAL_CAMPAIGNS: Record<CampaignId, OfficialCampaign> = {
   },
   "eef-senegal": {
     id: "eef-senegal",
-    name: "Études en France — Sénégal",
+    name: "Études en France (Sénégal)",
     audience: "Candidats résidant au Sénégal, formations « connectées » à la plateforme Études en France",
     intake: 2027,
     phases: [
@@ -118,14 +118,14 @@ export const OFFICIAL_CAMPAIGNS: Record<CampaignId, OfficialCampaign> = {
   },
   "eef-cameroun": {
     id: "eef-cameroun",
-    name: "Études en France — Cameroun",
+    name: "Études en France (Cameroun)",
     audience: "Candidats résidant au Cameroun (procédure Études en France)",
     intake: 2027,
     phases: [
       { label: "Ouverture de la plateforme Études en France", end: "2026-10-01" },
       { label: "Paiement des frais de procédure (TLS)", start: "2026-10-05", end: "2027-02-16" },
-      { label: "Dépôt du dossier — 1re année de licence, écoles d'architecture", end: "2026-12-14" },
-      { label: "Dépôt du dossier — L2, L3, BUT, licence pro, master, ingénieur", end: "2027-01-31", key: true },
+      { label: "Dépôt du dossier (1re année de licence, écoles d'architecture)", end: "2026-12-14" },
+      { label: "Dépôt du dossier (L2, L3, BUT, licence pro, master, ingénieur)", end: "2027-01-31", key: true },
       { label: "Entretien pédagogique", start: "2026-10-12", end: "2027-03-01" },
       { label: "Réponses des établissements", end: "2027-04-30" },
       { label: "Choix définitif", end: "2027-05-30" },
@@ -137,13 +137,13 @@ export const OFFICIAL_CAMPAIGNS: Record<CampaignId, OfficialCampaign> = {
   },
   "eef-togo": {
     id: "eef-togo",
-    name: "Études en France — Togo",
+    name: "Études en France (Togo)",
     audience: "Candidats résidant au Togo, formations connectées (candidature classique « Je suis candidat »)",
     intake: 2027,
     phases: [
       { label: "Ouverture de la plateforme Études en France", end: "2026-10-01" },
-      { label: "Dépôt du dossier et paiement — 1re année de licence", end: "2026-12-15" },
-      { label: "Dépôt du dossier et paiement — autres formations", end: "2026-12-31", key: true },
+      { label: "Dépôt du dossier et paiement (1re année de licence)", end: "2026-12-15" },
+      { label: "Dépôt du dossier et paiement (autres formations)", end: "2026-12-31", key: true },
       { label: "Entretien pédagogique", end: "2027-03-15" },
       { label: "Réponses des établissements", end: "2027-04-30" },
       { label: "Choix définitif", end: "2027-05-31" },
@@ -155,13 +155,13 @@ export const OFFICIAL_CAMPAIGNS: Record<CampaignId, OfficialCampaign> = {
   },
   "eef-mali": {
     id: "eef-mali",
-    name: "Études en France — Mali",
+    name: "Études en France (Mali)",
     audience: "Candidats résidant au Mali, établissements publics (procédure « Je suis candidat »)",
     intake: 2027,
     phases: [
       { label: "Ouverture de la plateforme Études en France", end: "2026-10-01" },
-      { label: "Dépôt du dossier et paiement — 1re année de licence, architecture, PASS/LAS", end: "2026-11-29" },
-      { label: "Dépôt du dossier et paiement — L2, L3, master, BUT, écoles d'ingénieurs et de commerce", end: "2027-01-30", key: true },
+      { label: "Dépôt du dossier et paiement (1re année de licence, architecture, PASS/LAS)", end: "2026-11-29" },
+      { label: "Dépôt du dossier et paiement (L2, L3, master, BUT, écoles d'ingénieurs et de commerce)", end: "2027-01-30", key: true },
       { label: "Entretien pédagogique", end: "2027-03-14" },
       { label: "Réponses des établissements", end: "2027-04-29" },
     ],
@@ -172,7 +172,7 @@ export const OFFICIAL_CAMPAIGNS: Record<CampaignId, OfficialCampaign> = {
   },
   "eef-maroc": {
     id: "eef-maroc",
-    name: "Études en France — Maroc",
+    name: "Études en France (Maroc)",
     audience: "Candidats résidant au Maroc, formations connectées à la plateforme Études en France",
     intake: 2027,
     phases: [

@@ -13,7 +13,7 @@ export default function LettreMotivationPage() {
   return (
     <AppShell
       title="Lettre de motivation"
-      description="Un brouillon basé sur votre profil et la formation visée — jamais une lettre finale, toujours à relire et personnaliser."
+      description="Un brouillon basé sur votre profil et la formation visée. Jamais une lettre finale : toujours à relire et personnaliser."
     >
       <Suspense>
         <MotivationLetterView />

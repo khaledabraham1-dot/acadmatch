@@ -18,13 +18,13 @@ export function OfficialSourceCard({ formation }: OfficialSourceCardProps) {
     <Card className="border-blue-100 bg-blue-50/60">
       <h2 className="mb-1 text-base font-semibold text-slate-900">Source officielle</h2>
       <p className="mb-3 text-sm text-slate-600">
-        Vérifiez toujours les conditions d&apos;admission sur le site de l&apos;établissement —
+        Vérifiez toujours les conditions d&apos;admission sur le site de l&apos;établissement :
         AcadMatch synthétise, il ne remplace pas la page officielle.
       </p>
 
       {formation.demo ? (
         <p className="text-sm text-slate-500" title={formation.source}>
-          Fiche de démonstration — URL fictive : {formation.source.replace(/^https?:\/\//, "")}
+          Fiche de démonstration, URL fictive : {formation.source.replace(/^https?:\/\//, "")}
         </p>
       ) : (
         <div className="space-y-1">
@@ -49,7 +49,7 @@ export function OfficialSourceCard({ formation }: OfficialSourceCardProps) {
         <p className="text-xs font-semibold text-slate-700">Comment candidater</p>
         <p className="mt-1 text-xs leading-relaxed text-slate-600">{formation.applicationProcedure}</p>
         <p className="mt-1 text-xs italic text-slate-500">
-          Plateforme et procédure générales — la date limite exacte de la campagne en cours n&apos;est
+          Plateforme et procédure générales : la date limite exacte de la campagne en cours n&apos;est
           fiable que sur la page officielle ci-dessus.
         </p>
       </div>

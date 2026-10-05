@@ -44,7 +44,7 @@ export interface DocumentSuggestionSet {
 export const MON_MASTER_COMMON_DOCUMENTS: DocumentSuggestionSet = {
   title: "Dossier commun Mon Master",
   description:
-    "Base commune transmise à toutes vos candidatures sur Mon Master (Master 1, France) — les pièces spécifiques demandées par chaque formation s'y ajoutent et varient. Consultez toujours la fiche de la formation visée sur monmaster.gouv.fr pour la liste complète.",
+    "Base commune transmise à toutes vos candidatures sur Mon Master (Master 1, France). Les pièces spécifiques demandées par chaque formation s'y ajoutent et varient. Consultez toujours la fiche de la formation visée sur monmaster.gouv.fr pour la liste complète.",
   items: [
     { label: "État civil (pièce d'identité)", required: true },
     { label: "Cursus post-bac (parcours suivi)", required: true },

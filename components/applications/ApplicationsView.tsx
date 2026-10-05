@@ -64,7 +64,7 @@ export function ApplicationsView() {
               <option value="">Choisissez une formation…</option>
               {availableFormations.map((f) => (
                 <option key={f.id} value={f.id}>
-                  {f.name} — {f.institution.name}
+                  {f.name}, {f.institution.name}
                 </option>
               ))}
             </Select>

@@ -49,7 +49,12 @@ describe("securityHeaders", () => {
         "X-Content-Type-Options",
         "Referrer-Policy",
         "Permissions-Policy",
+        "Strict-Transport-Security",
       ]),
     );
+  });
+
+  it("n'impose pas HTTPS en développement local", () => {
+    expect(securityHeaders({ isDev: true }).map((header) => header.key)).not.toContain("Strict-Transport-Security");
   });
 });

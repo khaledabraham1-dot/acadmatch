@@ -2,6 +2,7 @@ import { type EmailOtpType } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
+import { isSafeInternalPath } from "@/lib/profile/validation";
 
 /**
  * Cible du lien magique reçu par e-mail (`signInWithOtp`, voir
@@ -41,8 +42,5 @@ export async function GET(request: NextRequest) {
  * concaténés à `origin`, redirigeraient vers un site externe.
  */
 function safeNextPath(next: string | null): string {
-  if (!next || !next.startsWith("/") || next.startsWith("//") || next.startsWith("/\\")) {
-    return "/compte";
-  }
-  return next;
+  return isSafeInternalPath(next) ? next : "/compte";
 }

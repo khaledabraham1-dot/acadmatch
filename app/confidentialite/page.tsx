@@ -183,7 +183,7 @@ export default function ConfidentialitePage() {
         <ul>
           {SUBPROCESSORS.map((processor) => (
             <li key={processor.name}>
-              <strong>{processor.name}</strong> — {processor.role} ({processor.location}).{" "}
+              <strong>{processor.name}</strong> : {processor.role} ({processor.location}).{" "}
               <ExternalLink href={processor.privacyUrl}>Sa politique</ExternalLink>
             </li>
           ))}

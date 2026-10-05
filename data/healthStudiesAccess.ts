@@ -31,12 +31,12 @@ export const HEALTH_STUDIES_ACCESS: HealthStudiesCountryRule[] = [
     country: "France",
     title: "France : PASS ou L.AS, puis sélection",
     points: [
-      "Hors UE avec un bac étranger : candidature en 1re année (PASS ou L.AS) uniquement par la demande d'admission préalable (DAP) — via Études en France dans les pays concernés — et non par Parcoursup ; date limite habituelle : mi-décembre pour la rentrée suivante.",
+      "Hors UE avec un bac étranger : candidature en 1re année (PASS ou L.AS) uniquement par la demande d'admission préalable (DAP), via Études en France dans les pays concernés, et non par Parcoursup ; date limite habituelle : mi-décembre pour la rentrée suivante.",
       "L'entrée en 2e année de médecine, pharmacie, odontologie, maïeutique ou kinésithérapie se joue ensuite sur une sélection exigeante en fin de PASS ou de L.AS.",
       "Une L.AS (licence avec option Accès Santé, ex. Sciences de la vie à Nancy) garde une vraie licence en cas d'échec : c'est la voie la plus sûre.",
     ],
     source: {
-      label: "Faculté de médecine Paris-Saclay — accès PASS/L.AS hors UE",
+      label: "Faculté de médecine Paris-Saclay : accès PASS/L.AS hors UE",
       url: "https://www.medecine.universite-paris-saclay.fr/formations/acces-direct-aux-etudes-de-sante/acces-en-premiere-annee-des-formations-de-sante-pass/las-pour-les-etudiants-extracommunautaires",
     },
   },
@@ -49,7 +49,7 @@ export const HEALTH_STUDIES_ACCESS: HealthStudiesCountryRule[] = [
       "Diplôme secondaire étranger : l'équivalence doit être obtenue avant la clôture des inscriptions au concours.",
     ],
     source: {
-      label: "UMONS, Faculté de médecine — concours d'entrée",
+      label: "UMONS, Faculté de médecine : concours d'entrée",
       url: "https://web.umons.ac.be/fmp/fr/etudes/concours-dentree-medecine/",
     },
   },

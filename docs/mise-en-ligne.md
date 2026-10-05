@@ -52,9 +52,10 @@ tes accès à Vercel, Supabase, la console Anthropic et GitHub.
       peut pas changer la région d'un projet existant).
 - [ ] Supabase → **Table Editor** : vérifier que les tables `profiles`,
       `ai_usage`, `workspaces`, `feedback`, `formation_requests` et
-      `journey_events` existent.
+      `journey_events` existent, et que le déclencheur anti-abus
+      `throttle_feedback` est présent (Database → Triggers).
       Sinon, exécuter dans **SQL Editor**, dans l'ordre, les fichiers
-      manquants de `supabase/migrations/` (0001 à 0007).
+      manquants de `supabase/migrations/` (0001 à 0008).
 - [ ] Table `feedback` : supprimer les lignes de test envoyées pendant le
       développement (les plus anciennes, datées du 1er octobre 2026 dans la
       colonne `created_at`) : la table doit être vide au lancement.

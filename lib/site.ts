@@ -49,8 +49,8 @@ export const MAX_TITLE_LENGTH = 62;
 export function formationTitle(formation: Pick<StudyProgram, "name" | "institution">): string {
   const { name, institution } = formation;
   const candidates = [
-    `${name} — ${institution.name} : prérequis`,
-    `${name} — ${institution.name}`,
+    `${name}, ${institution.name} : prérequis`,
+    `${name}, ${institution.name}`,
     `${name} (${institution.city}) : prérequis et admission`,
     `${name} (${institution.city}) : prérequis`,
     `${name} (${institution.city})`,
@@ -62,7 +62,7 @@ export function formationTitle(formation: Pick<StudyProgram, "name" | "instituti
 export function formationDescription(formation: StudyProgram): string {
   const { institution } = formation;
   return truncateForMeta(
-    `${formation.name} — ${institution.name}, ${institution.city} (${institution.country}), ` +
+    `${formation.name}, ${institution.name}, ${institution.city} (${institution.country}), ` +
       `enseigné en ${formation.language.toLowerCase()}. Prérequis d'entrée, compétences attendues et procédure ` +
       `vérifiés sur la source officielle. Testez gratuitement votre compatibilité.`,
   );

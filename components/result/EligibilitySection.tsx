@@ -24,10 +24,10 @@ export function EligibilitySection({ formation, standalone = false }: Eligibilit
     <Card>
       <h2 className="mb-1 flex items-center gap-2 text-base font-semibold text-slate-900">
         <Landmark className="size-4 text-slate-500" />
-        Éligibilité administrative — {guide.country}
+        Éligibilité administrative ({guide.country})
       </h2>
       <p className="mb-4 text-sm text-slate-500">
-        Ces parcours déterminent qui peut candidater par quelle voie (nationalité, pays de résidence) —
+        Ces parcours déterminent qui peut candidater par quelle voie (nationalité, pays de résidence) :
         indépendamment de la compatibilité académique{standalone ? "" : " évaluée ci-dessus"}. Vérifiez toujours
         votre cas précis sur la source officielle.
       </p>
@@ -36,7 +36,7 @@ export function EligibilitySection({ formation, standalone = false }: Eligibilit
           <li key={pathway.audience} className="flex gap-2">
             <span className="mt-2 size-1.5 shrink-0 rounded-full bg-slate-300" aria-hidden />
             <span>
-              <span className="font-medium text-slate-900">{pathway.audience}</span> — {pathway.summary}
+              <span className="font-medium text-slate-900">{pathway.audience}</span> : {pathway.summary}
             </span>
           </li>
         ))}

@@ -29,7 +29,7 @@ const IMPORT_ERRORS: Record<string, string> = {
   file_too_large: "Fichier trop lourd (4 Mo maximum) : ne gardez que les pages de votre année, ou collez le texte.",
   text_too_long: "Texte trop long : collez seulement les descriptifs des cours de votre année.",
   not_a_syllabus:
-    "Ce document ne liste pas les cours d'un cursus. Il faut le programme ou la maquette de votre formation (même réduite aux intitulés des cours) — le relevé de notes s'importe au-dessus, dans « Matières ».",
+    "Ce document ne liste pas les cours d'un cursus. Il faut le programme ou la maquette de votre formation (même réduite aux intitulés des cours). Le relevé de notes s'importe au-dessus, dans « Matières ».",
   no_module_found: "Aucun cours lisible n'a été trouvé. Essayez un PDF plus net, ou collez le texte du programme.",
 };
 
@@ -138,13 +138,13 @@ export function SyllabusImport({ existingCourses, existingSkills, onAddCourses, 
           <p className="text-sm font-semibold text-slate-900">Importer le programme de mes cours (optionnel)</p>
           <p className="mt-1 text-sm text-slate-600">
             Le descriptif de vos cours (syllabus, programme détaillé, supplément au diplôme) montre ce que chaque
-            cours contenait vraiment — c&apos;est ce que lit un jury. AcadMatch en tire vos compétences, en ne
+            cours contenait vraiment : c&apos;est ce que lit un jury. AcadMatch en tire vos compétences, en ne
             gardant que les cours que vous avez suivis. Une simple maquette avec les intitulés des cours fonctionne
             aussi : les cours suivis rejoignent vos matières.
           </p>
           {existingCourses.length === 0 && (
             <p className="mt-2 text-sm text-violet-800">
-              Conseil : importez d&apos;abord votre relevé de notes (section « Matières ») — il permet de reconnaître
+              Conseil : importez d&apos;abord votre relevé de notes (section « Matières ») : il permet de reconnaître
               automatiquement les cours suivis parmi les options du programme.
             </p>
           )}
@@ -156,7 +156,7 @@ export function SyllabusImport({ existingCourses, existingSkills, onAddCourses, 
           <Link href="/compte?next=/profil" className="font-medium underline underline-offset-2">
             Connectez-vous
           </Link>{" "}
-          (compte gratuit) pour importer votre programme — vous pouvez aussi saisir vos compétences ci-dessous.
+          (compte gratuit) pour importer votre programme, ou saisissez vos compétences ci-dessous.
         </p>
       ) : (
         <div className="mt-4 space-y-3">
@@ -342,7 +342,7 @@ export function SyllabusImport({ existingCourses, existingSkills, onAddCourses, 
             <p className="text-sm text-emerald-700">
               {added.skills} compétence{added.skills > 1 ? "s" : ""}
               {added.courses > 0 && ` et ${added.courses} matière${added.courses > 1 ? "s" : ""}`} ajoutée
-              {added.skills + added.courses > 1 ? "s" : ""} — pensez à enregistrer votre profil.
+              {added.skills + added.courses > 1 ? "s" : ""}. Pensez à enregistrer votre profil.
             </p>
           )}
         </div>

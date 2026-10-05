@@ -33,7 +33,7 @@ export default function ConditionsPage() {
         </p>
       </Section>
 
-      <Section title="2. Ce que le score signifie — et ce qu'il ne garantit pas">
+      <Section title="2. Ce que le score signifie, et ce qu'il ne garantit pas">
         <ul>
           <li>
             Le score de compatibilité est une <strong>aide à la décision</strong>, calculée à partir de ce que

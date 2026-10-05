@@ -10,6 +10,7 @@ import {
   MAX_IMPORT_INPUT_TOKENS,
 } from "@/lib/ai/config";
 import { reserveAiCall, settleAiCall } from "@/lib/ai/rateLimit";
+import { naturalPunctuation } from "@/lib/ai/punctuation";
 
 export type AiFailureReason =
   | "not_configured"
@@ -68,7 +69,7 @@ export async function callAi({
     cost = costOfCall(response.model, response.usage);
 
     const textBlock = response.content.find((block): block is Anthropic.TextBlock => block.type === "text");
-    return textBlock ? { ok: true, text: textBlock.text } : { ok: false, reason: "error" };
+    return textBlock ? { ok: true, text: naturalPunctuation(textBlock.text) } : { ok: false, reason: "error" };
   } catch {
     return { ok: false, reason: "error" };
   } finally {

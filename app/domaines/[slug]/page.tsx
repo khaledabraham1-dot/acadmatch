@@ -97,7 +97,7 @@ function FormationRow({ formation }: { formation: StudyProgram }) {
     <li>
       <Link
         href={formationPath(formation)}
-        className="group flex flex-col gap-2 rounded-[18px] border border-slate-200 bg-white p-4 transition-colors hover:border-slate-300 sm:flex-row sm:items-center sm:justify-between sm:p-5"
+        className="group flex flex-col gap-2 rounded-[18px] border border-slate-200 bg-white p-4 transition-colors hover:border-slate-300 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:p-5"
       >
         <span className="min-w-0">
           <span className="block font-semibold text-slate-900 group-hover:text-blue-700">{formation.name}</span>
@@ -167,7 +167,7 @@ export default async function DomainPage({ params }: PageProps<"/domaines/[slug]
           {summary.masters.length > 0 && <>, {summary.masters.length} master{summary.masters.length > 1 ? "s" : ""}</>}
           {summary.others.length > 0 && <>, {summary.others.length} autre{summary.others.length > 1 ? "s" : ""}</>}, à{" "}
           {formatList(summary.cities)}
-          {summary.englishTaught > 0 && <> — dont {summary.englishTaught} enseignée{summary.englishTaught > 1 ? "s" : ""} en anglais</>}.
+          {summary.englishTaught > 0 && <>, dont {summary.englishTaught} enseignée{summary.englishTaught > 1 ? "s" : ""} en anglais</>}.
           Pour chacune : le diplôme d&apos;entrée, ce que le jury attend vraiment et la procédure, relevés sur les sources
           officielles.
         </p>

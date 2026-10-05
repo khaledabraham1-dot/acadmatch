@@ -12,7 +12,7 @@ import { Button, LinkButton } from "@/components/ui/Button";
  */
 export default function ErrorBoundary({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {
-    console.error("AcadMatch — erreur applicative interceptée :", error);
+    console.error("AcadMatch : erreur applicative interceptée", error);
   }, [error]);
 
   return (
@@ -29,7 +29,7 @@ export default function ErrorBoundary({ error, reset }: { error: Error & { diges
           Cela peut arriver si votre navigateur bloque le stockage local (navigation privée
           stricte, poste restreint). Vous pouvez réessayer ou revenir à l&apos;accueil.
         </p>
-        <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+        <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
           <Button onClick={reset}>Réessayer</Button>
           <LinkButton href="/" variant="outline">
             Retour à l&apos;accueil

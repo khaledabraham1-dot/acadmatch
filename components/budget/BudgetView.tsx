@@ -112,7 +112,7 @@ export function BudgetView() {
 
       <p className="text-xs leading-relaxed text-slate-500">
         Budget indicatif pour préparer votre projet : il ne remplace ni les informations de l&apos;établissement,
-        ni l&apos;examen de votre dossier de visa. Les montants officiels ont été vérifiés le 27/09/2026 — la
+        ni l&apos;examen de votre dossier de visa. Les montants officiels ont été vérifiés le 27/09/2026 ; la
         source fait toujours foi. Budget enregistré sur cet appareil.
       </p>
     </div>
@@ -254,7 +254,7 @@ function RateInput({ code, rate, onChange }: { code: string; rate: number; onCha
       <p className={cn("mt-1 text-xs", invalid ? "text-red-600" : "text-slate-500")}>
         {invalid
           ? "Saisissez un taux positif."
-          : "Hypothèse : ce taux varie chaque jour — vérifiez-le auprès de votre banque avant tout transfert."}
+          : "Hypothèse : ce taux varie chaque jour, vérifiez-le auprès de votre banque avant tout transfert."}
       </p>
     </div>
   );
@@ -453,7 +453,7 @@ function SummaryCard({ summary, plan }: { summary: BudgetSummary; plan: BudgetPl
 
   return (
     <Card>
-      <h2 className="text-sm font-semibold text-slate-900">Synthèse — rentrée {plan.targetYear}</h2>
+      <h2 className="text-sm font-semibold text-slate-900">Synthèse, rentrée {plan.targetYear}</h2>
       <dl className="mt-4 space-y-3 text-sm">
         <SummaryRow label="Total des coûts" cents={summary.totalCostCents} currency={currency} strong />
         <div className="space-y-1 border-l-2 border-slate-100 pl-3">

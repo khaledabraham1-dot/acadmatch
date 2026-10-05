@@ -127,7 +127,7 @@ export function TranscriptImport({
             <Link href="/compte?next=/profil" className="font-medium underline underline-offset-2">
               Connectez-vous
             </Link>{" "}
-            (compte gratuit) pour importer votre relevé — vous pouvez aussi saisir vos matières ci-dessous.
+            (compte gratuit) pour importer votre relevé, ou saisissez vos matières ci-dessous.
           </p>
         ) : (
           <div className="mt-4 space-y-3">
@@ -184,7 +184,7 @@ export function TranscriptImport({
             <div className="flex flex-wrap items-center justify-between gap-2">
               <p className="text-sm font-medium text-slate-900">
                 {extraction.courses.length} matière{extraction.courses.length > 1 ? "s" : ""} lue
-                {extraction.courses.length > 1 ? "s" : ""} — décochez celles à ne pas garder
+                {extraction.courses.length > 1 ? "s" : ""} : décochez celles à ne pas garder
               </p>
               <div className="flex gap-2 text-xs">
                 <button
@@ -241,14 +241,14 @@ export function TranscriptImport({
               </Button>
               {extraction.levelHint && extraction.levelHint !== currentLevel && (
                 <Button type="button" size="sm" variant="outline" className="h-auto min-h-9 py-1.5" onClick={() => onApplyLevel(extraction.levelHint!)}>
-                  Niveau lu : {extraction.levelHint} — l&apos;utiliser
+                  Niveau lu : {extraction.levelHint}. L&apos;utiliser
                 </Button>
               )}
 
             </div>
             {addedCount !== null && (
               <p className="text-sm text-emerald-700">
-                {addedCount} matière{addedCount > 1 ? "s" : ""} ajoutée{addedCount > 1 ? "s" : ""} — pensez à
+                {addedCount} matière{addedCount > 1 ? "s" : ""} ajoutée{addedCount > 1 ? "s" : ""}. Pensez à
                 enregistrer votre profil.
               </p>
             )}

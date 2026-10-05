@@ -72,11 +72,11 @@ export default function MasterGuide() {
         },
       ]}
       sources={[
-        { label: `Mon Master — ${monMaster.sourceLabel}`, url: monMaster.source },
-        { label: "Service-Public — droits d'inscription", url: fee.eu.source },
-        { label: "Service-Public — droits différenciés (hors UE)", url: fee.nonEu!.source },
-        { label: "Service-Public — visa étudiant et ressources", url: france.visaMonthlyMinimum!.source },
-        { label: "Campus France — procédure Études en France", url: "https://www.campusfrance.org/fr/candidature-procedure-etudes-en-france" },
+        { label: `Mon Master : ${monMaster.sourceLabel}`, url: monMaster.source },
+        { label: "Service-Public : droits d'inscription", url: fee.eu.source },
+        { label: "Service-Public : droits différenciés (hors UE)", url: fee.nonEu!.source },
+        { label: "Service-Public : visa étudiant et ressources", url: france.visaMonthlyMinimum!.source },
+        { label: "Campus France : procédure Études en France", url: "https://www.campusfrance.org/fr/candidature-procedure-etudes-en-france" },
       ]}
     >
       <Section id="voies" title="Trois voies de candidature">

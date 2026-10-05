@@ -32,7 +32,7 @@ export default function MentionsLegalesPage() {
 
       <Section title="Hébergement">
         <p>
-          {HOST.name}, {HOST.address} — <ExternalLink href={HOST.website}>{HOST.website.replace("https://", "")}</ExternalLink>.
+          {HOST.name}, {HOST.address} (<ExternalLink href={HOST.website}>{HOST.website.replace("https://", "")}</ExternalLink>).
         </p>
         <p>
           Les comptes et les projets synchronisés sont stockés chez Supabase, dans l&apos;Union européenne. Le détail des
@@ -40,7 +40,7 @@ export default function MentionsLegalesPage() {
         </p>
       </Section>
 
-      <Section title="Ce qu'est AcadMatch — et ce qu'il n'est pas">
+      <Section title="Ce qu'est AcadMatch, et ce qu'il n'est pas">
         <p>
           AcadMatch est un outil gratuit d&apos;aide à la décision pour les étudiants qui envisagent des études
           en France ou en Belgique. Il n&apos;est affilié ni à Campus France, ni à Parcoursup, ni à Mon Master, ni

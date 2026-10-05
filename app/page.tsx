@@ -15,6 +15,9 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-1 flex-col bg-slate-50">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd([websiteJsonLd(siteUrl()), organizationJsonLd(siteUrl())]) }} />
+      <a href="#contenu-principal" className="skip-link">
+        Aller au contenu
+      </a>
       <LandingNav />
       <main id="contenu-principal" className="flex-1">
         <Hero />

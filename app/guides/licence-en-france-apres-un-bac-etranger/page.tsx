@@ -72,11 +72,11 @@ export default function LicenceGuide() {
         },
       ]}
       sources={[
-        { label: "Campus France — candidater sans la procédure Études en France (DAP)", url: DAP_SOURCE },
-        { label: "Campus France Ghana — qui est concerné par la DAP", url: DAP_WHO_SOURCE },
-        { label: `Parcoursup — ${parcoursup.sourceLabel}`, url: parcoursup.source },
-        { label: "Service-Public — droits d'inscription", url: fee.eu.source },
-        { label: "Service-Public — droits différenciés (hors UE)", url: fee.nonEu!.source },
+        { label: "Campus France : candidater sans la procédure Études en France (DAP)", url: DAP_SOURCE },
+        { label: "Campus France Ghana : qui est concerné par la DAP", url: DAP_WHO_SOURCE },
+        { label: `Parcoursup : ${parcoursup.sourceLabel}`, url: parcoursup.source },
+        { label: "Service-Public : droits d'inscription", url: fee.eu.source },
+        { label: "Service-Public : droits différenciés (hors UE)", url: fee.nonEu!.source },
       ]}
     >
       <Section id="quelle-procedure" title="Parcoursup ou DAP : quelle procédure pour vous ?">
@@ -88,7 +88,7 @@ export default function LicenceGuide() {
           </li>
           <li>
             <strong>DAP via Études en France</strong> : vous résidez hors de l&apos;UE dans l&apos;un des pays de la
-            procédure (Bénin, Sénégal, Cameroun, Côte d&apos;Ivoire, Maroc…) — voir{" "}
+            procédure (Bénin, Sénégal, Cameroun, Côte d&apos;Ivoire, Maroc…) : voir{" "}
             <Link href={guidePath("etudes-en-france")} className="font-semibold text-blue-700 hover:text-blue-800">
               le guide Études en France
             </Link>

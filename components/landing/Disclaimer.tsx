@@ -1,6 +1,4 @@
 import { ShieldAlert } from "lucide-react";
-import { FORMATIONS } from "@/data/formations";
-import { coveredDomains, formatList } from "@/lib/search/filters";
 
 export function Disclaimer() {
   return (
@@ -16,10 +14,8 @@ export function Disclaimer() {
             garantie ni une probabilité d&apos;admission.
           </p>
           <p>
-            Les fiches actuelles sont des formations réelles (très majoritairement en France, avec
-            quelques établissements belges), vérifiées manuellement auprès de sources officielles,
-            sur un périmètre encore limité ({formatList(coveredDomains(FORMATIONS))}). Vérifiez
-            toujours la page de l&apos;établissement avant de candidater.
+            Chaque fiche est une formation réelle, vérifiée à la main sur sa page officielle et datée.
+            Vérifiez toujours la page de l&apos;établissement avant de candidater.
           </p>
         </div>
       </div>

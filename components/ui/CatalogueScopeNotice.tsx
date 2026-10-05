@@ -31,13 +31,10 @@ export function CatalogueScopeNotice({
         "rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm leading-relaxed text-slate-600"
       }
     >
-      <p className="font-medium text-slate-800">Périmètre actuel du catalogue</p>
-      <p className="mt-1">
-        AcadMatch couvre pour l&apos;instant un premier socle de {FORMATIONS.length} formations, très
-        majoritairement en France (et quelques-unes en Belgique), en{" "}
-        <strong className="font-semibold text-slate-800">{domains}</strong>, vérifiées auprès de sources
-        officielles. Ce n&apos;est pas (encore) l&apos;ensemble des
-        formations disponibles — l&apos;objectif est la fiabilité du matching, pas le volume.
+      <p>
+        <strong className="font-semibold text-slate-800">{FORMATIONS.length} formations vérifiées</strong> sur leurs pages
+        officielles, surtout en France, quelques-unes en Belgique : {domains}. Le catalogue s&apos;agrandit d&apos;après
+        les formations que vous signalez.
       </p>
       {!goalCovered && goal && (
         <p className="mt-2 font-medium text-amber-700">

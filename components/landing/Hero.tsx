@@ -33,7 +33,7 @@ export function Hero() {
           {FORMATION_COUNT} licences et masters, vérifiées sur leurs pages officielles. Vous voyez vos
           forces et ce qu&apos;il vous manque, avant de candidater.
         </p>
-        <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <LinkButton href="/profil" size="lg" className="w-full sm:w-auto">
             Analyser mon profil
             <ArrowRight className="size-4" aria-hidden />

@@ -55,5 +55,7 @@ export function securityHeaders(options: { isDev: boolean; supabaseUrl?: string 
     // L'import de relevé passe par <input type="file"> : aucune API capteur n'est utilisée.
     { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()" },
     { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+    // HTTPS imposé pendant 2 ans, sans « preload » (engagement difficile à défaire avant d'avoir le domaine définitif).
+    ...(options.isDev ? [] : [{ key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" }]),
   ];
 }

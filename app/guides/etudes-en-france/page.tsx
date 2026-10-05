@@ -49,11 +49,11 @@ export default function EtudesEnFranceGuide() {
         },
       ]}
       sources={[
-        { label: "Campus France — procédure Études en France", url: residence.source },
-        { label: "Service-Public — visa étudiant", url: FRANCE_VISA_GUIDE.source },
+        { label: "Campus France : procédure Études en France", url: residence.source },
+        { label: "Service-Public : visa étudiant", url: FRANCE_VISA_GUIDE.source },
         { label: "France-Visas", url: "https://france-visas.gouv.fr/" },
         ...countryPages.map((page) => ({
-          label: `${OFFICIAL_CAMPAIGNS[page.campaignId].sourceLabel} — calendrier`,
+          label: `${OFFICIAL_CAMPAIGNS[page.campaignId].sourceLabel} : calendrier`,
           url: OFFICIAL_CAMPAIGNS[page.campaignId].source,
         })),
       ]}

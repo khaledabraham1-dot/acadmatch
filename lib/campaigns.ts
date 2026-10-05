@@ -88,7 +88,7 @@ export function upcomingPhases(group: CampaignGroup, todayIso: string): Campaign
 
 /** Libellé du rappel ajouté au suivi de candidature (repris dans le calendrier, sans doublon). */
 export function campaignReminderLabel(campaign: OfficialCampaign, phase: CampaignPhase): string {
-  return `${campaign.name} — ${phase.label}`;
+  return `${campaign.name} : ${phase.label}`;
 }
 
 /**

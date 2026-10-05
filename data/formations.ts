@@ -131,7 +131,7 @@ export const FORMATIONS: StudyProgram[] = [
     requiredLevel: "Master 1",
     language: "Anglais",
     applicationProcedure:
-      "Candidature 100 % en ligne (relevés de notes, deux références académiques, CV, lettre de motivation) — dates précises sur la page admissions dédiée d'IP Paris.",
+      "Candidature 100 % en ligne (relevés de notes, deux références académiques, CV, lettre de motivation) ; dates précises sur la page admissions dédiée d'IP Paris.",
     prerequisites: [
       { id: "r1", type: "niveau", value: "Master 1", label: "Master 1 validé en mathématiques appliquées, statistiques ou équivalent" },
       { id: "r2", type: "domaine", value: "Mathématiques", label: "Solide formation en mathématiques appliquées ou statistiques", aliases: ["Data Science & IA"] },
@@ -170,7 +170,7 @@ export const FORMATIONS: StudyProgram[] = [
     requiredLevel: "Licence 3",
     language: "Anglais",
     applicationProcedure:
-      "Plateforme de candidature dédiée à CentraleSupélec, par vagues successives (environ 5 vagues, de novembre à mai) — candidater tôt augmente les chances sur les premières vagues.",
+      "Plateforme de candidature dédiée à CentraleSupélec, par vagues successives (environ 5 vagues, de novembre à mai) : candidater tôt augmente les chances sur les premières vagues.",
     prerequisites: [
       { id: "r1", type: "niveau", value: "Licence 3", label: "Licence (Bac+3/4) validée en sciences, ingénierie ou équivalent" },
       { id: "r2", type: "domaine", value: "Informatique", label: "Formation scientifique ou en ingénierie", aliases: ["Data Science & IA", "Mathématiques"] },
@@ -233,7 +233,7 @@ export const FORMATIONS: StudyProgram[] = [
   },
   {
     id: "f-mosef-paris1",
-    name: "Master 2 MoSEF — Data Science",
+    name: "Master 2 MoSEF, Data Science",
     institution: { name: "Université Paris 1 Panthéon-Sorbonne", city: "Paris", country: "France" },
     level: "Master 2",
     goal: "Master",
@@ -243,7 +243,7 @@ export const FORMATIONS: StudyProgram[] = [
     requiredLevel: "Master 1",
     language: "Français",
     applicationProcedure:
-      "Procédure de candidature non détaillée sur la page publique du programme — à vérifier directement sur le site officiel ou en contactant le programme.",
+      "Procédure de candidature non détaillée sur la page publique du programme, à vérifier directement sur le site officiel ou en contactant le programme.",
     prerequisites: [
       { id: "r1", type: "niveau", value: "Master 1", label: "Master 1 validé en économie, statistiques, mathématiques appliquées ou équivalent" },
       { id: "r2", type: "domaine", value: "Économie & Gestion", label: "Licence/Master en Économie, Statistiques ou Mathématiques appliquées", aliases: ["Mathématiques", "Data Science & IA"] },
@@ -268,8 +268,8 @@ export const FORMATIONS: StudyProgram[] = [
   },
   {
     id: "f-scdi-sorbonne",
-    name: "Master Mathématiques — Filière Sciences des Données pour l'Ingénieur.e (SCDI)",
-    institution: { name: "Sorbonne Université — Institut de Statistique (ISUP)", city: "Paris", country: "France" },
+    name: "Master Mathématiques, Filière Sciences des Données pour l'Ingénieur.e (SCDI)",
+    institution: { name: "Sorbonne Université, Institut de Statistique (ISUP)", city: "Paris", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Data Science & IA",
@@ -278,7 +278,7 @@ export const FORMATIONS: StudyProgram[] = [
     requiredLevel: "Licence 3",
     language: "Français",
     applicationProcedure:
-      "Master 1 : plateforme nationale Mon Master, sur dossier. Master 2 : plateforme eCandidat, généralement au printemps (mars à juin) — aucun entretien mentionné, admission sur dossier.",
+      "Master 1 : plateforme nationale Mon Master, sur dossier. Master 2 : plateforme eCandidat, généralement au printemps (mars à juin). Aucun entretien mentionné, admission sur dossier.",
     prerequisites: [
       { id: "r1", type: "niveau", value: "Licence 3", label: "Licence 3 validée en mathématiques ou équivalent" },
       { id: "r2", type: "domaine", value: "Mathématiques", label: "Licence en Mathématiques, avec de solides bases en probabilités et statistiques", aliases: ["Data Science & IA"] },
@@ -349,7 +349,7 @@ export const FORMATIONS: StudyProgram[] = [
     requiredLevel: "Baccalauréat",
     language: "Français",
     applicationProcedure:
-      "Procédure de candidature non confirmée sur la page consultée — à vérifier directement sur la page « Applying for undergraduate programmes » de l'université.",
+      "Procédure de candidature non confirmée sur la page consultée, à vérifier directement sur la page « Applying for undergraduate programmes » de l'université.",
     prerequisites: [
       { id: "r1", type: "niveau", value: "Baccalauréat", label: "Baccalauréat ou équivalent" },
       { id: "r2", type: "domaine", value: "Informatique", label: "Profil scientifique, spécialité Mathématiques ou NSI recommandée", aliases: ["Mathématiques"] },
@@ -377,7 +377,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-but-info-nantes",
     name: "BUT Informatique",
-    institution: { name: "IUT de Nantes — Université de Nantes", city: "Nantes", country: "France" },
+    institution: { name: "IUT de Nantes, Université de Nantes", city: "Nantes", country: "France" },
     level: "Licence 1",
     goal: "Licence",
     field: "Informatique",
@@ -411,7 +411,7 @@ export const FORMATIONS: StudyProgram[] = [
   },
   {
     id: "f-insa-lyon-info-parallele",
-    name: "Cycle ingénieur Informatique — admission parallèle (2ᵉ/3ᵉ année)",
+    name: "Cycle ingénieur Informatique, admission parallèle (2ᵉ/3ᵉ année)",
     institution: { name: "INSA Lyon", city: "Villeurbanne", country: "France" },
     level: "Licence 3",
     goal: "École spécialisée",
@@ -421,7 +421,7 @@ export const FORMATIONS: StudyProgram[] = [
     requiredLevel: "Licence 2",
     language: "Français",
     applicationProcedure:
-      "Page officielle non consultable au moment de la vérification — procédure et calendrier d'admission parallèle à vérifier directement sur le site de l'INSA Lyon.",
+      "Page officielle non consultable au moment de la vérification : procédure et calendrier d'admission parallèle à vérifier directement sur le site de l'INSA Lyon.",
     prerequisites: [
       { id: "r1", type: "niveau", value: "Licence 2", label: "L2, L3, DUT, BUT2/BUT3 ou BTS validé" },
       { id: "r2", type: "domaine", value: "Informatique", label: "Parcours scientifique ou technologique en informatique" },
@@ -446,7 +446,7 @@ export const FORMATIONS: StudyProgram[] = [
     id: "f-date-uclouvain",
     name: "Master en Data Science Engineering",
     institution: {
-      name: "UCLouvain — Louvain School of Engineering (EPL)",
+      name: "UCLouvain, Louvain School of Engineering (EPL)",
       city: "Louvain-la-Neuve",
       country: "Belgique",
     },
@@ -458,7 +458,7 @@ export const FORMATIONS: StudyProgram[] = [
     requiredLevel: "Licence 3",
     language: "Anglais",
     applicationProcedure:
-      "Candidature en ligne via le portail d'inscription de l'UCLouvain. Selon le diplôme d'origine : accès direct, accès conditionnel (jusqu'à 60 crédits complémentaires) ou refus — aucune période de candidature précise n'est indiquée sur la page consultée. Certificat de langue anglaise exigé pour les diplômes non belges.",
+      "Candidature en ligne via le portail d'inscription de l'UCLouvain. Selon le diplôme d'origine : accès direct, accès conditionnel (jusqu'à 60 crédits complémentaires) ou refus. Aucune période de candidature précise n'est indiquée sur la page consultée. Certificat de langue anglaise exigé pour les diplômes non belges.",
     prerequisites: [
       {
         id: "r1",
@@ -504,7 +504,7 @@ export const FORMATIONS: StudyProgram[] = [
     id: "f-mosig-grenoble-inp",
     name: "Master of Science in Informatics at Grenoble (MoSIG)",
     institution: {
-      name: "Grenoble INP — Ensimag, Université Grenoble Alpes",
+      name: "Grenoble INP, Ensimag, Université Grenoble Alpes",
       city: "Grenoble",
       country: "France",
     },
@@ -512,7 +512,7 @@ export const FORMATIONS: StudyProgram[] = [
     goal: "Master",
     field: "Informatique",
     description:
-      "Master of Science international de 2 ans (LMD), entièrement en anglais, à Grenoble INP — Ensimag, avec deux spécialisations possibles : Cloud Computing & Data Infrastructures, ou IA appliquée et systèmes interactifs.",
+      "Master of Science international de 2 ans (LMD), entièrement en anglais, à Grenoble INP-Ensimag, avec deux spécialisations possibles : Cloud Computing & Data Infrastructures, ou IA appliquée et systèmes interactifs.",
     requiredLevel: "Licence 3",
     language: "Anglais",
     applicationProcedure:
@@ -622,8 +622,8 @@ export const FORMATIONS: StudyProgram[] = [
   },
   {
     id: "f-ing-info-enseirb-matmeca",
-    name: "Ingénieur spécialité Informatique — admission sur titre (BUT/Licence)",
-    institution: { name: "ENSEIRB-MATMECA — Bordeaux INP", city: "Talence", country: "France" },
+    name: "Ingénieur spécialité Informatique, admission sur titre (BUT/Licence)",
+    institution: { name: "ENSEIRB-MATMECA, Bordeaux INP", city: "Talence", country: "France" },
     level: "Licence 3",
     goal: "École spécialisée",
     field: "Informatique",
@@ -666,8 +666,8 @@ export const FORMATIONS: StudyProgram[] = [
   // -------------------------------------------------------------------------
   {
     id: "f-licence-eco-gestion-tse",
-    name: "Licence Économie — parcours Économie et Gestion (L1-L2)",
-    institution: { name: "Université Toulouse Capitole — Toulouse School of Economics (TSE)", city: "Toulouse", country: "France" },
+    name: "Licence Économie, parcours Économie et Gestion (L1-L2)",
+    institution: { name: "Université Toulouse Capitole, Toulouse School of Economics (TSE)", city: "Toulouse", country: "France" },
     level: "Licence 1",
     goal: "Licence",
     field: "Économie & Gestion",
@@ -703,8 +703,8 @@ export const FORMATIONS: StudyProgram[] = [
   },
   {
     id: "f-licence-eco-gestion-amu",
-    name: "Licence Économie et Gestion — L1 portail commun",
-    institution: { name: "Aix-Marseille Université — Faculté d'Économie et de Gestion", city: "Aix-en-Provence", country: "France" },
+    name: "Licence Économie et Gestion, L1 portail commun",
+    institution: { name: "Aix-Marseille Université, Faculté d'Économie et de Gestion", city: "Aix-en-Provence", country: "France" },
     level: "Licence 1",
     goal: "Licence",
     field: "Économie & Gestion",
@@ -750,7 +750,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-m1-economics-tse",
     name: "Master 1 Economics (parcours international)",
-    institution: { name: "Université Toulouse Capitole — Toulouse School of Economics (TSE)", city: "Toulouse", country: "France" },
+    institution: { name: "Université Toulouse Capitole, Toulouse School of Economics (TSE)", city: "Toulouse", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Économie & Gestion",
@@ -792,8 +792,8 @@ export const FORMATIONS: StudyProgram[] = [
   },
   {
     id: "f-master-finance-ift-lyon3",
-    name: "Master Finance — parcours Ingénierie financière et transaction (IFT)",
-    institution: { name: "Université Jean Moulin Lyon 3 — iaelyon School of Management", city: "Lyon", country: "France" },
+    name: "Master Finance, parcours Ingénierie financière et transaction (IFT)",
+    institution: { name: "Université Jean Moulin Lyon 3, iaelyon School of Management", city: "Lyon", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Économie & Gestion",
@@ -802,7 +802,7 @@ export const FORMATIONS: StudyProgram[] = [
     requiredLevel: "Licence 3",
     language: "Français",
     applicationProcedure:
-      "Master 1 : plateforme nationale Mon Master, sur dossier — résultats académiques, test SIM Score IAE Message (TAGE MAGE ou GMAT tolérés pour les candidats internationaux), test d'anglais (TOEIC, TOEFL, IELTS…), CV et lettre de motivation. Master 2 : eCandidat (Université Lyon 3).",
+      "Master 1 : plateforme nationale Mon Master, sur dossier : résultats académiques, test SIM Score IAE Message (TAGE MAGE ou GMAT tolérés pour les candidats internationaux), test d'anglais (TOEIC, TOEFL, IELTS…), CV et lettre de motivation. Master 2 : eCandidat (Université Lyon 3).",
     prerequisites: [
       { id: "r1", type: "niveau", value: "Licence 3", label: "Licence ou 180 crédits ECTS dans un diplôme équivalent" },
       {
@@ -844,7 +844,7 @@ export const FORMATIONS: StudyProgram[] = [
     id: "f-master-gestion-uclouvain",
     name: "Master [120] en sciences de gestion (Master in Management)",
     institution: {
-      name: "UCLouvain — Louvain School of Management (LSM)",
+      name: "UCLouvain, Louvain School of Management (LSM)",
       city: "Louvain-la-Neuve",
       country: "Belgique",
     },
@@ -894,12 +894,12 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-licence-spi-strasbourg",
     name: "Licence Sciences pour l'ingénieur (SPI)",
-    institution: { name: "Université de Strasbourg — Faculté de physique et ingénierie", city: "Strasbourg", country: "France" },
+    institution: { name: "Université de Strasbourg, Faculté de physique et ingénierie", city: "Strasbourg", country: "France" },
     level: "Licence 1",
     goal: "Licence",
     field: "Sciences de l'ingénieur",
     description:
-      "Licence de 3 ans (180 crédits ECTS) : une L1 d'orientation en physique, mathématiques, chimie et informatique, une L2 élargie (mécanique du solide, électromagnétisme, thermodynamique, matériaux, électrotechnique) puis une L3 au choix parmi quatre parcours — systèmes électroniques, mécanique et génie industriel, mécatronique, sciences pour l'ingénieur et santé.",
+      "Licence de 3 ans (180 crédits ECTS) : une L1 d'orientation en physique, mathématiques, chimie et informatique, une L2 élargie (mécanique du solide, électromagnétisme, thermodynamique, matériaux, électrotechnique) puis une L3 au choix parmi quatre parcours : systèmes électroniques, mécanique et génie industriel, mécatronique, sciences pour l'ingénieur et santé.",
     requiredLevel: "Baccalauréat",
     language: "Français",
     applicationProcedure:
@@ -937,7 +937,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-bachelier-ingenieur-civil-uliege",
     name: "Bachelier en sciences de l'ingénieur, orientation ingénieur civil",
-    institution: { name: "Université de Liège (ULiège) — Faculté des Sciences appliquées", city: "Liège", country: "Belgique" },
+    institution: { name: "Université de Liège (ULiège), Faculté des Sciences appliquées", city: "Liège", country: "Belgique" },
     level: "Licence 1",
     goal: "Licence",
     field: "Sciences de l'ingénieur",
@@ -981,7 +981,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-master-mecanique-sorbonne",
     name: "Master Mécanique",
-    institution: { name: "Sorbonne Université — Faculté des Sciences et Ingénierie", city: "Paris", country: "France" },
+    institution: { name: "Sorbonne Université, Faculté des Sciences et Ingénierie", city: "Paris", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Sciences de l'ingénieur",
@@ -1029,7 +1029,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-master-ase-lille",
     name: "Master Automatique et systèmes électriques (ASE)",
-    institution: { name: "Université de Lille — Faculté des sciences et technologies", city: "Villeneuve-d'Ascq", country: "France" },
+    institution: { name: "Université de Lille, Faculté des sciences et technologies", city: "Villeneuve-d'Ascq", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Sciences de l'ingénieur",
@@ -1070,7 +1070,7 @@ export const FORMATIONS: StudyProgram[] = [
   },
   {
     id: "f-msc-advanced-manufacturing-centrale-nantes",
-    name: "MSc Mechanical Engineering — Advanced Manufacturing (M-ENG AM)",
+    name: "MSc Mechanical Engineering, Advanced Manufacturing (M-ENG AM)",
     institution: { name: "Centrale Nantes", city: "Nantes", country: "France" },
     level: "Master 1",
     goal: "Master",
@@ -1119,12 +1119,12 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-licence-droit-bordeaux",
     name: "Licence en droit",
-    institution: { name: "Université de Bordeaux — Faculté de droit et science politique", city: "Pessac", country: "France" },
+    institution: { name: "Université de Bordeaux, Faculté de droit et science politique", city: "Pessac", country: "France" },
     level: "Licence 1",
     goal: "Licence",
     field: "Droit",
     description:
-      "Licence de 3 ans donnant une culture juridique générale — droit privé, droit public, droit de l'Union européenne, droit international, histoire du droit et des institutions — puis une spécialisation en L3 (droit privé, droit public, droit de l'entreprise, droit international et européen, droit judiciaire, administration publique, science politique). Ouvre sur les masters de droit et la préparation au CRFPA (avocat).",
+      "Licence de 3 ans donnant une culture juridique générale (droit privé, droit public, droit de l'Union européenne, droit international, histoire du droit et des institutions), puis une spécialisation en L3 (droit privé, droit public, droit de l'entreprise, droit international et européen, droit judiciaire, administration publique, science politique). Ouvre sur les masters de droit et la préparation au CRFPA (avocat).",
     requiredLevel: "Baccalauréat",
     language: "Français",
     applicationProcedure:
@@ -1167,7 +1167,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-bachelier-droit-ulb",
     name: "Bachelier en droit",
-    institution: { name: "Université libre de Bruxelles (ULB) — Faculté de Droit et de Criminologie", city: "Bruxelles", country: "Belgique" },
+    institution: { name: "Université libre de Bruxelles (ULB), Faculté de Droit et de Criminologie", city: "Bruxelles", country: "Belgique" },
     level: "Licence 1",
     goal: "Licence",
     field: "Droit",
@@ -1203,12 +1203,12 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-master-droit-europeen-strasbourg",
     name: "Master Droit européen",
-    institution: { name: "Université de Strasbourg — Faculté de droit, de sciences politiques et de gestion", city: "Strasbourg", country: "France" },
+    institution: { name: "Université de Strasbourg, Faculté de droit, de sciences politiques et de gestion", city: "Strasbourg", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Droit",
     description:
-      "Master de 2 ans (120 crédits ECTS) au cœur de la capitale européenne : M1 centré sur le droit du marché intérieur, le contentieux de l'Union européenne ou le contentieux administratif et le droit public des affaires, puis cinq parcours en M2 — droit et politiques de l'UE, droit de l'économie et de la régulation, produits de santé, droit international et européen des affaires, espace de liberté, de sécurité et de justice.",
+      "Master de 2 ans (120 crédits ECTS) au cœur de la capitale européenne : M1 centré sur le droit du marché intérieur, le contentieux de l'Union européenne ou le contentieux administratif et le droit public des affaires, puis cinq parcours en M2 : droit et politiques de l'UE, droit de l'économie et de la régulation, produits de santé, droit international et européen des affaires, espace de liberté, de sécurité et de justice.",
     requiredLevel: "Licence 3",
     language: "Français",
     applicationProcedure:
@@ -1250,7 +1250,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-master-droit-affaires-amu",
     name: "Master Droit des affaires",
-    institution: { name: "Aix-Marseille Université — Faculté de droit et de science politique", city: "Aix-en-Provence", country: "France" },
+    institution: { name: "Aix-Marseille Université, Faculté de droit et de science politique", city: "Aix-en-Provence", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Droit",
@@ -1293,7 +1293,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-llm-international-economic-law-toulouse",
     name: "Master/LL.M. International Economic Law",
-    institution: { name: "Université Toulouse Capitole — European School of Law", city: "Toulouse", country: "France" },
+    institution: { name: "Université Toulouse Capitole, European School of Law", city: "Toulouse", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Droit",
@@ -1343,13 +1343,13 @@ export const FORMATIONS: StudyProgram[] = [
   // -------------------------------------------------------------------------
   {
     id: "f-licence-maths-rennes",
-    name: "Licence Mathématiques — portail Mathématiques et applications (L1-L2)",
-    institution: { name: "Université de Rennes — UFR Mathématiques", city: "Rennes", country: "France" },
+    name: "Licence Mathématiques, portail Mathématiques et applications (L1-L2)",
+    institution: { name: "Université de Rennes, UFR Mathématiques", city: "Rennes", country: "France" },
     level: "Licence 1",
     goal: "Licence",
     field: "Mathématiques",
     description:
-      "Deux premières années de la licence de mathématiques (campus de Beaulieu) : algèbre, géométrie, analyse, probabilités et statistiques, avec des modules de physique et d'informatique. Mène à la L3 de mathématiques — ou de physique, d'informatique — puis aux masters (calcul scientifique, préparation à l'agrégation, enseignement MEEF).",
+      "Deux premières années de la licence de mathématiques (campus de Beaulieu) : algèbre, géométrie, analyse, probabilités et statistiques, avec des modules de physique et d'informatique. Mène à la L3 de mathématiques (ou de physique, d'informatique), puis aux masters (calcul scientifique, préparation à l'agrégation, enseignement MEEF).",
     requiredLevel: "Baccalauréat",
     language: "Français",
     applicationProcedure:
@@ -1381,7 +1381,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-bachelier-maths-unamur",
     name: "Bachelier en sciences mathématiques",
-    institution: { name: "Université de Namur (UNamur) — Faculté des sciences", city: "Namur", country: "Belgique" },
+    institution: { name: "Université de Namur (UNamur), Faculté des sciences", city: "Namur", country: "Belgique" },
     level: "Licence 1",
     goal: "Licence",
     field: "Mathématiques",
@@ -1416,8 +1416,8 @@ export const FORMATIONS: StudyProgram[] = [
   },
   {
     id: "f-m1-maths-fondamentales-paris-saclay",
-    name: "Master Mathématiques et applications — M1 Mathématiques fondamentales et applications",
-    institution: { name: "Université Paris-Saclay — Institut de mathématiques d'Orsay", city: "Orsay", country: "France" },
+    name: "Master Mathématiques et applications, M1 Mathématiques fondamentales et applications",
+    institution: { name: "Université Paris-Saclay, Institut de mathématiques d'Orsay", city: "Orsay", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Mathématiques",
@@ -1472,7 +1472,7 @@ export const FORMATIONS: StudyProgram[] = [
     goal: "Master",
     field: "Mathématiques",
     description:
-      "M1 d'un an entièrement en anglais : probabilités et statistique, EDP et modélisation, images et géométrie, informatique, optimisation et cryptographie. Ouvre sur les M2 grenoblois — MSc in Industrial and Applied Mathematics (MSIAM : modélisation et calcul scientifique, ou data science), cybersécurité, recherche opérationnelle et optimisation (ORCO).",
+      "M1 d'un an entièrement en anglais : probabilités et statistique, EDP et modélisation, images et géométrie, informatique, optimisation et cryptographie. Ouvre sur les M2 grenoblois : MSc in Industrial and Applied Mathematics (MSIAM : modélisation et calcul scientifique, ou data science), cybersécurité, recherche opérationnelle et optimisation (ORCO).",
     requiredLevel: "Licence 3",
     language: "Anglais",
     applicationProcedure:
@@ -1510,7 +1510,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-master-maths-appliquees-stats-lille",
     name: "Master Mathématiques appliquées, statistiques",
-    institution: { name: "Université de Lille — Faculté des sciences et technologies", city: "Villeneuve-d'Ascq", country: "France" },
+    institution: { name: "Université de Lille, Faculté des sciences et technologies", city: "Villeneuve-d'Ascq", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Mathématiques",
@@ -1562,7 +1562,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-licence-physique-montpellier",
     name: "Licence Physique",
-    institution: { name: "Université de Montpellier — Faculté des sciences", city: "Montpellier", country: "France" },
+    institution: { name: "Université de Montpellier, Faculté des sciences", city: "Montpellier", country: "France" },
     level: "Licence 1",
     goal: "Licence",
     field: "Physique",
@@ -1604,7 +1604,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-bachelier-chimie-unamur",
     name: "Bachelier en sciences chimiques",
-    institution: { name: "Université de Namur (UNamur) — Faculté des sciences", city: "Namur", country: "Belgique" },
+    institution: { name: "Université de Namur (UNamur), Faculté des sciences", city: "Namur", country: "Belgique" },
     level: "Licence 1",
     goal: "Licence",
     field: "Chimie",
@@ -1645,8 +1645,8 @@ export const FORMATIONS: StudyProgram[] = [
   },
   {
     id: "f-master-chimie-strasbourg",
-    name: "Master Chimie — parcours Chimie moléculaire et supramoléculaire",
-    institution: { name: "Université de Strasbourg — Faculté de chimie & ECPM", city: "Strasbourg", country: "France" },
+    name: "Master Chimie, parcours Chimie moléculaire et supramoléculaire",
+    institution: { name: "Université de Strasbourg, Faculté de chimie & ECPM", city: "Strasbourg", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Chimie",
@@ -1691,7 +1691,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-master-physique-lyon1",
     name: "Master Physique fondamentale et applications",
-    institution: { name: "Université Claude Bernard Lyon 1 — Département de physique", city: "Villeurbanne", country: "France" },
+    institution: { name: "Université Claude Bernard Lyon 1, Département de physique", city: "Villeurbanne", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Physique",
@@ -1737,8 +1737,8 @@ export const FORMATIONS: StudyProgram[] = [
   },
   {
     id: "f-master-icfp-psl",
-    name: "Master ICFP — Physique fondamentale (International Centre for Fundamental Physics)",
-    institution: { name: "Université PSL — École normale supérieure, Département de physique", city: "Paris", country: "France" },
+    name: "Master ICFP, Physique fondamentale (International Centre for Fundamental Physics)",
+    institution: { name: "Université PSL, École normale supérieure, Département de physique", city: "Paris", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Physique",
@@ -1789,7 +1789,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-licence-sciences-vie-lorraine",
     name: "Licence Sciences de la vie",
-    institution: { name: "Université de Lorraine — Faculté des sciences et technologies", city: "Nancy", country: "France" },
+    institution: { name: "Université de Lorraine, Faculté des sciences et technologies", city: "Nancy", country: "France" },
     level: "Licence 1",
     goal: "Licence",
     field: "Biologie & Santé",
@@ -1831,12 +1831,12 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-bachelier-biologie-ulb",
     name: "Bachelier en sciences biologiques",
-    institution: { name: "Université libre de Bruxelles (ULB) — Faculté des Sciences", city: "Bruxelles", country: "Belgique" },
+    institution: { name: "Université libre de Bruxelles (ULB), Faculté des Sciences", city: "Bruxelles", country: "Belgique" },
     level: "Licence 1",
     goal: "Licence",
     field: "Biologie & Santé",
     description:
-      "Bachelier de 3 ans en français, à Bruxelles (campus de la Plaine) ou à Charleroi (avec l'UMONS) : formation générale en mathématiques, physique, chimie et sciences de la terre, et formation aux sciences du vivant — zoologie, botanique, évolution et écologie, physiologie, génétique, biochimie, biologie cellulaire et moléculaire, microbiologie. À Charleroi, le 1er bloc est polyvalent (tronc commun puis option chimie, biologie, pharmacie ou sciences biomédicales).",
+      "Bachelier de 3 ans en français, à Bruxelles (campus de la Plaine) ou à Charleroi (avec l'UMONS) : formation générale en mathématiques, physique, chimie et sciences de la terre, et formation aux sciences du vivant : zoologie, botanique, évolution et écologie, physiologie, génétique, biochimie, biologie cellulaire et moléculaire, microbiologie. À Charleroi, le 1er bloc est polyvalent (tronc commun puis option chimie, biologie, pharmacie ou sciences biomédicales).",
     requiredLevel: "Baccalauréat",
     language: "Français",
     applicationProcedure:
@@ -1872,12 +1872,12 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-master-bmc-sorbonne",
     name: "Master Biologie moléculaire et cellulaire (BMC)",
-    institution: { name: "Sorbonne Université — Faculté des Sciences et Ingénierie", city: "Paris", country: "France" },
+    institution: { name: "Sorbonne Université, Faculté des Sciences et Ingénierie", city: "Paris", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Biologie & Santé",
     description:
-      "Master de 2 ans, l'un des plus grands de France en biologie : M1 organisé en parcours — biologie cellulaire, du développement et des cellules souches, biotechnologies, génétique et épigénétique, immunologie, microbiologie, systèmes biologiques et concepts physiques, bio-informatique, interfaces chimie-biologie — dont un parcours international en anglais (From fundamental molecular biosciences to biotherapies). Alternance possible dans certains parcours.",
+      "Master de 2 ans, l'un des plus grands de France en biologie : M1 organisé en parcours : biologie cellulaire, du développement et des cellules souches, biotechnologies, génétique et épigénétique, immunologie, microbiologie, systèmes biologiques et concepts physiques, bio-informatique, interfaces chimie-biologie, dont un parcours international en anglais (From fundamental molecular biosciences to biotherapies). Alternance possible dans certains parcours.",
     requiredLevel: "Licence 3",
     language: "Français",
     applicationProcedure:
@@ -1912,7 +1912,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-master-bioinformatique-bordeaux",
     name: "Master Bio-informatique",
-    institution: { name: "Université de Bordeaux — Unité de formation de biologie", city: "Bordeaux", country: "France" },
+    institution: { name: "Université de Bordeaux, Unité de formation de biologie", city: "Bordeaux", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Biologie & Santé",
@@ -1927,7 +1927,7 @@ export const FORMATIONS: StudyProgram[] = [
         id: "r2",
         type: "domaine",
         value: "Biologie & Santé",
-        label: "Formation en biologie — aucun prérequis en informatique ou algorithmique",
+        label: "Formation en biologie, sans prérequis en informatique ou algorithmique",
       },
     ],
     coreCourses: [
@@ -1953,7 +1953,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-mph-ehesp",
     name: "Master of Public Health (MPH)",
-    institution: { name: "EHESP — École des hautes études en santé publique", city: "Rennes", country: "France" },
+    institution: { name: "EHESP, École des hautes études en santé publique", city: "Rennes", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Biologie & Santé",
@@ -1997,7 +1997,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-licence-science-politique-lille",
     name: "Licence Science politique",
-    institution: { name: "Université de Lille — Faculté des sciences juridiques, politiques et sociales", city: "Lille", country: "France" },
+    institution: { name: "Université de Lille, Faculté des sciences juridiques, politiques et sociales", city: "Lille", country: "France" },
     level: "Licence 1",
     goal: "Licence",
     field: "Sciences politiques",
@@ -2042,7 +2042,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-bachelier-sciences-politiques-uliege",
     name: "Bachelier en sciences politiques, orientation générale",
-    institution: { name: "Université de Liège (ULiège) — Faculté de Droit, de Science politique et de Criminologie", city: "Liège", country: "Belgique" },
+    institution: { name: "Université de Liège (ULiège), Faculté de Droit, de Science politique et de Criminologie", city: "Liège", country: "Belgique" },
     level: "Licence 1",
     goal: "Licence",
     field: "Sciences politiques",
@@ -2078,7 +2078,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-master-science-politique-paris1",
     name: "Master Science politique",
-    institution: { name: "Université Paris 1 Panthéon-Sorbonne — École de science politique de la Sorbonne", city: "Paris", country: "France" },
+    institution: { name: "Université Paris 1 Panthéon-Sorbonne, École de science politique de la Sorbonne", city: "Paris", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Sciences politiques",
@@ -2121,7 +2121,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-master-relations-internationales-uclouvain",
     name: "Master [120] en sciences politiques, orientation relations internationales",
-    institution: { name: "UCLouvain — Faculté des sciences économiques, sociales, politiques et de communication", city: "Louvain-la-Neuve", country: "Belgique" },
+    institution: { name: "UCLouvain, Faculté des sciences économiques, sociales, politiques et de communication", city: "Louvain-la-Neuve", country: "Belgique" },
     level: "Master 1",
     goal: "Master",
     field: "Sciences politiques",
@@ -2167,12 +2167,12 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-master-international-security-sciences-po",
     name: "Master in International Security (PSIA)",
-    institution: { name: "Sciences Po — Paris School of International Affairs (PSIA)", city: "Paris", country: "France" },
+    institution: { name: "Sciences Po, Paris School of International Affairs (PSIA)", city: "Paris", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Sciences politiques",
     description:
-      "Master de 2 ans entièrement en anglais : trois semestres de cours puis un semestre de stage ou de mémoire. Cours fondamentaux en études stratégiques, économie de la défense, analyse des conflits, consolidation de la paix et diplomatie, puis deux concentrations au choix — régionales (Afrique, Asie, Europe, Amériques, Moyen-Orient) ou thématiques (renseignement, droits humains, migrations, risques globaux, environnement…). Débouchés : administrations, renseignement, organisations internationales (ONU, OTAN, UE), ONG, entreprises.",
+      "Master de 2 ans entièrement en anglais : trois semestres de cours puis un semestre de stage ou de mémoire. Cours fondamentaux en études stratégiques, économie de la défense, analyse des conflits, consolidation de la paix et diplomatie, puis deux concentrations au choix : régionales (Afrique, Asie, Europe, Amériques, Moyen-Orient) ou thématiques (renseignement, droits humains, migrations, risques globaux, environnement…). Débouchés : administrations, renseignement, organisations internationales (ONU, OTAN, UE), ONG, entreprises.",
     requiredLevel: "Licence 3",
     language: "Anglais",
     applicationProcedure:
@@ -2204,7 +2204,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-master-economie-developpement-uca",
     name: "Master Économie du développement (CERDI)",
-    institution: { name: "Université Clermont Auvergne — École d'Économie (CERDI)", city: "Clermont-Ferrand", country: "France" },
+    institution: { name: "Université Clermont Auvergne, École d'Économie (CERDI)", city: "Clermont-Ferrand", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Économie & Gestion",
@@ -2251,8 +2251,8 @@ export const FORMATIONS: StudyProgram[] = [
   },
   {
     id: "f-master-mbfa-risques-financiers-rouen",
-    name: "Master Monnaie, banque, finance, assurance — parcours Économie et gestion des risques financiers",
-    institution: { name: "Université de Rouen Normandie — UFR Droit, Économie, Science politique", city: "Rouen", country: "France" },
+    name: "Master Monnaie, banque, finance, assurance, parcours Économie et gestion des risques financiers",
+    institution: { name: "Université de Rouen Normandie, UFR Droit, Économie, Science politique", city: "Rouen", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Économie & Gestion",
@@ -2298,8 +2298,8 @@ export const FORMATIONS: StudyProgram[] = [
   },
   {
     id: "f-master-mae-double-competence-tours",
-    name: "Master Management et administration des entreprises — parcours Management double compétence",
-    institution: { name: "Université de Tours — IAE Tours Val de Loire", city: "Tours", country: "France" },
+    name: "Master Management et administration des entreprises, parcours Management double compétence",
+    institution: { name: "Université de Tours, IAE Tours Val de Loire", city: "Tours", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Économie & Gestion",
@@ -2350,7 +2350,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-master-sante-publique-bordeaux",
     name: "Master Santé publique (ISPED)",
-    institution: { name: "Université de Bordeaux — ISPED (Institut de santé publique, d'épidémiologie et de développement)", city: "Bordeaux", country: "France" },
+    institution: { name: "Université de Bordeaux, ISPED (Institut de santé publique, d'épidémiologie et de développement)", city: "Bordeaux", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Biologie & Santé",
@@ -2394,8 +2394,8 @@ export const FORMATIONS: StudyProgram[] = [
   },
   {
     id: "f-m1-genie-civil-grenoble",
-    name: "Master Génie civil — 1re année, parcours Génie civil",
-    institution: { name: "Université Grenoble Alpes — UFR PhITEM", city: "Grenoble", country: "France" },
+    name: "Master Génie civil, 1re année, parcours Génie civil",
+    institution: { name: "Université Grenoble Alpes, UFR PhITEM", city: "Grenoble", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Sciences de l'ingénieur",
@@ -2438,8 +2438,8 @@ export const FORMATIONS: StudyProgram[] = [
   },
   {
     id: "f-master-securite-informatique-amu",
-    name: "Master Informatique — parcours Fiabilité et sécurité informatique (FSI)",
-    institution: { name: "Aix-Marseille Université — Faculté des sciences (Luminy)", city: "Marseille", country: "France" },
+    name: "Master Informatique, parcours Fiabilité et sécurité informatique (FSI)",
+    institution: { name: "Aix-Marseille Université, Faculté des sciences (Luminy)", city: "Marseille", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Informatique",
@@ -2481,8 +2481,8 @@ export const FORMATIONS: StudyProgram[] = [
   },
   {
     id: "f-master-droit-public-paris8",
-    name: "Master Droit public — parcours Droit public interne ou Droit international et européen",
-    institution: { name: "Université Paris 8 Vincennes-Saint-Denis — UFR Droit", city: "Saint-Denis", country: "France" },
+    name: "Master Droit public, parcours Droit public interne ou Droit international et européen",
+    institution: { name: "Université Paris 8 Vincennes-Saint-Denis, UFR Droit", city: "Saint-Denis", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Droit",
@@ -2529,8 +2529,8 @@ export const FORMATIONS: StudyProgram[] = [
   },
   {
     id: "f-master-droit-developpement-paris-cite",
-    name: "Master Droit international — parcours Droit et politique du développement",
-    institution: { name: "Université Paris Cité — Faculté de Droit, d'Économie et de Gestion", city: "Malakoff", country: "France" },
+    name: "Master Droit international, parcours Droit et politique du développement",
+    institution: { name: "Université Paris Cité, Faculté de Droit, d'Économie et de Gestion", city: "Malakoff", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Droit",
@@ -2578,7 +2578,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-master-droit-affaires-lorraine",
     name: "Master Droit des affaires",
-    institution: { name: "Université de Lorraine — Faculté de Droit, Sciences économiques et Gestion de Nancy", city: "Nancy", country: "France" },
+    institution: { name: "Université de Lorraine, Faculté de Droit, Sciences économiques et Gestion de Nancy", city: "Nancy", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Droit",
@@ -2622,7 +2622,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-licence-aes-lille",
     name: "Licence Administration économique et sociale (AES)",
-    institution: { name: "Université de Lille — Faculté des sciences juridiques, politiques et sociales", city: "Lille", country: "France" },
+    institution: { name: "Université de Lille, Faculté des sciences juridiques, politiques et sociales", city: "Lille", country: "France" },
     level: "Licence 1",
     goal: "Licence",
     field: "Économie & Gestion",
@@ -2670,7 +2670,7 @@ export const FORMATIONS: StudyProgram[] = [
   {
     id: "f-licence-gestion-iaelyon",
     name: "Licence Gestion et Management",
-    institution: { name: "Université Jean Moulin Lyon 3 — iaelyon School of Management", city: "Lyon", country: "France" },
+    institution: { name: "Université Jean Moulin Lyon 3, iaelyon School of Management", city: "Lyon", country: "France" },
     level: "Licence 1",
     goal: "Licence",
     field: "Économie & Gestion",
@@ -2715,8 +2715,8 @@ export const FORMATIONS: StudyProgram[] = [
   },
   {
     id: "f-master-plantes-tropicales-montpellier",
-    name: "Master Biologie, agrosciences — parcours Biotechnologie et amélioration des plantes tropicales (BAPT)",
-    institution: { name: "Université de Montpellier — Faculté des Sciences (co-accrédité avec l'Institut Agro Montpellier)", city: "Montpellier", country: "France" },
+    name: "Master Biologie, agrosciences, parcours Biotechnologie et amélioration des plantes tropicales (BAPT)",
+    institution: { name: "Université de Montpellier, Faculté des Sciences (co-accrédité avec l'Institut Agro Montpellier)", city: "Montpellier", country: "France" },
     level: "Master 1",
     goal: "Master",
     field: "Biologie & Santé",

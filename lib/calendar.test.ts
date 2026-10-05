@@ -43,7 +43,7 @@ describe("buildCalendarEntries", () => {
         formationName: "Master Test",
         date: "2026-02-01",
         source: "deadline",
-        label: "Échéance personnelle — Master Test",
+        label: "Échéance personnelle : Master Test",
         done: false,
       },
     ]);

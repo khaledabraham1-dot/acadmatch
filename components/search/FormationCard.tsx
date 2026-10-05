@@ -176,7 +176,7 @@ export function FormationCard({
         )}
       </div>
 
-      <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50 px-5 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50 px-5 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-6">
         {formation.demo ? (
           // Texte, pas un lien : cette URL est fictive et ne mène nulle part.
           <span

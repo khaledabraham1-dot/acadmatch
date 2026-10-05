@@ -117,7 +117,7 @@ export function ResultView() {
             Comparaison de {formations.length} formations
           </h2>
           <p className="mt-1 text-sm text-slate-500">
-            Vue côte-à-côte pour décider laquelle approfondir — puis ouvrez l&apos;analyse détaillée.
+            Vue côte-à-côte pour décider laquelle approfondir, puis ouvrez l&apos;analyse détaillée.
           </p>
         </div>
         <FormationCompareTable profile={profile} formations={formations} />

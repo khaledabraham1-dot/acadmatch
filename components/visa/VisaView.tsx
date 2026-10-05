@@ -112,7 +112,7 @@ export function VisaView() {
 
       <p className="text-xs leading-relaxed text-slate-500">
         AcadMatch vous oriente et renvoie vers les sources officielles, vérifiées le{" "}
-        {VISA_VERIFIED_AT.split("-").reverse().join("/")} ; il ne garantit aucune décision — elle appartient au
+        {VISA_VERIFIED_AT.split("-").reverse().join("/")} ; il ne garantit aucune décision : elle appartient au
         consulat. Les pièces à fournir, délais et frais sont ceux indiqués par les sites officiels, qui font
         toujours foi.
       </p>
@@ -343,7 +343,7 @@ function ResourcesStatus({ formation }: { formation: StudyProgram }) {
           )}
           <span>
             D&apos;après votre budget : {formatEuros(check.availableMonthlyCents)} / mois pour vivre après scolarité
-            et frais ponctuels — {check.meetsMinimum ? "au-dessus du minimum." : "en dessous du minimum."}{" "}
+            et frais ponctuels : {check.meetsMinimum ? "au-dessus du minimum." : "en dessous du minimum."}{" "}
             <Link href={budgetHref} className="font-medium underline underline-offset-2">
               Voir mon budget
             </Link>

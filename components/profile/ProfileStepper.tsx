@@ -49,7 +49,7 @@ export function ProfileStepper({ current, canOpen, isDone, onSelect }: ProfileSt
                     <span className="sm:hidden">{short}</span>
                     <span className="hidden sm:inline">{title}</span>
                   </span>
-                  <span className="hidden text-xs text-slate-600 sm:block">{hint}</span>
+                  <span className="hidden break-words text-xs text-slate-600 sm:block">{hint}</span>
                 </span>
               </button>
             </li>

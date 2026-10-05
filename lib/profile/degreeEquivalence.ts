@@ -41,7 +41,7 @@ export function estimateAcademicLevel(validatedYears: number): AcademicLevel {
 
 /** Options du sélecteur "années validées" — le dernier libellé couvre le doctorat et au-delà. */
 export const VALIDATED_YEARS_OPTIONS: { years: number; label: string }[] = [
-  { years: 0, label: "0 — uniquement le diplôme de fin d'études secondaires" },
+  { years: 0, label: "0 : uniquement le diplôme de fin d'études secondaires" },
   { years: 1, label: "1 an" },
   { years: 2, label: "2 ans" },
   { years: 3, label: "3 ans (ex : Bachelor's degree standard)" },

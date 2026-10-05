@@ -13,7 +13,7 @@ export default function EntretiensPage() {
   return (
     <AppShell
       title="Préparation aux entretiens"
-      description="Les questions qu'un jury poserait à votre profil pour cette formation — vos réponses, avec un retour pour les améliorer."
+      description="Les questions qu'un jury poserait à votre profil pour cette formation, et un retour sur vos réponses pour les améliorer."
     >
       <Suspense>
         <InterviewPrepView />

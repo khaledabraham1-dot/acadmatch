@@ -60,13 +60,13 @@ export default function BelgiqueGuide() {
         },
       ]}
       sources={[
-        ...(ulbDroit ? [{ label: "ULB — bachelier en droit (conditions d'admission)", url: ulbDroit.source }] : []),
-        ...(unamurMaths ? [{ label: "UNamur — bachelier en mathématiques (conditions)", url: unamurMaths.source }] : []),
-        ...(uliegeIngenieur ? [{ label: "ULiège — examen d'admission ingénieur civil", url: uliegeIngenieur.source }] : []),
-        { label: "ULB — droits d'inscription 2026-2027", url: ulb.eu.source },
-        { label: "UNamur — droits d'inscription 2026-2027", url: unamur.eu.source },
-        { label: "ULiège — droits d'inscription et moyens de subsistance", url: uliege.eu.source },
-        { label: "Office des étrangers — études", url: BELGIUM_VISA_GUIDE.source },
+        ...(ulbDroit ? [{ label: "ULB : bachelier en droit (conditions d'admission)", url: ulbDroit.source }] : []),
+        ...(unamurMaths ? [{ label: "UNamur : bachelier en mathématiques (conditions)", url: unamurMaths.source }] : []),
+        ...(uliegeIngenieur ? [{ label: "ULiège : examen d'admission ingénieur civil", url: uliegeIngenieur.source }] : []),
+        { label: "ULB : droits d'inscription 2026-2027", url: ulb.eu.source },
+        { label: "UNamur : droits d'inscription 2026-2027", url: unamur.eu.source },
+        { label: "ULiège : droits d'inscription et moyens de subsistance", url: uliege.eu.source },
+        { label: "Office des étrangers : études", url: BELGIUM_VISA_GUIDE.source },
       ]}
     >
       <Section id="etapes" title="Les étapes">

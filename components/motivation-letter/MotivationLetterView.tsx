@@ -148,7 +148,7 @@ export function MotivationLetterView() {
         />
 
         <p className="mt-2 text-xs leading-relaxed text-slate-500">
-          Ce texte est un point de départ, jamais une lettre finale — relisez-le, corrigez-le et
+          Ce texte est un point de départ, jamais une lettre finale : relisez-le, corrigez-le et
           personnalisez-le avant tout envoi. N&apos;ajoutez jamais une information inexacte.
         </p>
 

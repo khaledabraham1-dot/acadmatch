@@ -40,7 +40,7 @@ export function LoginForm() {
         <h2 className="text-base font-semibold text-slate-900">Vérifiez votre boîte mail</h2>
         <p className="mt-2 text-sm text-slate-600">
           Un lien de connexion a été envoyé à <strong>{email}</strong>. Cliquez dessus pour vous
-          connecter — il expire après un court délai.
+          connecter. Il expire après un court délai.
         </p>
       </Card>
     );
@@ -78,7 +78,7 @@ export function LoginForm() {
           <Link href="/conditions" className="underline underline-offset-2 hover:text-slate-700">
             conditions d&apos;utilisation
           </Link>
-          . Votre e-mail sert uniquement à vous connecter —{" "}
+          . Votre e-mail sert uniquement à vous connecter ;{" "}
           <Link href="/confidentialite" className="underline underline-offset-2 hover:text-slate-700">
             confidentialité
           </Link>

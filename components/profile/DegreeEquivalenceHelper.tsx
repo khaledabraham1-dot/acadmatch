@@ -69,7 +69,7 @@ export function DegreeEquivalenceHelper({ onApply }: DegreeEquivalenceHelperProp
         </Button>
       </div>
       <p className="mt-2 text-xs leading-relaxed text-slate-500">
-        Estimation indicative (Licence = Bac+3, Master = Bac+5 en France) — pas une équivalence
+        Estimation indicative (Licence = Bac+3, Master = Bac+5 en France), pas une équivalence
         officielle. Pour une reconnaissance officielle de votre diplôme, consultez le{" "}
         <a
           href={ENIC_NARIC_URL}

@@ -48,9 +48,9 @@ export default function EquivalenceGuide() {
         },
       ]}
       sources={[
-        { label: "Service-Public — faire reconnaître un diplôme obtenu à l'étranger", url: SERVICE_PUBLIC_RECOGNITION },
+        { label: "Service-Public : faire reconnaître un diplôme obtenu à l'étranger", url: SERVICE_PUBLIC_RECOGNITION },
         { label: "Centre ENIC-NARIC France (France Éducation international)", url: ENIC_NARIC_URL },
-        { label: "Campus France — diplômes français et système LMD", url: CAMPUS_FRANCE_LMD },
+        { label: "Campus France : diplômes français et système LMD", url: CAMPUS_FRANCE_LMD },
       ]}
     >
       <Section id="methode" title="La méthode : compter les années validées après le secondaire">
@@ -99,11 +99,11 @@ export default function EquivalenceGuide() {
 
       <Section id="ensuite" title="Ensuite : choisir le bon niveau d'entrée">
         <p>
-          Bac+3 validé ou en cours : visez un master 1 —{" "}
+          Bac+3 validé ou en cours : visez un master 1 :{" "}
           <Link href={guidePath("master-en-france-etudiant-etranger")} className="font-semibold text-blue-700 hover:text-blue-800">
             faire un master en France
           </Link>
-          . Diplôme de fin d&apos;études secondaires : une 1re année de licence —{" "}
+          . Diplôme de fin d&apos;études secondaires : une 1re année de licence :{" "}
           <Link href={guidePath("licence-en-france-apres-un-bac-etranger")} className="font-semibold text-blue-700 hover:text-blue-800">
             entrer en licence après un bac étranger
           </Link>

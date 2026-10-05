@@ -92,9 +92,9 @@ export default async function EefCountryPage({ params }: PageProps<"/guides/etud
         },
       ]}
       sources={[
-        { label: `${campaign.sourceLabel} — calendrier des procédures`, url: campaign.source },
-        { label: "Campus France — procédure Études en France", url: "https://www.campusfrance.org/fr/candidature-procedure-etudes-en-france" },
-        { label: "Service-Public — droits différenciés et visa", url: france.visaMonthlyMinimum!.source },
+        { label: `${campaign.sourceLabel} : calendrier des procédures`, url: campaign.source },
+        { label: "Campus France : procédure Études en France", url: "https://www.campusfrance.org/fr/candidature-procedure-etudes-en-france" },
+        { label: "Service-Public : droits différenciés et visa", url: france.visaMonthlyMinimum!.source },
       ]}
     >
       <Section id="calendrier" title={`Calendrier officiel, rentrée ${campaign.intake}`}>

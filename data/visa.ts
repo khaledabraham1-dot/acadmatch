@@ -212,7 +212,7 @@ export const BELGIUM_VISA_GUIDE: VisaGuide = {
       title: "Obtenir votre inscription",
       description:
         "La demande de visa pour études suppose d'être inscrit (ou admis) dans un établissement d'enseignement supérieur, pour des études à temps plein.",
-      link: { label: "Office des étrangers — études", url: DOFI_STUDENTS },
+      link: { label: "Office des étrangers : études", url: DOFI_STUDENTS },
       timing: "avant le départ",
       appliesTo: "tous",
     },
@@ -231,7 +231,7 @@ export const BELGIUM_VISA_GUIDE: VisaGuide = {
       title: "Demander le visa D au poste diplomatique belge",
       description:
         "La demande se dépose auprès de l'ambassade ou du consulat de Belgique compétent pour votre pays de résidence, qui indique les pièces à fournir.",
-      link: { label: "Office des étrangers — études", url: DOFI_STUDENTS },
+      link: { label: "Office des étrangers : études", url: DOFI_STUDENTS },
       timing: "avant le départ",
       appliesTo: "tous",
     },

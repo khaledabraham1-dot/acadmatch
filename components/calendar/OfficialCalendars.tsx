@@ -130,7 +130,7 @@ export function OfficialCalendars({
         if (group.key === "eef-generic") {
           return (
             <Card key={group.key}>
-              <h3 className="font-bold text-slate-900">Études en France — {visa?.residenceCountry}</h3>
+              <h3 className="font-bold text-slate-900">Études en France ({visa?.residenceCountry})</h3>
               <p className="mt-1 text-sm text-slate-600">
                 Vous résidez dans un pays « Études en France » : ces candidatures passent par Campus France, et non
                 par Parcoursup ou Mon Master. Les dates limites sont fixées par votre Espace Campus France, souvent dès

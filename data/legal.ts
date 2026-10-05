@@ -29,7 +29,7 @@ export const HOST = {
 /** Autorités de contrôle auprès desquelles un utilisateur peut déposer une réclamation. */
 export const AUTHORITIES = [
   {
-    name: "APDP — Autorité de Protection des Données à caractère Personnel (Bénin)",
+    name: "APDP, Autorité de Protection des Données à caractère Personnel (Bénin)",
     url: "https://apdp.bj",
   },
   { name: "CNIL (France)", url: "https://www.cnil.fr/fr/plaintes" },

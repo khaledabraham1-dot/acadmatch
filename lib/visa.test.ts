@@ -52,7 +52,7 @@ describe("parcours visa", () => {
     const twice = addChecklistLabelsOnce(once, labels, france.source);
     expect(once).toHaveLength(4);
     expect(twice).toEqual(once);
-    expect(once[0]).toMatchObject({ label: "Visa — Obtenir votre inscription ou préinscription", done: false });
+    expect(once[0]).toMatchObject({ label: "Visa : Obtenir votre inscription ou préinscription", done: false });
   });
 });
 

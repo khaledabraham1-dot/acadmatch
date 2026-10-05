@@ -2,7 +2,7 @@ import { OG_SIZE, ogCard } from "@/components/og/ogCard";
 import { FORMATIONS } from "@/data/formations";
 import { publicFormations } from "@/lib/site";
 
-export const alt = "Formation — prérequis et compatibilité sur AcadMatch";
+export const alt = "Formation : prérequis et compatibilité sur AcadMatch";
 export const size = OG_SIZE;
 export const contentType = "image/png";
 
@@ -17,6 +17,6 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   return ogCard({
     eyebrow: `${formation.goal} · ${formation.field}`,
     title: formation.name,
-    subtitle: `${formation.institution.name} — ${formation.institution.city}, ${formation.institution.country}`,
+    subtitle: `${formation.institution.name}, ${formation.institution.city}, ${formation.institution.country}`,
   });
 }

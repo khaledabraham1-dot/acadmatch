@@ -48,7 +48,7 @@ export function buildCalendarEntries(applications: Application[], formations: St
         formationName: formation.name,
         date: application.deadline,
         source: "deadline",
-        label: `Échéance personnelle — ${formation.name}`,
+        label: `Échéance personnelle : ${formation.name}`,
         done: false,
       });
     }

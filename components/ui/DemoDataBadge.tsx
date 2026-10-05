@@ -14,7 +14,7 @@ export function DemoDataBadge({ className }: { className?: string }) {
       )}
     >
       <Info className="size-3.5" />
-      Données de démonstration — à remplacer par les données officielles
+      Données de démonstration, à remplacer par les données officielles
     </div>
   );
 }

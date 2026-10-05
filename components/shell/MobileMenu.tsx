@@ -40,7 +40,7 @@ export function MobileMenu({ onClose }: { onClose: () => void }) {
       aria-label="Menu de navigation"
     >
       <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-3">
-        <Link href="/" onClick={onClose} aria-label="AcadMatch — accueil">
+        <Link href="/" onClick={onClose} aria-label="AcadMatch, accueil">
           <Logo />
         </Link>
         <button

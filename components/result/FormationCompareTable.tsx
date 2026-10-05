@@ -149,7 +149,7 @@ export function FormationCompareTable({ profile, formations }: FormationCompareT
               {rows.map(({ formation }) => (
                 <td key={formation.id} className="px-4 py-3">
                   {formation.demo ? (
-                    <span className="text-xs text-slate-500">Démo — URL fictive</span>
+                    <span className="text-xs text-slate-500">Démo, URL fictive</span>
                   ) : (
                     <a
                       href={formation.source}
@@ -185,7 +185,7 @@ export function FormationCompareTable({ profile, formations }: FormationCompareT
         </table>
       </Card>
       <p className="text-xs leading-relaxed text-slate-500">
-        Cette comparaison mesure une adéquation académique — pas une chance d&apos;admission. Ouvrez
+        Cette comparaison mesure une adéquation académique, pas une chance d&apos;admission. Ouvrez
         chaque analyse détaillée et la source officielle avant de décider.
       </p>
     </div>

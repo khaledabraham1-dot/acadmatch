@@ -57,9 +57,12 @@ export function LegalPage({
 }) {
   return (
     <div className="flex min-h-screen flex-col bg-white">
+      <a href="#contenu-principal" className="skip-link">
+        Aller au contenu
+      </a>
       <header className="border-b border-slate-100">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-4 sm:px-6">
-          <Link href="/" aria-label="AcadMatch — accueil">
+          <Link href="/" aria-label="AcadMatch, accueil">
             <Logo />
           </Link>
           <Link href="/profil" className="text-sm font-medium text-slate-600 hover:text-slate-900">
@@ -86,7 +89,7 @@ export function LegalPage({
           ))}
         </nav>
 
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">{title}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-pretty break-words hyphens-auto text-slate-900 sm:text-3xl">{title}</h1>
         <p className="mt-2 text-sm text-slate-500">Dernière mise à jour : {formatDate(LEGAL_UPDATED_AT)}</p>
         <div className="mt-6 text-base leading-relaxed text-slate-700">{intro}</div>
 

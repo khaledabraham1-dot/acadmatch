@@ -14,7 +14,7 @@ export default function NotFound() {
         <p className="mt-2 text-sm text-slate-500">
           Cette adresse n&apos;existe pas. Revenez à l&apos;accueil ou analysez votre profil.
         </p>
-        <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+        <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
           <LinkButton href="/">Accueil</LinkButton>
           <LinkButton href="/profil" variant="outline">
             Mon profil

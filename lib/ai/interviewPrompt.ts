@@ -74,7 +74,7 @@ Ne rédige JAMAIS une réponse complète à sa place. Si sa réponse mentionne u
 
 Sois exigeant mais bienveillant, concret et bref (120 à 220 mots). Si la question est posée en anglais, commente aussi la qualité de l'anglais.
 
-Format : texte brut uniquement, affiché tel quel — aucun Markdown (pas de **gras**, de # titres). Utilise exactement ces trois rubriques, chacune sur sa propre ligne suivie de tirets :
+Format : texte brut uniquement, affiché tel quel, aucun Markdown (pas de **gras**, de # titres) et jamais de tiret long (—). Utilise exactement ces trois rubriques, chacune sur sa propre ligne suivie de tirets :
 Points forts :
 À améliorer :
 Élément de votre profil à mobiliser :`;
@@ -99,7 +99,7 @@ Procédure de candidature (source officielle) : ${formation.applicationProcedure
 Écarts identifiés entre le profil et la formation :
 ${gaps.length > 0 ? gaps.map((g) => `- ${g}`).join("\n") : "- Aucun écart identifié."}
 
-Projet d'études — autres formations également ciblées :
+Projet d'études, autres formations également ciblées :
 ${others.length > 0 ? others.map((f) => `- ${f.name} (${f.institution.name}, ${f.institution.country})`).join("\n") : "- Aucune autre formation ciblée."}
 
 Langue des questions : ${interviewLanguage(formation)} (langue d'enseignement de la formation).

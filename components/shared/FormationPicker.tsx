@@ -38,7 +38,7 @@ export function FormationPicker({
               <option value="">Choisissez une formation…</option>
               {formations.map((f) => (
                 <option key={f.id} value={f.id}>
-                  {f.name} — {f.institution.name}
+                  {f.name}, {f.institution.name}
                 </option>
               ))}
             </Select>

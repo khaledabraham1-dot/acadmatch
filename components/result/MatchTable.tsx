@@ -68,7 +68,7 @@ export function MatchTable({ matches }: { matches: SubjectMatch[] }) {
                 <tr key={`${match.formationRequirement}-${index}`}>
                   <td className="py-3 pr-4 text-slate-700">
                     {match.strength === "manquant" ? (
-                      <span className="text-slate-500">—</span>
+                      <span className="text-slate-500">Absent de votre profil</span>
                     ) : (
                       match.studentItem
                     )}

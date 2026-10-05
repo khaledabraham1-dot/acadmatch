@@ -130,7 +130,7 @@ export default function MethodePage() {
           </p>
           <p>
             Exemple réel, recalculé à chaque mise à jour : le profil exemple (Licence 3 Informatique) obtient{" "}
-            <strong>{example.result.overallScore}/100</strong> pour le {example.formation.name} — prérequis{" "}
+            <strong>{example.result.overallScore}/100</strong> pour le {example.formation.name} : prérequis{" "}
             {example.result.breakdown.prerequisites}, contenu {example.result.breakdown.academicContent}, compétences{" "}
             {example.result.breakdown.skills}, niveau {example.result.breakdown.levelDegree}.
           </p>

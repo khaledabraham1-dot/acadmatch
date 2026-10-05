@@ -185,9 +185,17 @@ export function validateStoredProfile(profile: StudentProfile): ProfileValidatio
  * (pas d'open redirect vers un domaine externe via `//evil.com`).
  */
 export function safeInternalPath(next: string | null, fallback = "/recherche"): string {
-  if (!next) return fallback;
-  if (!next.startsWith("/")) return fallback;
-  if (next.startsWith("//")) return fallback;
-  if (next.includes("://")) return fallback;
-  return next;
+  return isSafeInternalPath(next) ? next : fallback;
+}
+
+/**
+ * Chemin interne sûr pour une redirection : commence par un seul « / » et ne
+ * contient ni antislash ni caractère de contrôle. Les navigateurs lisent
+ * « \ » comme « / » et ignorent tabulations et retours à la ligne : sans ce
+ * contrôle, « /\site.com » ou « /<tab>/site.com » redirigeraient hors d'AcadMatch.
+ */
+export function isSafeInternalPath(next: string | null): next is string {
+  if (!next || !next.startsWith("/") || next.startsWith("//")) return false;
+  if (next.includes("\\") || /[\u0000-\u001f\u007f]/.test(next)) return false;
+  return !next.includes("://");
 }

@@ -132,7 +132,7 @@ export function EspaceView() {
         ) : (
           <Card className="flex flex-wrap items-center justify-between gap-3 border-blue-100 bg-blue-50/60">
             <p className="text-sm text-blue-800">
-              Aucun profil renseigné pour l&apos;instant — indispensable pour calculer votre compatibilité.
+              Aucun profil renseigné pour l&apos;instant : il est indispensable pour calculer votre compatibilité.
             </p>
             <LinkButton href="/profil?next=/espace" size="sm">
               Analyser mon profil
@@ -355,7 +355,7 @@ export function EspaceView() {
               <p className="text-sm text-amber-700">
                 {studyProjectSummary.requiredDocumentsPending} document
                 {studyProjectSummary.requiredDocumentsPending > 1 ? "s" : ""} obligatoire
-                {studyProjectSummary.requiredDocumentsPending > 1 ? "s" : ""} encore à réunir — voir{" "}
+                {studyProjectSummary.requiredDocumentsPending > 1 ? "s" : ""} encore à réunir : voir{" "}
                 <Link href="/candidatures" className="font-medium underline underline-offset-2">
                   le suivi des candidatures
                 </Link>

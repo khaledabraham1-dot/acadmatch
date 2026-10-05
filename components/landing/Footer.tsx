@@ -65,7 +65,7 @@ export function Footer() {
               Conditions
             </Link>
           </nav>
-          <p className="mt-4 text-slate-600">© 2026 AcadMatch — aide à la décision académique, indépendante de Campus France</p>
+          <p className="mt-4 text-slate-600">© 2026 AcadMatch, aide à la décision académique, indépendante de Campus France</p>
         </div>
       </div>
     </footer>

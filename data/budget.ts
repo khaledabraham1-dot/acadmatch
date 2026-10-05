@@ -100,7 +100,7 @@ const UCLOUVAIN_FEE: TuitionFee = {
     },
     nonEu: null,
     nonEuNote:
-      "Une contribution supplémentaire peut s'ajouter pour les étudiants hors UE non assimilés : elle dépend de la nationalité et du programme, et UCLouvain ne la communique qu'au cours de l'inscription. Montant non publié — à demander au Service des inscriptions.",
+      "Une contribution supplémentaire peut s'ajouter pour les étudiants hors UE non assimilés : elle dépend de la nationalité et du programme, et UCLouvain ne la communique qu'au cours de l'inscription. Montant non publié, à demander au Service des inscriptions.",
     scope: "annuel",
     note: "Droits d'inscription complets 2026-2027 (grille validée le 10/06/2026). Tarifs réduits selon les revenus : 835 € (condition intermédiaire), 374 € (condition modeste), 0 € (boursiers).",
   };
@@ -213,9 +213,9 @@ export const TUITION_FEES: Record<string, TuitionFee> = {
       source: "https://www.sciencespo.fr/students/en/fees-funding/tuition-fees/",
     },
     nonEuNote:
-      "20 640 € par an quand le foyer fiscal des parents est hors de l'Espace économique européen. Bourses Sciences Po possibles (dont la bourse Émile Boutmy) — à vérifier selon le profil.",
+      "20 640 € par an quand le foyer fiscal des parents est hors de l'Espace économique européen. Bourses Sciences Po possibles (dont la bourse Émile Boutmy), à vérifier selon le profil.",
     scope: "annuel",
-    note: "Foyer fiscal dans l'EEE : droits calculés selon les revenus du foyer, de 0 € à 20 640 € par an — le montant affiché est le maximum.",
+    note: "Foyer fiscal dans l'EEE : droits calculés selon les revenus du foyer, de 0 € à 20 640 € par an ; le montant affiché est le maximum.",
   },
   "f-licence-droit-bordeaux": FRENCH_LICENCE,
   "f-master-droit-europeen-strasbourg": FRENCH_MASTER,
@@ -241,7 +241,7 @@ export const TUITION_FEES: Record<string, TuitionFee> = {
     },
     nonEu: null,
     nonEuNote:
-      "La page publie 4 500 € par an sans distinguer UE et hors UE ni préciser si les droits nationaux ou différenciés s'y ajoutent — à confirmer auprès de esl-admission@ut-capitole.fr.",
+      "La page publie 4 500 € par an sans distinguer UE et hors UE ni préciser si les droits nationaux ou différenciés s'y ajoutent. À confirmer auprès de esl-admission@ut-capitole.fr.",
     scope: "annuel",
     note: "4 500 € par an, montant publié pour 2025-2026 (dernière fiche disponible).",
   },

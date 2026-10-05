@@ -175,7 +175,7 @@ export function InterviewPrepView() {
         {english && (
           <p className="mt-3 flex items-start gap-2 rounded-xl bg-blue-50/70 px-3 py-2 text-sm text-blue-800">
             <Languages className="mt-0.5 size-4 shrink-0" aria-hidden />
-            Formation enseignée en anglais : l&apos;entretien se déroule généralement en anglais — les questions
+            Formation enseignée en anglais : l&apos;entretien se déroule généralement en anglais, les questions
             sont générées en anglais pour vous y entraîner.
           </p>
         )}
@@ -242,7 +242,7 @@ export function InterviewPrepView() {
         {!prep && (
           <p className="mt-4 text-sm leading-relaxed text-slate-600">
             Méthode conseillée : rédigez vous-même chaque réponse, demandez un retour, corrigez, puis
-            entraînez-vous à voix haute — 1 à 2 minutes par réponse, sans lire.
+            entraînez-vous à voix haute : 1 à 2 minutes par réponse, sans lire.
           </p>
         )}
       </Card>

@@ -139,6 +139,15 @@ describe("safeInternalPath", () => {
     expect(safeInternalPath("evil.com")).toBe("/recherche");
   });
 
+  it("rejette l'antislash et les caractères de contrôle, que les navigateurs normalisent en « // »", () => {
+    expect(safeInternalPath("/\\evil.com")).toBe("/recherche");
+    expect(safeInternalPath("/\t/evil.com")).toBe("/recherche");
+    expect(safeInternalPath("/\n/evil.com")).toBe("/recherche");
+    // Preuve que le danger est réel : le parseur d'URL du navigateur sort bien du site.
+    expect(new URL("/\\evil.com", "https://acadmatch.example").host).toBe("evil.com");
+    expect(new URL("/\t/evil.com", "https://acadmatch.example").host).toBe("evil.com");
+  });
+
   it("utilise le fallback si absent", () => {
     expect(safeInternalPath(null)).toBe("/recherche");
     expect(safeInternalPath(null, "/profil")).toBe("/profil");

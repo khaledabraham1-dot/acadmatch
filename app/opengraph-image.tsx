@@ -1,6 +1,6 @@
 import { OG_SIZE, ogCard } from "@/components/og/ogCard";
 
-export const alt = "AcadMatch — votre parcours correspond-il aux formations en France et en Belgique ?";
+export const alt = "AcadMatch : votre parcours correspond-il aux formations en France et en Belgique ?";
 export const size = OG_SIZE;
 export const contentType = "image/png";
 

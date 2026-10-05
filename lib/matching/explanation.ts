@@ -76,7 +76,7 @@ function adviceFor(label: string, importance: Importance, status: "manquant" | "
         : "Complément utile";
 
   if (status === "partielle") {
-    return `${priority} : vous avez une base proche de « ${label} » — approfondissez-la (cours, projet ou certification) avant de candidater.`;
+    return `${priority} : vous avez une base proche de « ${label} » : approfondissez-la (cours, projet ou certification) avant de candidater.`;
   }
   return `${priority} : « ${label} » n'apparaît pas dans votre profil. Ajoutez une preuve concrète (module, projet, stage) ou choisissez une formation moins exigeante sur ce point.`;
 }
@@ -202,7 +202,7 @@ export function buildDecisionAid(
 
   if (!languageOk) {
     paragraphs.push(
-      `La formation est enseignée en ${formation.language}, langue que vous n'avez pas indiquée comme confortable — cela pèse sur les prérequis.`,
+      `La formation est enseignée en ${formation.language}, langue que vous n'avez pas indiquée comme confortable, ce qui pèse sur les prérequis.`,
     );
   }
 

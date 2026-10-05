@@ -169,7 +169,7 @@ export function ProfileForm() {
     return {
       currentLevel,
       fieldOfStudy,
-      currentDegree: currentDegree.trim() || `${currentLevel} — ${fieldOfStudy}`,
+      currentDegree: currentDegree.trim() || `${currentLevel}, ${fieldOfStudy}`,
       courses: courses.map((name, index) => ({ id: courseId(index), name })),
       skills,
       goal,
@@ -336,7 +336,7 @@ export function ProfileForm() {
       <div hidden={step !== 1} className="space-y-6">
       <Card>
         <h2 ref={step === 1 ? stepHeadingRef : undefined} tabIndex={-1} className="mb-5 text-base font-semibold text-slate-900 focus:outline-none">
-          Étape 1 — Votre parcours actuel
+          Étape 1 : votre parcours actuel
         </h2>
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
@@ -429,7 +429,7 @@ export function ProfileForm() {
               Langues dans lesquelles vous êtes à l&apos;aise pour suivre des cours
             </legend>
             <p className="mb-2.5 text-xs text-slate-500">
-              Certaines formations sont enseignées entièrement en anglais — utilisé pour évaluer la
+              Certaines formations sont enseignées entièrement en anglais : utilisé pour évaluer la
               compatibilité.
             </p>
             <div className="flex flex-wrap gap-4">
@@ -453,7 +453,7 @@ export function ProfileForm() {
 
       <div hidden={step !== 2} className="space-y-6">
       <h2 ref={step === 2 ? stepHeadingRef : undefined} tabIndex={-1} className="text-base font-semibold text-slate-900 focus:outline-none">
-        Étape 2 — Ce que vous avez étudié
+        Étape 2 : ce que vous avez étudié
       </h2>
       {startWithDocuments && <DocumentQuickStart transcriptImport={transcriptImport} syllabusImport={syllabusImport} />}
 
@@ -499,7 +499,7 @@ export function ProfileForm() {
       <div hidden={step !== 3} className="space-y-6">
       <Card>
         <h2 ref={step === 3 ? stepHeadingRef : undefined} tabIndex={-1} className="mb-1 text-base font-semibold text-slate-900 focus:outline-none">
-          Étape 3 — Affiner <span className="font-normal text-slate-500">(optionnel)</span>
+          Étape 3 : affiner <span className="font-normal text-slate-500">(optionnel)</span>
         </h2>
         <p className="mb-5 text-sm text-slate-500">
           Vos résultats comptent dans le score, surtout face aux formations sélectives. Le reste sert aux
@@ -562,7 +562,7 @@ export function ProfileForm() {
               ))}
             </datalist>
             <p className="mt-1.5 text-xs text-slate-500">
-              Si vous laissez ce champ vide, AcadMatch utilisera « {currentLevel} — {fieldOfStudy} ».
+              Si vous laissez ce champ vide, AcadMatch utilisera « {currentLevel}, {fieldOfStudy} ».
             </p>
           </div>
 
@@ -576,7 +576,7 @@ export function ProfileForm() {
         <p className="mb-4 text-sm text-slate-500">
           Stages, projets, jobs, engagements associatifs… Non utilisés pour la compatibilité : ce sont les
           seules expériences que les assistants IA (lettre de motivation, entretiens) ont le droit de
-          mentionner — ils n&apos;en inventent jamais.
+          mentionner : ils n&apos;en inventent jamais.
         </p>
         <Textarea
           id="experiences"

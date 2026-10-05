@@ -88,7 +88,7 @@ export function ApplicationCard({ application, formation, onChange, onRemove }: 
             className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
           />
           <p className="mt-1 text-xs text-slate-500">
-            Un rappel que vous vous fixez — pas la date limite officielle. Vérifiez toujours la source de la
+            Un rappel que vous vous fixez, pas la date limite officielle. Vérifiez toujours la source de la
             formation.
           </p>
         </div>

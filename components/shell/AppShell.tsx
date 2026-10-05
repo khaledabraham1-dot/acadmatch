@@ -79,7 +79,7 @@ export function AppShell({ title, description, children }: AppShellProps) {
         <main id="contenu-principal" className="flex-1 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
           <div className="mx-auto w-full max-w-5xl">
             <div className="mb-8">
-              <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">{title}</h1>
+              <h1 className="text-2xl font-semibold tracking-tight text-pretty break-words hyphens-auto text-slate-900 sm:text-3xl">{title}</h1>
               {description && <p className="mt-2 text-slate-500">{description}</p>}
             </div>
             {children}

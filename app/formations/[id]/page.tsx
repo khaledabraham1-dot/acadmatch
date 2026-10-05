@@ -179,6 +179,12 @@ export default async function FormationPage({ params }: PageProps<"/formations/[
           </span>
         </div>
 
+        {/* Raccourci visible sans défiler sur mobile, avant la description (souvent longue). */}
+        <LinkButton href={`/resultat?formationId=${formation.id}`} size="sm" className="sm:hidden">
+          Calculer ma compatibilité
+          <ArrowRight className="size-4" aria-hidden />
+        </LinkButton>
+
         <p className="max-w-3xl text-base leading-relaxed text-slate-700">{formation.description}</p>
 
         <Card className="border-blue-200 bg-blue-50/70">
@@ -187,7 +193,7 @@ export default async function FormationPage({ params }: PageProps<"/formations/[
             AcadMatch compare vos matières et compétences aux prérequis ci-dessous, comme un jury, et vous montre
             vos points forts et les lacunes à combler avant de candidater. Gratuit, sans compte.
           </p>
-          <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+          <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
             <LinkButton href={`/resultat?formationId=${formation.id}`}>
               Calculer ma compatibilité
               <ArrowRight className="size-4" aria-hidden />
@@ -240,7 +246,7 @@ export default async function FormationPage({ params }: PageProps<"/formations/[
         <EligibilitySection formation={formation} standalone />
         <OfficialSourceCard formation={formation} />
 
-        <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <p className="text-sm font-bold text-slate-900">Partager cette formation</p>
           <ShareButtons path={formationPath(formation)} text={formationShareText(formation.name, formation.institution.name)} />
         </div>

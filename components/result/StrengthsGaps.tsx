@@ -26,7 +26,7 @@ export function StrengthsGaps({ strengths, gaps }: StrengthsGapsProps) {
           </ul>
         ) : (
           <p className="text-sm text-slate-500">
-            Aucun point fort identifié pour l&apos;instant — complétez votre profil pour affiner l&apos;analyse.
+            Aucun point fort identifié pour l&apos;instant : complétez votre profil pour affiner l&apos;analyse.
           </p>
         )}
       </Card>

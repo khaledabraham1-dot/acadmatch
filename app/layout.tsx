@@ -25,8 +25,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   title: {
     // ~60 caractères : au-delà, Google coupe le titre dans ses résultats.
-    default: "AcadMatch — Votre licence ou master en France et en Belgique",
-    template: "%s — AcadMatch",
+    default: "AcadMatch : votre licence ou master en France et en Belgique",
+    template: "%s | AcadMatch",
   },
   description: DEFAULT_DESCRIPTION,
   applicationName: SITE_NAME,

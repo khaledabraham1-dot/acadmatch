@@ -47,7 +47,7 @@ export default function FormationsPage() {
     >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
-      <div className="mb-8 flex flex-col gap-3 rounded-2xl border border-blue-200 bg-blue-50/70 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-8 flex flex-col gap-3 rounded-2xl border border-blue-200 bg-blue-50/70 p-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         <p className="text-sm text-slate-700">
           Filtrez par niveau, langue ou ville et voyez votre score de compatibilité pour chacune.
         </p>

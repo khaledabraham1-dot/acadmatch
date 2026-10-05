@@ -14,7 +14,7 @@ export type ProfileStep = 1 | 2 | 3;
 export const PROFILE_STEPS: { step: ProfileStep; title: string; short: string; hint: string }[] = [
   { step: 1, title: "Votre parcours", short: "Parcours", hint: "Niveau, domaine, objectif" },
   { step: 2, title: "Ce que vous avez étudié", short: "Études", hint: "Matières et compétences" },
-  { step: 3, title: "Affiner", short: "Affiner", hint: "Résultats, expériences — optionnel" },
+  { step: 3, title: "Affiner", short: "Affiner", hint: "Résultats, expériences (optionnel)" },
 ];
 
 export interface StepDraft {

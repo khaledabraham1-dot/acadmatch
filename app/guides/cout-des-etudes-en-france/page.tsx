@@ -68,11 +68,11 @@ export default function CoutGuide() {
         },
       ]}
       sources={[
-        { label: "Service-Public — droits d'inscription et CVEC", url: FRENCH_NATIONAL_FEES.licence.eu.source },
-        { label: "Service-Public — droits différenciés (hors UE)", url: FRENCH_NATIONAL_FEES.licence.nonEu!.source },
-        { label: "Service-Public — visa étudiant (ressources)", url: visa.source },
-        { label: "Direction générale du Trésor — parité du franc CFA", url: FIXED_EURO_PARITIES.XOF.source },
-        { label: "Crous — repas à 1 €", url: BUDGET_HINTS.food.source },
+        { label: "Service-Public : droits d'inscription et CVEC", url: FRENCH_NATIONAL_FEES.licence.eu.source },
+        { label: "Service-Public : droits différenciés (hors UE)", url: FRENCH_NATIONAL_FEES.licence.nonEu!.source },
+        { label: "Service-Public : visa étudiant (ressources)", url: visa.source },
+        { label: "Direction générale du Trésor : parité du franc CFA", url: FIXED_EURO_PARITIES.XOF.source },
+        { label: "Crous : repas à 1 €", url: BUDGET_HINTS.food.source },
       ]}
     >
       <Section id="droits" title="Les droits d'inscription 2026-2027">
