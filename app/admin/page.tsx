@@ -21,6 +21,11 @@ import { globalDailyBudgetUsd } from "@/lib/ai/config";
 import { FORMATIONS } from "@/data/formations";
 import { OFFICIAL_CAMPAIGNS } from "@/data/campaigns";
 import { TUITION_FEES } from "@/data/budget";
+import { LoginForm } from "@/components/account/LoginForm";
+import { AccountDeletionForm } from "@/components/admin/AccountDeletionForm";
+import { setRequestStatus } from "@/app/admin/actions";
+import { ADMIN_MAX_SESSION_HOURS } from "@/lib/admin/access";
+import type { RequestStatus } from "@/lib/admin/stats";
 
 export const metadata: Metadata = {
   title: "Administration",
@@ -45,20 +50,39 @@ const usd = (value: number) => `${value.toLocaleString("fr-FR", { minimumFractio
 export default async function AdminPage() {
   const access = await checkAdmin();
   if (access.status === "anonymous") redirect("/compte?next=/admin");
+  if (access.status === "reauth") {
+    return (
+      <AppShell title="Administration" description="Pour protéger les données, l'espace admin demande une connexion récente.">
+        <LoginForm
+          presetEmail={access.email}
+          afterLogin="/admin"
+          title="Confirmez votre identité"
+          intro={`Votre dernière connexion date de plus de ${ADMIN_MAX_SESSION_HOURS} heures. Recevez un code ou un lien sur votre adresse pour ouvrir l'espace admin.`}
+        />
+      </AppShell>
+    );
+  }
   if (access.status !== "admin") notFound();
 
   const now = new Date();
   const since30 = new Date(now.getTime() - 30 * DAY).toISOString();
   const db = createAdminClient();
-  const [users, profiles, workspaces, journey, requests, feedback, ai] = await Promise.all([
+  const requestColumns = "wanted, institution, country, source, profile_field, profile_level, created_at";
+  const [users, profiles, workspaces, journey, requestsWithStatus, feedback, ai, audit] = await Promise.all([
     db.auth.admin.listUsers({ page: 1, perPage: 1 }),
     db.from("profiles").select("id", { count: "exact", head: true }),
     db.from("workspaces").select("id", { count: "exact", head: true }),
     db.from("journey_events").select("step, detail, device, created_at").gte("created_at", since30).order("created_at", { ascending: false }).limit(MAX_ROWS),
-    db.from("formation_requests").select("wanted, institution, country, source, profile_field, profile_level, created_at").order("created_at", { ascending: false }).limit(MAX_ROWS),
+    db.from("formation_requests").select(`${requestColumns}, status`).order("created_at", { ascending: false }).limit(MAX_ROWS),
     db.from("feedback").select("formation_id, helpfulness, score_fairness, comment, created_at").order("created_at", { ascending: false }).limit(MAX_ROWS),
     db.from("ai_usage").select("feature, cost_usd, created_at").gte("created_at", since30).order("created_at", { ascending: false }).limit(MAX_ROWS),
+    db.from("admin_audit").select("created_at, admin_email, action, detail").order("created_at", { ascending: false }).limit(20),
   ]);
+  // Migration 0010 pas encore exécutée : la colonne « status » manque, on relit sans elle.
+  const actionsReady = !requestsWithStatus.error;
+  const requests = actionsReady
+    ? requestsWithStatus
+    : await db.from("formation_requests").select(requestColumns).order("created_at", { ascending: false }).limit(MAX_ROWS);
 
   const failures = [
     users.error && "comptes",
@@ -110,12 +134,19 @@ export default async function AdminPage() {
           />
         </Section>
 
+        {!actionsReady && (
+          <p role="alert" className="rounded-xl bg-amber-50 px-4 py-3 text-sm text-slate-800">
+            Actions désactivées : exécutez la migration <code>0010_admin_actions.sql</code> dans Supabase pour suivre le statut des
+            demandes et garder le journal des actions.
+          </p>
+        )}
+
         <Section id="demandes" title={`Formations demandées (${requestGroups.length})`} hint="Demandes « formation manquante », regroupées. En tête : les prochaines fiches à ajouter au catalogue.">
           {requestGroups.length === 0 ? (
             <Empty>Aucune demande pour l&apos;instant.</Empty>
           ) : (
             <Table
-              head={["Formation demandée", "Demandes", "Pays", "Domaine des demandeurs", "Dernière"]}
+              head={["Formation demandée", "Demandes", "Pays", "Domaine des demandeurs", "Dernière", "Statut"]}
               rows={requestGroups.slice(0, 50).map((g) => [
                 <span key="l">
                   {g.label}
@@ -125,6 +156,7 @@ export default async function AdminPage() {
                 g.countries.join(", ") || "-",
                 g.fields.join(", ") || "-",
                 dateFr(g.lastAt),
+                actionsReady ? <StatusControl key="s" status={g.status} wanted={g.wantedValues} /> : "-",
               ])}
             />
           )}
@@ -176,13 +208,75 @@ export default async function AdminPage() {
           />
         </Section>
 
+        <Section id="exports" title="Exporter les données" hint="Fichiers CSV (Excel), données anonymes. Chaque export est inscrit au journal.">
+          <div className="flex flex-wrap gap-2">
+            {[
+              ["demandes", "Demandes de formation"],
+              ["avis", "Avis sur les résultats"],
+              ["parcours", "Parcours des visiteurs"],
+            ].map(([type, label]) => (
+              <a key={type} href={`/admin/export?type=${type}`} className="rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-bold text-slate-800 hover:bg-slate-50">
+                {label}
+              </a>
+            ))}
+          </div>
+        </Section>
+
+        <Section id="rgpd" title="Supprimer un compte (demande d'un étudiant)" hint="Droit à l'effacement : supprime le compte, son profil et son projet synchronisé. Irréversible. Répondez à l'étudiant une fois fait.">
+          <AccountDeletionForm />
+        </Section>
+
         <Section id="catalogue" title="Santé du catalogue" hint="Ce qu'il faut revérifier sur les sources officielles (fiches de plus de 6 mois, calendriers et frais d'une année passée).">
           <HealthList title="Fiches à revérifier" items={health.formations} empty="Toutes les fiches ont été vérifiées il y a moins de 5 mois." />
           <HealthList title="Calendriers à mettre à jour" items={health.campaigns} empty="Tous les calendriers concernent la prochaine rentrée." />
           <HealthList title="Frais à mettre à jour" items={health.fees} empty="Tous les frais concernent l'année universitaire en cours." />
         </Section>
+
+        <Section id="journal" title="Journal des actions admin" hint="Les 20 dernières actions : changements de statut, exports, suppressions de comptes.">
+          <Table
+            head={["Date", "Administrateur", "Action", "Détail"]}
+            rows={((audit.data ?? []) as { created_at: string; admin_email: string; action: string; detail: string }[]).map((a) => [
+              new Date(a.created_at).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" }),
+              a.admin_email,
+              a.action,
+              a.detail,
+            ])}
+            emptyText={actionsReady ? "Aucune action pour l'instant." : "Journal disponible après la migration 0010."}
+          />
+        </Section>
       </div>
     </AppShell>
+  );
+}
+
+const STATUS_OPTIONS: { value: RequestStatus; label: string }[] = [
+  { value: "a-traiter", label: "À traiter" },
+  { value: "ajoutee", label: "Ajoutée" },
+  { value: "refusee", label: "Refusée" },
+];
+
+/** Statut d'un groupe de demandes : trois petits boutons, l'actif est mis en avant. */
+function StatusControl({ status, wanted }: { status: RequestStatus; wanted: string[] }) {
+  return (
+    <form action={setRequestStatus} className="flex flex-wrap gap-1">
+      <input type="hidden" name="wanted" value={JSON.stringify(wanted)} />
+      {STATUS_OPTIONS.map((option) => (
+        <button
+          key={option.value}
+          type="submit"
+          name="status"
+          value={option.value}
+          aria-pressed={status === option.value}
+          className={
+            status === option.value
+              ? "rounded-lg bg-blue-600 px-2 py-1 text-xs font-bold text-white"
+              : "rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-bold text-slate-700 hover:bg-slate-50"
+          }
+        >
+          {option.label}
+        </button>
+      ))}
+    </form>
   );
 }
 

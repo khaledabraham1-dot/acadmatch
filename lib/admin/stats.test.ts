@@ -34,6 +34,14 @@ describe("indicateurs admin", () => {
     ]);
     expect(groups[0]).toMatchObject({ label: "Master Économie du développement", count: 3, countries: ["Belgique", "France"] });
     expect(groups[1].label).toBe("Architecture");
+    expect(groups[0].wantedValues).toHaveLength(3);
+    expect(groups[0].status).toBe("a-traiter");
+  });
+
+  it("donne au groupe le statut commun, ou « à traiter » si une demande est nouvelle", () => {
+    const base = { institution: null, source: "catalogue", profile_level: null, country: null, profile_field: null, created_at: ago(1) };
+    expect(groupFormationRequests([{ ...base, wanted: "MBA", status: "ajoutee" }, { ...base, wanted: "mba", status: "ajoutee" }])[0].status).toBe("ajoutee");
+    expect(groupFormationRequests([{ ...base, wanted: "MBA", status: "ajoutee" }, { ...base, wanted: "mba" }])[0].status).toBe("a-traiter");
   });
 
   it("fait remonter les formations dont le score paraît faux", () => {

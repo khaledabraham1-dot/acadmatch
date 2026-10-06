@@ -177,3 +177,9 @@ test("l'espace admin renvoie un visiteur non connecté vers la connexion, sans a
   expect(response?.status()).toBeLessThan(500);
   await expect(page.getByText("Parcours des visiteurs")).toHaveCount(0);
 });
+
+test("l'export CSV de l'admin est introuvable sans session admin", async ({ request }) => {
+  const response = await request.get("/admin/export?type=demandes");
+  expect(response.status()).toBe(404);
+  expect(await response.text()).not.toContain(";");
+});

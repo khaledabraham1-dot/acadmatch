@@ -10,7 +10,7 @@ import { normalize } from "@/lib/utils";
 const DAY = 24 * 60 * 60 * 1000;
 
 export interface JourneyRow { step: string; detail: string | null; device: string | null; created_at: string }
-export interface RequestRow { wanted: string; institution: string | null; country: string | null; source: string; profile_field: string | null; profile_level: string | null; created_at: string }
+export interface RequestRow { wanted: string; institution: string | null; country: string | null; source: string; profile_field: string | null; profile_level: string | null; created_at: string; status?: string }
 export interface FeedbackRow { formation_id: string; helpfulness: string; score_fairness: string | null; comment: string; created_at: string }
 export interface AiUsageRow { feature: string; cost_usd: number | string; created_at: string }
 
@@ -46,7 +46,19 @@ export function journeyFunnel(rows: JourneyRow[], now: Date): FunnelLine[] {
   });
 }
 
-export interface RequestGroup { label: string; count: number; lastAt: string; countries: string[]; fields: string[]; institutions: string[] }
+export type RequestStatus = "a-traiter" | "ajoutee" | "refusee";
+export interface RequestGroup {
+  label: string;
+  count: number;
+  lastAt: string;
+  countries: string[];
+  fields: string[];
+  institutions: string[];
+  /** Intitulés exacts du groupe : la clé d'une mise à jour de statut. */
+  wantedValues: string[];
+  /** Statut commun ; « a-traiter » dès qu'une demande du groupe n'est pas traitée. */
+  status: RequestStatus;
+}
 
 /**
  * Demandes de formations manquantes regroupées : même intitulé à la casse et
@@ -71,8 +83,16 @@ export function groupFormationRequests(rows: RequestRow[]): RequestGroup[] {
       countries: distinct(list.map((r) => r.country)),
       fields: distinct(list.map((r) => r.profile_field)),
       institutions: distinct(list.map((r) => r.institution)),
+      wantedValues: [...new Set(list.map((r) => r.wanted))],
+      status: groupStatus(list),
     }))
     .sort((a, b) => b.count - a.count || b.lastAt.localeCompare(a.lastAt));
+}
+
+function groupStatus(list: RequestRow[]): RequestStatus {
+  const statuses = new Set(list.map((r) => r.status ?? "a-traiter"));
+  if (statuses.has("a-traiter") || statuses.size !== 1) return "a-traiter";
+  return [...statuses][0] === "refusee" ? "refusee" : "ajoutee";
 }
 
 export interface FeedbackSummary {

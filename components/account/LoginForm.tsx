@@ -21,8 +21,17 @@ type Status = "idle" | "busy" | "error";
  * Google en option, affiché seulement quand le fournisseur est configuré
  * (NEXT_PUBLIC_AUTH_GOOGLE=1, voir docs/mise-en-ligne.md).
  */
-export function LoginForm() {
-  const [email, setEmail] = useState("");
+interface LoginFormProps {
+  /** Adresse imposée (reconfirmation d'identité de l'admin) : le champ n'est pas modifiable. */
+  presetEmail?: string;
+  title?: string;
+  intro?: string;
+  /** Page après connexion ; par défaut, le paramètre ?next= ou /compte. */
+  afterLogin?: string;
+}
+
+export function LoginForm({ presetEmail, title, intro, afterLogin }: LoginFormProps = {}) {
+  const [email, setEmail] = useState(presetEmail ?? "");
   const [code, setCode] = useState("");
   const [step, setStep] = useState<Step>("email");
   const [status, setStatus] = useState<Status>("idle");
@@ -30,7 +39,7 @@ export function LoginForm() {
   const googleEnabled = process.env.NEXT_PUBLIC_AUTH_GOOGLE === "1";
 
   // `?next=` : revenir là où l'étudiant a demandé à se connecter (import de documents, admin…).
-  const nextPath = () => safeInternalPath(new URLSearchParams(window.location.search).get("next"), "/compte");
+  const nextPath = () => safeInternalPath(afterLogin ?? new URLSearchParams(window.location.search).get("next"), "/compte");
   const callbackUrl = () => `${window.location.origin}/auth/confirm?next=${encodeURIComponent(nextPath())}`;
 
   async function sendEmail(event?: FormEvent) {
@@ -129,14 +138,13 @@ export function LoginForm() {
 
   return (
     <Card>
-      <h2 className="text-base font-semibold text-slate-900">Se connecter ou créer un compte</h2>
+      <h2 className="text-base font-semibold text-slate-900">{title ?? "Se connecter ou créer un compte"}</h2>
       <p className="mt-1 text-sm text-slate-600">
-        Une seule étape : saisissez votre e-mail. Si vous n&apos;avez pas encore de compte, il est créé
-        automatiquement, sans mot de passe. Le compte est optionnel : il sauvegarde votre projet (profil,
-        candidatures, lettres, budget) et vous le retrouvez sur tous vos appareils.
+        {intro ??
+          "Une seule étape : saisissez votre e-mail. Si vous n'avez pas encore de compte, il est créé automatiquement, sans mot de passe. Le compte est optionnel : il sauvegarde votre projet (profil, candidatures, lettres, budget) et vous le retrouvez sur tous vos appareils."}
       </p>
 
-      {googleEnabled && (
+      {googleEnabled && !presetEmail && (
         <div className="mt-4 space-y-3">
           <Button type="button" variant="outline" className="w-full sm:w-auto" disabled={status === "busy"} onClick={() => void signInWithGoogle()}>
             <GoogleMark />
@@ -161,6 +169,7 @@ export function LoginForm() {
             placeholder="vous@exemple.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            readOnly={Boolean(presetEmail)}
           />
         </div>
         <Button type="submit" disabled={status === "busy"}>

@@ -55,7 +55,7 @@ tes accès à Vercel, Supabase, la console Anthropic et GitHub.
       `journey_events` existent, et que le déclencheur anti-abus
       `throttle_feedback` est présent (Database → Triggers).
       Sinon, exécuter dans **SQL Editor**, dans l'ordre, les fichiers
-      manquants de `supabase/migrations/` (0001 à 0009).
+      manquants de `supabase/migrations/` (0001 à 0010).
 - [ ] Table `feedback` : supprimer les lignes de test envoyées pendant le
       développement (les plus anciennes, datées du 1er octobre 2026 dans la
       colonne `created_at`) : la table doit être vide au lancement.
@@ -161,13 +161,17 @@ faut revérifier dans le catalogue. Personne d'autre que toi n'y a accès.
 
 - [ ] Supabase → **SQL Editor** : exécuter
       `supabase/migrations/0009_admin_read_grants.sql` (droits de lecture
-      seule pour le serveur ; sans lui, l'admin affiche « Lecture impossible »).
+      seule pour le serveur ; sans lui, l'admin affiche « Lecture impossible »),
+      puis `supabase/migrations/0010_admin_actions.sql` (statut des demandes,
+      journal des actions admin).
 - [ ] Vercel → **Settings → Environment Variables** → ajouter
       `ADMIN_EMAILS` = l'adresse avec laquelle tu te connectes à AcadMatch
       (plusieurs adresses : séparées par des virgules), environnement
       **Production** uniquement, puis **Redeploy**.
 - [ ] Se connecter sur `/compte`, puis ouvrir `/admin`. Toute autre personne
-      connectée y voit une page introuvable.
+      connectée y voit une page introuvable. Si ta dernière connexion date de
+      plus de 12 heures, l'admin te demande de confirmer ton identité (code
+      ou lien envoyé à ton adresse) : c'est voulu.
 
 ## Étape 7 — Obligations légales (≈ 30 min)
 

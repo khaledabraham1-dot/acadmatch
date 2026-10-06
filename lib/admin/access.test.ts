@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isAdminEmail, parseAdminEmails } from "@/lib/admin/access";
+import { isAdminEmail, isRecentSignIn, parseAdminEmails } from "@/lib/admin/access";
 
 describe("accès admin", () => {
   it("lit une liste d'adresses séparées par des virgules, sans tenir compte de la casse", () => {
@@ -16,5 +16,17 @@ describe("accès admin", () => {
   it("n'accepte pas une adresse qui ne fait que contenir une adresse admin", () => {
     expect(isAdminEmail("xa@exemple.com", "a@exemple.com")).toBe(false);
     expect(isAdminEmail("a@exemple.com.pirate.io", "a@exemple.com")).toBe(false);
+  });
+});
+
+describe("connexion récente pour l'admin", () => {
+  const now = new Date("2026-10-06T12:00:00Z");
+  it("accepte une connexion de moins de 12 heures", () => {
+    expect(isRecentSignIn("2026-10-06T01:00:00Z", now)).toBe(true);
+  });
+  it("refuse une session ancienne, absente ou invalide", () => {
+    expect(isRecentSignIn("2026-10-05T23:59:00Z", now)).toBe(false);
+    expect(isRecentSignIn(null, now)).toBe(false);
+    expect(isRecentSignIn("pas une date", now)).toBe(false);
   });
 });
