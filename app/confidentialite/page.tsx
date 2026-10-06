@@ -108,8 +108,9 @@ export default function ConfidentialitePage() {
       <Section title="5. Avec un compte (optionnel)">
         <ul>
           <li>
-            <strong>Votre adresse e-mail</strong>, pour vous envoyer un lien de connexion. Aucun mot de passe
-            n&apos;est créé ni stocké.
+            <strong>Votre adresse e-mail</strong>, pour vous envoyer un lien et un code de connexion. Aucun mot
+            de passe n&apos;est créé ni stocké. Si vous choisissez « Continuer avec Google », Google nous transmet
+            votre adresse e-mail et votre nom, rien d&apos;autre.
           </li>
           <li>
             <strong>Votre projet</strong> : profil académique, candidatures (avec vos brouillons de lettre et vos

@@ -89,18 +89,35 @@ recevront jamais leur lien de connexion.
 - [ ] Supabase → **Authentication → Rate Limits** : passer la limite d'envoi
       d'e-mails à au moins **100 par heure** (la valeur par défaut est basse).
 - [ ] Supabase → **Authentication → Emails → Templates → Magic Link** :
-      dans le corps de l'e-mail, remplacer `{{ .ConfirmationURL }}` par
-      exactement :
+      sujet « Votre connexion à AcadMatch », et remplacer tout le corps par :
 
-      ```
-      {{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next=/compte
+      ```html
+      <h2>Connexion à AcadMatch</h2>
+      <p>Votre code de connexion : <strong style="font-size:22px;letter-spacing:4px">{{ .Token }}</strong></p>
+      <p>Ou cliquez sur ce lien : <a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=email">me connecter</a></p>
+      <p>Ce code et ce lien expirent rapidement. Si vous n'avez rien demandé, ignorez cet e-mail.</p>
       ```
 
-      Ainsi le lien fonctionne même si l'étudiant le demande sur son
-      téléphone et l'ouvre sur un ordinateur.
+      Le code à 6 chiffres sert quand l'étudiant lit ses e-mails sur son
+      téléphone mais utilise AcadMatch sur un ordinateur ; le lien ramène
+      directement à la page d'où il s'est connecté. Faire de même pour le
+      modèle **Confirm signup** (premier compte).
 - [ ] **Tester** : sur `https://acadmatch.com/compte`, demander un lien avec
       ton adresse depuis ton téléphone, l'ouvrir depuis ton ordinateur. Tu
       dois arriver connecté sur `/compte`. Vérifier aussi les spams.
+
+- [ ] **Optionnel, recommandé : « Continuer avec Google »** (≈ 20 min).
+  1. [console.cloud.google.com](https://console.cloud.google.com) → créer un
+     projet « AcadMatch » → **APIs & Services → OAuth consent screen** :
+     type *External*, nom AcadMatch, ton e-mail, ton domaine.
+  2. **Credentials → Create credentials → OAuth client ID** → *Web
+     application* → *Authorized redirect URIs* : l'adresse affichée par
+     Supabase dans **Authentication → Providers → Google** (« Callback URL »).
+  3. Supabase → **Authentication → Providers → Google** → activer, coller
+     *Client ID* et *Client secret*.
+  4. Vercel → variable `NEXT_PUBLIC_AUTH_GOOGLE` = `1` (Production) →
+     **Redeploy**. Le bouton n'apparaît qu'avec cette variable : sans elle,
+     rien ne casse.
 
 ## Étape 5 — L'IA et son budget (≈ 15 min)
 
