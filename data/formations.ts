@@ -36,7 +36,8 @@ import type { AcademicItem, Importance, StudyProgram } from "@/types";
  * Sciences politiques (Lille, ULiège, Paris 1, UCLouvain, Sciences Po). Deuxième vague
  * (2026-10-05) : Clermont Auvergne, Rouen, Tours, Bordeaux ISPED, Grenoble
  * Alpes, Aix-Marseille (voir CATALOGUE_WAVE2_AT). Troisième vague : Paris 8,
- * Paris Cité, Lorraine, Lille, iaelyon, Montpellier (CATALOGUE_WAVE3_AT). Chaque fiche ajoutée
+ * Paris Cité, Lorraine, Lille, iaelyon, Montpellier (CATALOGUE_WAVE3_AT). Quatrième vague :
+ * Toulouse Capitole, Le Havre, Toulouse, Clermont Auvergne, Rouen (CATALOGUE_WAVE4_AT). Chaque fiche ajoutée
  * a aussi ses frais sourcés dans data/budget.ts (un test l'impose).
  *
  * Pour toute formation FICTIVE de démonstration ajoutée plus tard (tests,
@@ -117,6 +118,17 @@ const CATALOGUE_WAVE2_AT = "2026-10-05";
  * nationaux, relus le même jour.
  */
 const CATALOGUE_WAVE3_AT = "2026-10-05";
+
+/**
+ * Quatrième vague (2026-10-08) : spécialités très choisies par les étudiants
+ * d'Afrique francophone et absentes du catalogue — MIAGE et contrôle de
+ * gestion/audit (Toulouse Capitole), énergie (Le Havre), électronique et
+ * télécoms (Toulouse), logistique (Clermont Auvergne), management de
+ * l'environnement (Rouen). Choix sur données Mon Master 2025 : des masters
+ * publics qui font réellement des offres aux candidats non inscrits en France.
+ * Attendus Mon Master et pages officielles relus le même jour.
+ */
+const CATALOGUE_WAVE4_AT = "2026-10-08";
 
 export const FORMATIONS: StudyProgram[] = [
   {
@@ -2757,6 +2769,289 @@ export const FORMATIONS: StudyProgram[] = [
     ],
     source: "https://formations.umontpellier.fr/fr/formations/master-XB/master-biologie-agrosciences-ME147/biotechnologie-et-amelioration-des-plantes-tropicales-bapt-PR445.html",
     verifiedAt: CATALOGUE_WAVE3_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-miage-toulouse-capitole",
+    name: "Master MIAGE (Méthodes informatiques appliquées à la gestion des entreprises), 1re année",
+    institution: { name: "Université Toulouse Capitole, Faculté d'Informatique", city: "Toulouse", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Informatique",
+    description:
+      "Master qui forme des cadres de l'ingénierie des systèmes d'information : une solide base en informatique alliée à la gestion et à l'organisation des entreprises. M1 généraliste commun : modélisation du système d'information, des données et des processus, conception et programmation orientée objet, bases de données relationnelles avancées et décisionnelles, machine learning et IA symbolique, gestion de projet, droit du numérique, anglais et communication professionnelle ; spécialité Développement (web, industrialisation du développement) ou Données (intégration de données, analyse et visualisation). Mises à niveau en programmation et en bases de données en début d'année. M2 : Ingénierie des processus métiers (IPM) ou Ingénierie des données et analyse (IDA). Aussi proposé en alternance.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier ; les candidats résidant dans un pays à procédure « Études en France » passent par cette procédure. 65 places en formation initiale (session 2025).",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence (L3) avec de bons résultats en informatique (bases de données, programmation) et en mathématiques/statistiques, ou expérience équivalente" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Informatique",
+        label: "Formation en informatique, MIAGE ou gestion avec une forte composante informatique (licence AES conseillée par l'université)",
+        aliases: ["Économie & Gestion", "Data Science & IA", "Mathématiques"],
+      },
+    ],
+    coreCourses: [
+      course("Bases de données", "essentielle", ["Bases de données relationnelles", "SQL", "Bases de données décisionnelles"]),
+      course("Modélisation des systèmes d'information", "essentielle", ["Systèmes d'information", "Modélisation des données et des processus", "UML"]),
+      course("Programmation orientée objet", "essentielle", ["Conception orientée objet", "Java", "Programmation"]),
+      course("Gestion de projet", "importante", ["Méthodes agiles"]),
+      course("Machine learning", "importante", ["Intelligence artificielle", "Apprentissage automatique"]),
+      course("Développement web", "utile", ["Programmation web", "Analyse et visualisation de données"]),
+    ],
+    // Mon Master (UAI 0313124C, mention 1602749U), attendus : « bonnes compétences et connaissances en Bases de
+    // données relationnelles (conception et langage SQL), algorithmique et programmation » ; « connaissances en
+    // organisation des entreprises et en systèmes d'information et de gestion de projets » ; « bons résultats
+    // académiques dans les domaines informatique (base de données, programmation et mathématiques/statistiques) » ;
+    // travail en groupe ; communication écrite et orale. Programme : programme pédagogique M1 FI 2026-2027.
+    skills: [
+      skill("Bases de données", "essentielle", ["SQL", "Bases de données relationnelles", "Conception de bases de données"]),
+      skill("Algorithmique et programmation", "essentielle", ["Algorithmique", "Programmation", "Développement"]),
+      skill("Mathématiques et statistiques", "importante", ["Statistiques", "Mathématiques"]),
+      skill("Systèmes d'information", "importante", ["Organisation des entreprises", "Gestion de projet"]),
+      skill("Expression écrite et orale", "utile", ["Communication"]),
+    ],
+    source: "https://www.ut-capitole.fr/accueil/formations/offre-de-formation/nos-diplomes/masters/master-mention-miage-1ere-annee-formation-initiale",
+    verifiedAt: CATALOGUE_WAVE4_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-controle-gestion-audit-tsm",
+    name: "Master Contrôle de gestion et audit organisationnel",
+    institution: { name: "Université Toulouse Capitole, Toulouse School of Management (TSM)", city: "Toulouse", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Économie & Gestion",
+    description:
+      "Master de 2 ans de l'IAE de Toulouse (TSM) qui forme aux métiers du contrôle de gestion et de l'audit : construire et piloter les systèmes de mesure de la performance, conduire une mission d'audit interne ou externe (hors audit légal), accompagner les managers dans leurs décisions. M1 transversal : métiers des chiffres (comptabilité, droit, finance, anglais) et pilotage de la performance (systèmes d'information, outils décisionnels, reporting, management accounting), avec des cours en anglais (Strategic Management, Management Accounting), études de cas et intervenants professionnels. M2 : Audit et pilotage des organisations, ou Contrôle de gestion social et environnemental (RSE). Débouchés : auditeur, contrôleur de gestion, business analyst, consultant, responsable administratif et financier.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier ; les candidats résidant dans un pays à procédure « Études en France » passent par cette procédure. Le test TAGE MAGE n'est demandé qu'aux candidats résidant en France. 60 places (session 2025).",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence de gestion, d'économie-gestion ou de droit (diplômes conseillés par l'université) ; aisance écrite et orale en français, et anglais" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Économie & Gestion",
+        label: "Bases en comptabilité financière, contrôle de gestion (comptabilité analytique, calcul de coûts) et finance d'entreprise",
+        aliases: ["Droit"],
+      },
+    ],
+    coreCourses: [
+      course("Contrôle de gestion", "essentielle", ["Comptabilité analytique", "Pilotage de la performance", "Management accounting"]),
+      course("Audit", "essentielle", ["Audit organisationnel", "Audit interne"]),
+      course("Comptabilité", "essentielle", ["Comptabilité financière", "Comptabilité générale"]),
+      course("Finance d'entreprise", "importante", ["Finance", "Gestion de trésorerie"]),
+      course("Systèmes d'information", "importante", ["Outils décisionnels", "Reporting"]),
+      course("Droit", "utile", ["Droit des affaires", "Droit social"]),
+    ],
+    // Mon Master (UAI 0313124C, mention 1602740J), attendus : « mobiliser les concepts et principes généraux de
+    // comptabilité financière (états financiers, principes comptables), de contrôle de gestion (comptabilité
+    // analytique, calcul de coûts) » ; « de finance (mathématiques financières, finance d'entreprise) ou de systèmes
+    // d'information (bases d'Excel ou logiciels comptables) » ; projet professionnel construit ; expérience en
+    // organisation (stages, emplois, associatif) ; français écrit et oral ; anglais.
+    skills: [
+      skill("Comptabilité", "essentielle", ["Comptabilité financière", "Comptabilité générale", "États financiers"]),
+      skill("Contrôle de gestion", "essentielle", ["Comptabilité analytique", "Calcul de coûts"]),
+      skill("Finance d'entreprise", "importante", ["Mathématiques financières", "Finance"]),
+      skill("Bureautique", "utile", ["Excel", "Logiciels comptables"]),
+      skill("Anglais", "utile"),
+    ],
+    source: "https://tsm-education.fr/formations/masters/controle-de-gestion-et-audit-organisationnel/parcours-controle-de-gestion-et-audit-organisationnel-m1",
+    verifiedAt: CATALOGUE_WAVE4_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-energie-le-havre",
+    name: "Master Énergie, parcours Énergétique des fluides complexes (EFC)",
+    institution: { name: "Université Le Havre Normandie, UFR des Sciences et Techniques", city: "Le Havre", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Physique",
+    description:
+      "Master de 2 ans en énergétique et mécanique des fluides, aux voies professionnelle et recherche : thermodynamique, transferts thermiques, énergies solaire, éolienne et géothermique, machines tournantes, hydrodynamique marine, fluides industriels, mais aussi milieux condensés (turbulence, microfluidique, acoustique) et outils de l'ingénieur (mathématiques appliquées, calcul scientifique, traitement du signal). Environ un tiers des crédits enseignés en anglais, anglais à chaque semestre. Stage obligatoire de 4 à 6 mois en M2. Partenariats notamment avec l'Université de Douala (Cameroun). Débouchés : ingénieur d'étude, de modélisation, de bureau d'études ou de R&D dans l'énergie, l'espace et les transports, ou doctorat.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier (CV, lettre de motivation, relevés de notes, justificatifs de stages), avec un entretien possible en présentiel ou par téléphone ; les candidats résidant dans un pays à procédure « Études en France » passent par cette procédure. 23 places (session 2025).",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence de physique, de mécanique ou de physique-chimie" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Physique",
+        label: "Bases en mécanique des fluides, thermodynamique et thermique ; maîtrise des outils mathématiques et du calcul scientifique",
+        aliases: ["Sciences de l'ingénieur", "Chimie", "Mathématiques"],
+      },
+    ],
+    coreCourses: [
+      course("Thermodynamique", "essentielle", ["Thermodynamique appliquée", "Énergétique"]),
+      course("Mécanique des fluides", "essentielle", ["Hydrodynamique", "Turbulence"]),
+      course("Transferts thermiques", "essentielle", ["Thermique"]),
+      course("Énergies renouvelables", "importante", ["Énergie solaire", "Énergie éolienne", "Géothermie"]),
+      course("Calcul scientifique", "importante", ["Mathématiques appliquées", "Méthodes numériques"]),
+      course("Traitement du signal", "utile"),
+    ],
+    // Mon Master (UAI 0762762P, mention 1702934R), attendus : « licences de Physique – Mécanique – Physique chimie » ;
+    // « compétences et connaissances de base en mécanique des fluides, en thermodynamique, en thermique et
+    // éventuellement en énergétique » ; « la maîtrise d'outils mathématiques et de calcul scientifique sera regardée
+    // avec attention ».
+    skills: [
+      skill("Mécanique des fluides", "essentielle"),
+      skill("Thermodynamique", "essentielle", ["Thermique", "Transferts thermiques"]),
+      skill("Mathématiques", "importante", ["Analyse", "Mathématiques appliquées"]),
+      skill("Calcul scientifique", "importante", ["Programmation", "Méthodes numériques", "Python", "Matlab"]),
+      skill("Énergétique", "utile"),
+    ],
+    source: "https://www.univ-lehavre.fr/fr/formations/master-energie-energetique-des-fluides-complexes-efc/",
+    verifiedAt: CATALOGUE_WAVE4_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-eset-toulouse",
+    name: "Master Électronique, énergie électrique, automatique, parcours Électronique des systèmes embarqués et télécommunications (ESET)",
+    institution: { name: "Université de Toulouse, Faculté sciences et ingénierie", city: "Toulouse", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Sciences de l'ingénieur",
+    description:
+      "Master de 2 ans qui forme des ingénieurs et chercheurs spécialistes de la conception de systèmes électroniques pour l'embarqué, notamment spatial, et les télécommunications : composants et circuits analogiques et numériques, microcontrôleurs et FPGA, systèmes de transmission radiofréquences, circuits et antennes hyperfréquences, optoélectronique, capteurs, compatibilité électromagnétique, électronique pour le spatial. Fil rouge sur deux ans : la conception d'un nanosatellite (CubeSat) avec des partenaires toulousains. Adossé au LAAS-CNRS et au LAPLACE, avec des intervenants de Thales, Airbus et du CNES. M2 : circuits numériques, micro et nanotechnologies, ou opto-microonde et électromagnétisme.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier (adéquation de la formation antérieure, résultats, CV, lettre de motivation ; un seul dossier pour plusieurs parcours de la mention, avec un ordre de préférence) ; les candidats résidant dans un pays à procédure « Études en France » passent par cette procédure. 30 places (session 2025).",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence d'électronique, énergie électrique, automatique (EEA) ou de sciences pour l'ingénieur" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Sciences de l'ingénieur",
+        label: "Bases d'électronique analogique et numérique, d'électromagnétisme et de calcul des circuits ; au moins un langage de programmation",
+        aliases: ["Physique", "Informatique"],
+      },
+    ],
+    coreCourses: [
+      course("Électronique analogique", "essentielle", ["Conception de circuits analogiques", "Composants électroniques"]),
+      course("Électronique numérique", "essentielle", ["Circuits numériques", "FPGA", "Microcontrôleurs"]),
+      course("Télécommunications", "essentielle", ["Systèmes de transmission radiofréquences", "Transmission de données"]),
+      course("Hyperfréquences", "importante", ["Antennes", "Électromagnétisme", "Optoélectronique"]),
+      course("Systèmes embarqués", "importante", ["Électronique pour le spatial", "Capteurs"]),
+      course("Compatibilité électromagnétique", "utile", ["Fiabilité des systèmes électroniques"]),
+    ],
+    // Mon Master (UAI 0313218E, mention 1603154J, parcours ESET), attendus : bases de l'électronique analogique
+    // (composants passifs, diode, transistor, amplificateurs opérationnels) et numérique (algèbre de Boole, logique
+    // combinatoire et séquentielle) ; outils de calcul des circuits (électrocinétique, Laplace, Fourier, fonctions
+    // de transfert) ; appareils de mesure ; bases de l'électromagnétisme (Maxwell, propagation guidée) ; « au moins
+    // un langage de programmation (C, Matlab, etc.) » ; travail en équipe ; rédaction de rapports techniques.
+    skills: [
+      skill("Électronique analogique", "essentielle", ["Électronique", "Amplificateurs opérationnels", "Composants électroniques"]),
+      skill("Électronique numérique", "essentielle", ["Logique combinatoire et séquentielle", "Algèbre de Boole"]),
+      skill("Électromagnétisme", "importante", ["Ondes électromagnétiques", "Équations de Maxwell"]),
+      skill("Traitement du signal", "importante", ["Transformée de Laplace", "Transformée de Fourier", "Électrocinétique"]),
+      skill("Programmation", "importante", ["Langage C", "Matlab"]),
+      skill("Mesures électriques", "utile", ["Instrumentation"]),
+    ],
+    source: "https://www.univ-tlse3.fr/decouvrir-nos-diplomes/master-parcours-electronique-des-systemes-embarques-et-telecommunications-eset",
+    verifiedAt: CATALOGUE_WAVE4_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-ingenierie-logistique-uca",
+    name: "Master Gestion de production, logistique, achats, parcours Ingénierie logistique",
+    institution: { name: "Université Clermont Auvergne, IAE Clermont Auvergne (École universitaire de management)", city: "Clermont-Ferrand", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Économie & Gestion",
+    description:
+      "Master de 2 ans de l'IAE Clermont Auvergne pour comprendre et piloter la chaîne logistique de bout en bout. M1 en tronc commun : techniques fondamentales, management de l'information, logistique, environnement et stratégies, management de la performance logistique, pilotage opérationnel des flux, gestion des stocks, anglais, initiation à la recherche. M2 Ingénierie logistique : gestion de production, modélisation et optimisation de la chaîne logistique, contrôle de gestion opérationnel, entreprise intégrée et applications informatiques, avec les contraintes des activités opérationnelles. Mémoire de groupe avec une entreprise, études de cas et simulations ; stage de fin d'études ou alternance en M2. Insertion de 100 % pour la promotion 2024-2025 selon l'université.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier, avec un entretien si besoin ; les candidats résidant dans un pays à procédure « Études en France » passent par cette procédure. Le score SIM (IAE Message) est pris en compte et fortement conseillé. 22 places (session 2025).",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence de gestion, management, économie, AES, droit ou MIASHS, ou diplôme d'école (commerce, ingénieur, IEP) ; bon niveau d'anglais" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Économie & Gestion",
+        label: "Formation de base en gestion et management, aptitude à la logique et au raisonnement conceptuel",
+        aliases: ["Droit", "Mathématiques", "Sciences de l'ingénieur"],
+      },
+    ],
+    coreCourses: [
+      course("Logistique", "essentielle", ["Chaîne logistique", "Supply chain", "Pilotage des flux"]),
+      course("Gestion des stocks", "essentielle", ["Gestion de production"]),
+      course("Management de la performance logistique", "importante", ["Contrôle de gestion opérationnel"]),
+      course("Modélisation et optimisation de la chaîne logistique", "importante", ["Recherche opérationnelle", "Optimisation"]),
+      course("Management de l'information", "utile", ["Systèmes d'information"]),
+      course("Anglais", "utile", ["Anglais professionnel"]),
+    ],
+    // Mon Master (UAI 0632084Y, mention 1702008J, parcours Ingénierie logistique), attendus : autonomie et sens des
+    // responsabilités ; capacités de travail et de réflexion collectives et individuelles ; « aptitudes à la logique
+    // et au raisonnement conceptuel » ; « un bon niveau dans au moins une langue étrangère : Anglais » ; qualités
+    // humaines et de communication. Critères : notes des UE fondamentales de licence, lettre de motivation, projet
+    // professionnel, niveau d'anglais, score SIM.
+    skills: [
+      skill("Gestion", "essentielle", ["Management", "Gestion des entreprises"]),
+      skill("Raisonnement logique", "importante", ["Logique", "Mathématiques"]),
+      skill("Anglais", "importante"),
+      skill("Travail en équipe", "utile", ["Communication"]),
+    ],
+    source: "https://www.uca.fr/odf/master-gestion-de-production-logistique-achats",
+    verifiedAt: CATALOGUE_WAVE4_AT,
+    verificationStatus: "vérifiée",
+    demo: false,
+  },
+  {
+    id: "f-master-management-environnement-rouen",
+    name: "Master Économie de l'environnement, de l'énergie et des transports, parcours Management de l'environnement et du développement durable (MEDD)",
+    institution: { name: "Université de Rouen Normandie, UFR Droit, Sciences économiques et Gestion", city: "Rouen", country: "France" },
+    level: "Master 1",
+    goal: "Master",
+    field: "Économie & Gestion",
+    description:
+      "Master de 2 ans, ouvert en 2004, qui forme une quinzaine de futurs cadres de l'environnement et du développement durable par promotion, pour le privé, le public et le secteur mixte. Orientation principale en économie, avec une ouverture sur la gestion, le droit, la géographie et l'aménagement. Stage obligatoire de 4 mois minimum en M2 ; selon l'université, environ 60 % des diplômés de M2 signent un CDI pendant ou juste après leur stage. Métiers visés : chargé de mission RSE, environnement ou transition énergétique, chef de projet en énergies renouvelables, chargé d'études économiques, responsable QSE, responsable eau, assainissement ou déchets.",
+    requiredLevel: "Licence 3",
+    language: "Français",
+    applicationProcedure:
+      "Master 1 : plateforme nationale Mon Master, sur dossier (notes depuis le baccalauréat, notes dans les matières concernées, lettre de motivation, expériences) ; les candidats résidant dans un pays à procédure « Études en France » passent par cette procédure. 20 places (session 2025).",
+    prerequisites: [
+      { id: "r1", type: "niveau", value: "Licence 3", label: "Licence d'économie, d'économie-gestion ou d'AES (diplômes conseillés) ; plus rarement LEA, science politique ou école de commerce" },
+      {
+        id: "r2",
+        type: "domaine",
+        value: "Économie & Gestion",
+        label: "Bon niveau académique, notamment dans les matières quantitatives (techniques quantitatives, analyse de données)",
+        aliases: ["Sciences politiques"],
+      },
+    ],
+    coreCourses: [
+      course("Économie de l'environnement", "essentielle", ["Économie de l'énergie", "Économie des transports", "Développement durable"]),
+      course("Techniques quantitatives", "essentielle", ["Analyse de données", "Économétrie", "Statistiques"]),
+      course("Management environnemental", "importante", ["RSE", "Gestion"]),
+      course("Droit de l'environnement", "utile", ["Droit"]),
+      course("Aménagement du territoire", "utile", ["Géographie"]),
+    ],
+    // Mon Master (UAI 0761904G, mention 1702617W, parcours MEDD), attendus : « Avoir un bon niveau académique,
+    // notamment dans les matières quantitatives ; Essentiel » ; « Techniques quantitatives – Analyse de données –
+    // Capacités d'analyse ; Important » ; adéquation du projet ; autonomie et expériences ; rigueur.
+    skills: [
+      skill("Économie", "essentielle", ["Microéconomie", "Macroéconomie"]),
+      skill("Statistiques", "essentielle", ["Techniques quantitatives", "Analyse de données", "Économétrie", "Mathématiques"]),
+      skill("Gestion", "utile", ["Management"]),
+      skill("Expression écrite et orale", "utile", ["Rédaction"]),
+    ],
+    source: "https://formation.univ-rouen.fr/fr/catalogue-de-l-offre-de-formation/master-lmd-XB/master-economie-environnement-energie-transports-L4ZP3R4C.html",
+    verifiedAt: CATALOGUE_WAVE4_AT,
     verificationStatus: "vérifiée",
     demo: false,
   },

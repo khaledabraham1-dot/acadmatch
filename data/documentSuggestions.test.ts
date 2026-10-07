@@ -61,6 +61,12 @@ describe("documentSuggestionFor", () => {
       "f-master-droit-developpement-paris-cite",
       "f-master-droit-affaires-lorraine",
       "f-master-plantes-tropicales-montpellier",
+      "f-master-miage-toulouse-capitole",
+      "f-master-controle-gestion-audit-tsm",
+      "f-master-energie-le-havre",
+      "f-master-eset-toulouse",
+      "f-master-ingenierie-logistique-uca",
+      "f-master-management-environnement-rouen",
     ]);
   });
 });

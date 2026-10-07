@@ -42,6 +42,13 @@ MM = {
  "f-master-droit-developpement-paris-cite": ["1900232C4THI"],
  "f-master-droit-affaires-lorraine": ["1800137ZXEIA"],
  "f-master-plantes-tropicales-montpellier": ["1501396CJQK5"],
+ # Quatrième vague (2026-10-08)
+ "f-master-miage-toulouse-capitole": ["1602749UV67P"],
+ "f-master-controle-gestion-audit-tsm": ["1602740JABLT"],
+ "f-master-energie-le-havre": ["1702934RTQCS"],
+ "f-master-eset-toulouse": ["1603154J4X7G"],
+ "f-master-ingenierie-logistique-uca": ["1702008JTH4M"],
+ "f-master-management-environnement-rouen": ["1702617WETWL"],
 }
 PS = {
  "f-but-info-nantes": "5482", "f-licence-droit-bordeaux": "26330", "f-licence-eco-gestion-amu": "12528",
