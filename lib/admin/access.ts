@@ -27,3 +27,30 @@ export function isRecentSignIn(lastSignInAt: string | null | undefined, now: Dat
   const at = new Date(lastSignInAt).getTime();
   return Number.isFinite(at) && now.getTime() - at <= hours * 3600_000 && at <= now.getTime() + 60_000;
 }
+
+/**
+ * Adresse secrète de l'espace admin (2026-10-07) : variable ADMIN_PATH
+ * (Vercel), un segment long et aléatoire, par exemple
+ * « pilotage-k7m2x9q4w8r3t6v1 ». Le dossier interne app/admin reste, mais
+ * proxy.ts renvoie une page introuvable à quiconque tape /admin : seule
+ * l'adresse secrète y mène. Sans variable valide, l'admin est fermé.
+ * Ce n'est pas la protection principale (compte admin + mot de passe +
+ * double vérification), mais l'espace devient invisible aux robots qui
+ * essaient /admin, /dashboard, etc.
+ */
+export function adminBasePath(raw: string | undefined): string | null {
+  const slug = (raw ?? "").trim().replace(/^\/+|\/+$/g, "");
+  return /^[a-z0-9-]{16,64}$/.test(slug) && slug !== "admin" ? `/${slug}` : null;
+}
+
+/** Chemin public (adresse secrète) → chemin interne /admin, ou null si ce n'est pas l'admin. */
+export function toInternalAdminPath(pathname: string, base: string | null): string | null {
+  if (!base) return null;
+  if (pathname === base) return "/admin";
+  return pathname.startsWith(`${base}/`) ? `/admin${pathname.slice(base.length)}` : null;
+}
+
+/** Le dossier interne /admin, appelé directement : toujours introuvable. */
+export function isInternalAdminPath(pathname: string): boolean {
+  return pathname === "/admin" || pathname.startsWith("/admin/");
+}

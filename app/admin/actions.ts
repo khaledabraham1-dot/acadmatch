@@ -15,17 +15,22 @@ import type { RequestStatus } from "@/lib/admin/stats";
 const STATUSES: RequestStatus[] = ["a-traiter", "ajoutee", "refusee"];
 const STATUS_LABELS: Record<RequestStatus, string> = { "a-traiter": "à traiter", ajoutee: "ajoutée au catalogue", refusee: "refusée" };
 
-export async function setRequestStatus(formData: FormData): Promise<void> {
-  const email = await requireAdmin();
+export async function setRequestStatus(formData: FormData): Promise<{ ok: boolean }> {
+  let email: string;
+  try {
+    email = await requireAdmin();
+  } catch {
+    return { ok: false };
+  }
   const status = formData.get("status");
   let wanted: unknown;
   try {
     wanted = JSON.parse(String(formData.get("wanted") ?? "[]"));
   } catch {
-    return;
+    return { ok: false };
   }
-  if (!STATUSES.includes(status as RequestStatus)) return;
-  if (!Array.isArray(wanted) || wanted.length === 0 || wanted.length > 200 || !wanted.every((w) => typeof w === "string" && w.length <= 200)) return;
+  if (!STATUSES.includes(status as RequestStatus)) return { ok: false };
+  if (!Array.isArray(wanted) || wanted.length === 0 || wanted.length > 200 || !wanted.every((w) => typeof w === "string" && w.length <= 200)) return { ok: false };
 
   const { error } = await createAdminClient()
     .from("formation_requests")
@@ -33,6 +38,7 @@ export async function setRequestStatus(formData: FormData): Promise<void> {
     .in("wanted", wanted);
   if (!error) await logAdminAction(email, "statut-demande", `« ${wanted[0]} » : ${STATUS_LABELS[status as RequestStatus]}`);
   revalidatePath("/admin");
+  return { ok: !error };
 }
 
 export interface DeletionState {

@@ -100,6 +100,28 @@ h3 {
   scrollbar-color: var(--color-slate-300) transparent;
 }
 
+/* Espace admin (2026-10-07) : courbes qui se tracent, barres qui poussent, cartes qui apparaissent. */
+@keyframes admin-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes admin-rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes admin-grow-y {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+@keyframes admin-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.admin-draw { stroke-dasharray: 1; animation: admin-draw 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.admin-rise { animation: admin-rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.admin-grow-y { transform-box: fill-box; transform-origin: bottom; animation: admin-grow-y 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.admin-fade { animation: admin-fade 0.8s ease-out both; }
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

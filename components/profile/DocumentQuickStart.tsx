@@ -59,7 +59,7 @@ export function DocumentQuickStart({
       ) : (
         <div className="mt-4 flex flex-col gap-3 rounded-xl bg-slate-50 p-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <p className="text-sm text-slate-600">
-            L&apos;import demande un compte gratuit (connexion par lien e-mail, sans mot de passe) ; vos documents ne
+            L&apos;import demande un compte gratuit (e-mail et mot de passe, ou code reçu par e-mail) ; vos documents ne
             sont jamais conservés. Sinon, ajoutez vos matières ci-dessous, sans compte.
           </p>
           <LinkButton href="/compte?next=/profil" size="sm" className="shrink-0">

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { aiUsageSummary, currentAcademicYear, feedbackByFormation, groupFormationRequests, journeyFunnel } from "@/lib/admin/stats";
+import { currentAcademicYear, feedbackByFormation, groupFormationRequests } from "@/lib/admin/stats";
 import { outdatedCampaigns, outdatedFees, staleFormations } from "@/lib/admin/catalogueHealth";
 import { FORMATIONS } from "@/data/formations";
 import { OFFICIAL_CAMPAIGNS } from "@/data/campaigns";
@@ -9,21 +9,6 @@ const now = new Date("2026-10-06T12:00:00Z");
 const ago = (days: number) => new Date(now.getTime() - days * 86400000).toISOString();
 
 describe("indicateurs admin", () => {
-  it("compte les étapes du parcours sur 7 et 30 jours, avec la part mobile", () => {
-    const funnel = journeyFunnel(
-      [
-        { step: "resultat-vu", detail: null, device: "mobile", created_at: ago(1) },
-        { step: "resultat-vu", detail: null, device: "ordinateur", created_at: ago(10) },
-        { step: "resultat-vu", detail: null, device: "mobile", created_at: ago(40) },
-      ],
-      now,
-    );
-    const line = funnel.find((l) => l.step === "resultat-vu")!;
-    expect([line.last7, line.last30, line.mobileShare]).toEqual([1, 2, 50]);
-    expect(funnel[0].step).toBe("exemple-essaye");
-    expect(funnel.find((l) => l.step === "partage")!.mobileShare).toBeNull();
-  });
-
   it("regroupe les demandes identiques à la casse et aux accents près", () => {
     const base = { institution: null, source: "recherche-vide", profile_level: null };
     const groups = groupFormationRequests([
@@ -48,21 +33,6 @@ describe("indicateurs admin", () => {
     const row = (formation_id: string, score_fairness: string | null, helpfulness = "oui") => ({ formation_id, helpfulness, score_fairness, comment: "", created_at: ago(1) });
     const summary = feedbackByFormation([row("a", "juste"), row("a", "juste"), row("b", "trop-haut", "non"), row("b", "trop-bas")]);
     expect(summary[0]).toMatchObject({ formationId: "b", tooHigh: 1, tooLow: 1, helpfulShare: 50 });
-  });
-
-  it("additionne le coût de l'IA par jour et par fonctionnalité", () => {
-    const ai = aiUsageSummary(
-      [
-        { feature: "lettre-motivation", cost_usd: "0.01200", created_at: "2026-10-06T08:00:00Z" },
-        { feature: "import-releve", cost_usd: 0.05, created_at: "2026-10-06T09:00:00Z" },
-        { feature: "lettre-motivation", cost_usd: 0.012, created_at: "2026-10-05T09:00:00Z" },
-      ],
-      now,
-    );
-    expect(ai.today).toEqual({ day: "2026-10-06", calls: 2, costUsd: 0.062 });
-    expect(ai.days).toHaveLength(14);
-    expect(ai.byFeature[0]).toEqual({ feature: "import-releve", calls: 1, costUsd: 0.05 });
-    expect(ai.costLast30).toBe(0.074);
   });
 
   it("calcule l'année universitaire en cours", () => {

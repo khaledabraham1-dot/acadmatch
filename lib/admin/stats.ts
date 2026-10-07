@@ -4,18 +4,11 @@
  * testable (lib/admin/stats.test.ts). Aucune donnée personnelle n'entre ni ne
  * sort : les tables lues sont anonymes ou réduites à des comptes.
  */
-import { JOURNEY_STEPS, type JourneyStep } from "@/lib/journey";
+import type { JourneyStep } from "@/lib/journey";
 import { normalize } from "@/lib/utils";
 
-const DAY = 24 * 60 * 60 * 1000;
-
-export interface JourneyRow { step: string; detail: string | null; device: string | null; created_at: string }
 export interface RequestRow { wanted: string; institution: string | null; country: string | null; source: string; profile_field: string | null; profile_level: string | null; created_at: string; status?: string }
 export interface FeedbackRow { formation_id: string; helpfulness: string; score_fairness: string | null; comment: string; created_at: string }
-export interface AiUsageRow { feature: string; cost_usd: number | string; created_at: string }
-
-const since = (now: Date, days: number) => now.getTime() - days * DAY;
-const inWindow = (iso: string, now: Date, days: number) => new Date(iso).getTime() >= since(now, days);
 
 export const STEP_LABELS: Record<JourneyStep, string> = {
   "exemple-essaye": "Exemple essayé",
@@ -27,24 +20,6 @@ export const STEP_LABELS: Record<JourneyStep, string> = {
   "ia-utilisee": "Outil d'IA utilisé",
   partage: "Lien partagé",
 };
-
-export interface FunnelLine { step: JourneyStep; label: string; last7: number; last30: number; mobileShare: number | null }
-
-/** Étapes du parcours sur 7 et 30 jours, dans l'ordre du parcours. */
-export function journeyFunnel(rows: JourneyRow[], now: Date): FunnelLine[] {
-  return JOURNEY_STEPS.map((step) => {
-    const ofStep = rows.filter((r) => r.step === step);
-    const recent = ofStep.filter((r) => inWindow(r.created_at, now, 30));
-    const mobile = recent.filter((r) => r.device === "mobile").length;
-    return {
-      step,
-      label: STEP_LABELS[step],
-      last7: ofStep.filter((r) => inWindow(r.created_at, now, 7)).length,
-      last30: recent.length,
-      mobileShare: recent.length ? Math.round((mobile / recent.length) * 100) : null,
-    };
-  });
-}
 
 export type RequestStatus = "a-traiter" | "ajoutee" | "refusee";
 export interface RequestGroup {
@@ -127,34 +102,6 @@ export function feedbackByFormation(rows: FeedbackRow[]): FeedbackSummary[] {
         .map((r) => ({ text: r.comment.trim(), at: r.created_at })),
     }))
     .sort((a, b) => b.tooHigh + b.tooLow - (a.tooHigh + a.tooLow) || b.count - a.count);
-}
-
-export interface AiDay { day: string; calls: number; costUsd: number }
-export interface AiSummary { today: AiDay; days: AiDay[]; byFeature: { feature: string; calls: number; costUsd: number }[]; costLast30: number }
-
-const cost = (row: AiUsageRow) => Number(row.cost_usd) || 0;
-const round4 = (value: number) => Math.round(value * 10000) / 10000;
-
-/** Appels et coût de l'IA par jour (UTC, comme le budget quotidien) et par fonctionnalité. */
-export function aiUsageSummary(rows: AiUsageRow[], now: Date, days = 14): AiSummary {
-  const dayOf = (iso: string) => iso.slice(0, 10);
-  const list: AiDay[] = Array.from({ length: days }, (_, i) => {
-    const day = new Date(now.getTime() - i * DAY).toISOString().slice(0, 10);
-    const ofDay = rows.filter((r) => dayOf(r.created_at) === day);
-    return { day, calls: ofDay.length, costUsd: round4(ofDay.reduce((sum, r) => sum + cost(r), 0)) };
-  });
-  const recent = rows.filter((r) => inWindow(r.created_at, now, 30));
-  const features = new Map<string, { calls: number; costUsd: number }>();
-  for (const row of recent) {
-    const entry = features.get(row.feature) ?? { calls: 0, costUsd: 0 };
-    features.set(row.feature, { calls: entry.calls + 1, costUsd: entry.costUsd + cost(row) });
-  }
-  return {
-    today: list[0],
-    days: list,
-    byFeature: [...features.entries()].map(([feature, v]) => ({ feature, calls: v.calls, costUsd: round4(v.costUsd) })).sort((a, b) => b.costUsd - a.costUsd),
-    costLast30: round4(recent.reduce((sum, r) => sum + cost(r), 0)),
-  };
 }
 
 /** Rentrée universitaire en cours au format « 2026-2027 » (elle bascule en septembre). */

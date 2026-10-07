@@ -10,6 +10,7 @@ import { clearLocalWorkspace, snapshotLocal } from "@/lib/sync/workspace";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { SyncPanel } from "@/components/account/SyncStatus";
+import { PasswordForm } from "@/components/account/PasswordForm";
 
 type ActionStatus = { kind: "idle" | "success" | "error"; message?: string };
 
@@ -108,6 +109,15 @@ export function AccountDashboard({ user }: { user: User }) {
             Se déconnecter
           </Button>
         </div>
+      </Card>
+
+      <Card>
+        <h3 className="text-sm font-semibold text-slate-900">Mot de passe</h3>
+        <p className="mt-1 mb-3 text-xs text-slate-600">
+          Choisissez ou changez le mot de passe de votre compte. Si vous vous connectiez jusqu&apos;ici avec un code reçu par
+          e-mail, définissez-en un ici : vous pourrez ensuite vous connecter avec votre e-mail et ce mot de passe.
+        </p>
+        <PasswordForm />
       </Card>
 
       <Card className="border-red-100 bg-red-50/40">

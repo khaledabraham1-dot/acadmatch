@@ -1,25 +1,23 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
-import { KeyRound, Mail } from "lucide-react";
+import { KeyRound, LogIn, Mail, UserPlus } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { Hint, Input, Label } from "@/components/ui/Field";
+import { Input, Label } from "@/components/ui/Field";
+import { PasswordInput } from "@/components/account/PasswordInput";
 import { safeInternalPath } from "@/lib/profile/validation";
 import { isValidOtpCode, normalizeOtpCode } from "@/lib/auth/otp";
-
-type Step = "email" | "code";
-type Status = "idle" | "busy" | "error";
+import { authErrorMessage, passwordProblem, PASSWORD_MIN_LENGTH } from "@/lib/auth/password";
 
 /**
- * Connexion sans mot de passe (2026-10-06) : une seule action pour se
- * connecter ou créer son compte. Supabase envoie un e-mail contenant à la
- * fois un lien et un code à 6 chiffres : le code permet de se connecter sur
- * l'ordinateur quand on lit ses e-mails sur son téléphone (et inversement).
- * Google en option, affiché seulement quand le fournisseur est configuré
- * (NEXT_PUBLIC_AUTH_GOOGLE=1, voir docs/mise-en-ligne.md).
+ * Connexion (2026-10-07) : e-mail + mot de passe par défaut, comme partout
+ * ailleurs, avec création de compte et « mot de passe oublié ». Le code reçu
+ * par e-mail reste proposé en second choix (pratique sur un téléphone, ou
+ * pour un compte créé avant les mots de passe). Google en option, affiché
+ * seulement quand le fournisseur est configuré (NEXT_PUBLIC_AUTH_GOOGLE=1).
  */
 interface LoginFormProps {
   /** Adresse imposée (reconfirmation d'identité de l'admin) : le champ n'est pas modifiable. */
@@ -28,81 +26,137 @@ interface LoginFormProps {
   intro?: string;
   /** Page après connexion ; par défaut, le paramètre ?next= ou /compte. */
   afterLogin?: string;
+  /** Masque la création de compte (connexion à l'espace admin). */
+  signInOnly?: boolean;
 }
 
-export function LoginForm({ presetEmail, title, intro, afterLogin }: LoginFormProps = {}) {
+type Mode = "signin" | "signup" | "forgot" | "code";
+type Screen = { kind: "form" } | { kind: "code-sent" } | { kind: "info"; title: string; text: string };
+
+export function LoginForm({ presetEmail, title, intro, afterLogin, signInOnly }: LoginFormProps = {}) {
+  const [mode, setMode] = useState<Mode>("signin");
+  const [screen, setScreen] = useState<Screen>({ kind: "form" });
   const [email, setEmail] = useState(presetEmail ?? "");
+  const [password, setPassword] = useState("");
+  const [confirmation, setConfirmation] = useState("");
   const [code, setCode] = useState("");
-  const [step, setStep] = useState<Step>("email");
-  const [status, setStatus] = useState<Status>("idle");
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const googleEnabled = process.env.NEXT_PUBLIC_AUTH_GOOGLE === "1";
 
-  // `?next=` : revenir là où l'étudiant a demandé à se connecter (import de documents, admin…).
+  // `?next=` : revenir là où l'étudiant a demandé à se connecter (import de documents…).
   const nextPath = () => safeInternalPath(afterLogin ?? new URLSearchParams(window.location.search).get("next"), "/compte");
-  const callbackUrl = () => `${window.location.origin}/auth/confirm?next=${encodeURIComponent(nextPath())}`;
+  const callbackUrl = (next = nextPath()) => `${window.location.origin}/auth/confirm?next=${encodeURIComponent(next)}`;
+  // Rechargement complet : les pages serveur (compte, admin) lisent la nouvelle session.
+  const done = () => window.location.assign(nextPath());
 
-  async function sendEmail(event?: FormEvent) {
-    event?.preventDefault();
-    setStatus("busy");
+  function switchMode(next: Mode) {
+    setMode(next);
     setError("");
-    const { error: sendError } = await createClient().auth.signInWithOtp({
-      email: email.trim(),
-      options: { emailRedirectTo: callbackUrl() },
-    });
-    if (sendError) {
-      setStatus("error");
-      setError(
-        sendError.status === 429
-          ? "Trop de demandes en peu de temps. Patientez une minute avant de redemander un e-mail."
-          : "L'e-mail n'a pas pu être envoyé. Vérifiez l'adresse et réessayez.",
-      );
-      return;
-    }
-    setStatus("idle");
-    setStep("code");
+    setPassword("");
+    setConfirmation("");
   }
 
-  async function verifyCode(event: FormEvent) {
+  async function run(task: () => Promise<string | null>) {
+    setBusy(true);
+    setError("");
+    const problem = await task();
+    setBusy(false);
+    if (problem) setError(problem);
+  }
+
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    const address = email.trim();
+    const auth = createClient().auth;
+    void run(async () => {
+      if (mode === "signin") {
+        const { error: e } = await auth.signInWithPassword({ email: address, password });
+        if (e) return authErrorMessage(e, "signin");
+        done();
+        return null;
+      }
+      if (mode === "signup") {
+        const problem = passwordProblem(password, confirmation);
+        if (problem) return problem;
+        const { data, error: e } = await auth.signUp({ email: address, password, options: { emailRedirectTo: callbackUrl() } });
+        if (e) return authErrorMessage(e, "signup");
+        if (data.session) {
+          done();
+          return null;
+        }
+        // Adresse déjà inscrite : Supabase ne le dit pas (pour ne pas révéler les comptes), il renvoie un compte sans identité.
+        if (data.user && data.user.identities?.length === 0) return authErrorMessage({ code: "user_already_exists" }, "signup");
+        setScreen({
+          kind: "info",
+          title: "Confirmez votre adresse",
+          text: `Nous avons envoyé un e-mail à ${address}. Cliquez sur le lien qu'il contient pour activer votre compte, puis connectez-vous avec votre mot de passe. Pensez à regarder dans les indésirables.`,
+        });
+        return null;
+      }
+      if (mode === "forgot") {
+        const { error: e } = await auth.resetPasswordForEmail(address, { redirectTo: callbackUrl("/compte/nouveau-mot-de-passe") });
+        if (e) return authErrorMessage(e, "reset");
+        setScreen({
+          kind: "info",
+          title: "Vérifiez votre boîte mail",
+          text: `Si un compte existe pour ${address}, vous allez recevoir un lien pour choisir un nouveau mot de passe. Ouvrez-le dans ce navigateur. Pensez à regarder dans les indésirables.`,
+        });
+        return null;
+      }
+      const { error: e } = await auth.signInWithOtp({ email: address, options: { emailRedirectTo: callbackUrl(), shouldCreateUser: !signInOnly } });
+      if (e) return authErrorMessage(e, "reset");
+      setScreen({ kind: "code-sent" });
+      return null;
+    });
+  };
+
+  const verifyCode = (event: FormEvent) => {
     event.preventDefault();
     const token = normalizeOtpCode(code);
     if (!isValidOtpCode(token)) {
-      setStatus("error");
       setError("Le code contient 6 chiffres.");
       return;
     }
-    setStatus("busy");
-    setError("");
-    const { error: verifyError } = await createClient().auth.verifyOtp({ email: email.trim(), token, type: "email" });
-    if (verifyError) {
-      setStatus("error");
-      setError("Code incorrect ou expiré. Vérifiez-le, ou demandez un nouvel e-mail.");
-      return;
-    }
-    // Rechargement complet : les pages serveur (admin, compte) lisent la nouvelle session.
-    window.location.assign(nextPath());
-  }
-
-  async function signInWithGoogle() {
-    setStatus("busy");
-    setError("");
-    const { error: oauthError } = await createClient().auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: callbackUrl() },
+    void run(async () => {
+      const { error: e } = await createClient().auth.verifyOtp({ email: email.trim(), token, type: "email" });
+      if (e) return "Code incorrect ou expiré. Vérifiez-le, ou demandez un nouvel e-mail.";
+      done();
+      return null;
     });
-    if (oauthError) {
-      setStatus("error");
-      setError("La connexion avec Google n'a pas abouti. Réessayez ou utilisez votre e-mail.");
-    }
+  };
+
+  const signInWithGoogle = () =>
+    void run(async () => {
+      const { error: e } = await createClient().auth.signInWithOAuth({ provider: "google", options: { redirectTo: callbackUrl() } });
+      return e ? "La connexion avec Google n'a pas abouti. Réessayez ou utilisez votre e-mail." : null;
+    });
+
+  const back = () => {
+    setScreen({ kind: "form" });
+    setCode("");
+    setError("");
+  };
+
+  if (screen.kind === "info") {
+    return (
+      <Card>
+        <h2 className="text-base font-semibold text-slate-900">{screen.title}</h2>
+        <p className="mt-2 text-sm text-slate-600">{screen.text}</p>
+        <Button type="button" variant="ghost" size="sm" className="mt-3" onClick={() => { back(); switchMode("signin"); }}>
+          Retour à la connexion
+        </Button>
+      </Card>
+    );
   }
 
-  if (step === "code") {
+  if (screen.kind === "code-sent") {
     return (
       <Card>
         <h2 className="text-base font-semibold text-slate-900">Vérifiez votre boîte mail</h2>
         <p className="mt-2 text-sm text-slate-600">
           Nous avons envoyé un e-mail à <strong>{email.trim()}</strong>. Cliquez sur le lien qu&apos;il contient,
-          ou saisissez ici le code à 6 chiffres. Pensez à regarder dans les indésirables.
+          ou saisissez ici le code à 6 chiffres s&apos;il en contient un. Pensez à regarder dans les indésirables.
         </p>
         <form onSubmit={verifyCode} className="mt-4 space-y-3">
           <div>
@@ -119,34 +173,45 @@ export function LoginForm({ presetEmail, title, intro, afterLogin }: LoginFormPr
             />
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <Button type="submit" disabled={status === "busy"}>
+            <Button type="submit" disabled={busy}>
               <KeyRound className="size-4" aria-hidden />
-              {status === "busy" ? "Vérification…" : "Se connecter"}
+              {busy ? "Vérification…" : "Se connecter"}
             </Button>
-            <Button type="button" variant="ghost" size="sm" disabled={status === "busy"} onClick={() => void sendEmail()}>
-              Renvoyer l&apos;e-mail
-            </Button>
-            <Button type="button" variant="ghost" size="sm" onClick={() => { setStep("email"); setCode(""); setStatus("idle"); setError(""); }}>
+            <Button type="button" variant="ghost" size="sm" onClick={back}>
               Changer d&apos;adresse
             </Button>
           </div>
-          {status === "error" && <p role="alert" className="text-sm font-medium text-red-700">{error}</p>}
+          {error && <ErrorText>{error}</ErrorText>}
         </form>
       </Card>
     );
   }
 
+  const heading =
+    mode === "signup" ? "Créer un compte" : mode === "forgot" ? "Mot de passe oublié" : mode === "code" ? "Recevoir un code par e-mail" : (title ?? "Se connecter");
+  const submitLabel = {
+    signin: busy ? "Connexion…" : "Se connecter",
+    signup: busy ? "Création…" : "Créer mon compte",
+    forgot: busy ? "Envoi…" : "Recevoir le lien",
+    code: busy ? "Envoi…" : "Recevoir le code",
+  }[mode];
+  const SubmitIcon = mode === "signup" ? UserPlus : mode === "signin" ? LogIn : Mail;
+
   return (
     <Card>
-      <h2 className="text-base font-semibold text-slate-900">{title ?? "Se connecter ou créer un compte"}</h2>
+      <h2 className="text-base font-semibold text-slate-900">{heading}</h2>
       <p className="mt-1 text-sm text-slate-600">
-        {intro ??
-          "Une seule étape : saisissez votre e-mail. Si vous n'avez pas encore de compte, il est créé automatiquement, sans mot de passe. Le compte est optionnel : il sauvegarde votre projet (profil, candidatures, lettres, budget) et vous le retrouvez sur tous vos appareils."}
+        {mode === "signin" &&
+          (intro ??
+            "Le compte est optionnel : il sauvegarde votre projet (profil, candidatures, lettres, budget) et vous le retrouvez sur tous vos appareils.")}
+        {mode === "signup" && `Choisissez un mot de passe d'au moins ${PASSWORD_MIN_LENGTH} caractères, avec au moins une lettre et un chiffre.`}
+        {mode === "forgot" && "Saisissez votre adresse : vous recevrez un lien pour choisir un nouveau mot de passe."}
+        {mode === "code" && "Sans mot de passe : vous recevez un e-mail avec un lien de connexion."}
       </p>
 
-      {googleEnabled && !presetEmail && (
+      {googleEnabled && !presetEmail && (mode === "signin" || mode === "signup") && (
         <div className="mt-4 space-y-3">
-          <Button type="button" variant="outline" className="w-full sm:w-auto" disabled={status === "busy"} onClick={() => void signInWithGoogle()}>
+          <Button type="button" variant="outline" className="w-full sm:w-auto" disabled={busy} onClick={signInWithGoogle}>
             <GoogleMark />
             Continuer avec Google
           </Button>
@@ -158,38 +223,89 @@ export function LoginForm({ presetEmail, title, intro, afterLogin }: LoginFormPr
         </div>
       )}
 
-      <form onSubmit={sendEmail} className="mt-4 space-y-3">
+      <form onSubmit={submit} className="mt-4 space-y-3">
         <div>
           <Label htmlFor="login-email">Adresse e-mail</Label>
           <Input
             id="login-email"
             type="email"
             required
-            autoComplete="email"
+            autoComplete={mode === "signup" ? "email" : "username"}
             placeholder="vous@exemple.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             readOnly={Boolean(presetEmail)}
           />
         </div>
-        <Button type="submit" disabled={status === "busy"}>
-          <Mail className="size-4" aria-hidden />
-          {status === "busy" ? "Envoi en cours…" : "Continuer"}
+        {(mode === "signin" || mode === "signup") && (
+          <div>
+            <div className="flex items-baseline justify-between gap-3">
+              <Label htmlFor="login-password">Mot de passe</Label>
+              {mode === "signin" && (
+                <button type="button" className="text-xs font-semibold text-blue-700 hover:underline" onClick={() => switchMode("forgot")}>
+                  Mot de passe oublié ?
+                </button>
+              )}
+            </div>
+            <PasswordInput
+              id="login-password"
+              required
+              autoComplete={mode === "signup" ? "new-password" : "current-password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+        )}
+        {mode === "signup" && (
+          <div>
+            <Label htmlFor="login-confirmation">Confirmez le mot de passe</Label>
+            <PasswordInput id="login-confirmation" required autoComplete="new-password" value={confirmation} onChange={(e) => setConfirmation(e.target.value)} />
+          </div>
+        )}
+
+        <Button type="submit" disabled={busy} className="w-full sm:w-auto">
+          <SubmitIcon className="size-4" aria-hidden />
+          {submitLabel}
         </Button>
-        {status === "error" && <Hint>{error}</Hint>}
-        <p className="text-xs leading-relaxed text-slate-600">
-          Vous recevrez un e-mail avec un lien et un code de connexion. En créant un compte, vous acceptez les{" "}
-          <Link href="/conditions" className="underline underline-offset-2 hover:text-slate-800">
-            conditions d&apos;utilisation
-          </Link>
-          . Votre e-mail sert uniquement à vous connecter ;{" "}
-          <Link href="/confidentialite" className="underline underline-offset-2 hover:text-slate-800">
-            confidentialité
-          </Link>
-          .
-        </p>
+        {error && <ErrorText>{error}</ErrorText>}
+
+        <div className="flex flex-wrap gap-x-4 gap-y-1 border-t border-slate-100 pt-3 text-sm">
+          {mode !== "signin" && <ModeLink onClick={() => switchMode("signin")}>J&apos;ai déjà un mot de passe</ModeLink>}
+          {mode === "signin" && !signInOnly && <ModeLink onClick={() => switchMode("signup")}>Créer un compte</ModeLink>}
+          {mode !== "code" && <ModeLink onClick={() => switchMode("code")}>Recevoir plutôt un code par e-mail</ModeLink>}
+        </div>
+
+        {mode === "signup" && (
+          <p className="text-xs leading-relaxed text-slate-600">
+            En créant un compte, vous acceptez les{" "}
+            <Link href="/conditions" className="underline underline-offset-2 hover:text-slate-800">
+              conditions d&apos;utilisation
+            </Link>
+            . Votre e-mail sert uniquement à vous connecter ;{" "}
+            <Link href="/confidentialite" className="underline underline-offset-2 hover:text-slate-800">
+              confidentialité
+            </Link>
+            .
+          </p>
+        )}
       </form>
     </Card>
+  );
+}
+
+function ModeLink({ onClick, children }: { onClick: () => void; children: ReactNode }) {
+  return (
+    <button type="button" onClick={onClick} className="font-semibold text-blue-700 hover:underline">
+      {children}
+    </button>
+  );
+}
+
+function ErrorText({ children }: { children: ReactNode }) {
+  return (
+    <p role="alert" className="text-sm font-medium text-red-700">
+      {children}
+    </p>
   );
 }
 

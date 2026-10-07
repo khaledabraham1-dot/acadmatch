@@ -171,15 +171,14 @@ test("calendrier : un résident du Bénin voit le calendrier Campus France offic
   await expect(page.getByText("Études en France (Bénin) : Dépôt définitif après corrections")).toBeVisible();
 });
 
-test("l'espace admin renvoie un visiteur non connecté vers la connexion, sans aucune donnée", async ({ page }) => {
+test("l'adresse /admin est introuvable : l'espace admin n'est servi qu'à son adresse secrète", async ({ page, request }) => {
   const response = await page.goto("/admin");
-  await expect(page).toHaveURL(/\/compte\?next=%2Fadmin|\/compte\?next=\/admin/);
-  expect(response?.status()).toBeLessThan(500);
-  await expect(page.getByText("Parcours des visiteurs")).toHaveCount(0);
-});
-
-test("l'export CSV de l'admin est introuvable sans session admin", async ({ request }) => {
-  const response = await request.get("/admin/export?type=demandes");
-  expect(response.status()).toBe(404);
-  expect(await response.text()).not.toContain(";");
+  expect(response?.status()).toBe(404);
+  await expect(page.getByText("Pilotage AcadMatch")).toHaveCount(0);
+  for (const path of ["/admin/export?type=demandes", "/admin/donnees?jours=30"]) {
+    const sub = await request.get(path);
+    expect(sub.status()).toBe(404);
+    expect(sub.headers()["content-type"]).not.toMatch(/csv|json/);
+    expect(await sub.text()).not.toContain("Formation demandée");
+  }
 });

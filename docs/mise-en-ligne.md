@@ -153,25 +153,50 @@ recevront jamais leur lien de connexion.
       (mesure d'audience sans cookie, déjà prévue dans le code et dans la
       politique de confidentialité).
 
-## Étape 6 bis — Ton espace admin (≈ 5 min)
+## Étape 6 bis — Ton espace admin (≈ 10 min)
 
-L'espace `/admin` (lecture seule) montre le parcours des visiteurs, les
-formations demandées, les avis sur les scores, le coût de l'IA et ce qu'il
-faut revérifier dans le catalogue. Personne d'autre que toi n'y a accès.
+L'espace admin montre en direct (actualisé toutes les 30 secondes) le
+parcours des visiteurs, les formations demandées, les avis sur les scores,
+le coût de l'IA et ce qu'il faut revérifier dans le catalogue.
+
+**Il n'est pas à l'adresse `/admin`** (n'importe quel robot essaie cette
+adresse) : il est servi à une adresse secrète que toi seul connais.
+`/admin` affiche une page introuvable, comme une adresse qui n'existe pas.
+Et même avec l'adresse, il faut trois verrous : ton e-mail dans
+`ADMIN_EMAILS`, ton mot de passe (connexion de moins de 12 heures), et le
+code à 6 chiffres de ton téléphone (double vérification).
 
 - [ ] Supabase → **SQL Editor** : exécuter
-      `supabase/migrations/0009_admin_read_grants.sql` (droits de lecture
-      seule pour le serveur ; sans lui, l'admin affiche « Lecture impossible »),
-      puis `supabase/migrations/0010_admin_actions.sql` (statut des demandes,
-      journal des actions admin).
-- [ ] Vercel → **Settings → Environment Variables** → ajouter
-      `ADMIN_EMAILS` = l'adresse avec laquelle tu te connectes à AcadMatch
-      (plusieurs adresses : séparées par des virgules), environnement
-      **Production** uniquement, puis **Redeploy**.
-- [ ] Se connecter sur `/compte`, puis ouvrir `/admin`. Toute autre personne
-      connectée y voit une page introuvable. Si ta dernière connexion date de
-      plus de 12 heures, l'admin te demande de confirmer ton identité (code
-      ou lien envoyé à ton adresse) : c'est voulu.
+      `supabase/migrations/0009_admin_read_grants.sql` puis
+      `supabase/migrations/0010_admin_actions.sql` (déjà fait le 2026-10-06).
+- [ ] Supabase → **Authentication → Sign In / Providers → Email** :
+      vérifier que **Email** est activé (connexion par mot de passe), et
+      **Authentication → Multi-Factor** : vérifier que **TOTP (App
+      Authenticator)** est activé (il l'est par défaut).
+- [ ] Vercel → **Settings → Environment Variables**, environnement
+      **Production** :
+      - `ADMIN_EMAILS` = ton adresse de connexion (déjà fait) ;
+      - `ADMIN_PATH` = ton adresse secrète, en minuscules, chiffres et
+        tirets, 16 caractères minimum (par exemple celle de ton fichier
+        `.env.local`). **Garde-la pour toi**, ne la mets dans aucun lien
+        public, aucun message, aucun document partagé.
+      Puis **Redeploy**.
+- [ ] Si ton compte n'a pas encore de mot de passe (tu te connectais par
+      code) : `/compte` → connecte-toi par code → carte **Mot de passe** →
+      choisis-en un. (Ou « Mot de passe oublié » depuis la connexion.)
+- [ ] Installer sur ton téléphone une application d'authentification :
+      Google Authenticator, Microsoft Authenticator ou 2FAS.
+- [ ] Ouvrir `https://<ton-domaine>/<ADMIN_PATH>` → se connecter (e-mail +
+      mot de passe) → la première fois, scanner le QR code avec
+      l'application et saisir le code affiché. Ensuite, à chaque connexion :
+      mot de passe puis code du téléphone. Ajoute l'adresse à tes favoris.
+
+**Téléphone perdu ?** Supabase → **Authentication → Users** → ton compte →
+supprimer le facteur « AcadMatch admin ». À la connexion suivante, l'admin
+te propose de scanner un nouveau QR code.
+
+**Adresse secrète compromise ?** Change `ADMIN_PATH` sur Vercel et
+redéploie : l'ancienne adresse devient introuvable immédiatement.
 
 ## Étape 7 — Obligations légales (≈ 30 min)
 
