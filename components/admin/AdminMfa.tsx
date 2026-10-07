@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input, Label } from "@/components/ui/Field";
-import { isValidOtpCode, normalizeOtpCode } from "@/lib/auth/otp";
+import { isValidOtpCode, normalizeOtpCode, qrImageSrc } from "@/lib/auth/otp";
 
 /**
  * Double vérification de l'espace admin (2026-10-07), avec une application
@@ -17,7 +17,7 @@ import { isValidOtpCode, normalizeOtpCode } from "@/lib/auth/otp";
  */
 export function AdminMfa({ mode }: { mode: "enroll" | "verify" }) {
   const [factorId, setFactorId] = useState<string | null>(null);
-  const [qr, setQr] = useState<{ svg: string; secret: string } | null>(null);
+  const [qr, setQr] = useState<{ src: string; secret: string } | null>(null);
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -50,7 +50,7 @@ export function AdminMfa({ mode }: { mode: "enroll" | "verify" }) {
         return;
       }
       setFactorId(enrolled.id);
-      setQr({ svg: enrolled.totp.qr_code, secret: enrolled.totp.secret });
+      setQr({ src: qrImageSrc(enrolled.totp.qr_code), secret: enrolled.totp.secret });
     })();
   }, [mode]);
 
@@ -95,7 +95,7 @@ export function AdminMfa({ mode }: { mode: "enroll" | "verify" }) {
       {mode === "enroll" && qr && (
         <div className="mt-4 flex flex-wrap items-center gap-4">
           {/* eslint-disable-next-line @next/next/no-img-element -- QR code SVG fourni par Supabase, jamais mis en cache */}
-          <img src={`data:image/svg+xml;utf-8,${encodeURIComponent(qr.svg)}`} alt="QR code à scanner avec l'application d'authentification" className="size-44 rounded-xl border border-slate-200 bg-white p-2" />
+          <img src={qr.src} alt="QR code à scanner avec l'application d'authentification" className="size-44 rounded-xl border border-slate-200 bg-white p-2" />
           <div className="min-w-0 text-sm text-slate-600">
             <p>Impossible de scanner ? Saisissez cette clé dans l&apos;application :</p>
             <code className="mt-1 block break-all rounded-lg bg-slate-100 px-2 py-1 font-mono text-xs text-slate-900">{qr.secret}</code>
