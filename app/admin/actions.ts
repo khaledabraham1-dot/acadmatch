@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logAdminAction, requireAdmin } from "@/lib/admin/session";
 import type { RequestStatus } from "@/lib/admin/stats";
+import { loadDigest } from "@/lib/admin/loadAlerts";
+import { sendEmail } from "@/lib/email/resend";
 
 /**
  * Actions de l'espace admin (2026-10-06). Une action serveur est appelable
@@ -81,4 +83,28 @@ export async function deleteAccountByEmail(_previous: DeletionState, formData: F
   await logAdminAction(adminEmail, "suppression-compte", `Compte supprimé (domaine ${target.split("@")[1]})`);
   revalidatePath("/admin");
   return { ok: true, message: "Compte supprimé, avec son profil et son projet synchronisé." };
+}
+
+export interface AlertTestState {
+  ok: boolean;
+  message: string;
+}
+
+/**
+ * Essai des alertes depuis l'admin (2026-10-08) : construit le résumé du
+ * jour, même s'il n'y a rien d'important, et l'envoie tout de suite.
+ */
+export async function sendAlertTest(): Promise<AlertTestState> {
+  let email: string;
+  try {
+    email = await requireAdmin();
+  } catch {
+    return { ok: false, message: "Accès refusé : reconnectez-vous à l'espace admin." };
+  }
+  const { digest, error } = await loadDigest({ force: true });
+  if (error || !digest) return { ok: false, message: error ?? "Résumé impossible à préparer." };
+  const result = await sendEmail(digest);
+  if (!result.ok) return { ok: false, message: result.reason };
+  await logAdminAction(email, "alerte-essai", digest.subject);
+  return { ok: true, message: `E-mail envoyé : « ${digest.subject} ». Regardez aussi dans les indésirables.` };
 }

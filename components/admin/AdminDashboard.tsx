@@ -23,6 +23,7 @@ import type { RequestStatus } from "@/lib/admin/stats";
 import type { HealthItem } from "@/lib/admin/catalogueHealth";
 import { setRequestStatus } from "@/app/admin/actions";
 import { AccountDeletionForm } from "@/components/admin/AccountDeletionForm";
+import { AlertSettings, type AlertStatus } from "@/components/admin/AlertSettings";
 import { AnimatedNumber, DailyBars, GrowBar, LineChart, ORDINAL, SERIES, STATUS, Sparkline, StackedBar, formatInt, formatUsd, shortDay } from "@/components/admin/charts";
 import { cn } from "@/lib/utils";
 
@@ -52,7 +53,7 @@ const FAIRNESS = { "trop-haut": "Score trop haut", juste: "Score juste", "trop-b
 
 interface Toast { id: number; text: string; error?: boolean }
 
-export function AdminDashboard({ initial, base, email }: { initial: DashboardData; base: string; email: string }) {
+export function AdminDashboard({ initial, base, email, alerts }: { initial: DashboardData; base: string; email: string; alerts: AlertStatus }) {
   const [data, setData] = useState(initial);
   const [period, setPeriod] = useState<Period>(initial.period);
   const [state, setState] = useState<"live" | "loading" | "error" | "expired">("live");
@@ -198,7 +199,7 @@ export function AdminDashboard({ initial, base, email }: { initial: DashboardDat
         {tab === "avis" && <Feedback data={data} base={base} />}
         {tab === "ia" && <Ai data={data} />}
         {tab === "catalogue" && <Catalogue health={data.health} />}
-        {tab === "gestion" && <Management data={data} email={email} />}
+        {tab === "gestion" && <Management data={data} email={email} alerts={alerts} />}
       </div>
 
       <div aria-live="polite" className="pointer-events-none fixed bottom-4 right-4 z-50 flex w-72 flex-col gap-2">
@@ -854,9 +855,12 @@ function HealthPanel({ title, items, empty }: { title: string; items: HealthItem
 
 /* ---------- Gestion ---------- */
 
-function Management({ data, email }: { data: DashboardData; email: string }) {
+function Management({ data, email, alerts }: { data: DashboardData; email: string; alerts: AlertStatus }) {
   return (
     <div className="grid gap-5 lg:grid-cols-2">
+      <Panel title="Alertes par e-mail" hint="Un résumé le matin, seulement quand il y a quelque chose à faire." className="lg:col-span-2">
+        <AlertSettings status={alerts} />
+      </Panel>
       <Panel title="Supprimer un compte" hint="Droit à l'effacement, à la demande d'un étudiant : supprime le compte, son profil et son projet synchronisé. Irréversible.">
         <AccountDeletionForm />
       </Panel>

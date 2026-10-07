@@ -7,6 +7,7 @@ import { AdminDashboard } from "@/components/admin/AdminDashboard";
 import { adminHref, checkAdmin } from "@/lib/admin/session";
 import { loadDashboard } from "@/lib/admin/loadDashboard";
 import { ADMIN_MAX_SESSION_HOURS } from "@/lib/admin/access";
+import { emailConfig } from "@/lib/email/resend";
 
 export const metadata: Metadata = {
   title: "Espace privé",
@@ -64,9 +65,11 @@ export default async function AdminPage() {
   if (access.status !== "admin") notFound();
 
   const initial = await loadDashboard(30);
+  const mail = emailConfig();
+  const alerts = { configured: Boolean(mail.apiKey), to: mail.to, cron: Boolean(process.env.CRON_SECRET) };
   return (
     <AppShell title="Pilotage AcadMatch" description="Données en direct, actualisées toutes les 30 secondes. Aucune donnée personnelle.">
-      <AdminDashboard initial={initial} base={home} email={access.email} />
+      <AdminDashboard initial={initial} base={home} email={access.email} alerts={alerts} />
     </AppShell>
   );
 }

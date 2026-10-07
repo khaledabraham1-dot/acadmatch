@@ -198,6 +198,34 @@ te propose de scanner un nouveau QR code.
 **Adresse secrète compromise ?** Change `ADMIN_PATH` sur Vercel et
 redéploie : l'ancienne adresse devient introuvable immédiatement.
 
+## Étape 6 ter — Tes alertes par e-mail (≈ 10 min, possible dès maintenant)
+
+Chaque matin vers 7 h (heure du Bénin), AcadMatch t'envoie un résumé
+**seulement s'il y a quelque chose à faire** : formation demandée au moins
+3 fois et redemandée depuis la veille, nouveaux avis sur les résultats,
+coût de l'IA à 80 % du budget ou plus, et le lundi, le catalogue à
+revérifier. Les autres jours, aucun e-mail.
+
+Pas besoin d'avoir acheté le domaine : avec un compte Resend gratuit,
+l'expéditeur d'essai `onboarding@resend.dev` peut écrire **à l'adresse
+du compte Resend**. Crée donc le compte Resend avec la même adresse que
+`ADMIN_EMAILS`.
+
+- [ ] Créer un compte sur [resend.com](https://resend.com) avec ton adresse
+      admin, puis **API Keys → Create API Key** → nom `acadmatch-alertes`,
+      permission *Sending access*. Copier la clé (elle commence par `re_`).
+- [ ] Vercel → **Settings → Environment Variables** (Production) :
+      - `RESEND_API_KEY` = la clé copiée ;
+      - `CRON_SECRET` = une longue suite de lettres et de chiffres au hasard
+        (au moins 32 caractères). Vercel l'utilise pour lancer la tâche du
+        matin ; sans elle, l'envoi automatique reste éteint.
+      Puis **Redeploy**.
+- [ ] Espace admin → onglet **Gestion** → **Alertes par e-mail** : les trois
+      lignes doivent être vertes. Cliquer **M'envoyer le résumé maintenant**
+      pour recevoir un e-mail d'essai (regarder aussi les indésirables).
+- [ ] Plus tard, quand le domaine sera vérifié chez Resend (étape 4) :
+      ajouter `ALERT_FROM` = `AcadMatch <alertes@ton-domaine>`.
+
 ## Étape 7 — Obligations légales (≈ 30 min)
 
 - [ ] **APDP (Bénin)** : l'éditeur du site réside au Bénin, et le site

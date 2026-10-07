@@ -69,7 +69,7 @@ export async function loadDashboard(period: Period, now = new Date()): Promise<D
 }
 
 /** Dates de création et de dernière connexion des comptes, sans aucune adresse. */
-async function listAccountDates(db: ReturnType<typeof createAdminClient>): Promise<{ total: number | null; rows: AccountDates[]; error: boolean }> {
+export async function listAccountDates(db: ReturnType<typeof createAdminClient>): Promise<{ total: number | null; rows: AccountDates[]; error: boolean }> {
   const rows: AccountDates[] = [];
   let total: number | null = null;
   for (let page = 1; page <= MAX_ACCOUNT_PAGES; page++) {
